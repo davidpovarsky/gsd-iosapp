@@ -224,20 +224,26 @@ public actor SyncEngine {
     }
 
     /// Drain the pending queue → remote (§7.5). Payload-LWW-guard (skip+drop a stale upsert iff remote
-    /// `client_updated_at` > the payload's `updatedAt`); stale-delete guard (`isStaleDelete`);
-    /// create(no recordId)/update(by recordId)/delete;
+    /// `client_updated_at` > the payload's `updatedAt`); stale-delete guard (`isStaleDelete`).
+    /// A task missing from the listing proves nothing until the account is confirmed, so the push asks
+    /// auth-refresh once, before it first acts on an absence. A create POSTs to the collection; an
+    /// update or delete of a listed record goes through the guarded route with the listed version as
+    /// `expected_version`. A 412 means another device wrote after the listing: the row stays queued,
+    /// uncharged, and the push moves to the next row. A 401 or 403 ends the push, also uncharged.
     /// ~throttle; 429 aborts the loop; across-sync retry (5/10/30/60/300 s) → `failed` after 5 (kept).
     func push(token: String, owner: String) async throws -> (pushed: Int, failed: Int) {
         var index = try await client.remoteIndex(token: token)
         let nowMs = Int(now().timeIntervalSince1970 * 1000)
         var pushed = 0, failed = 0
+        var identityConfirmed = false
         for item in try await queue.pending() where isDue(item, nowMs: nowMs) {
             try fence(owner)   // outside the item's `do`: a session that ended must not spend this item's retries
             let remote = index[item.taskId]
             // Parity S11 (Android `MalformedRemoteVersion`): a remote copy whose version is missing or
-            // unparseable can't be shown to be older, so an upsert must not overwrite it. Skip it and
-            // spend a retry, like any failed attempt. A delete carries no version to compare.
-            if item.operation != .delete, let remote, remote.clientUpdatedAt == nil {
+            // unparseable can't be shown to be older, so a write must not overwrite it. Skip it and
+            // spend a retry, like any failed attempt. The staleness guards below can't run without a
+            // parseable stamp, and a delete is refused the same way (web does the same).
+            if let remote, remote.clientUpdatedAt == nil {
                 try await recordFailedAttempt(item, reason: "Remote task version is missing or malformed", nowMs: nowMs)
                 failed += 1; continue
             }
@@ -250,10 +256,22 @@ public actor SyncEngine {
             if item.operation == .delete, isStaleDelete(item, remoteUpdated: remote?.clientUpdatedAt) {
                 try await queue.remove(id: item.id); continue
             }
+            // A rejected token lists as an empty account, so a task missing from the listing proves
+            // nothing until the account is confirmed. Once per push, before this item's error handling.
+            if remote == nil, !identityConfirmed {
+                try await confirmIdentity(token: token, owner: owner)
+                identityConfirmed = true
+                try fence(owner)   // the identity request suspended; the session may have ended during it
+            }
+            // The listed record and its version string, exactly as the server holds it. The check above
+            // means a listed record always has one, so this is nil only when the task isn't listed.
+            let listed = remote.flatMap { entry in entry.version.map { (recordId: entry.recordId, version: $0) } }
             do {
                 switch item.operation {
                 case .delete:
-                    if let recordId = remote?.recordId { try await client.deleteTask(recordId: recordId, token: token) }
+                    if let listed {
+                        try await client.deleteTaskGuarded(recordId: listed.recordId, expectedVersion: listed.version, token: token)
+                    }
                     // The record is gone, so a later same-drain create for this task must POST, not
                     // PATCH the deleted record. A delete that threw never reaches this line.
                     index.removeValue(forKey: item.taskId)
@@ -264,12 +282,18 @@ public actor SyncEngine {
                     let wire = TaskWireMapper.toWire(payload, current: current, owner: owner, deviceId: deviceId,
                                                      recordId: remote?.recordId ?? "",
                                                      defaultReminder: defaultReminder())
-                    if let recordId = remote?.recordId { try await client.updateTask(recordId: recordId, record: wire, token: token) }
-                    else {
+                    if let listed {
+                        var guarded = wire
+                        guarded.clientUpdatedAt = LWW.guardedVersion(outgoing: wire.clientUpdatedAt, expected: listed.version)
+                        try await client.updateTaskGuarded(recordId: listed.recordId, expectedVersion: listed.version,
+                                                           record: guarded, token: token)
+                        // A second write to this task in the same push expects the version this one stored.
+                        index[item.taskId] = RemoteIndexEntry(recordId: listed.recordId, version: guarded.clientUpdatedAt)
+                    } else {
                         // Record the new recordId in the live index so a later same-drain DELETE for the
                         // same task_id finds it (else the create leaks an orphan remote record).
                         let newRecordId = try await client.createTask(wire, token: token)
-                        index[item.taskId] = (recordId: newRecordId, clientUpdatedAt: payload.updatedAt)
+                        index[item.taskId] = RemoteIndexEntry(recordId: newRecordId, version: wire.clientUpdatedAt)
                     }
                 }
                 try await queue.remove(id: item.id); pushed += 1
@@ -277,10 +301,22 @@ public actor SyncEngine {
             } catch let e as PocketBaseError {
                 if case .http(429, _) = e { break }                    // 429 → abort
                 if case .pocketBase(429, _) = e { break }
+                // 412: another device wrote after the listing. Not a failure and not charged; the row
+                // stays queued, and the next push lists again so last-write-wins decides. Reported quietly, not as an error.
+                if case .http(412, _) = e { continue }
+                if case .pocketBase(412, _) = e { continue }
+                if Self.endsTheRun(e) { throw e }                      // 401/403: the session is the problem, not this row
                 try await recordFailedAttempt(item, reason: "\(e)", nowMs: nowMs); failed += 1
             }
         }
         return (pushed, failed)
+    }
+
+    /// Asks the server who the token belongs to. Throws `SyncIdentityMismatch` for another account and
+    /// passes a 401 or 403 through, so the caller never reads a guest's empty listing as an absence.
+    /// The fresh token it returns is not kept. Android `confirmIdentity`.
+    private func confirmIdentity(token: String, owner: String) async throws {
+        guard try await client.authRefresh(token: token).record.id == owner else { throw SyncIdentityMismatch() }
     }
 
     /// D-10 rule 2: a queued payload from before the upgrade can carry a null offset. Push
@@ -300,8 +336,8 @@ public actor SyncEngine {
     /// A delete is stale when the remote changed after it was queued (B-42). An archive's delete also
     /// carries the task as archived, and is stale when the remote is newer than that version (B-47):
     /// archiving a stale copy must not delete the newer task. Web `isStaleDelete`, Android
-    /// `remoteEditedAfterQueued` and `remoteEditedAfterArchive`. A remote with no usable version
-    /// keeps the plain delete, which is today's behavior while owner decision D-9 is open.
+    /// `remoteEditedAfterQueued` and `remoteEditedAfterArchive`. A remote with no usable version never
+    /// reaches this check: the push charges that row first, because staleness can't be judged.
     private func isStaleDelete(_ item: SyncQueueItem, remoteUpdated: Date?) -> Bool {
         guard let remoteUpdated else { return false }
         let queuedAt = Date(timeIntervalSince1970: Double(item.timestamp) / 1000)
@@ -337,7 +373,7 @@ public actor SyncEngine {
         // The list rule filters rows, so a token the server rejects lists as 200 with zero items, just
         // like an empty account. Only auth-refresh tells them apart. Any failure throws before a delete.
         // The fresh token it returns is not kept. Android `confirmIdentity`.
-        guard try await client.authRefresh(token: token).record.id == owner else { throw SyncIdentityMismatch() }
+        try await confirmIdentity(token: token, owner: owner)
         var deleted = 0
         for task in unprotected {
             try fence(owner)
@@ -659,7 +695,7 @@ public actor SyncEngine {
         guard !remembered.isEmpty else { return 0 }
         let listing = try await client.listEveryTask(token: token)
         // A rejected token lists as an empty account; only auth-refresh tells them apart.
-        guard try await client.authRefresh(token: token).record.id == owner else { throw SyncIdentityMismatch() }
+        try await confirmIdentity(token: token, owner: owner)
         var waiting = Set<String>()
         var brought = 0
         for record in listing where remembered.contains(record.taskId) {
@@ -679,9 +715,8 @@ public actor SyncEngine {
 
     /// A step error that must still stop the run before the push: an ended session, a token confirmed
     /// for another account, or one the server rejects (401 or 403, read as `AccountDeleter` reads
-    /// them). The push has no identity check of its own, and a rejected token lists as an empty
-    /// account, so the step's auth-refresh is the first to see it. On a dead session the push would
-    /// spend a retry on every queued write.
+    /// them). A rejected token lists as an empty account, so the step's auth-refresh is the first to
+    /// see it, and the push's own identity check would see it again.
     private static func endsTheRun(_ error: Error) -> Bool {
         switch error {
         case is StaleSyncSession, is SyncIdentityMismatch: true
