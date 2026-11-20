@@ -25,14 +25,17 @@ struct TaskStoreWriteOrderTests {
         func restampIfUnchanged(id: String, from: Date, to: Date) async throws -> Bool { false }
         func delete(id: String) async throws { log.events.append("delete") }
         func replaceAll(_ tasks: [Task]) async throws { log.events.append("replaceAll") }
+        func replaceAll(_ tasks: [Task], queueing items: [SyncQueueItem], deletingLeftOut makeDelete: @Sendable (String) -> SyncQueueItem) async throws {
+            log.events.append("replaceAllQueueing")
+        }
         func observeAll() -> AsyncThrowingStream<[Task], Error> {
             AsyncThrowingStream { $0.finish() }
         }
     }
 
-    /// Delete is a SOFT delete now, so the local write it must be ordered against is the
-    /// move into the trash, not `TaskRepository.delete`. Without this double the ordering
-    /// assertions below would pass vacuously — the task repo never sees the write at all.
+    /// Delete is a soft delete, so its local write is the move into the trash, not
+    /// `TaskRepository.delete`. That one call also queues the delete, so the delete tests below
+    /// check for the single call. Without this double they would pass vacuously.
     final class LoggingTrash: TrashRepository, @unchecked Sendable {
         let log: EventLog
         var failTrash = false
@@ -43,7 +46,14 @@ struct TaskStoreWriteOrderTests {
             log.events.append("trash")
             if failTrash { throw Boom() }
         }
-        func restore(id: String) async throws -> Task? { nil }
+        func trash(_ task: Task, at deletedAt: Date, queueing item: SyncQueueItem) async throws {
+            log.events.append("trashQueueing")
+            if failTrash { throw Boom() }
+        }
+        func restore(id: String, queueing makeItem: @Sendable (Task) -> SyncQueueItem) async throws -> Task? {
+            log.events.append("restoreFromTrash")
+            return nil
+        }
         func deleteForever(id: String) async throws {}
         func empty() async throws -> Int { 0 }
         func fetchAll() async throws -> [Task] { [] }
@@ -86,6 +96,7 @@ struct TaskStoreWriteOrderTests {
             log.events.append("enqueue"); items.append(item)
         }
         func enqueueClearingWrites(_ item: SyncQueueItem) async throws { try await enqueue(item) }
+        func enqueueIfLive(_ item: SyncQueueItem) async throws -> Bool { try await enqueue(item); return true }
         func pending() async throws -> [SyncQueueItem] { items }
         func update(_ item: SyncQueueItem) async throws {}
         func remove(id: String) async throws { log.events.append("remove"); items.removeAll { $0.id == id } }
@@ -116,24 +127,40 @@ struct TaskStoreWriteOrderTests {
         #expect(log.events == ["enqueue", "upsert"])
     }
 
-    @Test func deleteEnqueuesBeforeMovingTheRowToTheTrash() async throws {
+    /// Trash queues its delete in the same write that moves the row, so there is no order
+    /// between two writes left to get wrong, and nothing goes through the injected queue.
+    @Test func deleteQueuesAndTrashesInOneCall() async throws {
         let log = EventLog()
-        let store = try makeStore(repo: LoggingRepository(log: log), queue: LoggingQueue(log: log))
+        let queue = LoggingQueue(log: log)
+        let store = try makeStore(repo: LoggingRepository(log: log), queue: queue)
         try await store.delete(task("a"))
-        #expect(log.events == ["enqueue", "trash"])
+        #expect(log.events == ["trashQueueing"])
+        #expect(queue.items.isEmpty)
     }
 
-    /// A delete whose enqueue fails must NOT delete the local row: unlike an upsert (whose row
-    /// survives and is re-enqueued by the next sync's seed), a deleted row is gone — seed cannot
-    /// re-enqueue it, so a lost delete-enqueue lets the next pull resurrect the task. The delete
-    /// must abort and keep the row so the user can retry.
-    @Test func deleteAbortsAndKeepsRowWhenEnqueueFails() async throws {
+    /// Import Replace queues its rows and swaps the task table in one write, so no push can run between
+    /// its queue writes and its task write, and nothing goes through the injected queue. This replaces
+    /// the sync-level `importReplaceWindow`, which pushed inside that window.
+    @Test func replaceQueuesAndSwapsInOneCall() async throws {
         let log = EventLog()
-        let repo = LoggingRepository(log: log)
-        let queue = LoggingQueue(log: log); queue.failEnqueue = true
-        let store = try makeStore(repo: repo, queue: queue)
-        await #expect(throws: (any Error).self) { try await store.delete(self.task("a")) }
-        #expect(!log.events.contains("trash"))    // row NOT moved → still active → cannot resurrect
+        let queue = LoggingQueue(log: log)
+        let store = try makeStore(repo: LoggingRepository(log: log), queue: queue)
+        let backup = try TaskExport.encode(TaskExport(tasks: [task("a")], exportedAt: Date(timeIntervalSince1970: 0)))
+        try await store.importTasks(backup, mode: .replace)
+        #expect(log.events == ["replaceAllQueueing"])
+        #expect(queue.items.isEmpty)
+    }
+
+    /// A delete that isn't recorded must keep the local row. An upsert's row survives a failed
+    /// enqueue and the next sync's seed re-queues it, but a trashed row is gone, so the next pull
+    /// would resurrect the task. The one write lands whole or not at all, and the store reports it.
+    @Test func aFailedTrashWriteIsDeleteNotRecorded() async throws {
+        let log = EventLog()
+        let trash = LoggingTrash(log: log); trash.failTrash = true
+        let queue = LoggingQueue(log: log)
+        let store = try makeStore(repo: LoggingRepository(log: log), queue: queue, trash: trash)
+        await #expect(throws: TaskStoreError.deleteNotRecorded) { try await store.delete(self.task("a")) }
+        #expect(log.events == ["trashQueueing"])
         #expect(queue.items.isEmpty)
     }
 

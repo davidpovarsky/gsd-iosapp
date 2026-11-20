@@ -33,6 +33,7 @@ private struct NoTombstones: TombstoneRepository {
     func tombstoneDate(id: String) async throws -> Date? { nil }
     func isArchived(id: String) async throws -> Bool { false }
     func resurrect(_ task: Task) async throws {}
+    func resurrectFromTrash(_ task: Task, queueing item: SyncQueueItem) async throws -> Bool { false }
     func abandonToTrash(id: String, at deletedAt: Date) async throws -> Bool { false }
     func buriedTask(id: String) async throws -> Task? { nil }
 }
@@ -210,7 +211,9 @@ public actor SyncEngine {
     func seedExistingTasks(owner: String? = nil) async throws {
         for task in try await tasks.fetchAll() {
             try fence(owner)
-            try await queue.enqueue(SyncQueueItem(
+            // The task may be archived or trashed after the snapshot above. The queue checks that it still
+            // exists in the same write, so a seeded update never lands behind that delete and POSTs it back.
+            _ = try await queue.enqueueIfLive(SyncQueueItem(
                 id: UUID().uuidString, taskId: task.id, operation: .update,
                 timestamp: Int(now().timeIntervalSince1970 * 1000), payload: task))
         }
@@ -241,10 +244,11 @@ public actor SyncEngine {
             try fence(owner)   // outside the item's `do`: a session that ended must not spend this item's retries
             let remote = index[item.taskId]
             // Parity S11 (Android `MalformedRemoteVersion`): a remote copy whose version is missing or
-            // unparseable can't be shown to be older, so a write must not overwrite it. Skip it and
-            // spend a retry, like any failed attempt. The staleness guards below can't run without a
-            // parseable stamp, and a delete is refused the same way (web does the same).
-            if let remote, remote.clientUpdatedAt == nil {
+            // unparseable can't be shown to be older, so an upsert must not overwrite it. Skip it and
+            // spend a retry, like any failed attempt. A delete goes on (R15): it carries no payload to
+            // compare, and the user asked for the record to go. The staleness guards below find no
+            // stamp to judge, and the guarded route still returns 412 if the record changed.
+            if let remote, remote.clientUpdatedAt == nil, item.operation != .delete {
                 try await recordFailedAttempt(item, reason: "Remote task version is missing or malformed", nowMs: nowMs)
                 failed += 1; continue
             }
@@ -270,14 +274,16 @@ public actor SyncEngine {
                 identityConfirmed = true
                 try fence(owner)   // the identity request suspended; the session may have ended during it
             }
-            // The listed record and its version string, exactly as the server holds it. The check above
-            // means a listed record always has one, so this is nil only when the task isn't listed.
+            // The listed record and its version string, exactly as the server holds it. For an upsert, the
+            // check above means a listed record always has one, so this is nil only when the task isn't listed.
             let listed = remote.flatMap { entry in entry.version.map { (recordId: entry.recordId, version: $0) } }
             do {
                 switch item.operation {
                 case .delete:
-                    if let listed {
-                        try await client.deleteTaskGuarded(recordId: listed.recordId, expectedVersion: listed.version, token: token)
+                    // R15: the raw listed string, or "" when the field is absent, because the hook reads
+                    // an absent version as "". A value over 64 characters gets a 400 and is charged below.
+                    if let remote {
+                        try await client.deleteTaskGuarded(recordId: remote.recordId, expectedVersion: remote.version ?? "", token: token)
                     }
                     // The record is gone, so a later same-drain create for this task must POST, not
                     // PATCH the deleted record. A delete that threw never reaches this line.
@@ -369,8 +375,8 @@ public actor SyncEngine {
     /// A delete is stale when the remote changed after it was queued (B-42). An archive's delete also
     /// carries the task as archived, and is stale when the remote is newer than that version (B-47):
     /// archiving a stale copy must not delete the newer task. Web `isStaleDelete`, Android
-    /// `remoteEditedAfterQueued` and `remoteEditedAfterArchive`. A remote with no usable version never
-    /// reaches this check: the push charges that row first, because staleness can't be judged.
+    /// `remoteEditedAfterQueued` and `remoteEditedAfterArchive`. A remote with no usable version is never
+    /// stale, because there is no stamp to judge (R15). The delete is sent, and F2 and F3 don't apply.
     private func isStaleDelete(_ item: SyncQueueItem, remoteUpdated: Date?, ignoringArchivedVersion: Bool = false) -> Bool {
         guard let remoteUpdated else { return false }
         let queuedAt = Date(timeIntervalSince1970: Double(item.timestamp) / 1000)
@@ -768,10 +774,14 @@ public actor SyncEngine {
         return try await queue.all().contains { $0.taskId == record.taskId && $0.operation == .delete }
     }
 
-    /// One remembered task the account lists. A Trash row goes and the server copy becomes active.
-    /// An active copy here, restored while signed out or brought back by the pull, takes the
-    /// server's only when it is strictly newer. An archive row stays archived (section 8, reading 2):
-    /// the archive was the user's last act here.
+    /// One remembered task the account lists. A Trash row newer than the server's copy holds an edit
+    /// made while signed out, and Trash took that edit off the queue. So the Trash row comes back and its
+    /// update goes up, as on Android (R25). One write does both, so the task is never live without that
+    /// update (Fix E), and it brings nothing back if the user removed the task after the read here.
+    /// Any other Trash row goes, and the server copy becomes active.
+    /// An active copy here, restored while signed out or brought back by the pull, takes the server's
+    /// only when it is strictly newer. An archive row stays archived (section 8, reading 2): the archive
+    /// was the user's last act here.
     private func bringBack(_ record: PocketBaseTaskRecord, remoteUpdated: Date, owner: String) async throws -> Bool {
         let local = try await tasks.fetch(id: record.taskId)
         if local == nil, try await tombstones.isArchived(id: record.taskId) { return false }
@@ -779,9 +789,17 @@ public actor SyncEngine {
         if let local, LWW.resolve(localUpdatedAt: local.updatedAt, remoteClientUpdatedAt: ingested) != .takeRemote {
             return false
         }
+        let buried = local == nil ? try await tombstones.buriedTask(id: record.taskId) : nil
+        // Only a strictly newer Trash row wins. A tie resolves to `.noOp` and takes the merge below, the
+        // same way a tie leaves an active row alone.
+        if let buried, LWW.resolve(localUpdatedAt: buried.updatedAt, remoteClientUpdatedAt: ingested) == .keepLocal {
+            let item = SyncQueueItem(id: UUID().uuidString, taskId: buried.id, operation: .update,
+                                     timestamp: Int(now().timeIntervalSince1970 * 1000), payload: buried)
+            try fence(owner)
+            return try await tombstones.resurrectFromTrash(buried, queueing: item)
+        }
         // A buried row merges the server copy the way an active row does, as web does, so its rich
         // time entries and this device's reminder state survive instead of a rebuild from the wire.
-        let buried = local == nil ? try await tombstones.buriedTask(id: record.taskId) : nil
         var incoming = TaskWireMapper.toDomain(record, mergingInto: local ?? buried)
         incoming.updatedAt = ingested
         try fence(owner)

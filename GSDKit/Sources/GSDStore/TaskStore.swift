@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import os
 import GSDModel
 
 /// Snooze durations (product spec §6.7). `.custom` supports arbitrary intervals
@@ -47,10 +48,10 @@ public struct BulkActionResult: Equatable, Sendable {
 }
 
 public enum TaskStoreError: Error, LocalizedError, Equatable {
-    /// A delete could not be recorded for sync (the queue write failed), so the local row was
-    /// KEPT rather than deleted. Deleting it would let the next pull resurrect the task (a deleted
-    /// row is gone, so the next sync's seed cannot re-enqueue the lost delete). Surfaced so the
-    /// user can retry, instead of a silent delete-then-resurrect.
+    /// A delete could not be recorded for sync (the one write that queues it and moves the row into
+    /// Trash failed), so the local row was KEPT rather than deleted. Deleting it would let the next
+    /// pull resurrect the task (a deleted row is gone, so the next sync's seed cannot re-enqueue the
+    /// lost delete). Surfaced so the user can retry, instead of a silent delete-then-resurrect.
     case deleteNotRecorded
     /// An archive's server delete could not be queued. The task is put back to active when that
     /// write succeeds, rather than left archived here with a server copy other devices keep showing.
@@ -87,6 +88,7 @@ public enum TaskStoreError: Error, LocalizedError, Equatable {
 @MainActor
 @Observable
 public final class TaskStore {
+    private static let log = Logger(subsystem: "dev.vinny.gsd", category: "store")
     public private(set) var tasks: [Task] = []
     /// True once the task observer has delivered its first snapshot. Lets the UI tell
     /// "loaded, and empty" apart from "not loaded yet" — `tasks` starts empty either way.
@@ -121,6 +123,9 @@ public final class TaskStore {
     @ObservationIgnored private var smartViewObserverTask: _Concurrency.Task<Void, Never>?
     @ObservationIgnored private var archiveObserverTask: _Concurrency.Task<Void, Never>?
 
+    /// Trash, Undo from Trash, and Import Replace skip `syncQueue` and write their queue rows through
+    /// `trashRepository` and `repository`, in the same write as the move, so all three must share one
+    /// database, as `App/GSDApp.swift` does.
     public init(
         repository: any TaskRepository,
         smartViewRepository: any SmartViewRepository,
@@ -446,23 +451,22 @@ public final class TaskStore {
     /// layered over the same server delete the web client performs, so the two clients
     /// remain byte-identical on the wire while both now offer a way back.
     public func delete(_ task: Task) async throws {
-        let task = try await repository.fetch(id: task.id) ?? task
-        // Require the delete to be recorded for sync BEFORE moving the local row. Unlike an
-        // upsert — whose row survives a failed enqueue and is re-enqueued by the next sync's seed
-        // — a removed row can't be re-enqueued by seed, and the next pull would resurrect the
-        // task. If the enqueue fails, abort and keep the row active (the user can retry).
+        // One write reads the live row, moves it into Trash, queues the delete, and removes the task's
+        // queued creates and updates. A removed row can't be re-queued by the next sync's seed, so a Trash
+        // that landed without its delete would let the next pull resurrect the task. A failed write keeps
+        // the row live.
         let trashedAt = clock()   // one reading for the Trash time and the delete's queue time
-        guard let queueItemId = await enqueue(task.id, .delete, payload: nil, at: trashedAt) else {
+        let item = Self.makeQueueItem(task.id, .delete, payload: nil, at: trashedAt)
+        do {
+            try await trashRepository.trash(task, at: trashedAt, queueing: item)
+        } catch {
+            // Nothing landed, whichever part failed, so the user can retry. The cause is logged first,
+            // because a lasting fault such as a full disk reads the same as a passing one to the user.
+            Self.log.error("Trash write failed, task kept live: \(String(describing: type(of: error)), privacy: .public) \(String(describing: error))")
             throw TaskStoreError.deleteNotRecorded
         }
-        do {
-            try await trashRepository.trash(task, at: trashedAt)
-        } catch {
-            try? await syncQueue.remove(id: queueItemId)
-            throw error
-        }
-        await reminders.cancel(taskID: task.id)   // before the removal, so a failed removal leaves nothing armed
-        try await dropQueuedWrites(for: task.id)
+        onMutation?()
+        await reminders.cancel(taskID: task.id)   // after the write commits, so a failed Trash leaves it armed
     }
 
     // MARK: Trash (soft delete, 30-day retention — see TrashRetention)
@@ -480,11 +484,17 @@ public final class TaskStore {
         try await archiveRepository.fetchAllStamped()
     }
 
-    /// Move a task back out of the trash. Enqueues `.create` — the server deleted it when it
-    /// was trashed, so restoring has to put it back, which is exactly what the web does.
+    /// Move a task back out of the trash. Queues `.create`, as the web does, because the Trash's delete
+    /// may already have removed the server copy. The same write removes the task's
+    /// queued delete: a delete still waiting out a backoff would land after the create and take the
+    /// task off every device. If the write fails, the task stays in Trash with its delete queued.
     public func restoreFromTrash(id: String) async throws {
-        guard let task = try await trashRepository.restore(id: id) else { return }
-        _ = await enqueue(task.id, .create, payload: task)
+        let queuedAt = clock()
+        let restored = try await trashRepository.restore(id: id, queueing: { task in
+            Self.makeQueueItem(task.id, .create, payload: task, at: queuedAt)
+        })
+        guard let task = restored else { return }
+        onMutation?()
         await refreshReminder(task)
     }
 
@@ -619,10 +629,7 @@ public final class TaskStore {
     @discardableResult
     private func enqueue(_ taskId: String, _ op: SyncQueueItem.Operation, payload: Task?, at stamp: Date? = nil,
                          clearingWrites: Bool = false) async -> String? {
-        let item = SyncQueueItem(id: IDGenerator.generate(size: IDGenerator.Size.task),
-                                 taskId: taskId, operation: op,
-                                 timestamp: Int((stamp ?? clock()).timeIntervalSince1970 * 1000),
-                                 payload: payload)
+        let item = Self.makeQueueItem(taskId, op, payload: payload, at: stamp ?? clock())
         do {
             if clearingWrites { try await syncQueue.enqueueClearingWrites(item) } else { try await syncQueue.enqueue(item) }
         } catch { return nil }
@@ -630,14 +637,12 @@ public final class TaskStore {
         return item.id
     }
 
-    /// A task that leaves the live table has its delete queued, so its queued creates and updates are
-    /// dead weight. Left in place, a charged update comes due after the delete lands, finds the task
-    /// unlisted, and POSTs it back from its old snapshot (F4). Done at the source rather than in the
-    /// push, because the push can't tell "archived" from "queued before its row is written" (Fix E).
-    private func dropQueuedWrites(for taskId: String) async throws {
-        for item in try await syncQueue.all() where item.taskId == taskId && item.operation != .delete {
-            try await syncQueue.remove(id: item.id)
-        }
+    /// The one place a queue item is built: a fresh id and the clock reading in milliseconds. Nonisolated
+    /// because Undo builds its item inside the trash repository's write, off the main actor.
+    nonisolated private static func makeQueueItem(_ taskId: String, _ op: SyncQueueItem.Operation,
+                                                  payload: Task?, at stamp: Date) -> SyncQueueItem {
+        SyncQueueItem(id: IDGenerator.generate(size: IDGenerator.Size.task), taskId: taskId, operation: op,
+                      timestamp: Int(stamp.timeIntervalSince1970 * 1000), payload: payload)
     }
 
     /// Race-proof write (design 2026-06-10 Fix E): persist the queue item BEFORE the task row.
@@ -1017,19 +1022,22 @@ public final class TaskStore {
         return try TaskExport.encode(export)
     }
 
-    /// Parse + persist an import. Replace clears all tasks then bulk-inserts (single
-    /// transaction); Merge regenerates colliding ids + remaps references, then upserts each
-    /// (stamping `updatedAt` via the clock). Limits + lenient decode live in `TaskImporter`.
-    /// Returns the parse result so the UI can report skipped-count. Each written task enqueues an
-    /// `.update` so it pushes + survives deletion-reconcile (import-replace's remote-deletion of
-    /// cleared-but-not-imported tasks is deferred — §8; they re-pull).
+    /// Parse and persist an import. Limits and lenient decode live in `TaskImporter`. Returns the parse
+    /// result so the UI can report the skipped count. Each imported task gets a queued `.update`, so it
+    /// pushes and survives deletion reconcile.
+    ///
+    /// Replace is one write. It queues those updates and a `.delete` for each task the backup leaves
+    /// out, read in that write, removes the left-out tasks' queued creates and updates, and swaps the
+    /// task table. If the write fails, nothing changes. Then the backup's companion stores are restored, and the app
+    /// drains the deletes through `SyncCoordinator.flushAfterReplace`.
+    ///
+    /// Merge regenerates colliding ids and remaps references, then upserts each task with a fresh
+    /// `updatedAt`.
     @discardableResult
     public func importTasks(_ data: Data, mode: ImportMode) async throws -> ImportResult {
         switch mode {
         case .replace:
-            let existingIDs = Set(try await repository.fetchAll().map(\.id))
             let result = try TaskImporter.replace(from: data)
-            let importedIDs = Set(result.tasks.map(\.id))
             let now = clock()
             // D3: the import restores the backup's settings, so its default is the one in effect after.
             let defaultReminder = result.notificationSettings?.defaultReminder ?? notificationSettings.defaultReminder
@@ -1038,21 +1046,15 @@ public final class TaskStore {
                 t.notifyBefore = t.notifyBefore ?? defaultReminder   // D-10: a backup with no offset
                 return t
             }
-            var enqueued: [String] = []
-            for t in stamped {
-                if let id = await enqueue(t.id, .update, payload: t) { enqueued.append(id) }
-            }
-            // §3.4: cleared-but-not-imported tasks must be deleted remotely too (the App drains via
-            // SyncCoordinator.flushAfterReplace under the pull-suppression gate).
-            for removed in existingIDs.subtracting(importedIDs) {
-                if let id = await enqueue(removed, .delete, payload: nil) { enqueued.append(id) }
-            }
-            do {
-                try await repository.replaceAll(stamped)
-            } catch {
-                for id in enqueued { try? await syncQueue.remove(id: id) }
-                throw error
-            }
+            // §3.4: left-out tasks are deleted remotely too. The app drains those deletes right after,
+            // under the pull-suppression gate, so a create or update still queued for one would find no
+            // record later and POST it back. The same write clears them (I3). It also reads which tasks
+            // are left out, so a task saved after this point is deleted like the rest.
+            let items = stamped.map { Self.makeQueueItem($0.id, .update, payload: $0, at: now) }
+            try await repository.replaceAll(stamped, queueing: items, deletingLeftOut: { id in
+                Self.makeQueueItem(id, .delete, payload: nil, at: now)
+            })
+            onMutation?()
             try await restoreCompanionStores(result, mode: .replace)
             return result
         case .merge:

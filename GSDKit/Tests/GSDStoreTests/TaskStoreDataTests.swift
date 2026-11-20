@@ -1,5 +1,6 @@
 import Testing
 import Foundation
+import GRDB
 import GSDModel
 @testable import GSDStore
 
@@ -58,6 +59,160 @@ struct TaskStoreDataTests {
         }
         #expect(store.tasks.map(\.id) == ["fresh"])
     }
+
+    /// Forwards every call to the real repository except the two `replaceAll`s, which fail before
+    /// writing anything.
+    final class FailingReplaceRepository: TaskRepository {
+        struct Refused: Error {}
+        let base: GRDBTaskRepository
+        init(_ base: GRDBTaskRepository) { self.base = base }
+        func upsert(_ task: Task) async throws { try await base.upsert(task) }
+        func fetchAll() async throws -> [Task] { try await base.fetchAll() }
+        func fetch(id: String) async throws -> Task? { try await base.fetch(id: id) }
+        func setNotifyBeforeIfNull(id: String, value: Int) async throws { try await base.setNotifyBeforeIfNull(id: id, value: value) }
+        func restampIfUnchanged(id: String, from: Date, to: Date) async throws -> Bool {
+            try await base.restampIfUnchanged(id: id, from: from, to: to)
+        }
+        func delete(id: String) async throws { try await base.delete(id: id) }
+        func replaceAll(_ tasks: [Task]) async throws { throw Refused() }
+        func replaceAll(_ tasks: [Task], queueing items: [SyncQueueItem], deletingLeftOut makeDelete: @Sendable (String) -> SyncQueueItem) async throws {
+            throw Refused()
+        }
+        func observeAll() -> AsyncThrowingStream<[Task], Error> { base.observeAll() }
+    }
+
+    /// The real repository, except that a pull lands a new task just before Replace's write, after the
+    /// store read the table.
+    final class PullLandsBeforeReplace: TaskRepository, @unchecked Sendable {
+        let base: GRDBTaskRepository, pulled: Task
+        init(_ base: GRDBTaskRepository, pulled: Task) { self.base = base; self.pulled = pulled }
+        func upsert(_ task: Task) async throws { try await base.upsert(task) }
+        func fetchAll() async throws -> [Task] { try await base.fetchAll() }
+        func fetch(id: String) async throws -> Task? { try await base.fetch(id: id) }
+        func setNotifyBeforeIfNull(id: String, value: Int) async throws { try await base.setNotifyBeforeIfNull(id: id, value: value) }
+        func restampIfUnchanged(id: String, from: Date, to: Date) async throws -> Bool {
+            try await base.restampIfUnchanged(id: id, from: from, to: to)
+        }
+        func delete(id: String) async throws { try await base.delete(id: id) }
+        func replaceAll(_ tasks: [Task]) async throws { try await base.replaceAll(tasks) }
+        func replaceAll(_ tasks: [Task], queueing items: [SyncQueueItem], deletingLeftOut makeDelete: @Sendable (String) -> SyncQueueItem) async throws {
+            try await base.upsert(pulled)
+            try await base.replaceAll(tasks, queueing: items, deletingLeftOut: makeDelete)
+        }
+        func observeAll() -> AsyncThrowingStream<[Task], Error> { base.observeAll() }
+    }
+
+    /// Replace leaves out every task the table holds when its write runs, so a task the pull saved after
+    /// the store read the table is removed with a queued delete like the rest, not wiped without one.
+    @Test("a task saved just before Replace's write is removed with a queued delete")
+    func replaceQueuesADeleteForATaskSavedBeforeItsWrite() async throws {
+        let db = try AppDatabase.inMemory()
+        let tasks = GRDBTaskRepository(db)
+        let queue = GRDBSyncQueueRepository(db)
+        let store = TaskStore(repository: PullLandsBeforeReplace(tasks, pulled: task("late")),
+                              smartViewRepository: GRDBSmartViewRepository(db),
+                              archiveRepository: GRDBArchiveRepository(db),
+                              trashRepository: GRDBTrashRepository(db),
+                              defaults: UserDefaults(suiteName: "test-\(UUID().uuidString)")!,
+                              clock: { Date(timeIntervalSince1970: 1000) },
+                              syncQueue: queue)
+        try await tasks.upsert(task("r"))
+        try await tasks.upsert(task("k"))
+        let backup = try TaskExport.encode(TaskExport(tasks: [task("k")], exportedAt: Date(timeIntervalSince1970: 0)))
+
+        try await store.importTasks(backup, mode: .replace)
+
+        let deleted = try await queue.all().filter { $0.operation == .delete }.map(\.taskId).sorted()
+        #expect(try await tasks.fetchAll().map(\.id) == ["k"])
+        #expect(deleted == ["late", "r"])
+    }
+
+    private struct QueuedRig {
+        let store: TaskStore
+        let tasks: GRDBTaskRepository
+        let queue: GRDBSyncQueueRepository
+        let db: AppDatabase
+    }
+
+    /// A store with a real queue and two live tasks. `r`'s update was sent, failed once, and is waiting
+    /// out its backoff. `k` has an update that hasn't been sent. The rows have distinct times, so the
+    /// queue's order is fixed.
+    private func storeWithQueuedWrites(failingReplace: Bool = false) async throws -> QueuedRig {
+        let db = try AppDatabase.inMemory()
+        let tasks = GRDBTaskRepository(db)
+        let queue = GRDBSyncQueueRepository(db)
+        let store = TaskStore(repository: failingReplace ? FailingReplaceRepository(tasks) : tasks,
+                              smartViewRepository: GRDBSmartViewRepository(db),
+                              archiveRepository: GRDBArchiveRepository(db),
+                              trashRepository: GRDBTrashRepository(db),
+                              defaults: UserDefaults(suiteName: "test-\(UUID().uuidString)")!,
+                              clock: { Date(timeIntervalSince1970: 1000) },
+                              syncQueue: queue)
+        try await tasks.upsert(task("r"))
+        try await tasks.upsert(task("k"))
+        try await queue.enqueue(SyncQueueItem(id: "q-r", taskId: "r", operation: .update, timestamp: 100_000,
+                                              retryCount: 1, payload: task("r"), lastError: "boom", lastAttemptAt: 900_000))
+        try await queue.enqueue(SyncQueueItem(id: "q-k", taskId: "k", operation: .update, timestamp: 200_000,
+                                              payload: task("k")))
+        return QueuedRig(store: store, tasks: tasks, queue: queue, db: db)
+    }
+
+    private func liveIds(_ rig: QueuedRig) async throws -> [String] {
+        try await rig.tasks.fetchAll().map(\.id).sorted()
+    }
+
+    @Test("Import Replace clears the queued writes of the tasks it removes")
+    func replaceClearsRemovedTasksWrites() async throws {
+        let rig = try await storeWithQueuedWrites()
+        let backup = try TaskExport.encode(TaskExport(tasks: [task("k")], exportedAt: Date(timeIntervalSince1970: 0)))
+        try await rig.store.importTasks(backup, mode: .replace)
+        let rows = try await rig.queue.all()
+        let removed = rows.filter { $0.taskId == "r" }.map(\.operation)
+        let kept = rows.filter { $0.taskId == "k" }
+        #expect(removed == [.delete])
+        #expect(kept.contains { $0.id == "q-k" })                                          // an imported id clears nothing
+        #expect(kept.contains { $0.operation == .update && $0.timestamp == 1_000_000 })    // the import's own update
+    }
+
+    /// The failing repository writes nothing, so anything the store wrote outside its one call
+    /// would show up here.
+    @Test("a failed Import Replace leaves the tasks and the queue exactly as they were")
+    func failedReplaceRestoresTheQueue() async throws {
+        let rig = try await storeWithQueuedWrites(failingReplace: true)
+        let before = try await rig.queue.all()
+        let backup = try TaskExport.encode(TaskExport(tasks: [task("k")], exportedAt: Date(timeIntervalSince1970: 0)))
+        await #expect(throws: FailingReplaceRepository.Refused.self) {
+            try await rig.store.importTasks(backup, mode: .replace)
+        }
+        #expect(try await liveIds(rig) == ["k", "r"])
+        #expect(try await rig.queue.all() == before)
+    }
+
+    /// The failure a user can reach. The importer keeps a repeated task id, and the second insert
+    /// breaks the task table's primary key. Nothing may change, including the archive and Trash the
+    /// backup would have replaced.
+    @Test("a Replace whose backup repeats a task id throws and changes nothing")
+    func duplicateIdBackupChangesNothing() async throws {
+        let rig = try await storeWithQueuedWrites()
+        let archive = GRDBArchiveRepository(rig.db)
+        let trash = GRDBTrashRepository(rig.db)
+        try await archive.archive(task("a1"), at: Date(timeIntervalSince1970: 10))
+        try await trash.trash(task("t1"), at: Date(timeIntervalSince1970: 20))
+        let tasksBefore = try await rig.tasks.fetchAll()
+        let queueBefore = try await rig.queue.all()
+        let backup = try TaskExport.encode(TaskExport(tasks: [task("k"), task("k")], exportedAt: Date(timeIntervalSince1970: 0),
+                                                      archivedTasks: [], deletedTasks: []))
+        await #expect {
+            try await rig.store.importTasks(backup, mode: .replace)
+        } throws: { error in
+            (error as? DatabaseError)?.resultCode == .SQLITE_CONSTRAINT
+        }
+        #expect(try await rig.tasks.fetchAll() == tasksBefore)
+        #expect(try await rig.queue.all() == queueBefore)
+        #expect(try await archive.fetchAll().map(\.id) == ["a1"])
+        #expect(try await trash.fetchAll().map(\.id) == ["t1"])
+    }
+
     @Test func importMergeRegeneratesCollidingId() async throws {
         let (store, _) = try makeStore()
         store.start()

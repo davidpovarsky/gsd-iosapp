@@ -9,14 +9,15 @@ struct TaskStoreEnqueueTests {
         var ops: [(taskId: String, op: SyncQueueItem.Operation)] = []
         func enqueue(_ item: SyncQueueItem) async throws { ops.append((item.taskId, item.operation)) }
         func enqueueClearingWrites(_ item: SyncQueueItem) async throws { try await enqueue(item) }
+        func enqueueIfLive(_ item: SyncQueueItem) async throws -> Bool { try await enqueue(item); return true }
         func pending() async throws -> [SyncQueueItem] { [] }
         func update(_ item: SyncQueueItem) async throws {}
         func remove(id: String) async throws {}
         func allTaskIds() async throws -> Set<String> { [] }
         func all() async throws -> [SyncQueueItem] { [] }
     }
-    private func makeStore(_ queue: RecordingQueue) throws -> TaskStore {
-        let db = try AppDatabase.inMemory()
+    private func makeStore(_ queue: RecordingQueue, db: AppDatabase? = nil) throws -> TaskStore {
+        let db = try db ?? AppDatabase.inMemory()
         return TaskStore(repository: GRDBTaskRepository(db),
                          smartViewRepository: GRDBSmartViewRepository(db),
                          archiveRepository: GRDBArchiveRepository(db),
@@ -86,19 +87,22 @@ struct TaskStoreEnqueueTests {
         #expect(counter.n >= 1)
     }
 
+    /// Replace queues its rows in the task repository's write, so they are read from the database. The
+    /// creates went to the injected queue, so the database holds only the import's rows.
     @Test func replaceEnqueuesDeletesForClearedTasks() async throws {
-        let q = RecordingQueue(); let store = try makeStore(q)
+        let db = try AppDatabase.inMemory()
+        let store = try makeStore(RecordingQueue(), db: db)
         try await store.create(sample("A"))
         try await store.create(sample("B"))
-        q.ops.removeAll()   // ignore the create ops; focus on the import
         // import-replace with only B and a new C → A is cleared
         let payload = try TaskExport.encode(TaskExport(tasks: [sample("B"), sample("C")],
                                                        exportedAt: Date(timeIntervalSince1970: 2)))
         _ = try await store.importTasks(payload, mode: .replace)
-        #expect(q.ops.contains { $0.op == .delete && $0.taskId == "A" })
-        #expect(q.ops.contains { $0.op == .update && $0.taskId == "B" })
-        #expect(q.ops.contains { $0.op == .update && $0.taskId == "C" })
-        #expect(!q.ops.contains { $0.op == .delete && $0.taskId == "B" })
+        let rows = try await GRDBSyncQueueRepository(db).all()
+        #expect(rows.contains { $0.operation == .delete && $0.taskId == "A" })
+        #expect(rows.contains { $0.operation == .update && $0.taskId == "B" })
+        #expect(rows.contains { $0.operation == .update && $0.taskId == "C" })
+        #expect(!rows.contains { $0.operation == .delete && $0.taskId == "B" })
     }
 
     @Test func createEnqueuesCreate() async throws {
@@ -113,10 +117,13 @@ struct TaskStoreEnqueueTests {
         #expect(q.ops.contains { $0.taskId == "a" && $0.op == .update })
     }
 
+    /// Trash queues its delete in the trash repository's write, so the row is read from the database.
     @Test func deleteEnqueuesDelete() async throws {
-        let q = RecordingQueue(); let store = try makeStore(q)
+        let db = try AppDatabase.inMemory()
+        let store = try makeStore(RecordingQueue(), db: db)
         try await store.delete(sample("a"))
-        #expect(q.ops.contains { $0.taskId == "a" && $0.op == .delete })
+        let rows = try await GRDBSyncQueueRepository(db).all()
+        #expect(rows.contains { $0.taskId == "a" && $0.operation == .delete })
     }
 
     @Test func toggleCompleteEnqueuesSpawnAsCreate() async throws {

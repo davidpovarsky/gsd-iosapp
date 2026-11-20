@@ -15,6 +15,10 @@ public protocol SyncQueueRepository: Sendable {
     /// Queues a task's delete and removes that task's create and update rows in one write, so a failure
     /// leaves neither half behind. Every conformer implements it; none may fall back to two writes.
     func enqueueClearingWrites(_ item: SyncQueueItem) async throws
+    /// Saves `item` only if its task still exists, checked in the same write. Returns whether it saved.
+    /// The first-sync seed uses it so a task archived or trashed after the seed read its list gets no
+    /// update queued behind that delete. Every conformer implements the check and the insert as one step.
+    func enqueueIfLive(_ item: SyncQueueItem) async throws -> Bool
     func allTaskIds() async throws -> Set<String>      // pending + failed
     func all() async throws -> [SyncQueueItem]          // every item (pending + failed), timestamp asc — health checks (5d)
 }
@@ -52,9 +56,16 @@ public final class GRDBSyncQueueRepository: SyncQueueRepository {
         let record = try SyncQueueRecord(item)
         try await dbWriter.write { db in
             try record.save(db)
-            _ = try SyncQueueRecord
-                .filter(Column("taskId") == item.taskId && Column("operation") != SyncQueueItem.Operation.delete.rawValue)
-                .deleteAll(db)
+            _ = try SyncQueueRecord.writes(of: [item.taskId]).deleteAll(db)
+        }
+    }
+
+    public func enqueueIfLive(_ item: SyncQueueItem) async throws -> Bool {
+        let record = try SyncQueueRecord(item)
+        return try await dbWriter.write { db in
+            guard try TaskRecord.exists(db, key: item.taskId) else { return false }
+            try record.save(db)
+            return true
         }
     }
 
@@ -82,6 +93,7 @@ public struct NoopSyncQueueRepository: SyncQueueRepository {
     public func pending() async throws -> [SyncQueueItem] { [] }
     public func update(_ item: SyncQueueItem) async throws {}
     public func enqueueClearingWrites(_ item: SyncQueueItem) async throws {}
+    public func enqueueIfLive(_ item: SyncQueueItem) async throws -> Bool { false }
     public func remove(id: String) async throws {}
     public func allTaskIds() async throws -> Set<String> { [] }
     public func all() async throws -> [SyncQueueItem] { [] }

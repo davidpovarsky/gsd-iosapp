@@ -26,9 +26,19 @@ public protocol TaskRepository: Sendable {
     func restampIfUnchanged(id: String, from: Date, to: Date) async throws -> Bool
     func delete(id: String) async throws
     /// Replace the entire task table in a single transaction: delete all rows, then insert
-    /// `tasks`. Used by Replace-mode import. No dependency-scrub is needed (a full clear
+    /// `tasks`. Erase All Data uses it with no tasks. No dependency-scrub is needed (a full clear
     /// leaves no surviving rows that could reference a deleted id).
     func replaceAll(_ tasks: [Task]) async throws
+    /// Import Replace, as one write: queue `items`, then for each task in the table that `tasks` leaves
+    /// out, queue `makeDelete(id)` and remove that task's queued creates and updates, then replace the
+    /// task table with `tasks`. The left-out set is read inside the write, so a task saved after the
+    /// caller read the table gets its delete like the rest. A create or update left queued for a removed
+    /// task would come due after its delete landed and POST the task back. `makeDelete` runs inside the
+    /// write, so it only builds the item. If the write fails, the tasks and the queue stay exactly as
+    /// they were. This writes the queue rows through the task repository's own database writer. The task
+    /// repository and the sync queue must therefore share one database, which `App/GSDApp.swift` does.
+    func replaceAll(_ tasks: [Task], queueing items: [SyncQueueItem],
+                    deletingLeftOut makeDelete: @Sendable (String) -> SyncQueueItem) async throws
     func observeAll() -> AsyncThrowingStream<[Task], Error>
 }
 
@@ -105,6 +115,21 @@ public final class GRDBTaskRepository: TaskRepository {
     public func replaceAll(_ tasks: [Task]) async throws {
         let records = try tasks.map { try TaskRecord($0) }
         try await dbWriter.write { db in
+            _ = try TaskRecord.deleteAll(db)
+            for record in records { try record.insert(db) }
+        }
+    }
+
+    public func replaceAll(_ tasks: [Task], queueing items: [SyncQueueItem],
+                           deletingLeftOut makeDelete: @Sendable (String) -> SyncQueueItem) async throws {
+        let records = try tasks.map { try TaskRecord($0) }
+        let queued = try items.map { try SyncQueueRecord($0) }
+        let kept = Set(tasks.map(\.id))
+        try await dbWriter.write { db in
+            let leftOut = try TaskRecord.select(Column("id"), as: String.self).fetchSet(db).subtracting(kept)
+            for item in queued { try item.save(db) }
+            for id in leftOut { try SyncQueueRecord(makeDelete(id)).save(db) }
+            _ = try SyncQueueRecord.writes(of: leftOut).deleteAll(db)
             _ = try TaskRecord.deleteAll(db)
             for record in records { try record.insert(db) }
         }

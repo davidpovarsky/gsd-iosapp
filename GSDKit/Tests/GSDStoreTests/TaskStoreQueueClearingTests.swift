@@ -1,5 +1,6 @@
 import Testing
 import Foundation
+import GRDB
 import GSDModel
 @testable import GSDStore
 
@@ -19,6 +20,7 @@ struct TaskStoreQueueClearingTests {
         struct Refused: Error {}
         func enqueue(_ item: SyncQueueItem) async throws { try await base.enqueue(item) }
         func enqueueClearingWrites(_ item: SyncQueueItem) async throws { throw Refused() }
+        func enqueueIfLive(_ item: SyncQueueItem) async throws -> Bool { try await base.enqueueIfLive(item) }
         func pending() async throws -> [SyncQueueItem] { try await base.pending() }
         func update(_ item: SyncQueueItem) async throws { try await base.update(item) }
         func remove(id: String) async throws { try await base.remove(id: id) }
@@ -84,43 +86,136 @@ struct TaskStoreQueueClearingTests {
         #expect(abs(trashedAt.timeIntervalSince(start)) < 0.001)               // the first reading, not a later one
     }
 
-    /// Records the order of the reminder cancel and the removal of queued writes.
-    final class Order: @unchecked Sendable { var events: [String] = [] }
-    struct OrderedReminders: ReminderScheduling {
-        let order: Order
-        func schedule(_ task: Task) async {}
-        func cancel(taskID: String) async { order.events.append("cancel") }
-        func cancelAll() async {}
-        func requestAuthorizationIfNeeded() async -> Bool { false }
-        func setBadge(_ count: Int) async {}
-    }
-    final class OrderedQueue: SyncQueueRepository, @unchecked Sendable {
-        let base: GRDBSyncQueueRepository; let order: Order
-        init(_ base: GRDBSyncQueueRepository, _ order: Order) { self.base = base; self.order = order }
-        func enqueue(_ item: SyncQueueItem) async throws { try await base.enqueue(item) }
-        func enqueueClearingWrites(_ item: SyncQueueItem) async throws { try await base.enqueueClearingWrites(item) }
-        func pending() async throws -> [SyncQueueItem] { try await base.pending() }
-        func update(_ item: SyncQueueItem) async throws { try await base.update(item) }
-        func remove(id: String) async throws { order.events.append("remove"); try await base.remove(id: id) }
-        func allTaskIds() async throws -> Set<String> { try await base.allTaskIds() }
-        func all() async throws -> [SyncQueueItem] { try await base.all() }
+    /// A store over a database the test can reach, so it can make SQLite refuse a queue write.
+    private struct Rig {
+        let store: TaskStore
+        let db: AppDatabase
+        let queue: GRDBSyncQueueRepository
+        let tasks: GRDBTaskRepository
     }
 
-    @Test("trash cancels the reminder before it removes the task's queued writes")
-    func trashCancelsTheReminderFirst() async throws {
+    private func rig(reminders: (AppDatabase) -> any ReminderScheduling) throws -> Rig {
         let db = try AppDatabase.inMemory()
-        let base = GRDBSyncQueueRepository(db)
+        let queue = GRDBSyncQueueRepository(db)
         let tasks = GRDBTaskRepository(db)
-        let order = Order()
         let store = TaskStore(repository: tasks, smartViewRepository: GRDBSmartViewRepository(db),
                               archiveRepository: GRDBArchiveRepository(db), trashRepository: GRDBTrashRepository(db),
                               defaults: UserDefaults(suiteName: "clear.\(UUID().uuidString)")!,
                               clock: { Date(timeIntervalSince1970: 1_800_000_000) },
-                              reminders: OrderedReminders(order: order), syncQueue: OrderedQueue(base, order))
+                              reminders: reminders(db), syncQueue: queue)
+        return Rig(store: store, db: db, queue: queue, tasks: tasks)
+    }
+
+    /// The queue write a trigger refuses: queuing the delete, or removing the task's queued writes.
+    enum RefusedWrite: String, CaseIterable, Sendable { case insert = "INSERT", delete = "DELETE" }
+
+    private func refuse(_ write: RefusedWrite, in db: AppDatabase) async throws {
+        try await db.writer.write { db in
+            try db.execute(sql: "CREATE TRIGGER refuseQueue BEFORE \(write.rawValue) ON syncQueue BEGIN SELECT RAISE(ABORT, 'refused'); END")
+        }
+    }
+
+    private func seedWithUpdate(_ id: String, _ rig: Rig) async throws {
+        try await rig.tasks.upsert(task(id))
+        try await rig.queue.enqueue(SyncQueueItem(id: "u-\(id)", taskId: id, operation: .update, timestamp: 1, payload: task(id)))
+    }
+
+    @Test("a Trash whose queue write is refused leaves the task live with its queue, Trash, and reminder untouched",
+          arguments: RefusedWrite.allCases)
+    func trashIsOneWrite(refusing write: RefusedWrite) async throws {
+        let reminders = RecordingReminderScheduler()
+        let rig = try rig(reminders: { _ in reminders })
+        try await seedWithUpdate("a", rig)
+        try await refuse(write, in: rig.db)
+
+        await #expect(throws: TaskStoreError.deleteNotRecorded) { try await rig.store.delete(task("a")) }
+
+        let live = try await rig.tasks.fetch(id: "a")
+        let queued = try await rig.queue.all().filter { $0.taskId == "a" }.map(\.operation)
+        let trashed = try await rig.store.trashedTasks()
+        #expect(live != nil)
+        #expect(queued == [.update])
+        #expect(trashed.isEmpty)
+        #expect(!reminders.calls.contains(.cancel("a")))
+    }
+
+    /// Records each reminder cancel with where the task was then. In Trash means the write had committed.
+    final class Cancels: @unchecked Sendable { var events: [String] = [] }
+    struct CommitCheckingReminders: ReminderScheduling {
+        let cancels: Cancels
+        let trash: GRDBTrashRepository
+        func schedule(_ task: Task) async {}
+        func cancel(taskID: String) async {
+            let inTrash = (try? await trash.fetchAll())?.contains { $0.id == taskID } == true
+            cancels.events.append(inTrash ? "cancel \(taskID) in Trash" : "cancel \(taskID) still live")
+        }
+        func cancelAll() async {}
+        func requestAuthorizationIfNeeded() async -> Bool { false }
+        func setBadge(_ count: Int) async {}
+    }
+
+    @Test("trash cancels the reminder once, after its write commits, and a failed Trash cancels nothing")
+    func trashCancelsTheReminderOnlyAfterItCommits() async throws {
+        let cancels = Cancels()
+        let rig = try rig(reminders: { CommitCheckingReminders(cancels: cancels, trash: GRDBTrashRepository($0)) })
+        try await seedWithUpdate("a", rig)
+        try await seedWithUpdate("b", rig)
+
+        try await rig.store.delete(task("a"))
+        #expect(cancels.events == ["cancel a in Trash"])
+
+        try await refuse(.delete, in: rig.db)   // the removal of b's queued update fails
+        await #expect(throws: TaskStoreError.deleteNotRecorded) { try await rig.store.delete(task("b")) }
+        #expect(cancels.events == ["cancel a in Trash"])
+    }
+
+    /// The real Trash, except that an edit to the task lands just before the Trash write, after the
+    /// store built its copy. It queues its update, then saves the row, as a main-actor edit does.
+    final class EditLandsBeforeTrash: TrashRepository, @unchecked Sendable {
+        let base: GRDBTrashRepository, tasks: GRDBTaskRepository, queue: GRDBSyncQueueRepository
+        init(_ db: AppDatabase) {
+            base = GRDBTrashRepository(db); tasks = GRDBTaskRepository(db); queue = GRDBSyncQueueRepository(db)
+        }
+        func trash(_ task: Task) async throws { try await base.trash(task) }
+        func trash(_ task: Task, at deletedAt: Date) async throws { try await base.trash(task, at: deletedAt) }
+        func trash(_ task: Task, at deletedAt: Date, queueing item: SyncQueueItem) async throws {
+            var edited = task
+            edited.title = "edited"; edited.updatedAt = task.updatedAt.addingTimeInterval(60)
+            try await queue.enqueue(SyncQueueItem(id: "u-edit", taskId: task.id, operation: .update, timestamp: 3, payload: edited))
+            try await tasks.upsert(edited)
+            try await base.trash(task, at: deletedAt, queueing: item)
+        }
+        func restore(id: String, queueing makeItem: @Sendable (Task) -> SyncQueueItem) async throws -> Task? {
+            try await base.restore(id: id, queueing: makeItem)
+        }
+        func deleteForever(id: String) async throws { try await base.deleteForever(id: id) }
+        func empty() async throws -> Int { try await base.empty() }
+        func fetchAll() async throws -> [Task] { try await base.fetchAll() }
+        func fetchAllStamped() async throws -> [ArchivedTask] { try await base.fetchAllStamped() }
+        func purge(before cutoff: Date) async throws -> Int { try await base.purge(before: cutoff) }
+        func observeAll() -> AsyncThrowingStream<[Task], Error> { base.observeAll() }
+    }
+
+    /// The Trash write clears the edit's queued update, so the Trash row is the only place left that can
+    /// hold the edit. It must be built from the row the write moves, not the copy read before it.
+    @Test("an edit landing just before the Trash write is the copy Trash keeps")
+    func trashKeepsAnEditThatLandedBeforeItsWrite() async throws {
+        let db = try AppDatabase.inMemory()
+        let queue = GRDBSyncQueueRepository(db)
+        let tasks = GRDBTaskRepository(db)
+        let store = TaskStore(repository: tasks, smartViewRepository: GRDBSmartViewRepository(db),
+                              archiveRepository: GRDBArchiveRepository(db), trashRepository: EditLandsBeforeTrash(db),
+                              defaults: UserDefaults(suiteName: "clear.\(UUID().uuidString)")!,
+                              clock: { Date(timeIntervalSince1970: 1_800_000_000) }, syncQueue: queue)
         try await tasks.upsert(task("a"))
-        try await base.enqueue(SyncQueueItem(id: "u-a", taskId: "a", operation: .update, timestamp: 1, payload: task("a")))
+
         try await store.delete(task("a"))
-        #expect(order.events == ["cancel", "remove"])
+
+        let trashed = try #require(try await store.trashedTasks().first).task
+        #expect(trashed.title == "edited")
+        #expect(trashed.updatedAt == task("a").updatedAt.addingTimeInterval(60))
+        #expect(try await queue.all().map(\.operation) == [.delete])
+        #expect(try await tasks.fetch(id: "a") == nil)
     }
 
     @Test("an archive whose delete can't be queued with its clearing returns the task to active and keeps the rows")
