@@ -451,16 +451,18 @@ public final class TaskStore {
         // upsert — whose row survives a failed enqueue and is re-enqueued by the next sync's seed
         // — a removed row can't be re-enqueued by seed, and the next pull would resurrect the
         // task. If the enqueue fails, abort and keep the row active (the user can retry).
-        guard let queueItemId = await enqueue(task.id, .delete, payload: nil) else {
+        let trashedAt = clock()   // one reading for the Trash time and the delete's queue time
+        guard let queueItemId = await enqueue(task.id, .delete, payload: nil, at: trashedAt) else {
             throw TaskStoreError.deleteNotRecorded
         }
         do {
-            try await trashRepository.trash(task, at: clock())
+            try await trashRepository.trash(task, at: trashedAt)
         } catch {
             try? await syncQueue.remove(id: queueItemId)
             throw error
         }
-        await reminders.cancel(taskID: task.id)
+        await reminders.cancel(taskID: task.id)   // before the removal, so a failed removal leaves nothing armed
+        try await dropQueuedWrites(for: task.id)
     }
 
     // MARK: Trash (soft delete, 30-day retention — see TrashRetention)
@@ -615,14 +617,27 @@ public final class TaskStore {
     /// a queue failure must not fail the user's mutation (the next sync's seed/reconcile
     /// self-heals). Returns the queue-item id so a failed companion write can remove the orphan.
     @discardableResult
-    private func enqueue(_ taskId: String, _ op: SyncQueueItem.Operation, payload: Task?) async -> String? {
+    private func enqueue(_ taskId: String, _ op: SyncQueueItem.Operation, payload: Task?, at stamp: Date? = nil,
+                         clearingWrites: Bool = false) async -> String? {
         let item = SyncQueueItem(id: IDGenerator.generate(size: IDGenerator.Size.task),
                                  taskId: taskId, operation: op,
-                                 timestamp: Int(clock().timeIntervalSince1970 * 1000),
+                                 timestamp: Int((stamp ?? clock()).timeIntervalSince1970 * 1000),
                                  payload: payload)
-        do { try await syncQueue.enqueue(item) } catch { return nil }
+        do {
+            if clearingWrites { try await syncQueue.enqueueClearingWrites(item) } else { try await syncQueue.enqueue(item) }
+        } catch { return nil }
         onMutation?()
         return item.id
+    }
+
+    /// A task that leaves the live table has its delete queued, so its queued creates and updates are
+    /// dead weight. Left in place, a charged update comes due after the delete lands, finds the task
+    /// unlisted, and POSTs it back from its old snapshot (F4). Done at the source rather than in the
+    /// push, because the push can't tell "archived" from "queued before its row is written" (Fix E).
+    private func dropQueuedWrites(for taskId: String) async throws {
+        for item in try await syncQueue.all() where item.taskId == taskId && item.operation != .delete {
+            try await syncQueue.remove(id: item.id)
+        }
     }
 
     /// Race-proof write (design 2026-06-10 Fix E): persist the queue item BEFORE the task row.
@@ -736,9 +751,14 @@ public final class TaskStore {
     /// back to active and nothing changes on the server.
     public func archive(_ task: Task) async throws {
         let task = try await repository.fetch(id: task.id) ?? task
-        try await archiveRepository.archive(task)
+        // One clock reading for `archivedAt` and the delete's queue time. Two readings let a write land
+        // between them: the pull would see it as newer than the archive and bring the task back, while
+        // the push sees it as older than the delete and sends it.
+        let archivedAt = clock()
+        try await archiveRepository.archive(task, at: archivedAt)
         // The delete carries the task as archived, so push can skip it if the server copy moved on (B-47).
-        guard await enqueue(task.id, .delete, payload: task) != nil else {
+        // The delete and the removal of the task's queued writes are one write: a failure restores the task.
+        guard await enqueue(task.id, .delete, payload: task, at: archivedAt, clearingWrites: true) != nil else {
             try? await archiveRepository.restore(id: task.id)
             throw TaskStoreError.archiveNotRecorded
         }
