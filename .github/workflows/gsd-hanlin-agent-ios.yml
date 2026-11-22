@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   native-acceptance:
-    runs-on: macos-26
+    runs-on: xcode-27
     timeout-minutes: 55
     steps:
       - uses: actions/checkout@v4
@@ -23,13 +23,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          selected="$(find /Applications -maxdepth 1 -type d -name 'Xcode_27*.app' -print | sort -V | tail -1)"
-          if [[ -z "$selected" ]]; then
-            echo "::error::The runner has no Xcode 27 installation; select a compatible runner"
-            exit 1
-          fi
-          sudo xcode-select -s "$selected/Contents/Developer"
           xcodebuild -version
+          if ! xcodebuild -version | grep -q '^Xcode 27'; then
+            selected="$(find /Applications -maxdepth 1 -type d -name 'Xcode*27*.app' -print | sort -V | tail -1)"
+            if [[ -n "$selected" ]]; then
+              sudo xcode-select -s "$selected/Contents/Developer"
+            fi
+          fi
+          xcodebuild -version | grep '^Xcode 27'
           xcodebuild -showsdks
       - name: Verify SDK and 22 host tools (unit tests)
         shell: bash
