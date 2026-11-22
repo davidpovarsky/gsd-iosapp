@@ -72,7 +72,7 @@ authenticated MCP bridge with user authorization and audit evidence.
 - Windows swift test initial attempt: timed out after 500 seconds while
   resolving external dependencies; NOT a passed test.
 - CI workflow .github/workflows/gsd-hanlin-agent-ios.yml:
-  executes package tests and compiles unsigned GSD iOS Simulator.
+  executes package tests and compiles unsigned GSD arm64 iOS device.
   CI results remain pending until run completion.
 - No IPA is claimed for GSD. Lorvex IPA is a separate sequential stage.
 
@@ -86,3 +86,8 @@ Do not mark GSD complete based only on sources or syntax checks.
   concurrency Task, and throwing nil-coalescing needed explicit try.
 - Patched those findings on the GSD branch; next run checks package tests
   and iOS app build independently, retaining both logs.
+
+- Apple run 45059134995: package test step failed on an XCTest non-Sendable
+  async closure. Replaced test-only helper with actor-local inline do/catch.
+  The redundant two-architecture simulator compilation was cancelled after
+  preserving logs. Next run builds one unsigned arm64 iOS device target.

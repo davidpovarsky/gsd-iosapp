@@ -82,21 +82,16 @@ final class GSDHanlinAgentTests: XCTestCase {
         await host.setContext(.init(namespace: context.namespace,
                                     sceneID: context.sceneID, generation: UUID()))
         let dispatcher = HanlinHostDispatcher(host: host)
-        await XCTAssertThrowsErrorAsync {
+        do {
             _ = try await dispatcher.dispatch(
                 alias: "create_task", argumentsJSON: #"{"title":"Wrong scene"}"#,
                 providerCallID: "stale", runID: UUID(), step: 0,
                 session: session, catalog: catalog, limits: .init())
+            XCTFail("Expected a stale context error")
+        } catch {
+            // The rejected invocation must leave the database unchanged.
         }
         let rows = try await store.fetchAllTasks()
         XCTAssertTrue(rows.isEmpty)
     }
-}
-
-private func XCTAssertThrowsErrorAsync(
-    _ operation: () async throws -> Void,
-    file: StaticString = #filePath, line: UInt = #line
-) async {
-    do { try await operation(); XCTFail("Expected an error", file: file, line: line) }
-    catch { /* expected */ }
 }
