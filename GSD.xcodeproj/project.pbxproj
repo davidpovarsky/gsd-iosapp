@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1C7B2D3E4F5061728394050 /* GSDHanlinAssistantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C7B2D3E4F5061728394050 /* GSDHanlinAssistantView.swift */; };
+		C1C7B2D3E4F5061728394050 /* GSDHanlinAgent in Frameworks */ = {isa = PBXBuildFile; productRef = D1C7B2D3E4F5061728394050 /* GSDHanlinAgent */; };
 		002BFF4E14DD42A9716D323B /* GSDStore in Frameworks */ = {isa = PBXBuildFile; productRef = 579A119DFC479E75D3534B6C /* GSDStore */; };
 		0051387282375038ED78CDDC /* DashboardSkeleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1226EAD759CBC2DA62A58442 /* DashboardSkeleton.swift */; };
 		046100EB23A8521EA8275EAE /* CaptureBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A03169462530BB59EC808C /* CaptureBar.swift */; };
@@ -222,6 +224,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B1C7B2D3E4F5061728394050 /* GSDHanlinAssistantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GSDHanlinAssistantView.swift; sourceTree = "<group>"; };
 		02871AE0A2EA749E5DED2891 /* PageTitleFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTitleFetcher.swift; sourceTree = "<group>"; };
 		0408B7C2649856ADA33B1BF0 /* GSDKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = GSDKit; path = GSDKit; sourceTree = SOURCE_ROOT; };
 		05D737A37C8C95E5AB3A36F7 /* AppleSignInButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInButtonLabel.swift; sourceTree = "<group>"; };
@@ -394,6 +397,7 @@
 			files = (
 				A92FC63E75447B51AB504FE8 /* GSDModel in Frameworks */,
 				002BFF4E14DD42A9716D323B /* GSDStore in Frameworks */,
+				C1C7B2D3E4F5061728394050 /* GSDHanlinAgent in Frameworks */,
 				8036F79C226CB3A58EAD44E4 /* GSDWire in Frameworks */,
 				D1A08D8A25028DD6A0CF3B82 /* GSDSync in Frameworks */,
 				CE679E1E1B908EA26EA9ADC6 /* GSDSnapshot in Frameworks */,
@@ -418,6 +422,7 @@
 				1453BDC2D91332EB87100A1D /* AppIcon.icon */,
 				249F029B40FD9FDAA6A68A25 /* Assets.xcassets */,
 				F13D65075CBAAF0DA403E950 /* ContentView.swift */,
+				B1C7B2D3E4F5061728394050 /* GSDHanlinAssistantView.swift */,
 				E82FA87A467E8E3CB5B6E075 /* GSD-Catalyst.entitlements */,
 				1E44544249232FE202E59EB0 /* GSD.entitlements */,
 				834FF1E8BA076E31BA383962 /* GSDApp.swift */,
@@ -939,6 +944,7 @@
 				E24393540B98A6395ECD91E2 /* GSDWire */,
 				4D69B433643C83344AA85FF9 /* GSDSync */,
 				98C26FEAF665B149C1D46E83 /* GSDSnapshot */,
+				D1C7B2D3E4F5061728394050 /* GSDHanlinAgent */,
 			);
 			productName = GSD;
 			productReference = 5786EAF6D1A1869947855193 /* GSD.app */;
@@ -1032,6 +1038,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				AA9D23755E7D9C4A13025258 /* XCLocalSwiftPackageReference "GSDKit" */,
+				E1C7B2D3E4F5061728394050 /* XCLocalSwiftPackageReference "GSDHanlinAgent" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A8F4EE28B10703F63C52EDE9 /* Products */;
@@ -1155,6 +1162,7 @@
 				4132C3E4E3012462A71F5C24 /* CommandPaletteView.swift in Sources */,
 				C54C617DEC7531732CFC2822 /* ConfettiView.swift in Sources */,
 				2C5CFB85FF77F009879520B9 /* ContentView.swift in Sources */,
+				A1C7B2D3E4F5061728394050 /* GSDHanlinAssistantView.swift in Sources */,
 				0051387282375038ED78CDDC /* DashboardSkeleton.swift in Sources */,
 				D0AFF2959538BB3C31A179B3 /* DashboardView.swift in Sources */,
 				897BB67F86F05D4495DD802C /* DataStorageView.swift in Sources */,
@@ -1451,7 +1459,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				MARKETING_VERSION = 4.0.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -1636,7 +1644,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				MARKETING_VERSION = 4.0.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1719,6 +1727,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		E1C7B2D3E4F5061728394050 /* XCLocalSwiftPackageReference "GSDHanlinAgent" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/GSDHanlinAgent;
+		};
 		AA9D23755E7D9C4A13025258 /* XCLocalSwiftPackageReference "GSDKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = GSDKit;
@@ -1726,6 +1738,10 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D1C7B2D3E4F5061728394050 /* GSDHanlinAgent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GSDHanlinAgent;
+		};
 		10C5831BD27556073CD6CD9F /* GSDModel */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GSDModel;

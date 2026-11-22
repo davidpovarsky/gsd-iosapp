@@ -1,0 +1,54 @@
+name: GSD Hanlin Agent - iPad SDK acceptance
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/hanlin-agent-api-20261122
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gsd-hanlin-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  native-acceptance:
+    runs-on: macos-26
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode 27 SDK for HanlinAgentSDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          selected="$(find /Applications -maxdepth 1 -type d -name 'Xcode_27*.app' -print | sort -V | tail -1)"
+          if [[ -z "$selected" ]]; then
+            echo "::error::The runner has no Xcode 27 installation; select a compatible runner"
+            exit 1
+          fi
+          sudo xcode-select -s "$selected/Contents/Developer"
+          xcodebuild -version
+          xcodebuild -showsdks
+      - name: Verify SDK and 22 host tools (unit tests)
+        shell: bash
+        run: |
+          set -o pipefail
+          swift test --package-path Packages/GSDHanlinAgent --filter GSDHanlinAgentTests 2>&1 | tee gsd-agent-tests.log
+      - name: Verify GSD iPad/iOS application compiles with embedded Hanlin
+        shell: bash
+        run: |
+          set -o pipefail
+          xcodebuild -project GSD.xcodeproj -scheme GSD -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO build 2>&1 | tee gsd-ipad-build.log
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gsd-hanlin-native-evidence-${{ github.run_id }}
+          path: |
+            gsd-agent-tests.log
+            gsd-ipad-build.log
+          retention-days: 14

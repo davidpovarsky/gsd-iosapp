@@ -31,12 +31,28 @@ struct ContentView: View {
     @State private var pendingWhatsNew = false
     @State private var showWhatsNew = false
     /// Mac "About GSD" panel (app menu), posted by GSDMenuCommands on Catalyst.
+    @State private var showHanlinAssistant = false
     @State private var showAbout = false
     /// "Field Guide" help sheet, posted by Settings ▸ About (all platforms) and the Mac Help menu.
     @State private var showHelp = false
 
     var body: some View {
         rootContent
+            .sheet(isPresented: $showHanlinAssistant) {
+                GSDHanlinAssistantView(store: store)
+            }
+            .overlay(alignment: .bottomTrailing) {
+                Button {
+                    showHanlinAssistant = true
+                } label: {
+                    Label("AI", systemImage: "sparkles")
+                        .labelStyle(.titleAndIcon)
+                }
+                .buttonStyle(.borderedProminent)
+                .padding(.trailing, 18)
+                .padding(.bottom, sizeClass == .compact ? 100 : 24)
+                .accessibilityLabel("Open Hanlin task AI assistant")
+            }
             .environment(palette)
             .environment(\.escalationWindow, EscalationWindow(rawValue: escalationWindowRaw) ?? .default)
             // Hidden ⌘K trigger — a zero-size button carrying the keyboard shortcut so the
