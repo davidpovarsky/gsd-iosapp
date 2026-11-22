@@ -96,7 +96,12 @@ public actor GSDHanlinHost: HanlinHostIntegration {
               let schema = try? spec.schemaJSON() else {
             return failed(invocation, "The tool or context is no longer valid", effect: .notDispatched)
         }
-        let original = invocation.originalArgumentsJSON ?? (try request.arguments.canonicalJSONData())
+        let original: Data
+        if let supplied = invocation.originalArgumentsJSON {
+            original = supplied
+        } else {
+            original = try request.arguments.canonicalJSONData()
+        }
         do {
             try HanlinHostSchemaValidation(schemaJSON: schema).validate(argumentsJSON: original)
         } catch {
@@ -118,13 +123,13 @@ public actor GSDHanlinHost: HanlinHostIntegration {
             // Explicit host consent, even if the provider/tool loop granted its own approval.
             let allowed = await writeAuthorizer(approval)
             guard allowed, activeContext == invocation.session.context,
-                  !cancelled.contains(request.id.rawValue), !Task.isCancelled else {
+                  !cancelled.contains(request.id.rawValue), !_Concurrency.Task<Never, Never>.isCancelled else {
                 return failed(invocation, "The change was not approved", effect: .notDispatched)
             }
         }
 
         do {
-            try Task.checkCancellation()
+            try _Concurrency.Task<Never, Never>.checkCancellation()
             guard activeContext == invocation.session.context,
                   !cancelled.contains(request.id.rawValue) else { throw HanlinHostError.staleContext }
             let json = try await perform(spec.alias, args)

@@ -43,7 +43,7 @@ public final class GSDHanlinAssistantState {
     }
 
     private func authorize(_ request: GSDHanlinWriteRequest) async -> Bool {
-        guard pendingApproval == nil, approvalContinuation == nil, !Task.isCancelled else { return false }
+        guard pendingApproval == nil, approvalContinuation == nil, !_Concurrency.Task<Never, Never>.isCancelled else { return false }
         return await withCheckedContinuation { (continuation: CheckedContinuation<Bool, Never>) in
             pendingApproval = request
             approvalContinuation = continuation

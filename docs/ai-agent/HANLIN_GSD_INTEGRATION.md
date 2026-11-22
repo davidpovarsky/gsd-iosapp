@@ -77,3 +77,12 @@ authenticated MCP bridge with user authorization and audit evidence.
 - No IPA is claimed for GSD. Lorvex IPA is a separate sequential stage.
 
 Do not mark GSD complete based only on sources or syntax checks.
+
+## Native CI follow-up
+
+- Apple run 45058469760: failed before tests; macos-26 lacks Xcode 27.
+- Apple run 45058764054: Xcode 27 setup passed, Swift compile reached
+  GSDHanlinHost. Three type errors were found: GSDModel.Task shadowed
+  concurrency Task, and throwing nil-coalescing needed explicit try.
+- Patched those findings on the GSD branch; next run checks package tests
+  and iOS app build independently, retaining both logs.
