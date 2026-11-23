@@ -76,3 +76,7 @@ SentinelX's service registry did not contain either GSD service; its service sta
 Tailscale confirms public Funnel is enabled for port 10000 with /gsd-cloud -> localhost:8770. RFC discovery aliases for /gsd-cloud still need to be installed separately from the existing /gsd aliases.
 
 Native Xcode tests, Hebrew/English simulator UI, closed-app UI flow, private ChatGPT plugin reconnection, real personal-account OAuth consent and TestFlight are owned by the coordinating/native agents and are not certified by the backend loopback tests. A simulator or backend test does not certify a physical iPad session.
+
+## Additional OAuth durability proof
+
+`node --test cloud/gateway/gateway-security.test.mjs` passed on Windows. It verifies exact requested consent text in Hebrew/RTL and English/LTR, absence of unrequested write/offline permission text, persisted access after restarting the gateway, encrypted PocketBase tokens and hashed opaque access tokens on disk, exactly one successful rotation from two concurrent requests using the same refresh credential, and revoked access rejection. This focused test uses a synthetic PocketBase auth fixture; the separate nine-checkpoint test above uses real PocketBase.

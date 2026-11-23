@@ -148,27 +148,50 @@ export function createGateway({
   };
   const renderLogin=(res,requestId,error='')=>{
     const pending=store.pending[requestId];
-    if(!pending||pending.expires<=clock())return document(res,400,'<h2>החיבור פג תוקף</h2>');
-    const form=(action,label,registration)=>(
+    if(!pending||pending.expires<=clock())return document(res,400,'<h2>Authorization request expired</h2>');
+    const en=pending.language==='en';
+    const label=en?{
+      email:'Email',password:'Password',confirm:'Confirm password',title:'Sign in to GSD',
+      intro:'Connect ChatGPT to your GSD account with your usual email and password. No pairing code or open iPad is required.',
+      login:'Sign in and allow',newAccount:'Create account and allow',existing:'Existing GSD account',create:'New GSD account',
+      requested:'Requested permissions',read:'Read your tasks and reports',write:'Create, edit and delete your tasks',
+      offline:'Keep access until you revoke this connection',footer:'Only this GSD account is shared with ChatGPT. You can revoke this connection in ChatGPT.'
+    }:{
+      email:'דואר אלקטרוני',password:'סיסמה',confirm:'אימות סיסמה',title:'התחברות לחשבון GSD',
+      intro:'חבר את ChatGPT לחשבון המשימות שלך באמצעות כניסה רגילה. אין צורך בקוד צימוד או באייפד פתוח.',
+      login:'התחברות ואישור',newAccount:'יצירת חשבון ואישור',existing:'כניסה לחשבון קיים',create:'חשבון GSD חדש',
+      requested:'הרשאות מבוקשות',read:'קריאת המשימות והדוחות שלך',write:'יצירה, עריכה ומחיקה של משימות',
+      offline:'גישה מתמשכת עד לביטול החיבור',footer:'רק חשבון GSD זה משותף עם ChatGPT. אפשר לבטל את החיבור בהגדרות ChatGPT.'
+    };
+    const errorEnglish={
+      'כתובת דוא"ל או סיסמה לא תקינה':'Enter a valid email address and password.',
+      'שתי הסיסמאות אינן זהות':'The two passwords do not match.',
+      'לא ניתן ליצור חשבון עם הפרטים האלו':'An account could not be created with these details.',
+      'פרטי ההתחברות לא נכונים':'The email address or password is incorrect.'
+    };
+    const form=(action,text,registration)=>(
       '<form method="post" action="'+frontPath+action+'">' +
       '<input type="hidden" name="request" value="'+htmlEscape(requestId)+'">' +
-      '<label>דואר אלקטרוני<input name="email" type="email" autocomplete="email" required maxlength="254"></label>'+
-      '<label>סיסמה<input name="password" type="password" autocomplete="'+(registration?'new-password':'current-password')+'" required minlength="'+(registration?10:1)+'" maxlength="128"></label>'+
-      (registration?'<label>אימות סיסמה<input name="confirm" type="password" autocomplete="new-password" required></label>':'')+
-      '<button type="submit">'+label+'</button></form>'
+      '<label>'+label.email+'<input name="email" type="email" autocomplete="email" required maxlength="254"></label>'+
+      '<label>'+label.password+'<input name="password" type="password" autocomplete="'+(registration?'new-password':'current-password')+'" required minlength="'+(registration?10:1)+'" maxlength="128"></label>'+
+      (registration?'<label>'+label.confirm+'<input name="confirm" type="password" autocomplete="new-password" required></label>':'')+
+      '<button type="submit">'+text+'</button></form>'
     );
+    const permissions=pending.scopes.map(scope=>({
+      'gsd.read':label.read,'gsd.write':label.write,'offline_access':label.offline
+    })[scope]).filter(Boolean).map(value=>'<li>'+htmlEscape(value)+'</li>').join('');
     document(res,200,
-      '<!doctype html><html dir="rtl" lang="he"><meta charset="utf-8">' +
+      '<!doctype html><html dir="'+(en?'ltr':'rtl')+'" lang="'+(en?'en':'he')+'"><meta charset="utf-8">' +
       '<meta name="viewport" content="width=device-width, initial-scale=1">'+
-      '<title>התחברות לחשבון GSD</title><style>body{font-family:system-ui;max-width:460px;padding:24px;margin:5vh auto;line-height:1.55}'+
-      'input{display:block;box-sizing:border-box;width:100%;padding:12px;margin:6px 0 15px;border:1px solid #aaa;border-radius:9px}'+
+      '<title>'+label.title+'</title><style>body{font-family:system-ui;max-width:460px;padding:24px;margin:5vh auto;line-height:1.55}'+
+      'input{direction:ltr;text-align:left;display:block;box-sizing:border-box;width:100%;padding:12px;margin:6px 0 15px;border:1px solid #aaa;border-radius:9px}'+
       'button{background:#2357ae;border:0;border-radius:9px;color:white;padding:12px 22px;font-size:17px}'+
       'section{padding:14px;border:1px solid #ddd;border-radius:14px;margin:15px 0}p{color:#555}</style>'+
-      '<h1>GSD Tasks</h1><p>חבר את ChatGPT לחשבון המשימות שלך באמצעות כניסה רגילה. אין צורך בקוד צימוד או באייפד פתוח.</p>'+
-      (error?'<p style="color:#ba1717">'+htmlEscape(error)+'</p>':'')+
-      '<section><h2>כניסה לחשבון</h2>'+form('/oauth/login','התחברות',false)+'</section>'+
-      '<section><h2>חשבון חדש</h2>'+form('/oauth/create-account','יצירת חשבון GSD',true)+'</section>'+
-      '<p>לאחר ההתחברות ChatGPT יקבל גישה למשימות שלך בהתאם להרשאות שאישרת. ניתן לבטל את החיבור.</p></html>');
+      '<h1>GSD Tasks</h1><p>'+label.intro+'</p><h2>'+label.requested+'</h2><ul>'+permissions+'</ul>'+
+      (error?'<p role="alert" style="color:#ba1717">'+htmlEscape(en?(errorEnglish[error]||'Sign-in failed. Please try again.'):error)+'</p>':'')+
+      '<section><h2>'+label.existing+'</h2>'+form('/oauth/login',label.login,false)+'</section>'+
+      '<section><h2>'+label.create+'</h2>'+form('/oauth/create-account',label.newAccount,true)+'</section>'+
+      '<p>'+label.footer+'</p></html>');
   };
   const authBearer=req=>{
     const h=req.headers.authorization||'';
@@ -535,7 +558,7 @@ export function createGateway({
           return document(res,400,'<h2>בקשת הרשאה לא תקינה</h2>');
         const requestId=rand(20);
         store.pending[requestId]={clientId,redirect,challenge,scopes,
-          state:url.searchParams.get('state')||'',created:clock(),expires:clock()+authTTL,failures:0};
+          state:url.searchParams.get('state')||'',language:((url.searchParams.get('ui_locales')||req.headers['accept-language']||'he').toString().toLowerCase().startsWith('en')?'en':'he'),created:clock(),expires:clock()+authTTL,failures:0};
         save();
         return renderLogin(res,requestId);
       }
