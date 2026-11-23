@@ -1,0 +1,71 @@
+{
+  "timestamp": "2026-11-23T22:09:08.232137+00:00",
+  "teamId": "NA6HPWARQ2",
+  "requestedConfigTeamId": "52HVJ3VDSM",
+  "teamCorrectionEvidence": {
+    "lorvexAppId": "6838139212",
+    "lorvexProfileId": "DQ3BMPXDPQ",
+    "lorvexProfileTeamIdentifier": "NA6HPWARQ2",
+    "distributionCertificateId": "B8HSX5CPJ4"
+  },
+  "appGroup": "group.com.itorah.gsd",
+  "bundleIds": [
+    {
+      "role": "main",
+      "identifier": "com.itorah.gsd",
+      "resourceId": "4888DDZ3CZ",
+      "created": true,
+      "capabilities": [
+        "IN_APP_PURCHASE",
+        "APP_GROUPS"
+      ]
+    },
+    {
+      "role": "widgets",
+      "identifier": "com.itorah.gsd.widgets",
+      "resourceId": "FT8CGJA23Z",
+      "created": true,
+      "capabilities": [
+        "IN_APP_PURCHASE",
+        "APP_GROUPS"
+      ]
+    },
+    {
+      "role": "share",
+      "identifier": "com.itorah.gsd.share",
+      "resourceId": "3WU23T2RLK",
+      "created": true,
+      "capabilities": [
+        "IN_APP_PURCHASE",
+        "APP_GROUPS"
+      ]
+    },
+    {
+      "role": "watch",
+      "identifier": "com.itorah.gsd.watchkitapp",
+      "resourceId": "N6AZ3WK759",
+      "created": true,
+      "capabilities": [
+        "IN_APP_PURCHASE",
+        "APP_GROUPS"
+      ]
+    },
+    {
+      "role": "watchwidgets",
+      "identifier": "com.itorah.gsd.watchkitapp.widgets",
+      "resourceId": "8P9G9J4V48",
+      "created": true,
+      "capabilities": [
+        "IN_APP_PURCHASE",
+        "APP_GROUPS"
+      ]
+    }
+  ],
+  "appStoreConnectApps": [],
+  "pending": [
+    "Create and associate group.com.itorah.gsd in Developer portal",
+    "Create GSD Tasks app record in App Store Connect",
+    "Generate profiles after App Group associations",
+    "Native acceptance and signed Release TestFlight"
+  ]
+}

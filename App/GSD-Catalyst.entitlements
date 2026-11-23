@@ -7,6 +7,9 @@
     <!-- Outbound sync: PocketBase REST + SSE. -->
     <key>com.apple.security.network.client</key>
     <true/>
+    <!-- Official ChatGPT OAuth callback listens on localhost only. -->
+    <key>com.apple.security.network.server</key>
+    <true/>
     <!-- Import/export document pickers reach user-chosen files. -->
     <key>com.apple.security.files.user-selected.read-write</key>
     <true/>
