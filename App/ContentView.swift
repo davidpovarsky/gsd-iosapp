@@ -66,21 +66,10 @@ struct ContentView: View {
                 if phase == .active { remoteBridge?.startPolling() }
                 else { remoteBridge?.stopPolling() }
             }
-            .confirmationDialog(
-                "Allow this change from ChatGPT?",
-                isPresented: Binding(
-                    get: { remoteBridge?.pendingApproval != nil },
-                    set: { if !$0 && remoteBridge?.pendingApproval != nil {
-                        remoteBridge?.resolveApproval(false)
-                    } }),
-                titleVisibility: .visible
-            ) {
-                Button("Allow change") { remoteBridge?.resolveApproval(true) }
-                Button("Deny", role: .cancel) { remoteBridge?.resolveApproval(false) }
-            } message: {
-                Text(remoteBridge?.pendingApproval?.description ??
-                     "ChatGPT requests permission to modify GSD tasks.")
-            }
+            .gsdRemoteWriteApproval(bridge: remoteBridge, isActive: {
+                !showHanlinAssistant && !palette.showPalette && palette.editor == nil &&
+                !showAbout && !showHelp && !showWhatsNew && session.pendingAccountSwitch == nil
+            })
             .environment(palette)
             .environment(\.escalationWindow, EscalationWindow(rawValue: escalationWindowRaw) ?? .default)
             // Hidden ⌘K trigger — a zero-size button carrying the keyboard shortcut so the

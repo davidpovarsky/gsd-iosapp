@@ -125,8 +125,20 @@ struct GSDHanlinAssistantView: View {
             .confirmationDialog(
                 "Allow the AI to modify your tasks?",
                 isPresented: Binding(
-                    get: { assistant.pendingApproval != nil },
-                    set: { if !$0 && assistant.pendingApproval != nil { assistant.resolveApproval(false) } }),
+                    get: {
+                        !showModelSettings && !showRemoteBridgeSettings && assistant.pendingApproval != nil
+                    },
+                    set: { presented in
+                        if !presented {
+                            // Let a button claim the approval before handling an outside-tap dismissal.
+                            _Concurrency.Task { @MainActor in
+                                if !showModelSettings && !showRemoteBridgeSettings &&
+                                    assistant.pendingApproval != nil {
+                                    assistant.resolveApproval(false)
+                                }
+                            }
+                        }
+                    }),
                 titleVisibility: .visible
             ) {
                 Button("Allow change") { assistant.resolveApproval(true) }
@@ -134,6 +146,9 @@ struct GSDHanlinAssistantView: View {
             } message: {
                 Text(assistant.pendingApproval?.description ?? "The requested change needs approval.")
             }
+            .gsdRemoteWriteApproval(bridge: remoteBridge, isActive: {
+                !showModelSettings && !showRemoteBridgeSettings && assistant.pendingApproval == nil
+            })
         }
     }
 
@@ -196,6 +211,7 @@ struct GSDHanlinAssistantView: View {
                 }
             }
             .navigationTitle("Hanlin model settings")
+            .gsdRemoteWriteApproval(bridge: remoteBridge)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -339,6 +355,7 @@ struct GSDRemoteBridgeSettingsView: View {
         }
       }
       .navigationTitle("ChatGPT MCP")
+      .gsdRemoteWriteApproval(bridge: bridge)
       .toolbar {
         ToolbarItem(placement: .confirmationAction) {
           Button("Done") { dismiss() }
@@ -346,4 +363,45 @@ struct GSDRemoteBridgeSettingsView: View {
       }
     }
   }
+}
+
+// Each presentation hosts its own dialog; only the foreground surface is active.
+private struct GSDRemoteWriteApprovalModifier: ViewModifier {
+    let bridge: GSDRemoteBridgeState?
+    let isActive: @MainActor () -> Bool
+
+    func body(content: Content) -> some View {
+        content.confirmationDialog(
+            "Allow this change from ChatGPT?",
+            isPresented: Binding(
+                get: { isActive() && bridge?.pendingApproval != nil },
+                set: { presented in
+                    if !presented {
+                        // A button action resolves synchronously; defer only no-choice dismissal.
+                        _Concurrency.Task { @MainActor in
+                            if isActive(), bridge?.pendingApproval != nil {
+                                bridge?.resolveApproval(false)
+                            }
+                        }
+                    }
+                }),
+            titleVisibility: .visible
+        ) {
+            Button("Allow change") { bridge?.resolveApproval(true) }
+            Button("Deny", role: .cancel) { bridge?.resolveApproval(false) }
+        } message: {
+            Text(bridge?.pendingApproval?.description ??
+                 "ChatGPT requests permission to modify GSD tasks.")
+        }
+    }
+}
+
+extension View {
+    @MainActor
+    func gsdRemoteWriteApproval(
+        bridge: GSDRemoteBridgeState?,
+        isActive: @escaping @MainActor () -> Bool = { true }
+    ) -> some View {
+        modifier(GSDRemoteWriteApprovalModifier(bridge: bridge, isActive: isActive))
+    }
 }
