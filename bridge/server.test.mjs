@@ -1,4 +1,5 @@
 import { test } from 'node:test';
+import http from 'node:http';
 import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -139,6 +140,123 @@ test('OAuth pairing, MCP auth and real device tool round trip without storing ta
     assert.equal(unsupported.json.result.isError,true);
     assert.equal(Object.values(bridge.store.devices).length,1);
   } finally {
+    await bridge.close();
+    rmSync(folder,{recursive:true,force:true});
+  }
+});
+
+test('subpath proxy preserves discovery, browser consent and MCP device round trip', async () => {
+  const folder=mkdtempSync(path.join(tmpdir(),'gsd-subpath-'));
+  const requested=[];
+  let upstream;
+  const metadataRoutes=new Map([
+    ['/.well-known/oauth-authorization-server/gsd','/.well-known/oauth-authorization-server'],
+    ['/.well-known/oauth-protected-resource/gsd/mcp','/.well-known/oauth-protected-resource']
+  ]);
+  const proxy=http.createServer((req,res)=>{
+    const url=new URL(req.url,'http://localhost');
+    requested.push(url.pathname);
+    // The root belongs to another service, as with the shared Funnel host.
+    const route=metadataRoutes.get(url.pathname) ||
+      (url.pathname.startsWith('/gsd/')?url.pathname.slice(4):null);
+    if(!route){res.writeHead(418);return res.end('Wrong service');}
+    const target=new URL(route+url.search,upstream);
+    const forward=http.request(target,{method:req.method,headers:req.headers},reply=>{
+      res.writeHead(reply.statusCode,reply.headers);
+      reply.pipe(res);
+    });
+    forward.on('error',()=>{res.writeHead(502);res.end();});
+    req.pipe(forward);
+  });
+  await new Promise(resolve=>proxy.listen(0,'127.0.0.1',resolve));
+  const origin='http://127.0.0.1:'+proxy.address().port;
+  const base=origin+'/gsd';
+  const bridge=createBridge({statePath:path.join(folder,'state.json'),publicOrigin:base});
+  await new Promise(resolve=>bridge.server.listen(0,'127.0.0.1',resolve));
+  upstream='http://127.0.0.1:'+bridge.server.address().port;
+  const jsonPost=(body,token)=>({method:'POST',headers:{
+    'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})
+  },body:JSON.stringify(body)});
+  try {
+    const challenge=await fetch(base+'/mcp',
+      jsonPost({jsonrpc:'2.0',id:1,method:'tools/list'}));
+    assert.equal(challenge.status,401);
+    const resourceURL=challenge.headers.get('www-authenticate')
+      .match(/resource_metadata="([^"]+)"/)[1];
+    const resource=await (await fetch(resourceURL)).json();
+    assert.equal(resource.resource,base+'/mcp');
+    const canonicalResource=await (await fetch(
+      origin+'/.well-known/oauth-protected-resource/gsd/mcp')).json();
+    assert.deepEqual(canonicalResource,resource);
+    const issuer=new URL(resource.authorization_servers[0]);
+    const discovery=new URL('/.well-known/oauth-authorization-server'+issuer.pathname,issuer);
+    const metadata=await (await fetch(discovery)).json();
+    assert.equal(metadata.issuer,base);
+    assert.equal(metadata.authorization_endpoint,base+'/oauth/authorize');
+
+    const secret=randomBytes(32).toString('base64url');
+    const deviceId='subpath-test-device';
+    const catalog=[{name:'get_dashboard',description:'Read dashboard',writes:false,
+      inputSchema:{type:'object',additionalProperties:false,properties:{}}}];
+    const pairing=await (await fetch(base+'/v1/device/register',
+      jsonPost({deviceId,catalog},secret))).json();
+    const registered=await (await fetch(metadata.registration_endpoint,jsonPost({
+      client_name:'Subpath acceptance',redirect_uris:['https://chatgpt.com/connector_platform_oauth_redirect']
+    }))).json();
+    const verifier=randomBytes(40).toString('base64url');
+    const authURL=new URL(metadata.authorization_endpoint);
+    authURL.search=new URLSearchParams({
+      client_id:registered.client_id,response_type:'code',
+      redirect_uri:registered.redirect_uris[0],
+      code_challenge:createHash('sha256').update(verifier).digest('base64url'),
+      code_challenge_method:'S256',state:'subpath-state'
+    }).toString();
+    const page=await (await fetch(authURL)).text();
+    const request=page.match(/name="request" value="([^"]+)"/)[1];
+    // Follow the action rendered to the browser, never a hardcoded test URL.
+    const action=new URL(page.match(/<form[^>]+action="([^"]+)"/)[1],authURL);
+    const approved=await fetch(action,{method:'POST',redirect:'manual',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({request,pair:pairing.pairingCode})});
+    assert.equal(approved.status,302,'The consent form must post to the GSD service');
+    assert.equal(action.pathname,'/gsd/oauth/approve');
+    const callback=new URL(approved.headers.get('location'));
+    assert.equal(callback.searchParams.get('state'),'subpath-state');
+    const tokenResponse=await fetch(metadata.token_endpoint,{method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({grant_type:'authorization_code',
+        code:callback.searchParams.get('code'),client_id:registered.client_id,
+        redirect_uri:registered.redirect_uris[0],code_verifier:verifier})});
+    assert.equal(tokenResponse.status,200);
+    const token=(await tokenResponse.json()).access_token;
+    const listed=await (await fetch(base+'/mcp',jsonPost({
+      jsonrpc:'2.0',id:2,method:'tools/list'},token))).json();
+    assert.deepEqual(listed.result.tools.map(t=>t.name),['get_dashboard']);
+
+    const inFlight=fetch(base+'/mcp',jsonPost({
+      jsonrpc:'2.0',id:3,method:'tools/call',
+      params:{name:'get_dashboard',arguments:{}}},token));
+    let command;
+    for(let retry=0;retry<10&&!command;retry++){
+      const poll=await (await fetch(base+'/v1/device/poll?device_id='+deviceId,
+        {headers:{Authorization:'Bearer '+secret}})).json();
+      command=poll.commands[0];
+      if(!command)await new Promise(resolve=>setTimeout(resolve,20));
+    }
+    assert.equal(command?.name,'get_dashboard');
+    const result=await fetch(base+'/v1/device/result',jsonPost({
+      deviceId,id:command.id,text:'{"total":0}',error:false},secret));
+    assert.equal(result.status,200);
+    const completed=await (await inFlight).json();
+    assert.equal(completed.result.content[0].text,'{"total":0}');
+    assert.ok(requested.every(route=>route.startsWith('/gsd/') || metadataRoutes.has(route)),
+      'No GSD request may escape to the unrelated root service');
+  } finally {
+    for(const pending of bridge.outstanding.values()){
+      clearTimeout(pending.timer);
+      pending.resolve({isError:true,content:[]});
+    }
+    await new Promise(resolve=>proxy.close(resolve));
     await bridge.close();
     rmSync(folder,{recursive:true,force:true});
   }

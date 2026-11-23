@@ -123,7 +123,8 @@ export function createBridge({
     '<p>Open GSD on your iPad â†’ AI â†’ ChatGPT MCP. Copy the one-time pairing code shown there. ',
     'Only the iPad can authorize task changes.</p>',
     err?'<p class="error">Invalid or expired code. Try a fresh code.</p>':'',
-    '<form method="post" action="/oauth/approve">',
+    // A relative action preserves the public mount path behind a reverse proxy.
+    '<form method="post" action="approve">',
     '<input type="hidden" name="request" value="'+uid+'">',
     '<input name="pair" autocomplete="one-time-code" maxlength="8" required placeholder="8-character code" spellcheck="false">',
     '<button type="submit">Connect this iPad</button></form>',
