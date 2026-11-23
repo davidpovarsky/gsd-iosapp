@@ -249,6 +249,7 @@ jobs:
             --app "$OUTPUT/GSD.xcarchive/Products/Applications/GSD.app" \
             --build "$GSD_BUILD_NUMBER" --output "$OUTPUT/archive-signatures.json"
       - name: Export and audit actual signed App Store IPA
+        id: export
         shell: bash
         run: |
           set -euo pipefail
@@ -284,11 +285,11 @@ jobs:
         if: always()
         shell: bash
         run: python3 scripts/prepare_gsd_signing.py cleanup --profiles "$OUTPUT/profiles.json"
-      - name: Preserve signed IPA
-        if: success()
+      - name: Preserve verified signed IPA for delivery or upload recovery
+        if: always() && steps.export.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: GSD-4.1.0-SIGNED-TestFlight-${{ inputs.build_number }}-${{ github.run_id }}
+          name: GSD-4.1.0-SIGNED-${{ inputs.build_number }}-${{ github.run_id }}
           path: dist/gsd-native-release/export/*.ipa
           if-no-files-found: error
           retention-days: 14

@@ -58,22 +58,31 @@ def prepare() -> None:
 
 def cleanup(profiles: Path | None) -> None:
     folder = location()
+    errors = []
     if folder.exists():
-        state_path = folder / "state.json"
-        if state_path.exists():
-            state = json.loads(state_path.read_text(encoding="utf-8"))
-            try:
-                security("list-keychains", "-d", "user", "-s", *state["keychains"])
-            finally:
-                keychain = Path(state["keychain"])
-                if keychain.exists():
-                    security("delete-keychain", str(keychain))
-        shutil.rmtree(folder)
+        try:
+            state_path = folder / "state.json"
+            if state_path.exists():
+                state = json.loads(state_path.read_text(encoding="utf-8"))
+                try:
+                    security("list-keychains", "-d", "user", "-s", *state["keychains"])
+                except RuntimeError:
+                    errors.append("restore keychain search list")
+                try:
+                    if Path(state["keychain"]).exists():
+                        security("delete-keychain", state["keychain"])
+                except RuntimeError:
+                    errors.append("unregister temporary keychain")
+        finally:
+            # Even a keychain service failure must not retain the private API key/P12.
+            shutil.rmtree(folder)
     if profiles and profiles.exists():
         for row in json.loads(profiles.read_text(encoding="utf-8")):
             if row.get("installed"):
                 path = Path.home() / "Library/MobileDevice/Provisioning Profiles" / (row["uuid"] + ".mobileprovision")
                 path.unlink(missing_ok=True)
+    if errors:
+        raise RuntimeError("Signing files removed; keychain cleanup requires attention: " + "; ".join(errors))
     print("GSD_CI_SIGNING_MATERIAL_REMOVED")
 
 def main() -> None:
