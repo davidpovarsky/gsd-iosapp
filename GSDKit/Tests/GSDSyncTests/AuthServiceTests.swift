@@ -51,7 +51,9 @@ struct AuthServiceTests {
         let sent = try JSONDecoder().decode([String: String].self, from: #require(exec.lastBody))
         #expect(sent["codeVerifier"] == "VERIFIER_G")
         #expect(sent["code"] == "AUTH_CODE")
-        #expect(presenter.presentedURL?.absoluteString.contains("redirect_uri=https%3A%2F%2Fapi.vinny.io%2Fios-oauth-redirect%2F") == true)
+        let redirect = presenter.presentedURL.flatMap { URLComponents(url: $0, resolvingAgainstBaseURL: false) }?
+            .queryItems?.first { $0.name == "redirect_uri" }?.value
+        #expect(redirect == AuthConfig.live.redirectURI)
     }
 
     @Test func stateMismatchIsRejected() async throws {

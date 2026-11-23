@@ -112,6 +112,7 @@ struct SettingsView: View {
             if session.isSignedIn {
                 LabeledContent(String(localized: "Signed in"),
                                value: session.email ?? String(localized: "Account"))
+                    .accessibilityIdentifier("gsd.cloud.signed-in")
                 if let note = session.accountNote {
                     Text(accountNoteText(note))
                         .font(.footnote)
@@ -145,6 +146,7 @@ struct SettingsView: View {
                 } label: {
                     Label(String(localized: "Sign Out"), systemImage: "rectangle.portrait.and.arrow.right")
                 }
+                .accessibilityIdentifier("gsd.cloud.sign-out")
                 Button(role: .destructive) {
                     showDeleteAccount = true
                 } label: {
@@ -159,6 +161,7 @@ struct SettingsView: View {
                         title: String(localized: "Sign in or create GSD Cloud account"),
                         systemImage: "person.crop.circle.badge.checkmark")
                 }
+                .accessibilityIdentifier("gsd.cloud.open")
                 .buttonStyle(.plain)
                 .disabled(session.inProgress)
 

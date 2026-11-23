@@ -103,7 +103,8 @@ struct GSDApp: App {
             tokenProvider: { try await authService.validToken() },
             rawToken: { tokenStore.load() },   // health-only: lets an expired session say so
             history: historyRepo,
-            reminders: scheduler)              // reconcile cancels as it removes a task
+            reminders: scheduler,
+            library: GRDBCloudLibraryRepository(database)) // same account and sync lifecycle
         _syncEngine = State(initialValue: syncEngine)
         // SyncCoordinator (Phase 5d) owns when sync fires (cadence/foreground/network/debounced push/SSE)
         // and the status surface; SessionStore delegates start/stop to it on sign-in/out.
@@ -153,8 +154,11 @@ struct GSDApp: App {
         _shareDrainer = State(initialValue: shareDrainer)
         _session = State(initialValue: SessionStore(
             auth: authService, tokenStore: tokenStore, coordinator: coordinator,
-            hasLocalActiveTasks: { !store.tasks.isEmpty },
-            eraseLocal: { try await store.eraseAllData() }))
+            hasLocalActiveTasks: { (try? await store.hasCloudAccountData()) ?? true },
+            eraseLocal: {
+                try await store.eraseAllData()
+                try await GRDBCloudLibraryRepository(database).resetMetadata()
+            }))
         // In-app intents (Siri/Shortcuts run in this process) resolve the SAME store via
         // AppDependencyManager. A second connection on the live DB would be invisible to
         // this one's ValueObservation (stale UI/widgets/reminders) and racing the open
