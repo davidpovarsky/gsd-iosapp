@@ -194,7 +194,6 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       SOURCE_RUN: ${{ inputs.source_run }}
-      RECOVERY_CACHE: ${{ runner.temp }}/gsd-native-recovery-${{ github.run_id }}
       RECOVERY_EVIDENCE: dist/gsd-native-recovery
     steps:
       - uses: actions/checkout@v4
@@ -217,13 +216,13 @@ jobs:
           python3 scripts/gsd_native_recovery.py prepare \
             --source-run "$SOURCE_RUN" \
             --expected-source-sha d44649ed9bb0cc0eab9fb0d12c9ec63a71cd41ca \
-            --cache "$RECOVERY_CACHE" --output "$RECOVERY_EVIDENCE"
+            --cache "$RUNNER_TEMP/gsd-native-recovery-$GITHUB_RUN_ID" --output "$RECOVERY_EVIDENCE"
       - name: Run both simulator families against the verified binary
         shell: bash
         run: |
           set -euo pipefail
           python3 scripts/gsd_simulator_smoke.py \
-            --app "$RECOVERY_CACHE/application/GSD.app" \
+            --app "$RUNNER_TEMP/gsd-native-recovery-$GITHUB_RUN_ID/application/GSD.app" \
             --output "$RECOVERY_EVIDENCE/smoke" \
             2>&1 | tee "$RECOVERY_EVIDENCE/smoke-console.log"
       - name: Verify combined native acceptance
