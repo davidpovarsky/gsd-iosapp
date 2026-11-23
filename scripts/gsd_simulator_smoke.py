@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 import plistlib
@@ -12,16 +13,44 @@ import time
 import uuid
 
 
+PREFERRED_DEVICE_TYPES = {
+    "iPhone": (
+        "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "com.apple.CoreSimulator.SimDeviceType.iPhone-18-Pro",
+        "com.apple.CoreSimulator.SimDeviceType.iPhone-17",
+    ),
+    "iPad": (
+        "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-13-inch-M5-12GB",
+        "com.apple.CoreSimulator.SimDeviceType.iPad-Air-13-inch-M4",
+        "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M5-12GB",
+    ),
+}
+
+
 def run(command: list[str], log: Path, timeout: int = 120,
         check: bool = True) -> str:
+    started = time.monotonic()
+    stamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    heading = f"[{stamp}] $ {' '.join(command)} (timeout={timeout}s)\n"
+    print(heading, end="", flush=True)
     with log.open("a", encoding="utf-8") as stream:
-        stream.write("$ " + " ".join(command) + "\n")
+        stream.write(heading)
         stream.flush()
-        result = subprocess.run(command, capture_output=True, text=True,
-                                timeout=timeout)
+        try:
+            result = subprocess.run(command, capture_output=True, text=True,
+                                    timeout=timeout)
+        except subprocess.TimeoutExpired as error:
+            partial = "".join(
+                value.decode("utf-8", errors="replace") if isinstance(value, bytes) else value
+                for value in (error.stdout or "", error.stderr or ""))
+            message = partial + f"\nTIMEOUT after {time.monotonic() - started:.1f}s\n"
+            stream.write(message)
+            print(message, end="", flush=True)
+            raise
         output = result.stdout + result.stderr
-        stream.write(output + f"\nexit={result.returncode}\n")
-    print(output, end="", flush=True)
+        footer = f"\nexit={result.returncode}; elapsed={time.monotonic() - started:.1f}s\n"
+        stream.write(output + footer)
+    print(output + footer, end="", flush=True)
     if check and result.returncode:
         raise RuntimeError(f"Command failed ({result.returncode}): {' '.join(command)}")
     return result.stdout
@@ -51,16 +80,51 @@ def devices_for_runtime(inventory: dict, runtime: dict) -> dict[str, dict]:
             maximum = version(device_type.get("maxRuntimeVersionString", "99999"))
             if minimum <= runtime_version <= maximum:
                 candidates.append(device_type)
-        if candidates:
-            selected[family] = candidates[-1]
+        compatible = {item["identifier"]: item for item in candidates}
+        for preferred in PREFERRED_DEVICE_TYPES[family]:
+            if preferred in compatible:
+                selected[family] = compatible[preferred]
+                break
     return selected
+
+
+def boot_device(device_id: str, log: Path, receipt: dict) -> None:
+    # The observed failure was a bootstatus timeout before GSD was installed.
+    # Only that infrastructure boundary permits one reset; app checks never retry.
+    receipt["bootAttempts"] = []
+    for attempt in (1, 2):
+        details = {"attempt": attempt, "status": "running"}
+        receipt["bootAttempts"].append(details)
+        try:
+            receipt["stage"] = "boot"
+            run(["xcrun", "simctl", "boot", device_id], log)
+            receipt["stage"] = "bootstatus"
+            run(["xcrun", "simctl", "bootstatus", device_id, "-b"], log, timeout=300)
+            details["status"] = "passed"
+            return
+        except subprocess.TimeoutExpired as error:
+            details.update(status="timed_out", stage=receipt["stage"], error=str(error))
+            if attempt == 2:
+                raise
+            message = "Pre-install boot timed out; recording state before one shutdown/reboot.\n"
+            print(message, end="", flush=True)
+            with log.open("a", encoding="utf-8") as stream:
+                stream.write(message)
+            try:
+                run(["xcrun", "simctl", "list", "devices", "--json"],
+                    log, timeout=30, check=False)
+            except (OSError, subprocess.SubprocessError) as diagnostic_error:
+                with log.open("a", encoding="utf-8") as stream:
+                    stream.write(f"Boot-state diagnostic failed: {diagnostic_error}\n")
+            run(["xcrun", "simctl", "shutdown", device_id], log)
 
 
 def smoke_device(family: str, device_type: dict, runtime: dict, app: Path,
                  bundle_id: str, executable: str, output: Path) -> dict:
     log = output / f"{family.lower()}.log"
     receipt = {"family": family, "deviceType": device_type["identifier"],
-               "runtime": runtime["identifier"], "status": "failed"}
+               "deviceName": device_type["name"], "runtime": runtime["identifier"],
+               "status": "failed", "stage": "create"}
     device_id = None
     try:
         name = f"GSD-smoke-{family}-{uuid.uuid4().hex[:8]}"
@@ -69,27 +133,30 @@ def smoke_device(family: str, device_type: dict, runtime: dict, app: Path,
         if not re.fullmatch(r"[0-9A-Fa-f-]{36}", device_id):
             raise RuntimeError("simctl create did not return a device UUID")
         receipt["deviceID"] = device_id
-        run(["xcrun", "simctl", "boot", device_id], log)
-        run(["xcrun", "simctl", "bootstatus", device_id, "-b"], log, timeout=300)
+        boot_device(device_id, log, receipt)
+        receipt["stage"] = "install"
         run(["xcrun", "simctl", "install", device_id, str(app)], log)
+        receipt["stage"] = "launch"
         launch = run(["xcrun", "simctl", "launch", device_id, bundle_id], log)
         match = re.search(rf"(?m)^{re.escape(bundle_id)}:\s*(\d+)\s*$", launch)
         if not match:
             raise RuntimeError("simctl launch did not report the app PID")
         process_id = match.group(1)
+        receipt["stage"] = "liveness"
         time.sleep(5)
         process = run(["ps", "-p", process_id, "-o", "pid=,comm="], log).strip()
         columns = process.split(maxsplit=1)
         if (len(columns) != 2 or columns[0] != process_id
                 or Path(columns[1]).name != executable):
             raise RuntimeError("The launched GSD process did not remain alive")
+        receipt["stage"] = "screenshot"
         screenshot = output / f"{family.lower()}.png"
         run(["xcrun", "simctl", "io", device_id, "screenshot",
              "--type=png", str(screenshot)], log)
         with screenshot.open("rb") as image:
             if image.read(8) != b"\x89PNG\r\n\x1a\n":
                 raise RuntimeError("Simulator screenshot is not a PNG")
-        receipt.update(status="passed", processID=int(process_id),
+        receipt.update(status="passed", stage="complete", processID=int(process_id),
                        aliveAfterSeconds=5, screenshot=screenshot.name)
     except (OSError, RuntimeError, subprocess.SubprocessError) as error:
         receipt["error"] = str(error)
@@ -128,7 +195,8 @@ def main() -> int:
         runtimes = sorted(
             (runtime for runtime in inventory["runtimes"]
              if runtime.get("isAvailable")
-             and runtime["identifier"].startswith("com.apple.CoreSimulator.SimRuntime.iOS-27")),
+             and re.fullmatch(r"com\.apple\.CoreSimulator\.SimRuntime\.iOS-27(?:-\d+)*",
+                              runtime["identifier"])),
             key=lambda runtime: version(runtime["version"]), reverse=True)
         selected = None
         for runtime in runtimes:
@@ -137,7 +205,7 @@ def main() -> int:
                 selected = runtime, device_types
                 break
         if selected is None:
-            raise RuntimeError("No available iOS 27 runtime with compatible iPhone and iPad types")
+            raise RuntimeError("No available general iOS 27 runtime with preferred compatible iPhone and iPad types")
         runtime, device_types = selected
         for family in ("iPhone", "iPad"):
             report["devices"].append(smoke_device(
