@@ -75,8 +75,9 @@ struct ChatGPTPlanContractTests: Sendable {
         ])
         let session = stubSession { request in
             if request.url?.path == "/.well-known/jwks.json" { return .init(data: signed.jwks) }
-            #expect(try form(request)["client_id"] == "issued-gsd-client")
-            #expect(try form(request)["code_verifier"] == attempt.verifier)
+            let sent = try form(request)
+            #expect(sent["client_id"] == "issued-gsd-client")
+            #expect(sent["code_verifier"] == attempt.verifier)
             return .init(data: body)
         }
         let client = HanlinChatGPTPlanClient(session: session, now: { [instant] in instant })
