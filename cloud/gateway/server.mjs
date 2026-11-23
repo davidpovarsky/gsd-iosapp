@@ -5,11 +5,12 @@ import { createHash, randomBytes, createCipheriv, createDecipheriv, timingSafeEq
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { quadrant, validDate, nextRecurringTask, dependencyWouldCycle, builtInViews } from './task-domain.mjs';
 
 const sha = x => createHash('sha256').update(String(x)).digest('hex');
 const rand = (n=32) => randomBytes(n).toString('base64url');
 const cleanCompare = (a,b) => typeof a === 'string' && typeof b === 'string' &&
-  a.length === b.length && timingSafeEqual(Buffer.from(a),Buffer.from(b));
+  Buffer.byteLength(a) === Buffer.byteLength(b) && timingSafeEqual(Buffer.from(a),Buffer.from(b));
 const isoNow = () => new Date().toISOString();
 const tokenTTL = 3600000;
 const refreshTTL = 30*24*3600000;
@@ -57,7 +58,7 @@ const htmlEscape=x=>String(x).replaceAll('&','&amp;').replaceAll('"','&quot;')
   .replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll("'",'&#39;');
 
 export function createGateway({
-  publicOrigin=process.env.GSD_CLOUD_ORIGIN||'https://torah-social.tail0a6c7d.ts.net:10000/gsd',
+  publicOrigin=process.env.GSD_CLOUD_ORIGIN||'https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud',
   pbOrigin=process.env.GSD_POCKETBASE_ORIGIN||'http://127.0.0.1:8095',
   stateDir=process.env.GSD_CLOUD_STATE_DIR||path.resolve('state'),
   clock=Date.now
@@ -93,6 +94,9 @@ export function createGateway({
     for(const field of Object.keys(store))if(prev[field])Object.assign(store[field],prev[field]);
   }
   const save=()=>{
+    for(const group of ['pending','codes','access','refresh'])
+      for(const [id,record] of Object.entries(store[group]))
+        if(record.expires<=clock())delete store[group][id];
     const tmp=stateFile+'.'+process.pid+'.tmp';
     fs.writeFileSync(tmp,JSON.stringify(store),{mode:0o600});
     fs.renameSync(tmp,stateFile);
@@ -144,27 +148,50 @@ export function createGateway({
   };
   const renderLogin=(res,requestId,error='')=>{
     const pending=store.pending[requestId];
-    if(!pending||pending.expires<=clock())return document(res,400,'<h2>החיבור פג תוקף</h2>');
-    const form=(action,label,registration)=>(
+    if(!pending||pending.expires<=clock())return document(res,400,'<h2>Authorization request expired</h2>');
+    const en=pending.language==='en';
+    const label=en?{
+      email:'Email',password:'Password',confirm:'Confirm password',title:'Sign in to GSD',
+      intro:'Connect ChatGPT to your GSD account with your usual email and password. No pairing code or open iPad is required.',
+      login:'Sign in and allow',newAccount:'Create account and allow',existing:'Existing GSD account',create:'New GSD account',
+      requested:'Requested permissions',read:'Read your tasks and reports',write:'Create, edit and delete your tasks',
+      offline:'Keep access until you revoke this connection',footer:'Only this GSD account is shared with ChatGPT. You can revoke this connection in ChatGPT.'
+    }:{
+      email:'דואר אלקטרוני',password:'סיסמה',confirm:'אימות סיסמה',title:'התחברות לחשבון GSD',
+      intro:'חבר את ChatGPT לחשבון המשימות שלך באמצעות כניסה רגילה. אין צורך בקוד צימוד או באייפד פתוח.',
+      login:'התחברות ואישור',newAccount:'יצירת חשבון ואישור',existing:'כניסה לחשבון קיים',create:'חשבון GSD חדש',
+      requested:'הרשאות מבוקשות',read:'קריאת המשימות והדוחות שלך',write:'יצירה, עריכה ומחיקה של משימות',
+      offline:'גישה מתמשכת עד לביטול החיבור',footer:'רק חשבון GSD זה משותף עם ChatGPT. אפשר לבטל את החיבור בהגדרות ChatGPT.'
+    };
+    const errorEnglish={
+      'כתובת דוא"ל או סיסמה לא תקינה':'Enter a valid email address and password.',
+      'שתי הסיסמאות אינן זהות':'The two passwords do not match.',
+      'לא ניתן ליצור חשבון עם הפרטים האלו':'An account could not be created with these details.',
+      'פרטי ההתחברות לא נכונים':'The email address or password is incorrect.'
+    };
+    const form=(action,text,registration)=>(
       '<form method="post" action="'+frontPath+action+'">' +
       '<input type="hidden" name="request" value="'+htmlEscape(requestId)+'">' +
-      '<label>דואר אלקטרוני<input name="email" type="email" autocomplete="email" required maxlength="254"></label>'+
-      '<label>סיסמה<input name="password" type="password" autocomplete="'+(registration?'new-password':'current-password')+'" required minlength="10" maxlength="128"></label>'+
-      (registration?'<label>אימות סיסמה<input name="confirm" type="password" autocomplete="new-password" required></label>':'')+
-      '<button type="submit">'+label+'</button></form>'
+      '<label>'+label.email+'<input name="email" type="email" autocomplete="email" required maxlength="254"></label>'+
+      '<label>'+label.password+'<input name="password" type="password" autocomplete="'+(registration?'new-password':'current-password')+'" required minlength="'+(registration?10:1)+'" maxlength="128"></label>'+
+      (registration?'<label>'+label.confirm+'<input name="confirm" type="password" autocomplete="new-password" required></label>':'')+
+      '<button type="submit">'+text+'</button></form>'
     );
+    const permissions=pending.scopes.map(scope=>({
+      'gsd.read':label.read,'gsd.write':label.write,'offline_access':label.offline
+    })[scope]).filter(Boolean).map(value=>'<li>'+htmlEscape(value)+'</li>').join('');
     document(res,200,
-      '<!doctype html><html dir="rtl" lang="he"><meta charset="utf-8">' +
+      '<!doctype html><html dir="'+(en?'ltr':'rtl')+'" lang="'+(en?'en':'he')+'"><meta charset="utf-8">' +
       '<meta name="viewport" content="width=device-width, initial-scale=1">'+
-      '<title>התחברות לחשבון GSD</title><style>body{font-family:system-ui;max-width:460px;padding:24px;margin:5vh auto;line-height:1.55}'+
-      'input{display:block;box-sizing:border-box;width:100%;padding:12px;margin:6px 0 15px;border:1px solid #aaa;border-radius:9px}'+
+      '<title>'+label.title+'</title><style>body{font-family:system-ui;max-width:460px;padding:24px;margin:5vh auto;line-height:1.55}'+
+      'input{direction:ltr;text-align:left;display:block;box-sizing:border-box;width:100%;padding:12px;margin:6px 0 15px;border:1px solid #aaa;border-radius:9px}'+
       'button{background:#2357ae;border:0;border-radius:9px;color:white;padding:12px 22px;font-size:17px}'+
       'section{padding:14px;border:1px solid #ddd;border-radius:14px;margin:15px 0}p{color:#555}</style>'+
-      '<h1>GSD Tasks</h1><p>חבר את ChatGPT לחשבון המשימות שלך באמצעות כניסה רגילה. אין צורך בקוד צימוד או באייפד פתוח.</p>'+
-      (error?'<p style="color:#ba1717">'+htmlEscape(error)+'</p>':'')+
-      '<section><h2>כניסה לחשבון</h2>'+form('/oauth/login','התחברות',false)+'</section>'+
-      '<section><h2>חשבון חדש</h2>'+form('/oauth/create-account','יצירת חשבון GSD',true)+'</section>'+
-      '<p>לאחר ההתחברות ChatGPT יקבל גישה למשימות שלך בהתאם להרשאות שאישרת. ניתן לבטל את החיבור.</p></html>');
+      '<h1>GSD Tasks</h1><p>'+label.intro+'</p><h2>'+label.requested+'</h2><ul>'+permissions+'</ul>'+
+      (error?'<p role="alert" style="color:#ba1717">'+htmlEscape(en?(errorEnglish[error]||'Sign-in failed. Please try again.'):error)+'</p>':'')+
+      '<section><h2>'+label.existing+'</h2>'+form('/oauth/login',label.login,false)+'</section>'+
+      '<section><h2>'+label.create+'</h2>'+form('/oauth/create-account',label.newAccount,true)+'</section>'+
+      '<p>'+label.footer+'</p></html>');
   };
   const authBearer=req=>{
     const h=req.headers.authorization||'';
@@ -196,7 +223,7 @@ export function createGateway({
   const rpcOk=(id,result)=>({jsonrpc:'2.0',id,result});
   const rpcError=(id,message,code=-32000)=>({jsonrpc:'2.0',id,error:{code,message}});
   const toolError=(message)=>({isError:true,content:[{type:'text',text:String(message).slice(0,1400)}]});
-  const validIdentity=x=>typeof x==='string'&&x.length>=10&&x.length<=254&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x);
+  const validIdentity=x=>typeof x==='string'&&x.length>=3&&x.length<=254&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x);
   const fullList=async(token)=>{
     let page=1,out=[];
     while(true) {
@@ -220,12 +247,13 @@ export function createGateway({
   const iso=()=>new Date(clock()).toISOString();
   const dueDate=t=>t?Date.parse(t):NaN;
   const saved=t=>Boolean(t.saved_at);
-  async function updateRow(token,row,changes) {
-    const patch={...changes,client_updated_at:iso(),device_id:'chatgpt-cloud'};
+  async function updateRow(token,row,changes,extra={}) {
+    const prior=Date.parse(row.client_updated_at)||0;
+    const patch={...changes,client_updated_at:new Date(Math.max(clock(),prior+1)).toISOString(),device_id:'chatgpt-cloud'};
     if(patch.task_id!==undefined)delete patch.task_id;
     const endpoint='/api/gsd/tasks/'+encodeURIComponent(row.id);
     const response=await pb(endpoint,{method:'PATCH',token,body:{
-      expected_version:row.client_updated_at||'',data:patch
+      expected_version:row.client_updated_at||'',data:patch,...extra
     }});
     return {taskId:row.task_id,updated:true,serverConfirmed:true,changes:patch};
   }
@@ -235,8 +263,8 @@ export function createGateway({
       owner:account,title:args.title,
       task_id:localId(),description:args.description||'',
       urgent:args.urgent||false,important:args.important??true,
-      quadrant:args.urgent?'urgentImportant':'notUrgentImportant',
-      due_date:args.due_at||'',completed:false,completed_at:'',
+      quadrant:quadrant(args.urgent||false,args.important??true),
+      due_date:args.due_at?validDate(args.due_at):'',completed:false,completed_at:'',
       recurrence:'none',tags:args.tags||[],subtasks:[],dependencies:[],
       notification_enabled:true,notification_sent:false,
       notify_before:0,last_notification_at:'',
@@ -246,6 +274,24 @@ export function createGateway({
     };
     const created=await pb('/api/collections/tasks/records',{method:'POST',token,body:row});
     return {taskId:created.task_id,recordId:created.id,title:created.title,created:true};
+  }
+  async function libraryRows(token,kind) {
+    const out=[];
+    for(let page=1;page<=100;page++){
+      const result=await pb('/api/collections/gsd_library/records?perPage=100&page='+page,{token});
+      for(const row of result.items||[])if(row.kind===kind&&!row.deleted){
+        const payload=JSON.parse(row.payload);
+        out.push({...payload,cloudVersion:row.client_updated_at});
+      }
+      if(page>=result.totalPages)return out;
+    }
+    throw Error('Library listing incomplete');
+  }
+  async function completeRow(token,row,completed) {
+    if(saved(row))throw Error('Return this saved item to a quadrant before completing it');
+    if(Boolean(row.completed)===completed)return {taskId:row.task_id,completed,unchanged:true};
+    const next=completed?nextRecurringTask(row,iso(),localId):null;
+    return updateRow(token,row,{completed,completed_at:completed?iso():''},next?{spawn_next:next}:{});
   }
   const groupFor=t=>{
     if(t.urgent&&t.important)return 'do_first';
@@ -280,15 +326,15 @@ export function createGateway({
     }
     case 'list_tags':return {tags:[...new Set(data.flatMap(t=>t.tags||[]))].sort()};
     case 'list_saved_tasks':return {tasks:data.filter(saved)};
-    case 'list_archived_tasks':return {tasks:[],unavailable:'Archive currently lives only in the local GSD database; cloud sync pending'};
-    case 'list_trashed_tasks':return {tasks:[],unavailable:'Trash currently lives only in the local GSD database; cloud sync pending'};
-    case 'list_smart_views':return {views:[],unavailable:'Saved views currently live only in the local GSD database; cloud sync pending'};
+    case 'list_archived_tasks':return {tasks:(await libraryRows(token,'archive')).filter(t=>!data.some(r=>r.task_id===t.id))};
+    case 'list_trashed_tasks':return {tasks:(await libraryRows(token,'trash')).filter(t=>!data.some(r=>r.task_id===t.id))};
+    case 'list_smart_views':return {views:[...builtInViews,...await libraryRows(token,'view')]};
     case 'create_task':return createRow(token,session.userId,a);
     case 'delete_task':{
       const row=await getRow(token,a.id);
       await pb('/api/gsd/tasks/'+encodeURIComponent(row.id),{method:'DELETE',token,
-        body:{expected_version:row.client_updated_at||''}});
-      return {taskId:a.id,deleted:true,undoAvailableInCloud:false};
+        body:{expected_version:row.client_updated_at||'',disposition:'trash'}});
+      return {taskId:a.id,deleted:true,trashed:true,undoAvailableInCloud:true};
     }
     case 'update_task':{
       const row=await getRow(token,a.id);
@@ -297,7 +343,7 @@ export function createGateway({
         ['urgent','urgent'],['important','important'],['tags','tags'],
         ['estimate_minutes','estimated_minutes']])if(a[arg]!==undefined)patch[field]=a[arg];
       if(a.clear_due)patch.due_date='';
-      else if(a.due_at!==undefined)patch.due_date=a.due_at;
+      else if(a.due_at!==undefined)patch.due_date=validDate(a.due_at);
       if(patch.urgent!==undefined||patch.important!==undefined){
         const urgent=patch.urgent??row.urgent;
         const important=patch.important??row.important;
@@ -309,8 +355,7 @@ export function createGateway({
     }
     case 'set_completed':{
       const row=await getRow(token,a.id);
-      if(Boolean(row.completed)===a.completed)return {taskId:a.id,completed:a.completed,unchanged:true};
-      return updateRow(token,row,{completed:a.completed,completed_at:a.completed?iso():''});
+      return completeRow(token,row,a.completed);
     }
     case 'add_subtask':{
       const row=await getRow(token,a.id);
@@ -329,16 +374,22 @@ export function createGateway({
     case 'add_dependency':
     case 'remove_dependency':{
       const row=await getRow(token,a.id);
-      if(a.dependency_id===a.id)throw Error('A task cannot depend on itself');
       const set=new Set(Array.isArray(row.dependencies)?row.dependencies:[]);
-      if(spec.name==='add_dependency')set.add(a.dependency_id);
+      if(spec.name==='add_dependency'){
+        if(!data.some(t=>t.task_id===a.dependency_id))throw Error('Dependency not found in this account');
+        if(dependencyWouldCycle(data,a.id,a.dependency_id))throw Error('Dependency would create a cycle');
+        set.add(a.dependency_id);
+      }
       else set.delete(a.dependency_id);
       return updateRow(token,row,{dependencies:[...set]});
     }
     case 'set_focus':{
       const row=await getRow(token,a.id);
-      return updateRow(token,row,{focus_date:a.clear?'':(a.date||''),
-        focus_rank:a.clear?0:(a.rank||0)});
+      if(!a.clear && (!a.date||!a.rank||!/^\d{4}-\d{2}-\d{2}$/.test(a.date)||
+        new Date(a.date+'T00:00:00Z').toISOString().slice(0,10)!==a.date))
+        throw Error('A valid date and a focus rank are required');
+      if(saved(row))throw Error('Return this saved item to a quadrant before choosing focus');
+      return updateRow(token,row,{focus_date:a.clear?'':a.date,focus_rank:a.clear?0:a.rank});
     }
     case 'bulk_complete':
     case 'bulk_add_tags':
@@ -348,7 +399,7 @@ export function createGateway({
         try{
           const row=await getRow(token,id);
           let changes={};
-          if(spec.name==='bulk_complete')changes={completed:true,completed_at:iso()};
+          if(spec.name==='bulk_complete'){await completeRow(token,row,true);completed.push(id);continue;}
           if(spec.name==='bulk_add_tags')changes={tags:[...new Set([...(row.tags||[]),...a.tags])]};
           if(spec.name==='bulk_move'){
             changes={
@@ -364,9 +415,29 @@ export function createGateway({
       }
       return {completedIds:completed,failures,partial:failures.length>0};
     }
-    case 'start_timer':
-    case 'stop_timer':
-      return {taskId:a.id,unavailable:'Timer sessions currently live on device; server timer sync must be added before remote control'};
+    case 'start_timer':{
+      const row=await getRow(token,a.id);
+      if(saved(row))throw Error('Return this saved item to a quadrant before starting a timer');
+      const entries=[...(row.time_entries||[])];
+      if(entries.some(t=>t.endedAt===''))throw Error('A timer is already running');
+      entries.push({id:localId(),startedAt:iso(),endedAt:'',minutes:0});
+      await updateRow(token,row,{time_entries:entries});
+      return {taskId:a.id,started:true};
+    }
+    case 'stop_timer':{
+      const row=await getRow(token,a.id),entries=[...(row.time_entries||[])];
+      const running=entries.find(t=>t.endedAt==='');
+      if(!running)throw Error('No timer is running');
+      running.endedAt=iso();
+      running.minutes=Math.max(0,Math.floor((Date.parse(running.endedAt)-Date.parse(running.startedAt))/60000));
+      if(a.notes!==undefined)running.notes=a.notes;
+      const milliseconds=entries.reduce((sum,t)=>sum+(t.endedAt
+        ?Math.max(0,Date.parse(t.endedAt)-Date.parse(t.startedAt))
+        :(t.endedAt===undefined?(Number(t.minutes)||0)*60000:0)),0);
+      const minutes=Math.floor(milliseconds/60000);
+      await updateRow(token,row,{time_entries:entries,time_spent:minutes});
+      return {taskId:a.id,stopped:true,totalMinutes:minutes};
+    }
     default:throw Error('Unsupported GSD tool');
     }
   }
@@ -374,6 +445,8 @@ export function createGateway({
     if(u==='/api/health'&&method==='GET')return true;
     if(u==='/api/realtime'&&['GET','POST'].includes(method))return true;
     if(u==='/api/gsd/account'&&method==='DELETE')return true;
+    if(u==='/api/collections/gsd_library/records'&&method==='GET')return true;
+    if(/^\/api\/gsd\/library\/(archive|trash|view)\/[A-Za-z0-9_-]{1,160}$/.test(u)&&method==='PUT')return true;
     if(/^\/api\/gsd\/tasks\/[A-Za-z0-9_-]{10,80}$/.test(u)&&['PATCH','DELETE'].includes(method))return true;
     if(u==='/api/collections/users/auth-methods'&&method==='GET')return true;
     if(u==='/api/collections/users/auth-with-password'&&method==='POST')return true;
@@ -381,7 +454,7 @@ export function createGateway({
     if(u==='/api/collections/users/records'&&method==='POST')return true;
     if(/^\/api\/collections\/users\/records\/[A-Za-z0-9_-]{10,80}$/.test(u)&&['GET','PATCH','DELETE'].includes(method))return true;
     if(u==='/api/collections/tasks/records'&&['GET','POST'].includes(method))return true;
-    if(/^\/api\/collections\/tasks\/records\/[A-Za-z0-9_-]{10,80}$/.test(u)&&['GET','PATCH','DELETE'].includes(method))return true;
+    if(/^\/api\/collections\/tasks\/records\/[A-Za-z0-9_-]{10,80}$/.test(u)&&['GET','DELETE'].includes(method))return true;
     return false;
   };
   function proxyToPocketBase(req,res,url) {
@@ -409,7 +482,7 @@ export function createGateway({
   const pageFor=async(request,login,form)=>{
     let auth;
     const email=form.get('email'),password=form.get('password');
-    if(!validIdentity(email)||typeof password!=='string'||password.length<10||password.length>128)
+    if(!validIdentity(email)||typeof password!=='string'||password.length<(login?1:10)||password.length>128)
       throw Error('כתובת דוא"ל או סיסמה לא תקינה');
     if(!login) {
       const confirm=form.get('confirm');
@@ -440,19 +513,19 @@ export function createGateway({
         return res.end();
       }
       if(u==='/health'&&method==='GET')
-        return json(res,200,{ok:true,name:'GSD Remote MCP Bridge',mode:'cloud-account',version:'1.0.0'});
+        return json(res,200,{ok:true,name:'GSD Cloud',mode:'cloud-account',version:'1.0.0'});
       if(u==='/api/health'||u.startsWith('/api/')){
         if(!proxyAllowed(u,method))return json(res,403,{error:'not_allowed'});
         if(u==='/api/collections/users/records'&&method==='POST'&&!rate(req,'signup',7,3600000))
           return json(res,429,{error:'signup_rate_limit'});
         return proxyToPocketBase(req,res,url);
       }
-      if(u==='/.well-known/oauth-protected-resource'&&method==='GET')
+      if(['/.well-known/oauth-protected-resource','/.well-known/oauth-protected-resource/mcp'].includes(u)&&method==='GET')
         return json(res,200,{resource:base+'/mcp',authorization_servers:[base],
           scopes_supported:[...allowedScopes],bearer_methods_supported:['header']});
       if(u==='/.well-known/oauth-authorization-server'&&method==='GET')
         return json(res,200,{issuer:base,authorization_endpoint:base+'/oauth/authorize',
-          token_endpoint:base+'/oauth/token',registration_endpoint:base+'/oauth/register',
+          token_endpoint:base+'/oauth/token',registration_endpoint:base+'/oauth/register',revocation_endpoint:base+'/oauth/revoke',
           response_types_supported:['code'],
           grant_types_supported:['authorization_code','refresh_token'],
           code_challenge_methods_supported:['S256'],
@@ -462,7 +535,7 @@ export function createGateway({
         if(!Array.isArray(data.redirect_uris)||!data.redirect_uris.length||
           data.redirect_uris.length>5||!data.redirect_uris.every(validRedirect))
           return json(res,400,{error:'invalid_redirect_uri'});
-        if(Object.keys(store.clients).length>100)return json(res,429,{error:'client_limit'});
+        if(Object.keys(store.clients).length>1000)return json(res,429,{error:'client_limit'});
         const client=rand(24);
         store.clients[client]={redirects:data.redirect_uris,registeredAt:clock()};
         save();
@@ -485,12 +558,14 @@ export function createGateway({
           return document(res,400,'<h2>בקשת הרשאה לא תקינה</h2>');
         const requestId=rand(20);
         store.pending[requestId]={clientId,redirect,challenge,scopes,
-          state:url.searchParams.get('state')||'',created:clock(),expires:clock()+authTTL,failures:0};
+          state:url.searchParams.get('state')||'',language:((url.searchParams.get('ui_locales')||req.headers['accept-language']||'he').toString().toLowerCase().startsWith('en')?'en':'he'),created:clock(),expires:clock()+authTTL,failures:0};
         save();
         return renderLogin(res,requestId);
       }
       if((u==='/oauth/login'||u==='/oauth/create-account')&&method==='POST'){
         if(!rate(req,'login',22,900000))return document(res,429,'<h2>יותר מדי ניסיונות. נסה שוב מאוחר יותר</h2>');
+        if(req.headers.origin && req.headers.origin!==new URL(base).origin)
+          return document(res,403,'<h2>Invalid request origin</h2>');
         const form=new URLSearchParams(await readBody(req,8000));
         const id=form.get('request'),pending=store.pending[id];
         if(!pending||pending.expires<clock())return document(res,400,'<h2>החיבור פג תוקף</h2>');
@@ -515,13 +590,15 @@ export function createGateway({
       if(u==='/oauth/token'&&method==='POST'){
         const form=new URLSearchParams(await readBody(req,8000));
         const type=form.get('grant_type'),clientId=form.get('client_id');
+        const resource=form.get('resource');
+        if(resource && resource!==base+'/mcp')return json(res,400,{error:'invalid_target'});
         let record;
         if(type==='authorization_code'){
           const key=sha(form.get('code')||''),stored=store.codes[key];
           const verifier=form.get('code_verifier')||'';
           const expected=createHash('sha256').update(verifier).digest('base64url');
           if(!stored||stored.expires<=clock()||stored.clientId!==clientId||
-            stored.redirect!==form.get('redirect_uri')||verifier.length<43||
+            stored.redirect!==form.get('redirect_uri')||!/^[-._~A-Za-z0-9]{43,128}$/.test(verifier)||
             !cleanCompare(stored.challenge,expected))
             return json(res,400,{error:'invalid_grant'});
           record=stored;delete store.codes[key];
@@ -530,16 +607,34 @@ export function createGateway({
           const stored=store.refresh[key];
           if(!stored||stored.expires<=clock()||stored.clientId!==clientId)
             return json(res,400,{error:'invalid_grant'});
-          record=stored;delete store.refresh[key];
+          record=stored;
+          // Claim the refresh credential before network I/O. Concurrent replays cannot both rotate it.
+          delete store.refresh[key];save();
+          try{
+            const renewed=await pb('/api/collections/users/auth-refresh',{method:'POST',token:open(record.pbToken)});
+            if(renewed.record.id!==record.userId)throw Error('Identity changed');
+            record.pbToken=seal(renewed.token);
+          }catch{return json(res,400,{error:'invalid_grant'});}
+          delete store.refresh[key];
         }else return json(res,400,{error:'unsupported_grant_type'});
         const access=rand(32),refresh=rand(32),scope=record.scopes||['gsd.read','gsd.write','offline_access'];
         const session={userId:record.userId,pbToken:record.pbToken,
-          clientId,scopes:scope,expires:clock()+tokenTTL};
+          family:record.family||rand(20),clientId,scopes:scope,expires:clock()+tokenTTL};
         store.access[sha(access)]=session;
-        store.refresh[sha(refresh)]={...session,expires:clock()+refreshTTL};
+        if(scope.includes('offline_access'))store.refresh[sha(refresh)]={...session,expires:clock()+refreshTTL};
         save();
         return json(res,200,{access_token:access,token_type:'Bearer',
-          expires_in:tokenTTL/1000,refresh_token:refresh,scope:scope.join(' ')});
+          expires_in:tokenTTL/1000,...(scope.includes('offline_access')?{refresh_token:refresh}:{}),scope:scope.join(' ')});
+      }
+      if(u==='/oauth/revoke'&&method==='POST'){
+        const form=new URLSearchParams(await readBody(req,8000)),hash=sha(form.get('token')||'');
+        const entry=store.refresh[hash]||store.access[hash],clientId=form.get('client_id');
+        if(entry&&entry.clientId===clientId){
+          for(const field of ['access','refresh'])for(const [id,record] of Object.entries(store[field]))
+            if(record.family===entry.family)delete store[field][id];
+          save();
+        }
+        return json(res,200,{});
       }
       if(u==='/mcp'){
         if(method!=='POST')return json(res,405,{error:'use_streamable_http_post'});
@@ -557,6 +652,8 @@ export function createGateway({
         if(!session)
           return json(res,401,{error:'unauthorized'},
             {'WWW-Authenticate':'Bearer resource_metadata="'+base+'/.well-known/oauth-protected-resource"'});
+        if(!session.scopes.includes('gsd.read'))
+          return json(res,403,{error:'insufficient_scope'});
         if(raw.method==='tools/list'){
           const tools=catalog.filter(t=>!t.writes||session.scopes.includes('gsd.write'))
             .map(t=>({name:t.name,description:t.description,inputSchema:t.inputSchema,
@@ -573,7 +670,7 @@ export function createGateway({
             return json(res,200,rpcOk(raw.id,toolError('Write permission not granted')));
           try {
             const result=await executeTool(def,args,session);
-            return json(res,200,rpcOk(raw.id,{content:[{type:'text',text:JSON.stringify(result)}]}));
+            return json(res,200,rpcOk(raw.id,{isError:Boolean(result.failures?.length),content:[{type:'text',text:JSON.stringify(result)}]}));
           }catch(error){
             return json(res,200,rpcOk(raw.id,toolError(error.message||'Operation failed')));
           }

@@ -48,7 +48,7 @@ public struct AuthService: Sendable {
     public func signInWithEmail(_ email: String, password: String) async throws -> AuthResult {
         let address = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         guard address.contains("@"), address.utf8.count <= 254,
-              password.count >= 10 else { throw AuthError.invalidCredentials }
+              !password.isEmpty, password.count <= 128 else { throw AuthError.invalidCredentials }
         let result = try await client.authWithPassword(email: address, password: password)
         tokenStore.save(result.token)
         return result
@@ -57,7 +57,7 @@ public struct AuthService: Sendable {
     public func createAccountWithEmail(_ email: String, password: String) async throws -> AuthResult {
         let address = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         guard address.contains("@"), address.utf8.count <= 254,
-              password.count >= 10 else { throw AuthError.invalidCredentials }
+              password.count >= 10, password.count <= 128 else { throw AuthError.invalidCredentials }
         let result = try await client.registerPasswordAccount(email: address, password: password)
         tokenStore.save(result.token)
         return result

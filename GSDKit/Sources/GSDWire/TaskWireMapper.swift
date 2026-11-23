@@ -69,7 +69,8 @@ package enum TaskWireMapper {
         } else {
             minutes = 0   // still-running entry
         }
-        return WireTimeEntry(id: entry.id, startedAt: WireDate.format(entry.startedAt), minutes: minutes)
+        return WireTimeEntry(id: entry.id, startedAt: WireDate.format(entry.startedAt), minutes: minutes,
+                             endedAt: WireDate.format(entry.endedAt), notes: entry.notes)
     }
 
     // MARK: Wire → Local (pull)
@@ -118,6 +119,7 @@ package enum TaskWireMapper {
         let dueDate = WireDate.parse(r.dueDate)
         let keepsReminder = !returning && isSameInstant(local.dueDate, dueDate)
         let pick = TopThree.fromWire(focusDate: r.focusDate, focusRank: r.focusRank)
+        let entries = mergedTimeEntries(r.timeEntries, local: local.timeEntries)
         return Task(
             id: r.taskId, title: r.title, description: r.description,
             urgent: r.urgent, important: r.important,
@@ -134,8 +136,9 @@ package enum TaskWireMapper {
             lastNotificationAt: keepsReminder ? local.lastNotificationAt : nil,
             snoozedUntil: keepsReminder ? local.snoozedUntil : nil,
             estimatedMinutes: r.estimatedMinutes,
-            timeSpent: local.timeSpent,                     // derived from timeEntries → stays local
-            timeEntries: local.timeEntries,                 // wire form lossy → prefer local
+            timeSpent: r.timeEntries.contains(where: { $0.endedAt != nil })
+                ? TimeTracking.timeSpentMinutes(entries) : local.timeSpent,
+            timeEntries: entries,
             savedAt: savedAt,
             focusDate: pick.focusDate, focusRank: pick.focusRank
         )
@@ -146,9 +149,25 @@ package enum TaskWireMapper {
 
     private static func epochMs(_ date: Date) -> Int { Int((date.timeIntervalSince1970 * 1000).rounded()) }
 
+    private static func mergedTimeEntries(_ remote: [WireTimeEntry], local: [TimeEntry]) -> [TimeEntry] {
+        // A legacy minute-only record cannot identify an open timer.
+        guard remote.contains(where: { $0.endedAt != nil }) else { return local }
+        let existing = Dictionary(local.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        let ids = Set(remote.map(\.id))
+        return remote.map { wire in
+            if wire.endedAt == nil, let original = existing[wire.id] { return original }
+            return reconstruct(wire)
+        } + local.filter { !ids.contains($0.id) }
+    }
+
     private static func reconstruct(_ wire: WireTimeEntry) -> TimeEntry {
         let started = WireDate.parse(wire.startedAt) ?? Date(timeIntervalSince1970: 0)
-        return TimeEntry(id: wire.id, startedAt: started,
-                         endedAt: started.addingTimeInterval(Double(wire.minutes) * 60), notes: nil)
+        let ended: Date?
+        if let exact = wire.endedAt {
+            ended = WireDate.parse(exact)
+        } else {
+            ended = started.addingTimeInterval(Double(wire.minutes) * 60)
+        }
+        return TimeEntry(id: wire.id, startedAt: started, endedAt: ended, notes: wire.notes)
     }
 }

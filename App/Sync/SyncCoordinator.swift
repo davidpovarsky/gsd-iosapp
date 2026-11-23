@@ -33,6 +33,7 @@ final class SyncCoordinator {
     @ObservationIgnored private var online = true
     @ObservationIgnored private var active = false
     @ObservationIgnored private var heldForAccountDeletion = false
+    @ObservationIgnored private var heldForSignIn = false
 
     /// Runs after every sync that pulled cleanly. GSDApp hangs the auto-archive sweep here: archiving
     /// deletes the server copy (parity B-43), so while signed in the sweep must decide from data at
@@ -55,14 +56,24 @@ final class SyncCoordinator {
 
     /// Launch / after-sign-in: begin cadence + reachability + SSE and run an initial sync.
     func start(trigger: SyncTrigger = .launch) {
-        guard signedIn() else { return }
+        if case .signIn = trigger { heldForSignIn = false }
+        guard signedIn(), !heldForSignIn, !heldForAccountDeletion else { return }
         resume(trigger: trigger)
     }
 
     /// The user is starting to sign in, and no token exists yet. The engine's next run, whatever
     /// triggers it, drops the deletes queued while signed out before anything else (resurrect on
     /// sight, spec section 5).
-    func beginSignIn() async { await engine.beginSignIn() }
+    func beginSignIn() async {
+        stop()
+        heldForSignIn = true
+        await engine.beginSignIn()
+    }
+
+    func cancelSignIn() {
+        heldForSignIn = false
+        start(trigger: .manual)
+    }
 
     /// Shared bring-up for launch and foreground-return (kept in one place so the two entry points
     /// never diverge in which subsystems they spin up). Cadence/SSE cancel-and-restart; reachability
@@ -89,6 +100,7 @@ final class SyncCoordinator {
     /// local tasks are NOT wiped). Keeps the engine out of `SessionStore`.
     func signedOut() {
         heldForAccountDeletion = false
+        heldForSignIn = false
         stop()
         _Concurrency.Task { await engine.resetCursor() }
     }
@@ -109,7 +121,7 @@ final class SyncCoordinator {
     }
 
     func enteredForeground() {
-        guard signedIn(), !heldForAccountDeletion else { return }
+        guard signedIn(), !heldForAccountDeletion, !heldForSignIn else { return }
         resume(trigger: .foreground)
     }
 
@@ -131,7 +143,7 @@ final class SyncCoordinator {
     /// would otherwise fire against a suspended store) and runs the sync inline instead. Cadence,
     /// SSE and reachability stay down: they are foreground-only. No-op when signed out.
     func backgroundSync() async {
-        guard signedIn() else { return }
+        guard signedIn(), !heldForSignIn, !heldForAccountDeletion else { return }
         debounceTask?.cancel(); debounceTask = nil
         await runSync(trigger: .background)
     }
@@ -187,7 +199,7 @@ final class SyncCoordinator {
 
     /// Debounced post-mutation push — called from `TaskStore.onMutation`. Coalesces rapid edits.
     func scheduleDebouncedPush() {
-        guard signedIn() else { return }
+        guard signedIn(), !heldForSignIn, !heldForAccountDeletion else { return }
         debounceTask?.cancel()
         debounceTask = _Concurrency.Task { [weak self] in
             try? await _Concurrency.Task.sleep(for: .milliseconds(1500))
@@ -259,7 +271,7 @@ final class SyncCoordinator {
     }
 
     private func runSync(trigger: SyncTrigger) async {
-        guard !heldForAccountDeletion else { return }
+        guard signedIn(), !heldForAccountDeletion, !heldForSignIn else { return }
         phase = .syncing
         let result = await engine.sync(trigger: trigger)
         apply(result)
@@ -267,6 +279,7 @@ final class SyncCoordinator {
     }
 
     private func runPush() async {
+        guard signedIn(), !heldForAccountDeletion, !heldForSignIn else { return }
         phase = .syncing
         let result = await engine.pushNow()
         apply(result)

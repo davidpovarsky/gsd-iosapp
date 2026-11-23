@@ -13,6 +13,18 @@ extension AppDatabase {
         registerV6(&migrator)
         registerV7(&migrator)
         registerV8(&migrator)
+        migrator.registerMigration("v9-cloud-library-sync") { db in
+            try db.create(table: "cloudLibrarySync") { table in
+                table.column("owner", .text).notNull()
+                table.column("kind", .text).notNull()
+                table.column("entityId", .text).notNull()
+                table.column("payload", .text).notNull()
+                table.column("version", .text).notNull()
+                table.column("deleted", .boolean).notNull()
+                table.column("pending", .boolean).notNull()
+                table.primaryKey(["owner", "kind", "entityId"])
+            }
+        }
         return migrator
     }
 

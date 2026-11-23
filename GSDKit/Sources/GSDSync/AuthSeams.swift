@@ -12,7 +12,7 @@ public struct AuthConfig: Sendable {
     /// The owner's live backend + the configured bounce redirect (set up + tested).
     public static let live = AuthConfig(
         baseURL: PocketBaseEndpoint.liveBaseURL,
-        redirectURI: "https://torah-social.tail0a6c7d.ts.net:10000/gsd/ios-oauth-redirect/",
+        redirectURI: "https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud/ios-oauth-redirect/",
         callbackScheme: "gsd")
 }
 

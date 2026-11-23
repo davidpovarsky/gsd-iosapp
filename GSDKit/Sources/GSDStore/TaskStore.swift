@@ -473,6 +473,14 @@ public final class TaskStore {
 
     /// Trashed tasks, newest first. Read on demand rather than observed: the trash is a
     /// settings-screen surface, not something the matrix renders.
+    /// Read actual repositories so an unready UI observer cannot bypass account isolation.
+    public func hasCloudAccountData() async throws -> Bool {
+        if !(try await repository.fetchAll()).isEmpty { return true }
+        if !(try await archiveRepository.fetchAll()).isEmpty { return true }
+        if !(try await trashRepository.fetchAll()).isEmpty { return true }
+        return !(try await smartViewRepository.fetchAll()).isEmpty
+    }
+
     public func trashedTasks() async throws -> [ArchivedTask] {
         try await trashRepository.fetchAllStamped()
     }
