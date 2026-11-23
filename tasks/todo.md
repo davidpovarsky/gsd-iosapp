@@ -2,13 +2,16 @@
 
 ### Resuming From Here
 
-- Scope: restore the requested GSD iPad + Hanlin + ChatGPT MCP delivery; Lorvex is outside this repair.
-- Done: actual remote contract mapping, polling ownership, active-surface approvals, public OAuth subpath/discovery, and SwiftUI type-check decomposition.
-- Public acceptance 45100655342: twelve checkpoints passed; exact synthetic fixture removed; existing user devices preserved.
-- Native acceptance 45101502774 on b5c78c3: all seven Hanlin, two MCP and three packaging tests passed; device/IPA and simulator builds passed; normal iPhone launch and screenshot passed and were visually reviewed.
-- Remaining native failure: iPad bootstatus timed out before app installation. The corrected harness chooses supported modern devices, logs timeout output and permits one pre-install reboot; both families remain required.
-- CI now preserves IPA assets immediately after build and the simulator app before launch. Run the corrected native gate, inspect IPA hashes and screenshots, publish prerelease, update Asana.
-- Physical iPad installation and personal ChatGPT authorization remain unverified until observed.
+- Scope: finish the requested GSD iPad + Hanlin + ChatGPT MCP delivery. Lorvex remains outside this repair.
+- All implementation changes are in code revision 383ff4833d0ae412d4cf37475ec70813d1cb28dc.
+- Current native acceptance: https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45111695893 . It was dispatched on that revision and is awaiting a GitHub Xcode runner. Do not create duplicate native runs.
+- Previous queued run45106355079 at aaf31d5 was cancelled before any step ran, after almost an hour without a runner, when the consolidated current-code run was created.
+- Earlier native45101502774 proved the device/IPA build and universal simulator build, seven SDK tests, three packaging tests and normal iPhone launch. Only old iPad simulator boot timed out before app installation.
+- Simulator selection now uses compatible modern devices; one recovery is allowed only before app installation. Both device families must pass. IPA and simulator binaries are preserved before smoke tests.
+- Public acceptance45110816923 passed all12 OAuth/MCP checkpoints on383ff, including a240069-byte Hebrew result;3 local/server regression tests passed including the exact1MiB UTF-8 boundary.
+- Oracle is running serverSHA256 3f11aa7a1df46d205f129ea03fc78e52f89fd2a62fca24418de751a524888ac6. Its result limit now matches native1MiB; ordinary body limits remain128KiB. The exact public-test fixture was removed, both services are healthy and Lorvex's paired device remains.
+- Next: complete current native run, inspect both screenshots, download and validate IPA archives, publish prerelease and finish Asana delivery tasks. Validator is prepared on Windows for run45111695893 and requires actual terminal-success metadata.
+- Physical iPad signing/installation and personal ChatGPT OAuth pairing remain user-device acceptance; keep that Asana task open until observed.
 
 # Native sync ports: confirm before absence, guarded task writes (2026-11-19)
 

@@ -52,20 +52,35 @@ screenshot failures are never retried. Both device families must pass.
 IPA artifacts are now saved immediately after the device build, using an explicit
 always condition so a later simulator failure cannot discard built binaries.
 The compiled simulator app is also archived before launch for reproducible diagnosis.
-The corrected harness still requires a new native acceptance run.
+The consolidated native acceptance is [run 45111695893](https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45111695893)
+on 383ff4833d0ae412d4cf37475ec70813d1cb28dc; it is awaiting a GitHub Xcode runner
+at this checkpoint. Earlier queued run45106355079 was cancelled before any
+step ran after almost an hour, once this current-code replacement was created.
 
 The generated project.pbxproj SHA256 is
 8b959df9cfc64bcef95df924b2cc7c9fe972907080cc8aee49765235df345b83.
 
 ## Verified public MCP service
 
-[Public acceptance 45100655342](https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45100655342)
-passed twelve checkpoints on febbc6bb03077915087ba8ec348e66c940b2573a:
-canonical discovery, DCR, actual consent-form action, OAuth PKCE, refresh rotation
-and replay rejection, synthetic MCP dashboard round trip, and authorization revocation.
-The exact synthetic fixture and its authorization records were removed afterwards.
-Existing user devices were preserved, and both GSD and the root service stayed healthy.
-This is live server/transport evidence; it is not personal iPad/ChatGPT pairing evidence.
+[Public acceptance 45110816923](https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45110816923)
+passed twelve checkpoints on code revision 383ff4833d0ae412d4cf37475ec70813d1cb28dc.
+They cover canonical discovery, DCR, actual consent-form action, OAuth PKCE,
+refresh rotation/replay rejection, a synthetic dashboard round trip and revocation.
+The round trip carried 240,069 UTF-8 bytes of Hebrew text through public HTTPS.
+
+A focused native/relay wire review found matching registration, polling and result
+field contracts, but an inconsistent result size limit. Native allowed 1 MiB of
+UTF-8 while the relay allowed only 128 KiB envelopes and 100,000 text characters.
+The result route now accepts a bounded escaped-JSON envelope and enforces the
+same decoded 1 MiB UTF-8 limit. Other endpoints retain their 128 KiB body cap.
+Three Node tests passed, including exact-limit transport, a one-byte-over-limit
+rejection and unchanged ordinary request limits.
+
+Deployed server SHA256:
+3f11aa7a1df46d205f129ea03fc78e52f89fd2a62fca24418de751a524888ac6.
+The exact synthetic fixture and its client/auth records were removed afterwards.
+Existing user devices were preserved; GSD and Lorvex both remained healthy.
+This is live server/transport evidence, not personal iPad/ChatGPT pairing evidence.
 
 ## Remaining delivery
 
