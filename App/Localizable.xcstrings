@@ -1471,6 +1471,23 @@
       },
       "extractionState": "manual"
     },
+    "Account mode": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Account mode"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "????? ??????"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Action failed": {
       "localizations": {
         "en": {
@@ -3256,6 +3273,23 @@
       },
       "extractionState": "manual"
     },
+    "Cloud account": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cloud account"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "????? ???"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Cloudflare / MCP bridge": {
       "localizations": {
         "en": {
@@ -3545,6 +3579,23 @@
       },
       "extractionState": "manual"
     },
+    "Confirm password": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirm password"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "????? ?????"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Connecting…": {
       "localizations": {
         "en": {
@@ -3642,6 +3693,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "השמירה המאובטחת של פרטי הגישה לגשר נכשלה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Could not sign in. Check your email, password, or internet connection.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not sign in. Check your email, password, or internet connection."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "?? ???? ??????. ?? ????? ?? ????? ??????, ?????? ?? ?????? ????????."
           }
         }
       },
@@ -4276,6 +4344,23 @@
       },
       "extractionState": "manual"
     },
+    "Create GSD account": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create GSD account"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "????? ????? GSD"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Create Task": {
       "localizations": {
         "en": {
@@ -4322,6 +4407,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "יצירת משימה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Create account": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create account"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "????? ?????"
           }
         }
       },
@@ -5484,6 +5586,23 @@
       },
       "extractionState": "manual"
     },
+    "Email address": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Email address"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "????? ?????"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Empty": {
       "localizations": {
         "en": {
@@ -6227,6 +6346,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "GSD"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "GSD Cloud account": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GSD Cloud account"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "????? GSD Cloud"
           }
         }
       },
@@ -9411,6 +9547,40 @@
       },
       "extractionState": "manual"
     },
+    "Password": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Password"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "?????"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Passwords do not match.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passwords do not match."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "???????? ???? ??????."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Paused â€” reopen GSD": {
       "localizations": {
         "en": {
@@ -11587,6 +11757,57 @@
       },
       "extractionState": "manual"
     },
+    "Sign in": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "???????"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Sign in or create GSD Cloud account": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in or create GSD Cloud account"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "??????? ?? ????? ????? GSD Cloud"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Sign in to GSD Cloud": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to GSD Cloud"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "??????? ??GSD Cloud"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Sign in with Apple": {
       "localizations": {
         "en": {
@@ -13474,6 +13695,23 @@
       },
       "extractionState": "manual"
     },
+    "To sync your tasks and use ChatGPT while this iPad is closed, sign in to GSD Cloud.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To sync your tasks and use ChatGPT while this iPad is closed, sign in to GSD Cloud."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "??? ?????? ?? ??????? ??????? ??ChatGPT ?? ???????? ????, ?? ?????? ?????? GSD Cloud."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Today": {
       "localizations": {
         "en": {
@@ -14290,6 +14528,40 @@
       },
       "extractionState": "manual"
     },
+    "Use the same account in ChatGPT and on every device. ChatGPT can manage your cloud tasks while this app is closed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use the same account in ChatGPT and on every device. ChatGPT can manage your cloud tasks while this app is closed."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "???? ?????? ????? ????? ??ChatGPT ???? ????????. ChatGPT ???? ???? ?? ??????? ???? ?? ??????????? ?????."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Use the same account in ChatGPT and on every device. Tasks sync even when this iPad is closed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use the same account in ChatGPT and on every device. Tasks sync even when this iPad is closed."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "???? ?????? ????? ????? ??ChatGPT ???? ????????. ??????? ????????? ?? ???????? ????."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Version": {
       "localizations": {
         "en": {
@@ -15021,6 +15293,23 @@
       },
       "extractionState": "manual"
     },
+    "current selection": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "current selection"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "?????? ???????"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "due in %lld days": {
       "localizations": {
         "en": {
@@ -15289,6 +15578,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "שנייה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "several tasks": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "several tasks"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "??? ??????"
           }
         }
       },
