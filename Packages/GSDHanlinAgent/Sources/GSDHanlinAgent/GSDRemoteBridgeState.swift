@@ -51,6 +51,7 @@ public final class GSDRemoteBridgeState {
   @ObservationIgnored private let store: TaskStore
   @ObservationIgnored private var host: GSDHanlinHost?
   @ObservationIgnored private var pollTask: _Concurrency.Task<Void, Never>?
+  @ObservationIgnored private var pollGeneration: UUID?
   @ObservationIgnored private var approvalContinuation: CheckedContinuation<Bool, Never>?
   @ObservationIgnored private let deviceID: String
 
@@ -187,27 +188,35 @@ public final class GSDRemoteBridgeState {
   public func startPolling() {
     guard pollTask == nil, !endpointText.isEmpty,
           credentials != nil else { return }
+    let generation = UUID()
+    pollGeneration = generation
     pollTask = _Concurrency.Task { [weak self] in
       guard let self else { return }
-      await self.pollLoop()
+      await self.pollLoop(generation: generation)
     }
   }
 
   public func stopPolling() {
     pollTask?.cancel()
+    pollGeneration = nil
     pollTask = nil
     isPolling = false
     resolveApproval(false)
     if status == "iPad online" { status = "Paused â€” reopen GSD" }
   }
 
-  private func pollLoop() async {
+  private func pollLoop(generation: UUID) async {
+    guard pollGeneration == generation else { return }
     isPolling = true
     defer {
-      isPolling = false
-      pollTask = nil
+      // A cancelled scene's loop must not clear a newer foreground loop.
+      if pollGeneration == generation {
+        isPolling = false
+        pollTask = nil
+        pollGeneration = nil
+      }
     }
-    while !_Concurrency.Task<Never, Never>.isCancelled {
+    while pollGeneration == generation, !_Concurrency.Task<Never, Never>.isCancelled {
       do {
         let endpoint = try Self.endpoint(endpointText)
         guard let token = credentials else {
@@ -216,6 +225,7 @@ public final class GSDRemoteBridgeState {
         let data = try await request(
           "/v1/device/poll?device_id=" + deviceID,
           endpoint:endpoint,method:"GET",token:token)
+        guard pollGeneration == generation, !_Concurrency.Task<Never, Never>.isCancelled else { break }
         let polled = try JSONDecoder().decode(GSDRemotePoll.self,from:data)
         linked = polled.linked
         status = polled.linked ? "iPad online â€” ChatGPT can read tasks" :

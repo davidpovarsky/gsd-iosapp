@@ -182,11 +182,11 @@ public actor GSDHanlinHost: HanlinHostIntegration {
     } catch {
       return .init(text: "The tool parameters do not match the declared schema", isError: true)
     }
-    let args: GSDHanlinArgs
+    let args: GSDHanlinArguments
     do {
       let decoder = JSONDecoder()
       decoder.keyDecodingStrategy = .convertFromSnakeCase
-      args = try decoder.decode(GSDHanlinArgs.self, from: argumentsJSON)
+      args = try decoder.decode(GSDHanlinArguments.self, from: argumentsJSON)
     } catch {
       return .init(text: "Cannot decode arguments", isError: true)
     }
@@ -194,9 +194,9 @@ public actor GSDHanlinHost: HanlinHostIntegration {
     if spec.writes {
       let request = GSDHanlinWriteRequest(
         tool: name,
-        objectIDs: args.id.map { [$0] } ?? [],
+        taskIDs: args.ids ?? args.id.map { [$0] } ?? [],
         description: spec.summary + ": " +
-          (args.title ?? args.name ?? args.id ?? "current selection"))
+          (args.title ?? args.id ?? "current selection"))
       guard await writeAuthorizer(request), !_Concurrency.Task<Never, Never>.isCancelled else {
         return .init(text: "Change declined or cancelled on the iPad", isError: true)
       }

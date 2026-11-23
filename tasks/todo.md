@@ -1,3 +1,13 @@
+## GSD Hanlin MCP build repair (2026-11-23)
+
+### Resuming From Here
+
+- Scope: restore the already requested GSD native iPad + Hanlin + ChatGPT MCP delivery. Lorvex is outside this repair.
+- FIX_REPRODUCED: native run 45094695724 failed in GSDHanlinHost because the remote adapter referenced GSDHanlinArgs and objectIDs, which belong to a different host contract. The existing GSD contract is GSDHanlinArguments/taskIDs; args.name is also not a GSD field.
+- Verification owner: current coordinator runs one native acceptance pipeline (existing seven Hanlin tests and arm64 IPA export). Reuse unchanged packaging evidence; public subpath OAuth and sideload-readiness reviews have separate owners.
+- In progress: repair native contract mapping; test the public OAuth subpath; verify IPA archives and publish the resulting build.
+- Physical iPad installation and personal ChatGPT authorization remain unverified until observed.
+
 # Native sync ports: confirm before absence, guarded task writes (2026-11-19)
 
 Two phases, stacked. Phase A is `fix/confirm-before-absence` (`3b67bb5`). Phase B is `fix/guarded-task-writes`, on top of it, from `269910f` through the final fix wave. Spec and plan: `plans/2026-11-19-native-sync-ports.md` in the workspace root. The Android and web halves have their own worktrees. Real-server results for Phase A (both clients, failure on main and pass on the Phase A commits): `plans/2026-11-19-native-sync-ports-real-server.md`.
