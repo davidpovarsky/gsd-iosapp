@@ -5,7 +5,8 @@
 - Scope: restore the already requested GSD native iPad + Hanlin + ChatGPT MCP delivery. Lorvex is outside this repair.
 - FIX_REPRODUCED: native run 45094695724 failed in GSDHanlinHost because the remote adapter referenced GSDHanlinArgs and objectIDs, which belong to a different host contract. The existing GSD contract is GSDHanlinArguments/taskIDs; args.name is also not a GSD field.
 - Verification owner: current coordinator runs one native acceptance pipeline (existing seven Hanlin tests and arm64 IPA export). Reuse unchanged packaging evidence; public subpath OAuth and sideload-readiness reviews have separate owners.
-- In progress: repair native contract mapping; test the public OAuth subpath; verify IPA archives and publish the resulting build.
+- Done: remote contract mapping, polling ownership, active-surface approvals and public OAuth fixes. External acceptance 45100655342 passed and its synthetic fixture was removed.
+- Next native gate: run 45100448844 passed all seven SDK tests but exposed SwiftUI type-check complexity in ContentView. Split the modifier chain into small opaque boundaries, preserving state and order. Rebuild, launch both simulator families, verify IPA archives and publish.
 - Physical iPad installation and personal ChatGPT authorization remain unverified until observed.
 
 # Native sync ports: confirm before absence, guarded task writes (2026-11-19)
