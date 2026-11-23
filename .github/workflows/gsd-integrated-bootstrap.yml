@@ -1,0 +1,27 @@
+name: GSD Integrated Native Validation Bootstrap
+on:
+  push:
+    branches: [feat/gsd-complete-testflight-20261124]
+    paths: [.github/workflows/gsd-integrated-bootstrap.yml]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Dispatch exact-commit Xcode 27 native acceptance
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          SOURCE_SHA: ${{ github.sha }}
+          SOURCE_BRANCH: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "GSD_INTEGRATED_SHA=$SOURCE_SHA"
+          gh workflow run gsd-hanlin-agent-ios.yml \
+            --repo "$GH_REPO" --ref "$SOURCE_BRANCH" \
+            -f mode=validate -f source_ref="$SOURCE_SHA" -f build_number=48
+          echo "GSD_NATIVE_VALIDATE_DISPATCHED"
