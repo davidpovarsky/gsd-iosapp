@@ -2,16 +2,32 @@
 
 ### Resuming From Here
 
-- Scope: finish the requested GSD iPad + Hanlin + ChatGPT MCP delivery. Lorvex remains outside this repair.
-- All implementation changes are in code revision 383ff4833d0ae412d4cf37475ec70813d1cb28dc.
-- Current native acceptance: https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45111695893 . It was dispatched on that revision and is awaiting a GitHub Xcode runner. Do not create duplicate native runs.
-- Previous queued run45106355079 at aaf31d5 was cancelled before any step ran, after almost an hour without a runner, when the consolidated current-code run was created.
-- Earlier native45101502774 proved the device/IPA build and universal simulator build, seven SDK tests, three packaging tests and normal iPhone launch. Only old iPad simulator boot timed out before app installation.
-- Simulator selection now uses compatible modern devices; one recovery is allowed only before app installation. Both device families must pass. IPA and simulator binaries are preserved before smoke tests.
-- Public acceptance45110816923 passed all12 OAuth/MCP checkpoints on383ff, including a240069-byte Hebrew result;3 local/server regression tests passed including the exact1MiB UTF-8 boundary.
-- Oracle is running serverSHA256 3f11aa7a1df46d205f129ea03fc78e52f89fd2a62fca24418de751a524888ac6. Its result limit now matches native1MiB; ordinary body limits remain128KiB. The exact public-test fixture was removed, both services are healthy and Lorvex's paired device remains.
-- Next: complete current native run, inspect both screenshots, download and validate IPA archives, publish prerelease and finish Asana delivery tasks. Validator is prepared on Windows for run45111695893 and requires actual terminal-success metadata.
-- Physical iPad signing/installation and personal ChatGPT OAuth pairing remain user-device acceptance; keep that Asana task open until observed.
+- Scope: finish GSD iPad + Hanlin + ChatGPT MCP delivery. Lorvex remains outside this repair.
+- Compiled application source: d44649ed9bb0cc0eab9fb0d12c9ec63a71cd41ca. Recovery branch: fix/gsd-simulator-install-20261123.
+- Source run 45113033128 finished FAILURE solely at simulator smoke. Seven Hanlin, three Node and three packaging tests passed; device compilation, both IPA exports/upload, simulator compilation/archive/upload passed.
+- Both modern simulator devices booted on the first attempt. Both simctl install invocations hit 120-second harness timeouts. No current normal launch/liveness/screenshot success was established by that run.
+- Actual full IPA: 28,024,600 bytes, SHA256 a0af2ad0e61aac8242da6c14557dc7e06a3b271a8c20063c8fac71b799cb8bdd. Actual sideload IPA: 24,829,003 bytes, SHA256 f617ff67394bb2bd1e30604199079fa2cd98404524a253aabb7c9eeb9a09324e. Independent archive CRC/Mach-O, bundle/version/minimum-OS and manifest-hash checks passed; all 41 retained sideload entries match the full archive.
+- Harness correction: file-backed stdout/stderr and direct-child wait; one 300-second installation attempt, bounded failure diagnostics, unchanged two-family normal install/launch/PID/five-second-liveness/PNG gates.
+- Synthetic checks reproduced the old capture-output false timeout and showed the new direct wait finishing in about 0.08 seconds; exit 7 and actual timeout propagation passed. These checks do not prove the actual simctl cause.
+- Recovery uses the exact source simulator artifact only after pinned source/attempt/step/artifact-digest checks, unchanged protected-tree proof and byte equality of all nine generated build inputs. Application inputs were not changed.
+- Full workflow remains the default; no skip-CI markers. This recovery branch is outside its push filter, and the recovery was explicitly dispatched. Workflow/ref concurrency preserves cancel-in-progress: false.
+- Public acceptance 45110816923 passed three Node tests and twelve external OAuth/MCP checks on 383ff4833d0ae412d4cf37475ec70813d1cb28dc, including 240,069 UTF-8 bytes of Hebrew. Deployed server SHA256 remains 3f11aa7a1df46d205f129ea03fc78e52f89fd2a62fca24418de751a524888ac6. Synthetic fixture/auth cleanup completed; existing devices were preserved; GSD and Lorvex health endpoints returned HTTP 200.
+- Earlier 45101502774 iPhone onboarding is historical evidence only. Earlier queued 45106355079 and 45111695893 were cancelled before any runner/step.
+- Setup: unsigned GSD 4.0.1 (47), iOS/iPadOS 27+. Hanlin AI → Cancel if Model settings auto-open → MCP → Pair this iPad with ChatGPT. Keep GSD foregrounded and approve writes. Provider API configuration remains separate.
+
+### Technical delivery complete; physical acceptance pending
+
+- Recovery 45119548923 at 22555c2f8ad8aebe4d7a5935eb9976246ade3fe9 completed SUCCESS at 06:30:48 UTC on 2026-11-23: https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45119548923 .
+- Both first bootstatus attempts timed out; both second boots passed. Each installation ran once and exited 0: iPhone 83.9 seconds/PID 14583, iPad 111.3 seconds/PID 18122. Both normal launches, five-second liveness and PNG gates passed.
+- Downloaded aggregate validator PASSED in GSD-IPA-validation-recovered-45119548923.json. The source 45113033128 remains explicitly failed overall; compiled-code and harness SHAs remain separate.
+- The assistant viewed both actual screenshots: GSD first-run onboarding rendered with legible/in-bounds title, icon, text, page dots and Skip/Next; no blank/error view. Coverage is launch/onboarding only, not navigation, task editing or personal MCP interaction.
+- PUBLISHED and VERIFIED: release 455067425, prerelease=true/draft=false, tag gsd-hanlin-mcp-ipad-20261123-build47, target tested 22555c2f8ad8aebe4d7a5935eb9976246ade3fe9. Published 2026-11-23 06:39:48 UTC; all nine asset names/sizes/SHA256 verified at 06:39:49 UTC. [Release](https://github.com/davidpovarsky/gsd-iosapp/releases/tag/gsd-hanlin-mcp-ipad-20261123-build47).
+- Recommended unsigned sideload download: [GSD-Hanlin-iPad-4.0.1+47-SIDELOAD-NO-EXTENSIONS-UNSIGNED.ipa](https://github.com/davidpovarsky/gsd-iosapp/releases/download/gsd-hanlin-mcp-ipad-20261123-build47/GSD-Hanlin-iPad-4.0.1%2B47-SIDELOAD-NO-EXTENSIONS-UNSIGNED.ipa).
+- Public release page and both IPA HEAD requests returned HTTP 200 without authentication at 06:40:28 UTC; IPA Content-Length values matched.
+- Technical delivery is complete: successful source prerequisites plus green recovery, independent artifact validation, assistant-inspected onboarding screenshots and verified publication. Separate visual record: GSD-simulator-visual-review-45119548923.json.
+- Asana native/IPA tasks are complete; project status 1220777011360994 is on track. Physical acceptance remains open.
+- Physical installation, personal ChatGPT OAuth pairing and provider inference remain unverified; keep the physical-acceptance Asana task open.
+- Detailed evidence: docs/ai-agent/GSD_BUILD_REPAIR_20261123.md. Setup: docs/ai-agent/GSD_REMOTE_MCP_HANDOFF_20261123.md.
 
 # Native sync ports: confirm before absence, guarded task writes (2026-11-19)
 
