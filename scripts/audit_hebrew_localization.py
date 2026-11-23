@@ -111,6 +111,8 @@ def audit():
                     value = unit.get("value", "")
                     if not value or unit.get("state") != "translated":
                         issues.append(f"{target}: unfinished {lang} for {key}")
+                    if lang == "he" and re.search(r"\?{2,}", value):
+                        issues.append(f"{target}: corrupted Hebrew text for {key}")
                     placeholders = FORMAT.findall(key)
                     actual = FORMAT.findall(value)
                     # A singular or dual explicitly spelling out a quantity may omit its number.
