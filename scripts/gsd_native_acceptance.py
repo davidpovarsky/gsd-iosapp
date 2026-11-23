@@ -49,8 +49,10 @@ def run(args: list[str], log: Path, timeout: int = 120, env: dict | None = None,
                     process.wait(timeout=10)
                 raise
         finally:
-            stream.seek(0)
-            output = redact(stream.read().decode("utf-8", errors="replace"))
+            # pread preserves the shared stdout offset if a simulator child
+            # inherited this file descriptor and remains alive after xcodebuild.
+            raw = os.pread(stream.fileno(), os.fstat(stream.fileno()).st_size, 0)
+            output = redact(raw.decode("utf-8", errors="replace"))
             log.write_text(output, encoding="utf-8")
     if check and code:
         raise RuntimeError(f"{args[0]} {args[1]} exited {code}; see {log}")
