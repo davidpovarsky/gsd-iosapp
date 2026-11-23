@@ -22,6 +22,7 @@ struct GSDApp: App {
     /// recovery screen instead of the main UI (so no edits hit a throwaway store).
     @State private var databaseUnavailable: Bool
     @Environment(\.scenePhase) private var scenePhase
+    @AppStorage("layoutDirectionPreference", store: .shared) private var direction = "system"
     @AppStorage("appTheme", store: .shared) private var themeRaw = AppTheme.system.rawValue
     @AppStorage("hasOnboarded", store: .shared) private var hasOnboarded = false
     /// Frozen clock for the demo-video harness; `nil` in every normal launch.
@@ -255,6 +256,13 @@ struct GSDApp: App {
                             _Concurrency.Task { await session.signIn(provider: "apple") }
                         }
                     )
+                }
+                .transformEnvironment(\.layoutDirection) { inherited in
+                    switch direction {
+                    case "rtl": inherited = .rightToLeft
+                    case "ltr": inherited = .leftToRight
+                    default: break
+                    }
                 }
             }
         }

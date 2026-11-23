@@ -21,9 +21,9 @@ struct DemoHomeScreen: View {
             snapshot: WidgetSnapshot(
                 generatedAt: now,
                 tasks: [
-                    WidgetTask(id: "demo-finance",  title: "Get finance sign-off", dueDate: now),
-                    WidgetTask(id: "demo-deck",     title: "Finish the Q3 board deck", dueDate: now.addingTimeInterval(2 * day)),
-                    WidgetTask(id: "demo-investor", title: "Reply to the investor email", dueDate: now.addingTimeInterval(-day)),
+                    WidgetTask(id: "demo-finance",  title: String(localized: "Get finance sign-off"), dueDate: now),
+                    WidgetTask(id: "demo-deck",     title: String(localized: "Finish the Q3 board deck"), dueDate: now.addingTimeInterval(2 * day)),
+                    WidgetTask(id: "demo-investor", title: String(localized: "Reply to the investor email"), dueDate: now.addingTimeInterval(-day)),
                 ],
                 totalCount: 3))
     }()

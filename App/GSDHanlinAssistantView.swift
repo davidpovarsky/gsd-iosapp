@@ -1,6 +1,7 @@
 import Security
 import SwiftUI
 import Charts
+import enum GSDModel.Quadrant
 import GSDStore
 import GSDHanlinAgent
 
@@ -42,7 +43,7 @@ struct GSDHanlinAssistantView: View {
                             ForEach(assistant.messages) { entry in
                                 HStack {
                                     if entry.role == .user { Spacer(minLength: 36) }
-                                    Text(entry.text)
+                                    Text(AssistantCopy.message(entry))
                                         .font(entry.role == .status ? .caption : .body)
                                         .foregroundStyle(entry.role == .status ? .secondary : .primary)
                                         .padding(11)
@@ -71,7 +72,7 @@ struct GSDHanlinAssistantView: View {
                     }
                 }
                 if let error = assistant.errorMessage {
-                    Text(error).font(.caption).foregroundStyle(.red).padding(.horizontal)
+                    Text(AssistantCopy.status(error)).font(.caption).foregroundStyle(.red).padding(.horizontal)
                 }
                 HStack(spacing: 10) {
                     TextField("Ask about your tasks…", text: $prompt, axis: .vertical)
@@ -144,7 +145,7 @@ struct GSDHanlinAssistantView: View {
                 Button("Allow change") { assistant.resolveApproval(true) }
                 Button("Deny", role: .cancel) { assistant.resolveApproval(false) }
             } message: {
-                Text(assistant.pendingApproval?.description ?? "The requested change needs approval.")
+                Text(assistant.pendingApproval.map { AssistantCopy.approval($0.description) } ?? String(localized: "The requested change needs approval."))
             }
             .gsdRemoteWriteApproval(bridge: remoteBridge, isActive: {
                 !showModelSettings && !showRemoteBridgeSettings && assistant.pendingApproval == nil
@@ -167,9 +168,9 @@ struct GSDHanlinAssistantView: View {
             }
             .pickerStyle(.segmented)
             Chart(summary.buckets(mode: chartBreakdown)) { bucket in
-                BarMark(x: .value("Group", bucket.name),
+                BarMark(x: .value("Group", AssistantCopy.bucket(bucket.name)),
                         y: .value("Tasks", bucket.value))
-                    .foregroundStyle(by: .value("Group", bucket.name))
+                    .foregroundStyle(by: .value("Group", AssistantCopy.bucket(bucket.name)))
             }
             .chartLegend(.hidden)
             .frame(height: 180)
@@ -223,7 +224,7 @@ struct GSDHanlinAssistantView: View {
                     Button("Save") {
                         guard let url = URL(string: endpoint), url.scheme == "https", url.host != nil,
                               !modelID.isEmpty else {
-                            configurationError = "Enter an HTTPS endpoint and a model identifier."
+                            configurationError = String(localized: "Enter an HTTPS endpoint and a model identifier.")
                             return
                         }
                         do {
@@ -233,7 +234,7 @@ struct GSDHanlinAssistantView: View {
                             showModelSettings = false
                             Task { await assistant.cancel() }
                         } catch {
-                            configurationError = "Keychain could not securely store this credential."
+                            configurationError = String(localized: "Keychain could not securely store this credential.")
                         }
                     }
                 }
@@ -312,10 +313,10 @@ struct GSDRemoteBridgeSettingsView: View {
             Image(systemName: bridge.linked ? "checkmark.shield.fill" : "network")
               .foregroundStyle(bridge.linked ? Color.green : Color.secondary)
             VStack(alignment: .leading) {
-              Text(bridge.status)
+              Text(AssistantCopy.status(bridge.status))
                 .font(.callout)
               if let last = bridge.lastTool {
-                Text("Last tool: " + last).font(.caption).foregroundStyle(.secondary)
+                Text("Last tool: \(AssistantCopy.toolName(last))").font(.caption).foregroundStyle(.secondary)
               }
             }
           }
@@ -323,7 +324,7 @@ struct GSDRemoteBridgeSettingsView: View {
             Task { await bridge.pair() }
           } label: {
             if bridge.isPairing {
-              ProgressView("Connectingâ€¦")
+              ProgressView("Connecting…")
             } else {
               Label("Pair this iPad with ChatGPT", systemImage: "link")
             }
@@ -336,7 +337,7 @@ struct GSDRemoteBridgeSettingsView: View {
             Text(code)
               .font(.system(.largeTitle, design: .monospaced, weight: .bold))
               .textSelection(.enabled)
-              .accessibilityLabel("One-time ChatGPT pairing code: " + code)
+              .accessibilityLabel(String(localized: "One-time ChatGPT pairing code: \(code)"))
             Text("In ChatGPT on the web, connect a custom MCP server at this HTTPS address with OAuth. When ChatGPT opens the GSD sign-in page, enter this code. The code expires after 10 minutes.")
               .font(.callout)
             Text("You do not need to share your GSD database, Apple ID or API keys with the bridge.")
@@ -390,8 +391,8 @@ private struct GSDRemoteWriteApprovalModifier: ViewModifier {
             Button("Allow change") { bridge?.resolveApproval(true) }
             Button("Deny", role: .cancel) { bridge?.resolveApproval(false) }
         } message: {
-            Text(bridge?.pendingApproval?.description ??
-                 "ChatGPT requests permission to modify GSD tasks.")
+            Text(bridge?.pendingApproval.map { AssistantCopy.approval($0.description) } ??
+                 String(localized: "ChatGPT requests permission to modify GSD tasks."))
         }
     }
 }
@@ -403,5 +404,63 @@ extension View {
         isActive: @escaping @MainActor () -> Bool = { true }
     ) -> some View {
         modifier(GSDRemoteWriteApprovalModifier(bridge: bridge, isActive: isActive))
+    }
+}
+
+/// Only framework-generated labels enter these lookups. Task titles and chat content stay verbatim.
+private enum AssistantCopy {
+    private static func localized(_ key: String) -> String {
+        Bundle.main.localizedString(forKey: key, value: key, table: nil)
+    }
+
+    static func toolName(_ alias: String) -> String {
+        guard let spec = GSDHanlinToolCatalog.specs.first(where: { $0.alias == alias }) else { return alias }
+        return localized(spec.title)
+    }
+
+    static func message(_ entry: GSDHanlinMessage) -> String {
+        switch entry.role {
+        case .status: return status(entry.text)
+        case .assistant where entry.text == "No reply text. Review the tool activity or try again.":
+            return String(localized: "No reply text. Review the tool activity or try again.")
+        default: return entry.text
+        }
+    }
+
+    static func bucket(_ name: String) -> String {
+        Quadrant(rawValue: name)?.title ?? localized(name)
+    }
+
+    static func approval(_ description: String) -> String {
+        guard let separator = description.range(of: ": ") else { return localized(description) }
+        let action = localized(String(description[..<separator.lowerBound]))
+        let selection = String(description[separator.upperBound...])
+        return String(localized: "\(action): \(selection)")
+    }
+
+    static func status(_ message: String) -> String {
+        if let separator = message.range(of: ": ") {
+            let prefix = message[..<separator.lowerBound]
+            let detail = String(message[separator.upperBound...])
+            switch prefix {
+            case "Tool failed": return String(localized: "Tool failed: \(toolName(detail))")
+            case "Tool completed": return String(localized: "Tool completed: \(toolName(detail))")
+            case "Reviewing tool": return String(localized: "Reviewing tool: \(toolName(detail))")
+            case "Bridge temporarily unavailable":
+                return String(localized: "Bridge temporarily unavailable: \(localized(detail))")
+            default: break
+            }
+        }
+        let pairingPrompt = "Enter this code in ChatGPT connection (expires in "
+        if message.hasPrefix(pairingPrompt), message.hasSuffix(" minutes)"),
+           let minutes = Int(message.dropFirst(pairingPrompt.count).dropLast(" minutes)".count)) {
+            return String(localized: "Enter this code in ChatGPT. It expires in \(minutes) minutes.")
+        }
+        if message.hasPrefix("Bridge HTTP "), let code = Int(message.dropFirst(12).prefix(while: \.isNumber)) {
+            return code == 401
+                ? String(localized: "Bridge error \(code). Pair the iPad again.")
+                : String(localized: "Bridge error \(code).")
+        }
+        return localized(message)
     }
 }

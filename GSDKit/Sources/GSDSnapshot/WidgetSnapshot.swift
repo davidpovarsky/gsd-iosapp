@@ -63,9 +63,9 @@ public struct WidgetSnapshot: Codable, Sendable, Equatable {
         return WidgetSnapshot(
             generatedAt: now,
             tasks: [
-                WidgetTask(id: "s1", title: "Ship the release", dueDate: now.addingTimeInterval(-day)),
-                WidgetTask(id: "s2", title: "Reply to the board", dueDate: now),
-                WidgetTask(id: "s3", title: "Finalize the deck", dueDate: now.addingTimeInterval(3 * day)),
+                WidgetTask(id: "s1", title: String(localized: "Ship the release"), dueDate: now.addingTimeInterval(-day)),
+                WidgetTask(id: "s2", title: String(localized: "Reply to the board"), dueDate: now),
+                WidgetTask(id: "s3", title: String(localized: "Finalize the deck"), dueDate: now.addingTimeInterval(3 * day)),
             ],
             totalCount: 5)
     }

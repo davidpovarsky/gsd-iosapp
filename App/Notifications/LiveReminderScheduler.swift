@@ -89,8 +89,8 @@ final class LiveReminderScheduler: ReminderScheduling, @unchecked Sendable {
         let reminder = WeeklySweepSettings.reminder()
         guard reminder.enabled else { return }
         let content = UNMutableNotificationContent()
-        content.title = String(localized: "Weekly sweep")
-        content.body = String(localized: "A few minutes to clear what’s gone quiet.")
+        content.title = NSString.localizedUserNotificationString(forKey: "Weekly sweep", arguments: nil)
+        content.body = NSString.localizedUserNotificationString(forKey: "A few minutes to clear what’s gone quiet.", arguments: nil)
         content.sound = settingsProvider().soundEnabled ? .default : nil
         var when = DateComponents()
         when.weekday = reminder.calendarWeekday

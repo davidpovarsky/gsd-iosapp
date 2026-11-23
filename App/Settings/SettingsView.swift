@@ -13,6 +13,7 @@ struct SettingsView: View {
     @Environment(SyncCoordinator.self) private var sync
     @Environment(PaletteController.self) private var palette
     @AppStorage("showCompleted", store: .shared) private var showCompleted = false
+    @AppStorage("layoutDirectionPreference", store: .shared) private var direction = "system"
     @AppStorage("appTheme", store: .shared) private var themeRaw = AppTheme.system.rawValue
     @AppStorage(AppGroupDefaults.Key.escalationWindowDays, store: .shared)
     private var escalationWindowRaw = EscalationWindow.default.rawValue
@@ -76,6 +77,12 @@ struct SettingsView: View {
                 ForEach(AppTheme.allCases) { theme in Text(theme.label).tag(theme.rawValue) }
             }
             .tint(Surface.ink3)   // value is information, not an action — read it graphite
+            Picker("Layout direction", selection: $direction) {
+                Text("System").tag("system")
+                Text("Right to left").tag("rtl")
+                Text("Left to right").tag("ltr")
+            }
+            .tint(Surface.ink3)
             Toggle(String(localized: "Show Completed Tasks"), isOn: $showCompleted)
                 .tint(Surface.tint)   // toggles read the single interactive tint, not a third "on" color
             Picker(String(localized: "Escalate tasks due within"), selection: $escalationWindowRaw) {
@@ -136,7 +143,7 @@ struct SettingsView: View {
                 Button(role: .destructive) {
                     session.signOut()
                 } label: {
-                    Label(String(localized: "Sign Out"), systemImage: "rectangle.portrait.and.arrow.right")
+                    Label(String(localized: "Sign Out"), systemImage: "rectangle.portrait.and.arrow.forward")
                 }
                 Button(role: .destructive) {
                     showDeleteAccount = true

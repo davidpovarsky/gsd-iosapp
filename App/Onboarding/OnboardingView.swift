@@ -194,11 +194,12 @@ struct AppMark: View {
 
 /// A 2×2 of pigment-wash tiles with urgency/importance axis labels.
 private struct AxesDiagram: View {
+    @Environment(\.layoutDirection) private var direction
     var body: some View {
         HStack(spacing: 8) {
-            Text(String(localized: "More important →"))
+            Label("More important", systemImage: "arrow.forward")
                 .font(.caption.weight(.semibold)).foregroundStyle(Surface.ink3)
-                .fixedSize().rotationEffect(.degrees(-90)).frame(width: 18)
+                .fixedSize().rotationEffect(.degrees(direction == .rightToLeft ? 90 : -90)).frame(width: 18)
             VStack(spacing: 8) {
                 HStack(spacing: 8) {
                     tile(.urgentImportant, String(localized: "Do First"))
@@ -208,7 +209,7 @@ private struct AxesDiagram: View {
                     tile(.urgentNotImportant, String(localized: "Delegate"))
                     tile(.notUrgentNotImportant, String(localized: "Eliminate"))
                 }
-                Text(String(localized: "← More urgent"))
+                Label("More urgent", systemImage: "arrow.backward")
                     .font(.caption.weight(.semibold)).foregroundStyle(Surface.ink3)
             }
         }
@@ -251,7 +252,7 @@ private struct CaptureLegend: View {
                 legendRow("!!", String(localized: "Urgent & important"))
                 legendRow("!", String(localized: "Urgent"))
                 legendRow("*", String(localized: "Important"))
-                legendRow("#tag", String(localized: "Add a tag"))
+                legendRow(String(localized: "#tag"), String(localized: "Add a tag"))
             }
         }
         .frame(maxWidth: 280)

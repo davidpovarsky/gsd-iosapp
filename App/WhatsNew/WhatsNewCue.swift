@@ -33,7 +33,7 @@ struct WhatsNewCue: View {
         let evaluation = evaluation
         VStack(spacing: 0) {
             if let release = evaluation.release, let headline = release.headline {
-                line(version: release.version, headline: headline)
+                line(version: release.version, headline: WhatsNewContent.localized(headline))
             }
         }
         .task(id: evaluation.recordVersion) {

@@ -189,7 +189,7 @@ struct TaskCardView: View {
                     .accessibilityLabel(String(localized: "Blocked by \(blockedByCount)"))
             }
             if blockingCount > 0 {
-                Label("\(blockingCount)", systemImage: "arrow.right.circle")
+                Label("\(blockingCount)", systemImage: "arrow.forward.circle")
                     .accessibilityLabel(String(localized: "Blocking \(blockingCount)"))
             }
             if let runningStart {

@@ -138,7 +138,7 @@ struct HelpView: View {
                 SyntaxRow(token: "!", meaning: String(localized: "Marks the task urgent"))
                 SyntaxRow(token: "!!", meaning: String(localized: "Urgent and important (Do First)"))
                 SyntaxRow(token: "*", meaning: String(localized: "Marks the task important"))
-                SyntaxRow(token: "#tag", meaning: String(localized: "Adds a tag — any word-like token"))
+                SyntaxRow(token: String(localized: "#tag"), meaning: String(localized: "Adds a tag — any word-like token"))
             }
             .padding(.top, 2)
 

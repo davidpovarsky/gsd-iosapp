@@ -192,12 +192,12 @@ struct CompleteTaskIntent: AppIntent {
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let message = try await withDatabaseResumedForIntent { () -> String in
             guard let domainTask = try await store.fetchTask(id: task.id) else {
-                return "That task is no longer available."
+                return String(localized: "That task is no longer available.")
             }
             if !domainTask.completed {
                 try await store.toggleComplete(domainTask)
             }
-            return "Completed \(domainTask.title)."
+            return String(localized: "Completed \(domainTask.title).")
         }
         return .result(dialog: "\(message)")
     }

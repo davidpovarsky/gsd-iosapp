@@ -85,7 +85,7 @@ struct DashboardView: View {
                 Label(String(localized: "\(count) overdue"), systemImage: "exclamationmark.triangle")
                     .font(.headline)
                 Spacer()
-                Image(systemName: "chevron.right").font(.footnote.weight(.semibold))
+                Image(systemName: "chevron.forward").font(.footnote.weight(.semibold))
             }
             .foregroundStyle(Surface.alert)
             .padding()
@@ -104,7 +104,7 @@ struct DashboardView: View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 11) {
             statCard(String(localized: "Active"), "\(s.activeCount)", "tray.full")
             statCard(String(localized: "Completed"), "\(s.completedCount)", "checkmark.circle")
-            statCard(String(localized: "Completion"), "\(Int((s.completionRate * 100).rounded()))%", "percent")
+            statCard(String(localized: "Completion"), s.completionRate.formatted(.percent.precision(.fractionLength(0))), "percent")
             if s.totalTrackedMinutes == 0 {
                 // Zero-state: "< 1m" read as cryptic data; an em-dash + spoken
                 // "nothing tracked yet" is honest about the empty state.

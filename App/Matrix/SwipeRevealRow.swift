@@ -24,6 +24,7 @@ struct SwipeRevealRow<Menu: View, Content: View>: View {
     @ViewBuilder let menu: () -> Menu
     @ViewBuilder let content: () -> Content
 
+    @Environment(\.layoutDirection) private var layoutDirection
     @Environment(\.escalationWindow) private var escalationWindow
     @State private var offset: CGFloat = 0
     @State private var rowSize: CGSize = .zero
@@ -46,7 +47,8 @@ struct SwipeRevealRow<Menu: View, Content: View>: View {
             content()
                 .background(Surface.surface)                  // opaque: hides the actions when closed
                 .background(sizeReader)                       // non-intrusive size measurement
-                .offset(x: offset)
+                .padding(.leading, offset)
+                .padding(.trailing, -offset)
                 .contentShape(Rectangle())
                 .onTapGesture { offset == 0 ? onEdit(task) : close() }
                 .gesture(swipe)                               // custom swipe (coexists with the two below)
@@ -56,7 +58,7 @@ struct SwipeRevealRow<Menu: View, Content: View>: View {
             // Reveal buttons occupy ONLY the swiped-open strip (never the visible card),
             // so tap-to-close / swipe-back always reach the card's own gestures.
             if offset > 0 {
-                revealButton(task.completed ? "arrow.uturn.left" : "checkmark",
+                revealButton(task.completed ? "arrow.uturn.backward" : "checkmark",
                              task.completed ? String(localized: "Uncomplete") : String(localized: "Complete"),
                              Surface.success) {
                     actions.toggle(task); close()
@@ -114,11 +116,11 @@ struct SwipeRevealRow<Menu: View, Content: View>: View {
                 // Directional lock: only claim horizontal-dominant drags so vertical
                 // pans reach the parent ScrollView and short taps still reach tap-to-edit.
                 guard abs(v.translation.width) > abs(v.translation.height) else { return }
-                let t = v.translation.width
+                let t = layoutDirection == .rightToLeft ? -v.translation.width : v.translation.width
                 offset = t > 0 ? min(t, rowSize.width) : max(t, -trailingReveal)
             }
             .onEnded { v in
-                let t = v.translation.width
+                let t = layoutDirection == .rightToLeft ? -v.translation.width : v.translation.width
                 let fullSwipe = SwipeRevealMetrics.fullSwipeDistance(rowWidth: rowSize.width)
                 withAnimation(.snappy) {
                     if t > fullSwipe {                        // full-swipe → complete immediately

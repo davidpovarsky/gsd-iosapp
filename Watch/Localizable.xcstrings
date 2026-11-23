@@ -1,0 +1,824 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@, due %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, due %@"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, מועד יעד %@"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "%@, first": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, first"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, ראשונה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "%@, second": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, second"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, שנייה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "%@, third": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, third"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, שלישית"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "%lld changes waiting for iPhone": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld changes waiting for iPhone"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "שינויים שממתינים ל־iPhone: %lld"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "%lld days overdue": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld days overdue"
+          }
+        },
+        "he": {
+          "variations": {
+            "plural": {
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "באיחור של %lld ימים"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "באיחור של יום"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "באיחור של יומיים"
+                }
+              }
+            }
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "+%lld more on iPhone": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld more on iPhone"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ועוד %lld ב־iPhone"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "1 change waiting for iPhone": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 change waiting for iPhone"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "שינוי אחד ממתין ל־iPhone"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "1 day overdue": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 day overdue"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "באיחור של יום"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Add": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הוספה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Add %@ to today": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add %@ to today"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הוספת „%@” להיום"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Add a task": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a task"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הוספת משימה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Add task": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add task"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הוספת משימה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Add to today": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add to today"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הוספה להיום"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Cancel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ביטול"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Capture": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capture"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הוספה מהירה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Clear for now": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear for now"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הכול טופל לעת עתה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Coming up": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coming up"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בקרוב"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Complete": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Complete"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "סימון כהושלמה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Delegate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delegate"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "להעביר לאחרים"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Destination": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destination"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "יעד"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Do First": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do First"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לביצוע מיידי"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Due %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Due %@"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מועד היעד: %@"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Eliminate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eliminate"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לוותר"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Escalating: %@, not marked urgent.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escalating: %@, not marked urgent."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הדחיפות עולה: %@, המשימה עדיין אינה מסומנת כדחופה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "GSD": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GSD"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GSD"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Mark urgent": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark urgent"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "סימון כדחופה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Mark urgent, moves to %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark urgent, moves to %@"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "סימון כדחופה והעברה לרבע „%@”"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Moves to %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moves to %@"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "העברה לרבע „%@”"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "New task": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New task"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "משימה חדשה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Nothing to pick from yet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing to pick from yet"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "עדיין אין משימות לבחירה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Open GSD on your iPhone to load your tasks.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open GSD on your iPhone to load your tasks."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "כדי לטעון את המשימות יש לפתוח את GSD ב־iPhone."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Pick up to three for today": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pick up to three for today"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "אפשר לבחור עד שלוש משימות להיום"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Quadrant": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quadrant"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "רבע"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Remove from today": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove from today"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הסרה מהיום"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Schedule": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schedule"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לתכנן"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Snooze 1 hour": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snooze 1 hour"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "דחייה בשעה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Titles are limited to %lld characters. Shorten it to add.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titles are limited to %lld characters. Shorten it to add."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הכותרת מוגבלת ל־%lld תווים. יש לקצר אותה כדי להוסיף את המשימה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Today": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "היום"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Today, %lld of %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today, %lld of %lld"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "היום, %lld מתוך %lld"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Undo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Undo"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ביטול הפעולה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Undo complete": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Undo complete"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ביטול השלמה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Updated %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updated %@"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "עודכן בשעה %@"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "due in %lld days": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "due in %lld days"
+          }
+        },
+        "he": {
+          "variations": {
+            "plural": {
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "מועד היעד בעוד %lld ימים"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "מועד היעד מחר"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "מועד היעד בעוד יומיים"
+                }
+              }
+            }
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "due today": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "due today"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "להיום"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "due tomorrow": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "due tomorrow"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "למחר"
+          }
+        }
+      },
+      "extractionState": "manual"
+    }
+  },
+  "version": "1.0"
+}

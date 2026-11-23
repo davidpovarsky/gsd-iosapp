@@ -50,7 +50,7 @@ struct SyncHistoryView: View {
                      "↑\(e.pushedCount)", "↓\(e.pulledCount)"]
         if e.conflictsResolved > 0 { parts.append("⚖\(e.conflictsResolved)") }
         if let f = e.failedCount, f > 0 { parts.append("⚠\(f)") }
-        if let d = e.duration { parts.append("\(d) ms") }
+        if let d = e.duration { parts.append(String(localized: "\(d) ms")) }
         if let m = e.errorMessage { parts.append(m) }
         return parts.joined(separator: " · ")
     }

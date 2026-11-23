@@ -81,5 +81,5 @@ struct QuadrantCompletionRings: View {
             : String(localized: "\(Self.percent(stat.completionRate)) complete")
     }
 
-    private static func percent(_ rate: Double) -> String { "\(Int((rate * 100).rounded()))%" }
+    private static func percent(_ rate: Double) -> String { rate.formatted(.percent.precision(.fractionLength(0))) }
 }
