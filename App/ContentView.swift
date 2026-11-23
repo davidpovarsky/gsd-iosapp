@@ -40,6 +40,37 @@ struct ContentView: View {
     @State private var showHelp = false
 
     var body: some View {
+        routedContent
+            // Cross-account guard (design 2026-06-10 Fix C): a DIFFERENT account signed in
+            // while this device holds tasks from the previous one — sync is parked until the
+            // user chooses. Hosted here so sign-ins from Settings AND Onboarding both surface it.
+            .confirmationDialog(
+                String(localized: "Different account"),
+                isPresented: Binding(
+                    get: { session.pendingAccountSwitch != nil },
+                    set: { presented in
+                        if !presented {
+                            // Defer one turn: a button action claims synchronously first, so
+                            // this only cancels a no-choice (outside-tap) dismissal.
+                            _Concurrency.Task { @MainActor in session.cancelAccountSwitchIfUnresolved() }
+                        }
+                    }
+                ),
+                titleVisibility: .visible
+            ) {
+                Button(String(localized: "Keep my tasks")) { session.resolveAccountSwitch(.merge) }
+                Button(String(localized: "Start fresh (erase tasks on this device)"), role: .destructive) {
+                    session.resolveAccountSwitch(.fresh)
+                }
+                Button(String(localized: "Cancel"), role: .cancel) { session.resolveAccountSwitch(.cancel) }
+            } message: {
+                Text(String(localized: "You signed in as \(session.pendingAccountSwitch?.newEmail ?? String(localized: "a different account")), but this device has tasks from a previous account. Keep them and sync them to this account, or start fresh?"))
+            }
+    }
+
+    // Opaque return boundaries keep the root modifier chain tractable for Swift's
+    // type checker while preserving modifier order and state ownership.
+    private var assistantContent: some View {
         rootContent
             .sheet(isPresented: $showHanlinAssistant) {
                 GSDHanlinAssistantView(store: store, remoteBridge: remoteBridge)
@@ -70,6 +101,10 @@ struct ContentView: View {
                 !showHanlinAssistant && !palette.showPalette && palette.editor == nil &&
                 !showAbout && !showHelp && !showWhatsNew && session.pendingAccountSwitch == nil
             })
+    }
+
+    private var actionContent: some View {
+        assistantContent
             .environment(palette)
             .environment(\.escalationWindow, EscalationWindow(rawValue: escalationWindowRaw) ?? .default)
             // Hidden ⌘K trigger — a zero-size button carrying the keyboard shortcut so the
@@ -100,6 +135,10 @@ struct ContentView: View {
             .onChange(of: sizeClass) { _, size in
                 if size == .compact { palette.carryToCompact() } else { palette.carryToRegular() }
             }
+    }
+
+    private var presentedContent: some View {
+        actionContent
             // Catalyst re-inject: its sheet hosting controller evaluates the presentation's
             // preferences before it inherits the presenter's environment, so @Observable stores
             // must be re-applied on the presented content (a no-op on iOS). Without it, the sheet's
@@ -122,6 +161,10 @@ struct ContentView: View {
                     }
                 }
             }
+    }
+
+    private var routedContent: some View {
+        presentedContent
             .onOpenURL { handleDeepLink($0) }
             .onContinueUserActivity(CSSearchableItemActionType, perform: handleSpotlightActivity)
             .onReceive(NotificationCenter.default.publisher(for: .gsdOpenDeepLink)) { notification in
@@ -149,31 +192,6 @@ struct ContentView: View {
                 if let url = DeepLinkHandoff.consumePendingURL() {
                     handleDeepLink(url)
                 }
-            }
-            // Cross-account guard (design 2026-06-10 Fix C): a DIFFERENT account signed in
-            // while this device holds tasks from the previous one — sync is parked until the
-            // user chooses. Hosted here so sign-ins from Settings AND Onboarding both surface it.
-            .confirmationDialog(
-                String(localized: "Different account"),
-                isPresented: Binding(
-                    get: { session.pendingAccountSwitch != nil },
-                    set: { presented in
-                        if !presented {
-                            // Defer one turn: a button action claims synchronously first, so
-                            // this only cancels a no-choice (outside-tap) dismissal.
-                            _Concurrency.Task { @MainActor in session.cancelAccountSwitchIfUnresolved() }
-                        }
-                    }
-                ),
-                titleVisibility: .visible
-            ) {
-                Button(String(localized: "Keep my tasks")) { session.resolveAccountSwitch(.merge) }
-                Button(String(localized: "Start fresh (erase tasks on this device)"), role: .destructive) {
-                    session.resolveAccountSwitch(.fresh)
-                }
-                Button(String(localized: "Cancel"), role: .cancel) { session.resolveAccountSwitch(.cancel) }
-            } message: {
-                Text(String(localized: "You signed in as \(session.pendingAccountSwitch?.newEmail ?? String(localized: "a different account")), but this device has tasks from a previous account. Keep them and sync them to this account, or start fresh?"))
             }
     }
 
