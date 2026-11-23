@@ -261,3 +261,92 @@ test('subpath proxy preserves discovery, browser consent and MCP device round tr
     rmSync(folder,{recursive:true,force:true});
   }
 });
+
+test('native-size UTF-8 results cross the relay while other request limits stay bounded', async () => {
+  const folder=mkdtempSync(path.join(tmpdir(),'gsd-result-budget-'));
+  const bridge=createBridge({statePath:path.join(folder,'state.json')});
+  await new Promise(resolve=>bridge.server.listen(0,'127.0.0.1',resolve));
+  const base=bridge.getPublicBase();
+  const deviceId='result-budget-device';
+  const secret=randomBytes(32).toString('base64url');
+  const bearer=randomBytes(32).toString('base64url');
+  const hash=value=>createHash('sha256').update(value).digest('hex');
+  const catalog=[{name:'get_dashboard',description:'Synthetic result transport',
+    writes:false,inputSchema:{type:'object',properties:{},additionalProperties:false}}];
+  // OAuth is covered above; this fixture isolates the result transport budget.
+  bridge.store.devices[deviceId]={
+    secretHash:hash(secret),catalog,linked:true,lastSeen:Date.now()
+  };
+  bridge.store.tokens[hash(bearer)]={
+    deviceId,clientId:'result-budget-client',expires:Date.now()+60000
+  };
+  const jsonPost=(body,token)=>({
+    method:'POST',headers:{'Content-Type':'application/json',
+      Authorization:'Bearer '+token},body:JSON.stringify(body)
+  });
+  try {
+    const oversizedRegistration=await fetch(base+'/v1/device/register',jsonPost({
+      deviceId:'result-budget-other',catalog,padding:'x'.repeat(128*1024)
+    },secret));
+    assert.equal(oversizedRegistration.status,400,
+      'Ordinary device requests must retain the 128 KiB body limit');
+    assert.equal((await oversizedRegistration.json()).error,'invalid_request');
+    assert.equal(Object.keys(bridge.store.devices).length,1,
+      'Rejected oversized enrollment must not mutate device state');
+
+    const inFlight=fetch(base+'/mcp',jsonPost({
+      jsonrpc:'2.0',id:1,method:'tools/call',
+      params:{name:'get_dashboard',arguments:{}}
+    },bearer)).then(response=>response.json())
+      .then(value=>({value}),error=>({error}));
+    let command;
+    for(let retry=0;retry<10&&!command;retry++){
+      const polled=await (await fetch(base+'/v1/device/poll?device_id='+deviceId,
+        {headers:{Authorization:'Bearer '+secret}})).json();
+      command=polled.commands[0];
+      if(!command)await new Promise(resolve=>setTimeout(resolve,20));
+    }
+    assert.equal(command?.name,'get_dashboard');
+
+    const nativeLimit=1024*1024;
+    const tooLarge='\u05d0'.repeat(nativeLimit/2)+'a';
+    assert.equal(Buffer.byteLength(tooLarge,'utf8'),nativeLimit+1);
+    assert.ok(tooLarge.length<nativeLimit,
+      'This regression must distinguish UTF-8 bytes from JS character count');
+    const rejected=await fetch(base+'/v1/device/result',jsonPost({
+      deviceId,id:command.id,text:tooLarge,error:false
+    },secret));
+    assert.equal(rejected.status,400);
+    assert.equal((await rejected.json()).error,'result_invalid');
+    assert.ok(bridge.outstanding.has(command.id),
+      'An invalid result must not consume an outstanding command');
+
+    // Exercise multibyte data and JSON escaping at the exact native byte limit.
+    const escapedNotes='"\\\n'.repeat(20000);
+    const remaining=nativeLimit-Buffer.byteLength(
+      JSON.stringify({fixture:true,notes:escapedNotes}),'utf8');
+    const notes=escapedNotes+'\u05d0'.repeat(Math.floor(remaining/2))+
+      'a'.repeat(remaining%2);
+    const text=JSON.stringify({fixture:true,notes});
+    assert.equal(Buffer.byteLength(text,'utf8'),nativeLimit);
+    const packet=jsonPost({deviceId,id:command.id,text,error:false},secret);
+    assert.ok(Buffer.byteLength(packet.body,'utf8')>128*1024);
+    const accepted=await fetch(base+'/v1/device/result',packet);
+    assert.equal(accepted.status,200);
+    assert.equal((await accepted.json()).accepted,true);
+    const completed=await inFlight;
+    if(completed.error)throw completed.error;
+    assert.equal(completed.value.result.isError,false);
+    assert.ok(completed.value.result.content[0].text===text,
+      'The exact native result must survive JSON encoding and MCP delivery');
+    assert.equal(bridge.commands.size,0);
+    assert.equal(bridge.outstanding.size,0);
+  } finally {
+    for(const pending of bridge.outstanding.values()){
+      clearTimeout(pending.timer);
+      pending.resolve({isError:true,content:[]});
+    }
+    await bridge.close();
+    rmSync(folder,{recursive:true,force:true});
+  }
+});

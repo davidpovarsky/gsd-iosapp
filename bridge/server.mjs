@@ -5,6 +5,9 @@ import path from 'node:path';
 import { URL, URLSearchParams } from 'node:url';
 
 const MAX_BODY = 128 * 1024;
+const MAX_RESULT_TEXT_BYTES = 1024 * 1024; // Same UTF-8 cap as GSDHanlinHost.encode.
+// JSON escaping can expand one text byte to six bytes, plus the result envelope.
+const MAX_RESULT_BODY = 6 * MAX_RESULT_TEXT_BYTES + 4096;
 const CODE_TTL_MS = 10 * 60 * 1000;
 const TOKEN_TTL_MS = 60 * 60 * 1000;
 const REFRESH_TTL_MS = 30 * 24 * 60 * 60 * 1000;
@@ -88,12 +91,12 @@ export function createBridge({
       'Content-Security-Policy':"default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'"});
     res.end('<!doctype html><html lang=en><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=utf-8><style>'+UI_CSS+'</style>'+page+'</html>');
   };
-  const readBody = async (req) => {
+  const readBody = async (req,maxBytes=MAX_BODY) => {
     const all = [];
     let size=0;
     for await (const chunk of req) {
       size+=chunk.length;
-      if (size>MAX_BODY) throw Error('payload_too_large');
+      if (size>maxBytes) throw Error('payload_too_large');
       all.push(chunk);
     }
     return Buffer.concat(all).toString('utf8');
@@ -327,12 +330,14 @@ export function createBridge({
         }))});
       }
       if (u==='/v1/device/result' && method==='POST') {
-        const body=JSON.parse(await readBody(req));
+        const body=JSON.parse(await readBody(req,MAX_RESULT_BODY));
         const device=findDevice(req,body.deviceId);
         if(!device) return json(res,401,{error:'invalid_device_credential'});
         const pending=outstanding.get(body.id);
         if(!pending||pending.deviceId!==body.deviceId) return json(res,404,{error:'request_expired'});
-        if (typeof body.text!=='string'||body.text.length>100000) return json(res,400,{error:'result_invalid'});
+        if (typeof body.text!=='string' ||
+            Buffer.byteLength(body.text,'utf8')>MAX_RESULT_TEXT_BYTES)
+          return json(res,400,{error:'result_invalid'});
         clearTimeout(pending.timer);outstanding.delete(body.id);commands.delete(body.id);
         pending.resolve({isError:body.error===true,content:[{type:'text',text:body.text}]});
         return json(res,200,{accepted:true});

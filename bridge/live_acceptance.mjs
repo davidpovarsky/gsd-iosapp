@@ -199,9 +199,15 @@ try{
     }
     assert.ok(command?.name==='get_dashboard','Dashboard command not delivered to fixture');
     assert.ok(command.argumentsJSON==='{}','Unexpected synthetic dashboard arguments');
-    const synthetic='{"total":0,"open":0,"completed":0,"fixture":true}';
-    await jsonRequest('fixture_result',base+'/v1/device/result',
-      jsonPost({deviceId,id:command.id,text:synthetic,error:false},deviceSecret));
+    const synthetic=JSON.stringify({total:0,open:0,completed:0,fixture:true,
+      transportProbe:'\u05d0\u05d1'.repeat(60000)});
+    const packet=jsonPost({deviceId,id:command.id,text:synthetic,error:false},deviceSecret);
+    receipt.transport={resultUTF8Bytes:Buffer.byteLength(synthetic,'utf8'),
+      envelopeUTF8Bytes:Buffer.byteLength(packet.body,'utf8')};
+    assert.ok(receipt.transport.resultUTF8Bytes>128*1024 &&
+      receipt.transport.resultUTF8Bytes<=1024*1024,'Large UTF-8 probe size is invalid');
+    saveReceipt();
+    await jsonRequest('fixture_result',base+'/v1/device/result',packet);
     const completed=await inflight;
     if(completed.error)throw completed.error;
     assert.ok(completed.value.result?.isError===false &&
