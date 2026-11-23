@@ -1,0 +1,48 @@
+name: GSD integration conflict audit
+on:
+  push:
+    branches: [feat/gsd-complete-testflight-20261124]
+    paths: [.github/workflows/gsd-integration-conflict-audit.yml]
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ref: [feat/gsd-siwc-sdk-20261123, feat/gsd-cloud-testflight-20261123]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Report exact merge conflicts without changing branches
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch="${{ matrix.ref }}"
+          git config user.name "GSD Integration Audit"
+          git config user.email "gsd-integration@users.noreply.github.com"
+          git fetch origin "$branch" --no-tags
+          echo "BASE_SHA=$(git rev-parse HEAD)"
+          echo "SOURCE_BRANCH=$branch"
+          echo "SOURCE_SHA=$(git rev-parse FETCH_HEAD)"
+          set +e
+          git merge --no-commit --no-ff --no-edit FETCH_HEAD
+          result=$?
+          set -e
+          mkdir -p merge-report
+          printf 'source=%s\nresult=%s\n' "$branch" "$result" > merge-report/state.txt
+          git diff --name-only --diff-filter=U > merge-report/unmerged.txt
+          git status --short > merge-report/git-status.txt
+          echo "MERGE_RESULT=$result"
+          echo "UNMERGED_FILES:"
+          cat merge-report/unmerged.txt
+          if [[ "$result" -eq 0 ]]; then echo "CLEAN_MERGE_POSSIBLE"; fi
+          git merge --abort 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GSD-integration-conflicts-${{ strategy.job-index }}
+          path: merge-report/
+          if-no-files-found: warn
