@@ -10,7 +10,8 @@ on:
       - 'GSDKit/**'
       - 'Packages/GSDHanlinAgent/**'
       - 'Vendor/**'
-      - 'bridge/**'
+      - 'project.yml'
+      - 'scripts/gsd_simulator_smoke.py'
       - 'scripts/build_gsd_hanlin_ipad_ipa.sh'
       - 'scripts/package_gsd_sideload_ipa.py'
       - 'scripts/test_package_gsd_sideload_ipa.py'
@@ -41,17 +42,41 @@ jobs:
           fi
           xcodebuild -version | grep '^Xcode 27'
           xcodebuild -showsdks
+      - name: Regenerate the Xcode project from its source
+        id: project
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v xcodegen >/dev/null; then
+            brew install xcodegen
+          fi
+          xcodegen generate
+      - name: Preserve the generated project and plists
+        if: steps.project.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Hanlin-Generated-Project-${{ github.run_id }}
+          path: |
+            GSD.xcodeproj/project.pbxproj
+            GSD.xcodeproj/xcshareddata/xcschemes/
+            App/Info.plist
+            Widgets/Info.plist
+            ShareExtension/Info.plist
+            Watch/Info.plist
+            WatchWidgets/Info.plist
+          if-no-files-found: error
+          retention-days: 21
       - name: Test GSD OAuth PKCE and MCP bridge locally
         shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           node --test bridge/server.test.mjs 2>&1 | tee gsd-mcp-node-tests.log
           python3 scripts/test_package_gsd_sideload_ipa.py -v 2>&1 | tee gsd-ipa-package-tests.log
       - name: Test GSD Hanlin tools, schema and remote write consent
         id: tests
         shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           swift test --package-path Packages/GSDHanlinAgent \
             --filter GSDHanlinAgentTests -j 3 2>&1 | tee gsd-agent-tests.log
       - name: Preserve SDK test log before native app build
@@ -67,11 +92,40 @@ jobs:
           retention-days: 21
       - name: Build native iPad app and both unsigned IPA variants
         id: build
-        if: success() || failure()
+        if: (success() || failure()) && steps.project.outcome == 'success'
         shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           bash scripts/build_gsd_hanlin_ipad_ipa.sh 2>&1 | tee gsd-ipad-pipeline.log
+      - name: Build the universal iPhone and iPad simulator app
+        id: simulator_build
+        if: steps.tests.outcome == 'success' && steps.build.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcodebuild -project GSD.xcodeproj -scheme GSD -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath .gsd-hanlin-simulator-derived \
+            ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO \
+            build 2>&1 | tee gsd-simulator-build.log
+      - name: Launch and capture disposable iPhone and iPad simulators
+        if: steps.simulator_build.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/gsd_simulator_smoke.py \
+            --app .gsd-hanlin-simulator-derived/Build/Products/Debug-iphonesimulator/GSD.app \
+            --output dist/gsd-simulator-smoke
+      - name: Preserve simulator screenshots and launch evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Hanlin-Simulator-Smoke-${{ github.run_id }}
+          path: |
+            gsd-simulator-build.log
+            dist/gsd-simulator-smoke/
+          if-no-files-found: warn
+          retention-days: 21
       - name: Upload verified GSD iPad IPA assets
         if: steps.build.outcome == 'success'
         uses: actions/upload-artifact@v4

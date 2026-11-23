@@ -2,7 +2,7 @@ name: GSD
 options:
   bundleIdPrefix: dev.vinny
   deploymentTarget:
-    iOS: "26.0"
+    iOS: "27.0"
     watchOS: "26.0"
   createIntermediateGroups: true
 settings:
@@ -16,7 +16,7 @@ settings:
     # CFBundleShortVersionString/CFBundleVersion (App Store rule). Bump these two lines
     # per release — never per-target (that's how the app/extension versions drifted apart).
     MARKETING_VERSION: "4.0.1"
-    CURRENT_PROJECT_VERSION: "46"
+    CURRENT_PROJECT_VERSION: "47"
     # Xcode 26 "recommended settings" — declared here so they survive `xcodegen
     # generate` (clicking "Perform Changes" in Xcode would edit the generated pbxproj
     # and be wiped). These are already the SDK-default resolved values; made explicit
@@ -27,6 +27,8 @@ settings:
 packages:
   GSDKit:
     path: GSDKit
+  GSDHanlinAgent:
+    path: Packages/GSDHanlinAgent
 targets:
   GSD:
     type: application
@@ -83,6 +85,8 @@ targets:
             UIApplicationShortcutItemSubtitle: Open priority tasks
             UIApplicationShortcutItemIconType: UIApplicationShortcutIconTypeFavorite
     dependencies:
+      - package: GSDHanlinAgent
+        product: GSDHanlinAgent
       - package: GSDKit
         product: GSDModel
       - package: GSDKit

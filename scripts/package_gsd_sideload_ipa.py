@@ -83,7 +83,7 @@ def validate_manifest(ipa: Path, *, portable: bool) -> dict:
             "mainExecutable": executable,
             "entryCount": len(names),
             "bundledExtensions": False if portable else bool(nested),
-            "removedCapabilities": ["WidgetKit extensions", "Focus Filter", "Watch companion"] if portable else [],
+            "removedCapabilities": ["WidgetKit extensions", "Share Extension", "Watch companion"] if portable else [],
             "signed": False,
             "needsExternalSigning": True,
             "notes": ("The sideloading/signing service may rename only the main bundle ID; "
@@ -146,7 +146,7 @@ def main() -> int:
             "physical device installation NOT tested"),
         "important": (
             "Use sideloadCompatible only with a signing tool that re-signs the main app. "
-            "It intentionally excludes widgets, Focus Filter and the Watch app; "
+            "It intentionally excludes widgets, Share Extension and the Watch app; "
             "for full features use a correctly signed distribution that preserves "
             "the parent prefix for all embedded extension identifiers.")
     }
