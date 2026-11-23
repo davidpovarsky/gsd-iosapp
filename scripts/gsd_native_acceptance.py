@@ -88,8 +88,9 @@ def main() -> None:
             folder.mkdir(exist_ok=True)
             device = devices[family]
             device_id = None
+            cloud_round_trip = family == "iPad" and language == "he"
             receipt = {"family": family, "language": language, "deviceType": device["name"],
-                       "runtime": runtime["version"], "passed": False, "cloudRoundTrip": family == "iPad"}
+                       "runtime": runtime["version"], "passed": False, "cloudRoundTrip": cloud_round_trip}
             receipts.append(receipt)
             try:
                 device_id = run(["xcrun", "simctl", "create", "GSD48-" + name + "-" + uuid.uuid4().hex[:8],
@@ -104,7 +105,7 @@ def main() -> None:
                            "-testLanguage", language, "-testRegion", "IL" if language == "he" else "US",
                            "-only-testing:GSDScreenshotTests/GSDCloudReleaseUITests/test01LocalizedNavigationEditorChartsAndRTL",
                            "-only-testing:GSDScreenshotTests/GSDCloudReleaseUITests/test03LocalizedWidgetView"]
-                if family == "iPad":
+                if cloud_round_trip:
                     command.append("-only-testing:GSDScreenshotTests/GSDCloudReleaseUITests/test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload")
                 environment = os.environ.copy()
                 environment.update({

@@ -29,7 +29,7 @@ Use the existing registered workflow .github/workflows/gsd-hanlin-agent-ios.yml 
 6. Run focused account/sync/cloud system tests in GSDKit.
 7. Build the universal simulator app, four embedded targets and native UI runner once.
 8. Inspect compiled localization resources inside each target.
-9. Run real UI acceptance on disposable English/Hebrew iPhone/iPad simulators. The iPad passes log in using the actual account sheet, terminate the app before a cloud write, relaunch and assert the task appears, capture a local task and verify the Oracle record, then relaunch to confirm persistence.
+9. Run real UI acceptance on disposable English/Hebrew iPhone/iPad simulators. The Hebrew iPad pass logs in using the actual account sheet, terminates the app before a cloud write, relaunches and asserts the task appears, captures a local task and verifies the Oracle record, then relaunches to confirm persistence.
 10. Save localized screenshots, test summaries, sanitized logs and a success receipt only when all required gates pass.
 
 Test credentials are generated for disposable accounts and removed by test teardown. No production user account is used. The evidence artifact excludes raw xcresult activity archives; screenshot PNGs and exported summaries are sufficient for review without retaining credential-entry activity. Simulator evidence must never be described as a physical iPad/TestFlight device test.
@@ -69,3 +69,5 @@ Do not run duplicate native suites or start a parallel watcher. Generated projec
 The same four device/language runs also launch the existing --demo-home harness, which renders the actual TodaysFocusView. The UI test checks its localized title and due-state accessibility text and saves a widget-view screenshot. This is a rendered view check; installation on SpringBoard and the separate WidgetKit timeline lifecycle require their own evidence.
 
 Raw XCTest output is written to a private unnamed temporary file outside artifact directories. Before saving any log or later xcresult summary, the runner redacts every ephemeral fixture password observed in memory. Cancellation cannot cause artifact globbing to collect the raw file. Three real-subprocess regression checks cover success plus later summary redaction, command failure, and timeout. They passed on a POSIX Python runtime; no Xcode result is implied.
+
+The live XCUI account round-trip runs once, on Hebrew iPad. The other three cases still exercise localized account forms and all visual/navigation checks. Together with the two-account native system test, this uses three new accounts per native CI run and respects the existing gateway's seven-registration-per-IP hourly limit. Authentication and abuse controls are not weakened for test convenience.
