@@ -83,3 +83,20 @@ Native Xcode tests, Hebrew/English simulator UI, closed-app UI flow, private Cha
 ## Guarded-version regression closed
 
 A task PATCH must change its version; reusing the expected version now fails with HTTP 400. A library payload cannot change while keeping the same version; exact idempotent retries remain safe. The native library wire client advances an equal outgoing version by one millisecond, matching the existing active-task guarded-write rule. Public unguarded task PATCH is denied; normal writes use the transactional route. Real-PocketBase staging repeated the nine affected checkpoints and passed, including same-version rejection and denied raw PATCH. Evidence: `/mnt/development/projects/gsd-cloud/backend-staging-evidence-ubuntu.txt`. This run was invoked from Windows over SSH as ubuntu and cleaned its own ephemeral processes/data.
+
+## Public route and repository handoff
+
+All implementation commits through cd039e1 were pushed successfully to the explicitly requested davidpovarsky/gsd-iosapp fork, branch feat/gsd-cloud-testflight-20261123. The worktree's original origin points to upstream vscarpenter, so publication used the explicit David repository URL and the existing gh credential helper without changing shared remotes or force-pushing.
+
+Public DNS lookup returned Funnel ingress addresses 185.40.234.75, 185.40.234.55 and 185.40.234.198. HTTPS health was independently verified through the first public address using curl --resolve with normal certificate validation, returning HTTP 200. This did not use the Oracle tailnet DNS address.
+
+The following additive port-10000 aliases were installed and returned HTTP 200 with the correct cloud issuer/resource:
+- /.well-known/oauth-authorization-server/gsd-cloud
+- /.well-known/oauth-protected-resource/gsd-cloud/mcp
+- /.well-known/oauth-protected-resource/gsd-cloud
+
+Every preexisting Web handler, TCP setting and AllowFunnel flag was compared and preserved. Non-secret operational evidence is in /mnt/development/projects/gsd-cloud/discovery-alias-evidence.json. Only routing changed; the old gateway process remains active until the sanctioned service-policy registration/restart gate is resolved.
+
+For the postdeployment public E2E, set GSD_TEST_PUBLIC_IP to a freshly resolved public Funnel IP, in addition to the normal HTTPS GSD_TEST_BASE. The fixture pins only its own target-host DNS, retains hostname/SNI/certificate validation, and refuses a private address. Keep credentials out of logs.
+
+The official Sentinel service-registration edit was dry-run successfully with YAML validation, but has not been applied. It is scoped to named GSD units/actions, and no existing service policy was relaxed.
