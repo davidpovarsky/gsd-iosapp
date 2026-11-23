@@ -1,0 +1,98 @@
+name: GSD Apple Developer Readiness
+on:
+  push:
+    branches: [feat/gsd-apple-release-20261123]
+    paths: [.github/workflows/gsd-apple-readiness.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  apple-profiles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Apple App Store GSD record and create App Store profiles when capable
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install -q 'PyJWT[crypto]==2.10.1'
+          python3 - <<'PY'
+          import os,base64,time,jwt,urllib.request,urllib.parse,urllib.error,json,tempfile,plistlib,subprocess
+          team="NA6HPWARQ2";group="group.com.itorah.gsd"
+          assert os.environ["APPLE_TEAM_ID"]==team
+          specs=[
+            ("main","com.itorah.gsd","4888DDZ3CZ","GSD_Tasks_MAIN_AppStore_20261123"),
+            ("widgets","com.itorah.gsd.widgets","FT8CGJA23Z","GSD_Tasks_WIDGETS_AppStore_20261123"),
+            ("share","com.itorah.gsd.share","3WU23T2RLK","GSD_Tasks_SHARE_AppStore_20261123"),
+            ("watch","com.itorah.gsd.watchkitapp","N6AZ3WK759","GSD_Tasks_WATCH_AppStore_20261123"),
+            ("watchwidgets","com.itorah.gsd.watchkitapp.widgets","8P9G9J4V48","GSD_Tasks_WATCHWIDGETS_AppStore_20261123")]
+          def api(method,path,body=None):
+            now=int(time.time())
+            token=jwt.encode({"iss":os.environ["ASC_ISSUER_ID"],"iat":now-10,"exp":now+600,"aud":"appstoreconnect-v1"},
+              base64.b64decode(os.environ["ASC_KEY_P8"]).decode(),algorithm="ES256",headers={"kid":os.environ["ASC_KEY_ID"],"typ":"JWT"})
+            req=urllib.request.Request("https://api.appstoreconnect.apple.com/v1/"+path,
+              data=json.dumps(body).encode() if body else None,method=method,
+              headers={"Authorization":"Bearer "+token,"Content-Type":"application/json"})
+            try:
+              with urllib.request.urlopen(req,timeout=30) as res:
+                data=res.read()
+                return res.status,json.loads(data) if data else {}
+            except urllib.error.HTTPError as ex:
+              try:errors=[{"code":e.get("code"),"title":e.get("title")} for e in json.loads(ex.read(4096)).get("errors",[])]
+              except Exception:errors=[]
+              print("APPLE_API_ERROR",method,path.split("?")[0],ex.code,errors,flush=True)
+              return ex.code,{}
+          report={"team":team,"group":group,"appId":None,"targets":[]}
+          rc,apps=api("GET","apps?filter%5BbundleId%5D=com.itorah.gsd")
+          if rc!=200:raise RuntimeError("App Store app lookup failed")
+          a=[x for x in apps.get("data",[]) if x["attributes"]["bundleId"]=="com.itorah.gsd"]
+          if len(a)==1:report["appId"]=a[0]["id"]
+          print("APP_STORE_RECORD",report["appId"] or "MISSING",flush=True)
+          for role,bundle,bid,name in specs:
+            rc,obj=api("GET","bundleIds/"+bid)
+            if rc!=200 or obj["data"]["attributes"]["identifier"]!=bundle:raise RuntimeError("App ID missing: "+bundle)
+            rc,caps=api("GET",f"bundleIds/{bid}/bundleIdCapabilities")
+            if rc!=200 or "APP_GROUPS" not in {v["attributes"]["capabilityType"] for v in caps.get("data",[])}:raise RuntimeError("App Group capability disabled: "+bundle)
+            rc,ls=api("GET",f"bundleIds/{bid}/profiles?limit=100")
+            if rc!=200:raise RuntimeError("Cannot list profiles: "+bundle)
+            matches=[x for x in ls.get("data",[]) if x["attributes"].get("name")==name and x["attributes"].get("profileState")=="ACTIVE"]
+            new=False
+            if matches:
+              record=matches[0];print("PROFILE_REUSED",role,flush=True)
+            else:
+              payload={"data":{"type":"profiles","attributes":{"name":name,"profileType":"IOS_APP_STORE"},
+                "relationships":{"bundleId":{"data":{"type":"bundleIds","id":bid}},
+                "certificates":{"data":[{"type":"certificates","id":"B8HSX5CPJ4"}]}}}}
+              rc,v=api("POST","profiles",payload)
+              if rc!=201:raise RuntimeError("Cannot create App Store profile for "+role)
+              record=v["data"];new=True;print("PROFILE_CREATED",role,flush=True)
+            rc,full=api("GET","profiles/"+record["id"])
+            if rc!=200:raise RuntimeError("Cannot download profile: "+role)
+            with tempfile.NamedTemporaryFile(suffix=".mobileprovision") as f:
+              f.write(base64.b64decode(full["data"]["attributes"]["profileContent"]));f.flush()
+              res=subprocess.run(["openssl","cms","-verify","-noverify","-inform","DER","-in",f.name],capture_output=True,timeout=25)
+            if res.returncode:raise RuntimeError("Invalid Apple profile signature: "+role)
+            ent=plistlib.loads(res.stdout)["Entitlements"]
+            has_group=group in ent.get("com.apple.security.application-groups",[])
+            print("SIGNED_APP_GROUP",role,has_group,flush=True)
+            if new and not has_group:
+              code,_=api("DELETE","profiles/"+record["id"])
+              print("DISCARDED_INCOMPLETE_PROFILE",role,code,flush=True)
+            report["targets"].append({"role":role,"bundle":bundle,"groupAttached":has_group,"profileId":record["id"] if has_group else None})
+          open("gsd-apple-readiness.json","w").write(json.dumps(report,indent=2))
+          if not report["appId"] or not all(x["groupAttached"] for x in report["targets"]):
+            raise RuntimeError("Pending App Store record and/or portal App Group association")
+          print("READY_FOR_SIGNING",report["appId"],flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GSD-Apple-Readiness
+          path: gsd-apple-readiness.json
+          if-no-files-found: warn
