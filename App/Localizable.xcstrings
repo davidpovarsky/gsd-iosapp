@@ -1482,7 +1482,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "????? ??????"
+            "value": "פעולה בחשבון"
           }
         }
       },
@@ -3284,7 +3284,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "????? ???"
+            "value": "חשבון ענן"
           }
         }
       },
@@ -3590,7 +3590,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "????? ?????"
+            "value": "אימות סיסמה"
           }
         }
       },
@@ -3709,7 +3709,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "?? ???? ??????. ?? ????? ?? ????? ??????, ?????? ?? ?????? ????????."
+            "value": "לא ניתן להתחבר. יש לבדוק את כתובת הדוא״ל, הסיסמה או החיבור לאינטרנט."
           }
         }
       },
@@ -4355,7 +4355,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "????? ????? GSD"
+            "value": "יצירת חשבון GSD"
           }
         }
       },
@@ -4423,7 +4423,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "????? ?????"
+            "value": "יצירת חשבון"
           }
         }
       },
@@ -5597,7 +5597,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "????? ?????"
+            "value": "כתובת דוא״ל"
           }
         }
       },
@@ -6362,7 +6362,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "????? GSD Cloud"
+            "value": "חשבון GSD Cloud"
           }
         }
       },
@@ -9558,7 +9558,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "?????"
+            "value": "סיסמה"
           }
         }
       },
@@ -9575,7 +9575,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "???????? ???? ??????."
+            "value": "הסיסמאות אינן תואמות."
           }
         }
       },
@@ -11768,7 +11768,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "???????"
+            "value": "התחברות"
           }
         }
       },
@@ -11785,7 +11785,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "??????? ?? ????? ????? GSD Cloud"
+            "value": "התחברות או יצירת חשבון GSD Cloud"
           }
         }
       },
@@ -11802,7 +11802,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "??????? ??GSD Cloud"
+            "value": "התחברות ל־GSD Cloud"
           }
         }
       },
@@ -13706,7 +13706,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "??? ?????? ?? ??????? ??????? ??ChatGPT ?? ???????? ????, ?? ?????? ?????? GSD Cloud."
+            "value": "כדי לסנכרן את המשימות ולהשתמש ב־ChatGPT גם כשהאייפד סגור, יש להתחבר לחשבון GSD Cloud."
           }
         }
       },
@@ -14539,7 +14539,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "???? ?????? ????? ????? ??ChatGPT ???? ????????. ChatGPT ???? ???? ?? ??????? ???? ?? ??????????? ?????."
+            "value": "אפשר להשתמש באותו חשבון ב־ChatGPT ובכל המכשירים. ChatGPT יכול לנהל את המשימות בענן גם כשהאפליקציה סגורה."
           }
         }
       },
@@ -14556,7 +14556,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "???? ?????? ????? ????? ??ChatGPT ???? ????????. ??????? ????????? ?? ???????? ????."
+            "value": "אפשר להשתמש באותו חשבון ב־ChatGPT ובכל המכשירים. המשימות מסתנכרנות גם כשהאייפד סגור."
           }
         }
       },
@@ -15304,7 +15304,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "?????? ???????"
+            "value": "הבחירה הנוכחית"
           }
         }
       },
@@ -15594,7 +15594,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "??? ??????"
+            "value": "כמה משימות"
           }
         }
       },
