@@ -1,0 +1,346 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@ %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "%@, first": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, first"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, ראשונה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "%@, second": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, second"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, שנייה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "%@, third": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, third"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, שלישית"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Add a task": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a task"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הוספת משימה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Add task": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add task"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הוספת משימה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Call the dentist": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Call the dentist"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "להתקשר למרפאת השיניים"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Capture": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capture"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הוספה מהירה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Clear for now": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear for now"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הכול טופל לעת עתה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Delegate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delegate"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "להעביר לאחרים"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Destination": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destination"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "יעד"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Do First": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do First"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לביצוע מיידי"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Do First at a glance, and the next task due today.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do First at a glance, and the next task due today."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "המשימות לביצוע מיידי והמשימה הבאה להיום."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Eliminate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eliminate"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לוותר"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "GSD": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GSD"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GSD"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "New task": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New task"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "משימה חדשה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Open GSD on a new task.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open GSD on a new task."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "פתיחת GSD ליצירת משימה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Open GSD on your iPhone to load your tasks.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open GSD on your iPhone to load your tasks."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "כדי לטעון את המשימות יש לפתוח את GSD ב־iPhone."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Schedule": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schedule"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לתכנן"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Today, %lld of %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today, %lld of %lld"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "היום, %lld מתוך %lld"
+          }
+        }
+      },
+      "extractionState": "manual"
+    }
+  },
+  "version": "1.0"
+}

@@ -21,7 +21,7 @@ struct WhatsNewView: View {
             ForEach(releases) { release in
                 Section {
                     if let headline = release.headline {
-                        Text(headline).font(.body.weight(.medium)).foregroundStyle(Surface.ink)
+                        Text(WhatsNewContent.localized(headline)).font(.body.weight(.medium)).foregroundStyle(Surface.ink)
                     }
                     group(String(localized: "New"), release.new)
                     group(String(localized: "Improved"), release.improved)
@@ -56,7 +56,7 @@ struct WhatsNewView: View {
                 ForEach(items, id: \.self) { item in
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text(verbatim: "•").foregroundStyle(Surface.ink3).accessibilityHidden(true)
-                        Text(item).foregroundStyle(Surface.ink)
+                        Text(WhatsNewContent.localized(item)).foregroundStyle(Surface.ink)
                     }
                     .font(.subheadline)
                 }

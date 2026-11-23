@@ -55,49 +55,49 @@ public enum DemoFixtures {
         var out: [Task] = []
         // ---- Active: Do First ---- (varied due dates so the cards read realistically AND
         // deterministically against the frozen demo clock: today / +2d / overdue)
-        out.append(t("demo-finance", "Get finance sign-off", u: true, i: true, tags: ["work"],
+        out.append(t("demo-finance", String(localized: "Get finance sign-off"), u: true, i: true, tags: [String(localized: "work")],
                      due: cal.startOfDay(for: now), created: 1))
-        out.append(t("demo-deck", "Finish the Q3 board deck", u: true, i: true, tags: ["work"],
-                     subtasks: [Subtask(id: "sub1", title: "Pull revenue numbers", completed: true),
-                                Subtask(id: "sub2", title: "Draft the narrative"),
-                                Subtask(id: "sub3", title: "Design the key slides")],
+        out.append(t("demo-deck", String(localized: "Finish the Q3 board deck"), u: true, i: true, tags: [String(localized: "work")],
+                     subtasks: [Subtask(id: "sub1", title: String(localized: "Pull revenue numbers"), completed: true),
+                                Subtask(id: "sub2", title: String(localized: "Draft the narrative")),
+                                Subtask(id: "sub3", title: String(localized: "Design the key slides"))],
                      deps: ["demo-finance"], due: daysFromNow(2), created: 3))
         // Overdue, and kept free of subtasks/deps so it's the clean card we complete on camera.
-        out.append(t("demo-investor", "Reply to the investor email", u: true, i: true, tags: ["work"],
+        out.append(t("demo-investor", String(localized: "Reply to the investor email"), u: true, i: true, tags: [String(localized: "work")],
                      due: daysAgo(1), created: 2))
         // ---- Active: Schedule ----
-        out.append(t("demo-vacation", "Plan the summer vacation", u: false, i: true, tags: ["family"],
+        out.append(t("demo-vacation", String(localized: "Plan the summer vacation"), u: false, i: true, tags: [String(localized: "family")],
                      due: daysFromNow(7), created: 5))
-        out.append(t("demo-physical", "Book the annual physical", u: false, i: true, tags: ["health"],
+        out.append(t("demo-physical", String(localized: "Book the annual physical"), u: false, i: true, tags: [String(localized: "health")],
                      created: 9))
-        out.append(t("demo-passport", "Renew passport", u: false, i: true, tags: ["family"],
+        out.append(t("demo-passport", String(localized: "Renew passport"), u: false, i: true, tags: [String(localized: "family")],
                      due: daysFromNow(30), created: 4))
         // ---- Active: Delegate ----
-        out.append(t("demo-newsletter", "Send the weekly newsletter", u: true, i: false,
-                     tags: ["work"], recurrence: .weekly, due: daysFromNow(1), created: 6))
-        out.append(t("demo-supplies", "Order office supplies", u: true, i: false, tags: ["errands"],
+        out.append(t("demo-newsletter", String(localized: "Send the weekly newsletter"), u: true, i: false,
+                     tags: [String(localized: "work")], recurrence: .weekly, due: daysFromNow(1), created: 6))
+        out.append(t("demo-supplies", String(localized: "Order office supplies"), u: true, i: false, tags: [String(localized: "errands")],
                      created: 1))
         // ---- Active: Eliminate ----
-        out.append(t("demo-downloads", "Sort the downloads folder", u: false, i: false, tags: ["errands"],
+        out.append(t("demo-downloads", String(localized: "Sort the downloads folder"), u: false, i: false, tags: [String(localized: "errands")],
                      created: 8))
-        out.append(t("demo-reviews", "Browse gadget reviews", u: false, i: false, created: 12))
+        out.append(t("demo-reviews", String(localized: "Browse gadget reviews"), u: false, i: false, created: 12))
 
         // ---- Completed history (drives the Dashboard trend; completedAt is preserved by create()) ----
         let done: [(String, String, Bool, Bool, [String], Int)] = [
-            ("d-expense", "Submit the expense report", true, true, ["work"], 1),
-            ("d-standup", "Write standup notes", true, false, ["work"], 1),
-            ("d-dentist", "Call the dentist", false, true, ["health"], 2),
-            ("d-pr", "Review PR #482", true, true, ["work"], 2),
-            ("d-water", "Water the plants", false, false, ["home"], 3),
-            ("d-card", "Pay the credit card", false, true, ["errands"], 3),
-            ("d-grocery", "Grocery run", true, false, ["errands"], 4),
-            ("d-login", "Fix the login bug", true, true, ["work"], 5),
-            ("d-walk", "Walk the dog", true, false, ["home"], 5),
-            ("d-recipe", "Try the new recipe", false, false, ["home"], 6),
-            ("d-invoice", "Send the client invoice", true, true, ["work"], 7),
-            ("d-1on1", "Prep the 1:1 agenda", false, true, ["work"], 8),
-            ("d-laundry", "Do the laundry", true, false, ["home"], 9),
-            ("d-read", "Read the design article", false, false, [], 11),
+            ("d-expense", String(localized: "Submit the expense report"), true, true, [String(localized: "work")], 1),
+            ("d-standup", String(localized: "Write standup notes"), true, false, [String(localized: "work")], 1),
+            ("d-dentist", String(localized: "Call the dentist"), false, true, [String(localized: "health")], 2),
+            ("d-pr", String(localized: "Review PR #482"), true, true, [String(localized: "work")], 2),
+            ("d-water", String(localized: "Water the plants"), false, false, [String(localized: "home")], 3),
+            ("d-card", String(localized: "Pay the credit card"), false, true, [String(localized: "errands")], 3),
+            ("d-grocery", String(localized: "Grocery run"), true, false, [String(localized: "errands")], 4),
+            ("d-login", String(localized: "Fix the login bug"), true, true, [String(localized: "work")], 5),
+            ("d-walk", String(localized: "Walk the dog"), true, false, [String(localized: "home")], 5),
+            ("d-recipe", String(localized: "Try the new recipe"), false, false, [String(localized: "home")], 6),
+            ("d-invoice", String(localized: "Send the client invoice"), true, true, [String(localized: "work")], 7),
+            ("d-1on1", String(localized: "Prep the 1:1 agenda"), false, true, [String(localized: "work")], 8),
+            ("d-laundry", String(localized: "Do the laundry"), true, false, [String(localized: "home")], 9),
+            ("d-read", String(localized: "Read the design article"), false, false, [], 11),
         ]
         for (id, title, u, i, tags, ago) in done {
             out.append(t(id, title, u: u, i: i, tags: tags, done: daysAgo(ago), created: ago + 1 + ago % 3))

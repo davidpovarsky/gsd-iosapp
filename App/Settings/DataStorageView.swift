@@ -70,14 +70,14 @@ struct DataStorageView: View {
         .alert(String(localized: "Erase All Data"), isPresented: $showEraseAlert) {
             TextField(String(localized: "Type RESET to confirm"), text: $resetConfirmText)
             Button(String(localized: "Erase"), role: .destructive) {
-                guard resetConfirmText == "RESET" else { return }
+                guard resetConfirmText == String(localized: "RESET") else { return }
                 _Concurrency.Task {
                     let ok = await sync.eraseEverywhere(store: store)
                     statusMessage = ok ? String(localized: "All data erased.")
                                        : String(localized: "Couldn't erase right now — check your connection and try again. Nothing was removed from this device.")
                 }
             }
-            .disabled(resetConfirmText != "RESET")
+            .disabled(resetConfirmText != String(localized: "RESET"))
             Button(String(localized: "Cancel"), role: .cancel) {}
         } message: {
             Text(String(localized: "This cannot be undone and, if you're signed in, erases your tasks on all your devices. Type RESET to confirm. Consider exporting first."))

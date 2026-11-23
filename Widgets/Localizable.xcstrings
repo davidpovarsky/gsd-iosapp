@@ -1,0 +1,176 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@, %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, %@"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, %@"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "+%lld more": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld more"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ועוד %lld"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "All clear": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All clear"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הכול טופל"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Finalize the deck": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finalize the deck"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לסיים את המצגת"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Reply to the board": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reply to the board"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לענות לדירקטוריון"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Ship the release": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ship the release"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "להוציא את הגרסה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Today's Focus": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today's Focus"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "המיקוד להיום"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Your urgent and important tasks.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your urgent and important tasks."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "המשימות הדחופות והחשובות שלך."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "due today": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "due today"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "להיום"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "overdue": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "overdue"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "באיחור"
+          }
+        }
+      },
+      "extractionState": "manual"
+    }
+  },
+  "version": "1.0"
+}

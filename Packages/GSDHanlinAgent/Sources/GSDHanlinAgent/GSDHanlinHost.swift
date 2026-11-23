@@ -127,7 +127,7 @@ public actor GSDHanlinHost: HanlinHostIntegration {
         if spec.writes {
             let approval = GSDHanlinWriteRequest(
                 tool: spec.alias, taskIDs: args.ids ?? args.id.map { [$0] } ?? [],
-                description: "\(spec.title): \(args.title ?? args.id ?? "several tasks")")
+                description: "\(spec.title): \(args.title ?? args.id ?? String(localized: "several tasks"))")
             // Explicit host consent, even if the provider/tool loop granted its own approval.
             let allowed = await writeAuthorizer(approval)
             guard allowed, activeContext == invocation.session.context,
@@ -196,7 +196,7 @@ public actor GSDHanlinHost: HanlinHostIntegration {
         tool: name,
         taskIDs: args.ids ?? args.id.map { [$0] } ?? [],
         description: spec.summary + ": " +
-          (args.title ?? args.id ?? "current selection"))
+          (args.title ?? args.id ?? String(localized: "current selection")))
       guard await writeAuthorizer(request), !_Concurrency.Task<Never, Never>.isCancelled else {
         return .init(text: "Change declined or cancelled on the iPad", isError: true)
       }

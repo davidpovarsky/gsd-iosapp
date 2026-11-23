@@ -23,7 +23,7 @@ struct WatchFooter: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             if pending > 0 {
-                Text(pending == 1 ? "1 change waiting for iPhone" : "\(pending) changes waiting for iPhone")
+                Text(pending == 1 ? String(localized: "1 change waiting for iPhone") : String(localized: "\(pending) changes waiting for iPhone"))
             }
             if model.hasSnapshot {
                 Text("Updated \(model.snapshot.generatedAt.formatted(date: .omitted, time: .shortened))")
