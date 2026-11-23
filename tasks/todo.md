@@ -3,15 +3,17 @@
 ### Resuming From Here
 
 - Scope: finish the requested GSD iPad + Hanlin + ChatGPT MCP delivery. Lorvex remains outside this repair.
-- All implementation changes are in code revision 383ff4833d0ae412d4cf37475ec70813d1cb28dc.
-- Current native acceptance: https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45111695893 . It was dispatched on that revision and is awaiting a GitHub Xcode runner. Do not create duplicate native runs.
-- Previous queued run45106355079 at aaf31d5 was cancelled before any step ran, after almost an hour without a runner, when the consolidated current-code run was created.
-- Earlier native45101502774 proved the device/IPA build and universal simulator build, seven SDK tests, three packaging tests and normal iPhone launch. Only old iPad simulator boot timed out before app installation.
-- Simulator selection now uses compatible modern devices; one recovery is allowed only before app installation. Both device families must pass. IPA and simulator binaries are preserved before smoke tests.
-- Public acceptance45110816923 passed all12 OAuth/MCP checkpoints on383ff, including a240069-byte Hebrew result;3 local/server regression tests passed including the exact1MiB UTF-8 boundary.
-- Oracle is running serverSHA256 3f11aa7a1df46d205f129ea03fc78e52f89fd2a62fca24418de751a524888ac6. Its result limit now matches native1MiB; ordinary body limits remain128KiB. The exact public-test fixture was removed, both services are healthy and Lorvex's paired device remains.
-- Next: complete current native run, inspect both screenshots, download and validate IPA archives, publish prerelease and finish Asana delivery tasks. Validator is prepared on Windows for run45111695893 and requires actual terminal-success metadata.
-- Physical iPad signing/installation and personal ChatGPT OAuth pairing remain user-device acceptance; keep that Asana task open until observed.
+- Current code checkpoint: d44649ed9bb0cc0eab9fb0d12c9ec63a71cd41ca.
+- Current native acceptance: https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45113033128 . It is queued on that revision; do not claim success or dispatch a duplicate.
+- Queued runs 45106355079 and 45111695893 were cancelled before either acquired a runner or executed a step. The native concurrency key now includes workflow and ref while preserving cancel-in-progress: false.
+- Native 45101502774 already proved device compilation, both unsigned IPA exports, universal simulator compilation, seven SDK tests, three packaging tests and normal iPhone launch. The reviewed screenshot shows GSD onboarding. That run failed only at the old iPad's 300-second bootstatus wait, before installation.
+- Compatible modern-device selection and one pre-install boot recovery now await native verification. Both families must pass; installation/launch/liveness/screenshot failures are never retried. CI preserves IPA and simulator binaries before smoke tests.
+- Public acceptance 45110816923 passed three Node tests and all twelve external OAuth/MCP checks on 383ff4833d0ae412d4cf37475ec70813d1cb28dc, including a 240,069-byte UTF-8 Hebrew round trip.
+- Oracle is running server SHA256 3f11aa7a1df46d205f129ea03fc78e52f89fd2a62fca24418de751a524888ac6. The decoded result limit matches native 1 MiB; ordinary request limits remain 128 KiB. The exact synthetic fixture and its client/auth records were removed. Existing user devices were preserved, and GSD and Lorvex health endpoints both returned HTTP 200.
+- Next: record the terminal outcome of 45113033128, inspect both screenshots, validate that run's actual IPA archives/manifests, publish the verified prerelease and update Asana. Validation must use the actual completed run and require success metadata.
+- Setup target: unsigned GSD 4.0.1 build 47, iOS/iPadOS 27+. Hanlin AI → Cancel if Model settings auto-open → MCP → Pair this iPad with ChatGPT. Keep GSD foregrounded and approve writes on-device. Model provider API configuration is separate.
+- Physical iPad installation, personal ChatGPT OAuth pairing and provider inference remain unverified. Keep the physical-acceptance Asana task open until observed.
+- Detailed evidence: docs/ai-agent/GSD_BUILD_REPAIR_20261123.md; setup: docs/ai-agent/GSD_REMOTE_MCP_HANDOFF_20261123.md.
 
 # Native sync ports: confirm before absence, guarded task writes (2026-11-19)
 
