@@ -1,0 +1,230 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "Add a task in ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a task in ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הוספת משימה ב־${applicationName}"
+          }
+        }
+      }
+    },
+    "Add a task to ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a task to ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הוספת משימה אל ${applicationName}"
+          }
+        }
+      }
+    },
+    "Add a to-do in ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a to-do in ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "להוסיף מטלה ב־${applicationName}"
+          }
+        }
+      }
+    },
+    "Add a to-do to ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a to-do to ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "להוסיף מטלה אל ${applicationName}"
+          }
+        }
+      }
+    },
+    "Capture a task in ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capture a task in ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "רישום משימה ב־${applicationName}"
+          }
+        }
+      }
+    },
+    "Check off a task in ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check off a task in ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לסמן סיום משימה ב־${applicationName}"
+          }
+        }
+      }
+    },
+    "Complete a task in ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Complete a task in ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "השלמת משימה ב־${applicationName}"
+          }
+        }
+      }
+    },
+    "Create a task in ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create a task in ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "יצירת משימה בתוך ${applicationName}"
+          }
+        }
+      }
+    },
+    "Create a task to ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create a task to ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "יצירת משימה ב־${applicationName}"
+          }
+        }
+      }
+    },
+    "Finish a task in ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finish a task in ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לסיים משימה ב־${applicationName}"
+          }
+        }
+      }
+    },
+    "Mark a task done in ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark a task done in ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "סימון משימה כהושלמה ב־${applicationName}"
+          }
+        }
+      }
+    },
+    "New task in ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New task in ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "משימה חדשה ב־${applicationName}"
+          }
+        }
+      }
+    },
+    "Open ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "פתיחת ${applicationName}"
+          }
+        }
+      }
+    },
+    "Show my focus in ${applicationName}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show my focus in ${applicationName}"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הצגת המיקוד שלי ב־${applicationName}"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

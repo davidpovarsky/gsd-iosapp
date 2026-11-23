@@ -151,7 +151,7 @@ struct TaskActions {
                 try await operation()
                 onSuccess()
             } catch {
-                onError(appendDetail ? "\(failureMessage): \(error.localizedDescription)" : failureMessage)
+                onError(appendDetail ? String(localized: "\(failureMessage): \(error.localizedDescription)") : failureMessage)
             }
         }
     }

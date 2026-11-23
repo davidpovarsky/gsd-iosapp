@@ -72,7 +72,7 @@ struct TodaysFocusView: View {
                 .lineLimit(1)
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(state.spoken.map { "\(task.title), \($0)" } ?? task.title)
+        .accessibilityLabel(state.spoken.map { String(localized: "\(task.title), \($0)") } ?? task.title)
     }
 
     private enum DueState {

@@ -18,7 +18,7 @@ struct WatchWidgetProvider: TimelineProvider {
 
     /// A sample row, so the gallery shows what the widget looks like instead of the empty state.
     func placeholder(in context: Context) -> WatchWidgetEntry {
-        let sample = WatchTask(id: "sample", title: "Call the dentist", urgent: true, important: true,
+        let sample = WatchTask(id: "sample", title: String(localized: "Call the dentist"), urgent: true, important: true,
                                createdAt: .now, updatedAt: .now, isRecurring: false)
         return WatchWidgetEntry(date: .now, snapshot: WatchSnapshot(
             generatedAt: .now, escalationWindowDays: nil, tasks: [sample], doFirstTotal: 1, appliedCommandIDs: []))

@@ -4,6 +4,10 @@ import GSDModel
 /// This build's Apple release notes, read once from the copy of the web repo's
 /// `whats-new.json` that GSDModel bundles (spec: gsd-taskmanager `tasks/spec-whats-new.md`).
 enum WhatsNewContent {
+    static func localized(_ releaseText: String) -> String {
+        Bundle.main.localizedString(forKey: releaseText, value: releaseText, table: nil)
+    }
+
     /// The running marketing version, e.g. "3.8.0".
     static let runningVersion: String? = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
 

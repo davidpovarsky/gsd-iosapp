@@ -81,7 +81,7 @@ private struct PickRow: View {
             }
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(task.dueDate.map { "\(label), due \($0.formatted(date: .abbreviated, time: .omitted))" } ?? label)
+        .accessibilityLabel(task.dueDate.map { String(localized: "\(label), due \($0.formatted(date: .abbreviated, time: .omitted))") } ?? label)
         .swipeActions(edge: .leading) {
             Button { model.complete(task) } label: { Label("Complete", systemImage: "checkmark") }
                 .tint(.green)

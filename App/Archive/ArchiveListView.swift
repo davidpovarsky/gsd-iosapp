@@ -163,7 +163,7 @@ struct ArchiveListView: View {
                 try await operation()
                 onSuccess()
             } catch {
-                actionFailure = TaskActionFailure("\(failureMessage): \(error.localizedDescription)")
+                actionFailure = TaskActionFailure(String(localized: "\(failureMessage): \(error.localizedDescription)"))
             }
         }
     }

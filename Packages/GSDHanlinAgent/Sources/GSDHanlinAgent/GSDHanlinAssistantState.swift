@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 import Observation
 import GSDStore
 import HanlinAgentCore
@@ -109,12 +110,15 @@ public final class GSDHanlinAssistantState {
 
         do {
             // Do not retain a raw API key in a string fingerprint.
-            let fingerprint = "\(provider)|\(endpoint)|\(modelID)"
-            if bundle == nil || fingerprint != currentModelKey {
+            let credentialDigest = SHA256.hash(data: Data(credential.utf8))
+                .map { String(format: "%02x", $0) }.joined()
+            let fingerprint = "\(provider)|\(endpoint)|\(modelID)|\(credentialDigest)"
+            let usesChatGPTPlan = provider == "ChatGPT"
+            if bundle == nil || fingerprint != currentModelKey || usesChatGPTPlan {
                 if let old = bundle { await old.agent.invalidate() }
                 let configuration = HanlinChatModelConfiguration(
-                    modelID: modelID, company: provider,
-                    apiType: provider == "Anthropic" ? "Anthropic" :
+                    modelID: modelID, company: usesChatGPTPlan ? "OpenAI" : provider,
+                    apiType: usesChatGPTPlan ? "openai-responses" : provider == "Anthropic" ? "Anthropic" :
                              provider == "Google" ? "Gemini" : "OpenAI",
                     endpoint: endpointURL, apiKey: credential, maxTokens: 2048,
                     supportsToolUse: true)

@@ -176,7 +176,7 @@ struct QuadrantCell: View {
         .swipeActions(edge: .leading) {
             Button { actions.toggle(task) } label: {
                 Label(task.completed ? String(localized: "Uncomplete") : String(localized: "Complete"),
-                      systemImage: task.completed ? "arrow.uturn.left" : "checkmark")
+                      systemImage: task.completed ? "arrow.uturn.backward" : "checkmark")
             }
             .tint(Surface.success)
         }

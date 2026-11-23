@@ -27,7 +27,7 @@ struct SweepEntryLine: View {
                         Label(String(localized: "Weekly sweep"), systemImage: "wind")
                             .font(.callout).foregroundStyle(Surface.ink2)
                         Spacer(minLength: 0)
-                        Image(systemName: "chevron.right").font(.footnote).foregroundStyle(Surface.ink3)
+                        Image(systemName: "chevron.forward").font(.footnote).foregroundStyle(Surface.ink3)
                             .accessibilityHidden(true)
                     }
                     .frame(minHeight: 44)

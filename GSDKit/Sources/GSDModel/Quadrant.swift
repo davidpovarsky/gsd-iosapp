@@ -1,3 +1,5 @@
+import Foundation
+
 /// The four Eisenhower quadrants. Declaration order is the canonical
 /// display/iteration order Q1→Q4 (product spec §5.8).
 public enum Quadrant: String, Codable, Sendable, CaseIterable {
@@ -19,10 +21,10 @@ public enum Quadrant: String, Codable, Sendable, CaseIterable {
 
     public var title: String {
         switch self {
-        case .urgentImportant: "Do First"
-        case .notUrgentImportant: "Schedule"
-        case .urgentNotImportant: "Delegate"
-        case .notUrgentNotImportant: "Eliminate"
+        case .urgentImportant: String(localized: "Do First")
+        case .notUrgentImportant: String(localized: "Schedule")
+        case .urgentNotImportant: String(localized: "Delegate")
+        case .notUrgentNotImportant: String(localized: "Eliminate")
         }
     }
 
