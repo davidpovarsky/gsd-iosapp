@@ -21,7 +21,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: gsd-hanlin-native-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
