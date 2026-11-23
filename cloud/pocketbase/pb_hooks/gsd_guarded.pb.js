@@ -17,7 +17,8 @@ routerAdd("PATCH","/api/gsd/tasks/{id}",(e)=>{
     if(patch.owner!==undefined&&patch.owner!==auth.id)throw new BadRequestError("Immutable owner");
     if(patch.task_id!==undefined&&patch.task_id!==task.getString("task_id"))throw new BadRequestError("Immutable task id");
     if(task.getString("client_updated_at")!==body.expected_version)throw new ApiError(412,"Task version conflict");
-    if(typeof patch.client_updated_at!=="string"||!Number.isFinite(Date.parse(patch.client_updated_at)))
+    if(typeof patch.client_updated_at!=="string"||!Number.isFinite(Date.parse(patch.client_updated_at))||
+      patch.client_updated_at===body.expected_version)
       throw new BadRequestError("Valid client_updated_at is required");
     const wasComplete=task.getBool("completed");
     for(const k of Object.keys(patch))task.set(k,patch[k]);

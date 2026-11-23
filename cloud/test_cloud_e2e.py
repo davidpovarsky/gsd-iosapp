@@ -89,6 +89,11 @@ try:
     request("GET","/api/collections/tasks/records/"+task["id"],token=b["token"],expect=(403,404))
     request("PATCH","/api/gsd/tasks/"+task["id"],{"expected_version":update["client_updated_at"],
         "data":{**update,"owner":b["record"]["id"]}},token=a["token"],expect=(400,403,404))
+    request("PATCH","/api/gsd/tasks/"+task["id"],{"expected_version":update["client_updated_at"],
+        "data":{"title":"Same-version write must fail","client_updated_at":update["client_updated_at"]}},
+        token=a["token"],expect=400)
+    request("PATCH","/api/collections/tasks/records/"+task["id"],{"title":"Unguarded write must fail"},
+        token=a["token"],expect=403)
     passed("native_wire_guarded_update_stale_conflict_and_owner_immutability")
     ga,gb=oauth(a),oauth(b)
     passed("oauth_pkce_login_two_accounts_single_use_codes")
@@ -154,6 +159,8 @@ try:
     view_body={"expected_version":"","payload":json.dumps(view),"client_updated_at":library_stamp,"deleted":False}
     request("PUT","/api/gsd/library/view/"+view_id,view_body,token=a["token"],expect=204)
     request("PUT","/api/gsd/library/view/"+view_id,view_body,token=a["token"],expect=412)
+    request("PUT","/api/gsd/library/view/"+view_id,{**view_body,"expected_version":library_stamp,
+        "payload":json.dumps({**view,"name":"Same-version write must fail"})},token=a["token"],expect=400)
     assert any(v["id"]==view_id for v in tool(ga,"list_smart_views")["views"])
     assert not any(v["id"]==view_id for v in tool(gb,"list_smart_views")["views"])
     later=(instant+datetime.timedelta(milliseconds=1)).isoformat(timespec="milliseconds").replace("+00:00","Z")

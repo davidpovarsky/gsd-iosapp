@@ -454,7 +454,7 @@ export function createGateway({
     if(u==='/api/collections/users/records'&&method==='POST')return true;
     if(/^\/api\/collections\/users\/records\/[A-Za-z0-9_-]{10,80}$/.test(u)&&['GET','PATCH','DELETE'].includes(method))return true;
     if(u==='/api/collections/tasks/records'&&['GET','POST'].includes(method))return true;
-    if(/^\/api\/collections\/tasks\/records\/[A-Za-z0-9_-]{10,80}$/.test(u)&&['GET','PATCH','DELETE'].includes(method))return true;
+    if(/^\/api\/collections\/tasks\/records\/[A-Za-z0-9_-]{10,80}$/.test(u)&&['GET','DELETE'].includes(method))return true;
     return false;
   };
   function proxyToPocketBase(req,res,url) {

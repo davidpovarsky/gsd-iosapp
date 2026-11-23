@@ -30,6 +30,9 @@ function save(app,owner,kind,id,payload,version,deleted,expected) {
   let record=find(app,owner,kind,id);
   if(expected!==undefined && (record?record.getString("client_updated_at"):"")!==expected)
     throw new ApiError(412,"Library version conflict");
+  if(record && record.getString("client_updated_at")===version &&
+    (record.getString("payload")!==payload || record.getBool("deleted")!==!!deleted))
+    throw new BadRequestError("Changed library data requires a new version");
   if(!record){record=new Record(app.findCollectionByNameOrId("gsd_library"));
     record.set("owner",owner);record.set("kind",kind);record.set("entity_id",id);}
   record.set("payload",payload);record.set("client_updated_at",version);record.set("deleted",!!deleted);

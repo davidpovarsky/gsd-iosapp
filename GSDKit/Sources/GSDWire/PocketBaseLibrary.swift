@@ -36,7 +36,13 @@ extension PocketBaseClient {
         guard item.entityId.unicodeScalars.allSatisfy({ safe.contains($0) }) else {
             throw PocketBaseError.decoding("Invalid library id")
         }
-        let body = Body(expected_version: expectedVersion, client_updated_at: item.clientUpdatedAt,
+        let version: String
+        if item.clientUpdatedAt == expectedVersion, let previous = WireDate.parse(expectedVersion) {
+            version = WireDate.format(previous.addingTimeInterval(0.001))
+        } else {
+            version = item.clientUpdatedAt
+        }
+        let body = Body(expected_version: expectedVersion, client_updated_at: version,
                         payload: item.payload, deleted: item.deleted)
         try await sendNoContent(authedRequest(
             path: "/api/gsd/library/\(item.kind)/\(item.entityId)", method: "PUT",
