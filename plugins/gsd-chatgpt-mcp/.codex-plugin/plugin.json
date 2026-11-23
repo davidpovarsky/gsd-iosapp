@@ -1,0 +1,24 @@
+{
+  "interface": {
+    "capabilities": [
+      "Interactive"
+    ],
+    "category": "Productivity",
+    "defaultPrompt": "Help me plan my week using the tasks and priorities in GSD.",
+    "developerName": "Goldy Sterling",
+    "displayName": "GSD Tasks",
+    "longDescription": "Read and manage your personal GSD tasks, priorities, deadlines, saved views, timers and dashboard through your GSD Cloud account. Connect with your normal GSD email and password. Tasks are available through Oracle even while the iPad app is closed.",
+    "shortDescription": "Manage your GSD Cloud tasks"
+  },
+  "name": "gsd-chatgpt-mcp",
+  "version": "0.2.0",
+  "description": "Private ChatGPT connection to your GSD Cloud account, with tasks synchronized to your devices.",
+  "author": {
+    "name": "Goldy Sterling",
+    "email": "goldysterling@gmail.com"
+  },
+  "keywords": [],
+  "repository": "https://github.com/davidpovarsky/gsd-iosapp",
+  "skills": "./skills",
+  "mcpServers": "./.mcp.json"
+}

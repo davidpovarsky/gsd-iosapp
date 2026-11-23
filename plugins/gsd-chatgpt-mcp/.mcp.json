@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "gsd-remote": {
+      "type": "streamable-http",
+      "url": "https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud/mcp",
+      "headers": {},
+      "extensions": {
+        "com.openai": {
+          "auth": {
+            "type": "oauth",
+            "client": {
+              "mode": "dcr"
+            },
+            "baseScopes": [
+              "gsd.read",
+              "gsd.write",
+              "offline_access"
+            ],
+            "defaultScopes": [
+              "gsd.read",
+              "gsd.write",
+              "offline_access"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

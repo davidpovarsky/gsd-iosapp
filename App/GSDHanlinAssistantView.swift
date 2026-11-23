@@ -9,6 +9,12 @@ import GSDHanlinAgent
 /// API tokens stay in the device Keychain (not UserDefaults, project files or conversation logs).
 struct GSDHanlinAssistantView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(SessionStore.self) private var cloudSession
+    @State private var chatGPT = GSDChatGPTAccountState()
+    @State private var showChatGPTSettings = false
+    @State private var isPreparingRequest = false
+    @State private var sendTask: _Concurrency.Task<Void, Never>?
+    @State private var requestID: UUID?
     @State private var assistant: GSDHanlinAssistantState
     let remoteBridge: GSDRemoteBridgeState?
     @State private var showRemoteBridgeSettings = false
@@ -74,14 +80,25 @@ struct GSDHanlinAssistantView: View {
                 if let error = assistant.errorMessage {
                     Text(AssistantCopy.status(error)).font(.caption).foregroundStyle(.red).padding(.horizontal)
                 }
+                if let configurationError {
+                    Text(configurationError).font(.caption).foregroundStyle(.red).padding(.horizontal)
+                }
+                if provider == "ChatGPT", chatGPT.canUsePlan {
+                    HStack {
+                        Text("Using ChatGPT plan")
+                        Spacer()
+                        Link("Manage usage", destination: URL(string: "https://chatgpt.com/settings/usage")!)
+                    }.font(.caption).padding(.horizontal)
+                }
                 HStack(spacing: 10) {
                     TextField("Ask about your tasks…", text: $prompt, axis: .vertical)
                         .lineLimit(1...4)
                         .textFieldStyle(.roundedBorder)
                         .submitLabel(.send)
                         .onSubmit(send)
-                    if assistant.isRunning {
+                    if assistant.isRunning || isPreparingRequest {
                         Button {
+                            sendTask?.cancel()
                             Task { await assistant.cancel() }
                         } label: { Image(systemName: "stop.circle") }
                             .accessibilityLabel("Stop AI")
@@ -110,18 +127,22 @@ struct GSDHanlinAssistantView: View {
             .onAppear {
                 apiToken = GSDHanlinKeychain.read()
                 configuredToken = apiToken
-                if modelID.isEmpty { showModelSettings = true }
+                if provider == "ChatGPT" ? !chatGPT.canUsePlan : modelID.isEmpty {
+                    showModelSettings = true
+                }
             }
             .onDisappear {
+                sendTask?.cancel()
+                chatGPT.cancelSignIn()
                 Task { await assistant.cancel() }
+            }
+            .onChange(of: cloudSession.currentUserID) { _, _ in
+                sendTask?.cancel()
+                Task { await assistant.cancel(); dismiss() }
             }
             .sheet(isPresented: $showModelSettings) { settings }
             .sheet(isPresented: $showRemoteBridgeSettings) {
-                if let remoteBridge {
-                    GSDRemoteBridgeSettingsView(bridge: remoteBridge)
-                } else {
-                    ContentUnavailableView("MCP not ready", systemImage: "network.slash")
-                }
+                GSDCloudConnectionView()
             }
             .confirmationDialog(
                 "Allow the AI to modify your tasks?",
@@ -188,30 +209,46 @@ struct GSDHanlinAssistantView: View {
             Form {
                 Section("AI provider") {
                     Picker("Provider", selection: $provider) {
+                        Text("ChatGPT plan").tag("ChatGPT")
                         Text("OpenRouter").tag("OpenRouter")
                         Text("OpenAI").tag("OpenAI")
                         Text("Anthropic").tag("Anthropic")
                         Text("Google").tag("Google")
                         Text("Other compatible").tag("Other")
                     }
-                    TextField("Model identifier", text: $modelID)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                    TextField("HTTPS API base URL", text: $endpoint)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .keyboardType(.URL)
-                    SecureField("API key", text: $apiToken)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                    Text("The API key is saved only in your device Keychain. An API provider may charge for usage. This is not ChatGPT account sign-in.")
-                        .font(.caption).foregroundStyle(.secondary)
+                    if provider == "ChatGPT" {
+                        Button("Continue with ChatGPT") { showChatGPTSettings = true }
+                            .accessibilityIdentifier("hanlin.chatgpt.settings")
+                        Text(chatGPT.status).font(.caption).foregroundStyle(.secondary)
+                        if !chatGPT.selectedModelID.isEmpty {
+                            LabeledContent("Model", value: chatGPT.selectedModelID)
+                        }
+                    } else {
+                        TextField("Model identifier", text: $modelID)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
+                        TextField("HTTPS API base URL", text: $endpoint)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
+                            .keyboardType(.URL)
+                        SecureField("API key", text: $apiToken)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
+                        Text("The API key is saved only in your device Keychain. An API provider may charge for usage. This is not ChatGPT account sign-in.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
                 }
                 if let configurationError {
                     Text(configurationError).foregroundStyle(.red)
                 }
             }
             .navigationTitle("Hanlin model settings")
+            .sheet(isPresented: $showChatGPTSettings) {
+                GSDChatGPTSettingsView(account: chatGPT) {
+                    sendTask?.cancel()
+                    await assistant.cancel()
+                }
+            }
             .gsdRemoteWriteApproval(bridge: remoteBridge)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -222,6 +259,16 @@ struct GSDHanlinAssistantView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
+                        if provider == "ChatGPT" {
+                            guard chatGPT.canUsePlan else {
+                                configurationError = String(localized: "Connect ChatGPT and enable plan usage first.")
+                                return
+                            }
+                            configurationError = nil
+                            showModelSettings = false
+                            Task { await assistant.cancel() }
+                            return
+                        }
                         guard let url = URL(string: endpoint), url.scheme == "https", url.host != nil,
                               !modelID.isEmpty else {
                             configurationError = String(localized: "Enter an HTTPS endpoint and a model identifier.")
@@ -244,11 +291,34 @@ struct GSDHanlinAssistantView: View {
 
     private func send() {
         let text = prompt.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !text.isEmpty, !assistant.isRunning else { return }
+        guard !text.isEmpty, !assistant.isRunning, !isPreparingRequest else { return }
+        let id = UUID()
+        requestID = id
+        isPreparingRequest = true
+        configurationError = nil
         prompt = ""
-        Task {
-            await assistant.send(text, modelID: modelID, endpoint: endpoint,
-                                 credential: configuredToken, provider: provider)
+        sendTask = Task { @MainActor in
+            defer {
+                if requestID == id { isPreparingRequest = false; sendTask = nil; requestID = nil }
+            }
+            do {
+                if provider == "ChatGPT" {
+                    let access = try await chatGPT.accessForInference()
+                    try Task.checkCancellation()
+                    await assistant.send(text, modelID: access.modelID,
+                        endpoint: "https://api.openai.com/v1/responses",
+                        credential: access.token, provider: "ChatGPT")
+                } else {
+                    try Task.checkCancellation()
+                    await assistant.send(text, modelID: modelID, endpoint: endpoint,
+                                         credential: configuredToken, provider: provider)
+                }
+            } catch is CancellationError {
+                if prompt.isEmpty { prompt = text }
+            } catch {
+                configurationError = String(format: String(localized: "ChatGPT access failed: %@"), error.localizedDescription)
+                if prompt.isEmpty { prompt = text }
+            }
         }
     }
 }
@@ -278,92 +348,26 @@ private enum GSDHanlinKeychain {
             kSecAttrService as String: service,
             kSecAttrAccount as String: account
         ]
-        let previous = SecItemDelete(query as CFDictionary)
-        guard previous == errSecSuccess || previous == errSecItemNotFound else {
-            throw NSError(domain: NSOSStatusErrorDomain, code: Int(previous))
+        if value.isEmpty {
+            let status = SecItemDelete(query as CFDictionary)
+            guard status == errSecSuccess || status == errSecItemNotFound else {
+                throw NSError(domain: NSOSStatusErrorDomain, code: Int(status))
+            }
+            return
         }
-        guard !value.isEmpty else { return }
-        var item = query
-        item[kSecValueData as String] = Data(value.utf8)
-        item[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
-        let result = SecItemAdd(item as CFDictionary, nil)
+        let data = Data(value.utf8)
+        var result = SecItemUpdate(query as CFDictionary,
+            [kSecValueData as String: data] as CFDictionary)
+        if result == errSecItemNotFound {
+            var item = query
+            item[kSecValueData as String] = data
+            item[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+            result = SecItemAdd(item as CFDictionary, nil)
+        }
         guard result == errSecSuccess else {
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(result))
         }
     }
-}
-
-/// User-driven OAuth linking. The iPad generates a private device credential,
-/// registers its actual SDK tool catalog, and displays a short-lived one-time
-/// code. No server-side copy of GSD's private database is created.
-struct GSDRemoteBridgeSettingsView: View {
-  @Environment(\.dismiss) private var dismiss
-  @Bindable var bridge: GSDRemoteBridgeState
-
-  var body: some View {
-    NavigationStack {
-      Form {
-        Section("Cloudflare / MCP bridge") {
-          TextField("HTTPS bridge URL", text: $bridge.endpointText)
-            .textContentType(.URL)
-            .autocorrectionDisabled()
-          Text("The address of your private GSD MCP relay. It must use HTTPS.")
-            .font(.caption).foregroundStyle(.secondary)
-          HStack {
-            Image(systemName: bridge.linked ? "checkmark.shield.fill" : "network")
-              .foregroundStyle(bridge.linked ? Color.green : Color.secondary)
-            VStack(alignment: .leading) {
-              Text(AssistantCopy.status(bridge.status))
-                .font(.callout)
-              if let last = bridge.lastTool {
-                Text("Last tool: \(AssistantCopy.toolName(last))").font(.caption).foregroundStyle(.secondary)
-              }
-            }
-          }
-          Button {
-            Task { await bridge.pair() }
-          } label: {
-            if bridge.isPairing {
-              ProgressView("Connecting…")
-            } else {
-              Label("Pair this iPad with ChatGPT", systemImage: "link")
-            }
-          }
-          .disabled(bridge.isPairing || bridge.endpointText.isEmpty)
-        }
-
-        if let code = bridge.pairingCode {
-          Section("One-time pairing code") {
-            Text(code)
-              .font(.system(.largeTitle, design: .monospaced, weight: .bold))
-              .textSelection(.enabled)
-              .accessibilityLabel(String(localized: "One-time ChatGPT pairing code: \(code)"))
-            Text("In ChatGPT on the web, connect a custom MCP server at this HTTPS address with OAuth. When ChatGPT opens the GSD sign-in page, enter this code. The code expires after 10 minutes.")
-              .font(.callout)
-            Text("You do not need to share your GSD database, Apple ID or API keys with the bridge.")
-              .font(.caption).foregroundStyle(.secondary)
-          }
-        }
-        Section("When can ChatGPT use tools?") {
-          Label("Keep GSD open in the foreground while ChatGPT uses the tools.", systemImage: "ipad")
-          Label("Task changes require approval on this iPad.", systemImage: "checkmark.shield")
-          Label("The server stores only device pairing and temporary requests, not your tasks.", systemImage: "lock.shield")
-          if bridge.linked {
-            Button("Disconnect ChatGPT and revoke access", role: .destructive) {
-              Task { await bridge.disconnect() }
-            }
-          }
-        }
-      }
-      .navigationTitle("ChatGPT MCP")
-      .gsdRemoteWriteApproval(bridge: bridge)
-      .toolbar {
-        ToolbarItem(placement: .confirmationAction) {
-          Button("Done") { dismiss() }
-        }
-      }
-    }
-  }
 }
 
 // Each presentation hosts its own dialog; only the foreground surface is active.
