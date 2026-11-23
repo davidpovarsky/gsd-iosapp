@@ -105,6 +105,23 @@ final class GSDCloudReleaseUITests: XCTestCase {
         try capture(app, "07-account-sign-in")
     }
 
+    /// Uses the existing real widget view harness. This proves rendered strings
+    /// and layout, not the separate SpringBoard WidgetKit timeline lifecycle.
+    func test03LocalizedWidgetView() throws {
+        let app = application(demo: false)
+        app.launchArguments.insert("--demo-home", at: 0)
+        app.launch()
+        let screen = app.descendants(matching: .any).matching(identifier: "demo-home-screen").firstMatch
+        XCTAssertTrue(screen.waitForExistence(timeout: 15))
+        let heading = app.staticTexts[label("Today's Focus", "המיקוד להיום")].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 10), "Widget header was not localized")
+        let overdue = app.descendants(matching: .any).matching(NSPredicate(
+            format: "label CONTAINS %@", label("overdue", "באיחור"))).firstMatch
+        XCTAssertTrue(overdue.exists, "Widget due-state accessibility text was not localized")
+        try capture(app, "11-widget-view")
+        app.terminate()
+    }
+
     func test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload() async throws {
         guard ProcessInfo.processInfo.environment["GSD_CLOUD_SYSTEM_TEST"] == "1" else {
             throw XCTSkip("Live cloud acceptance requires explicit CI opt-in")

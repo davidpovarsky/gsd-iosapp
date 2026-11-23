@@ -9,43 +9,52 @@ from pathlib import Path
 import re
 import signal
 import subprocess
+import tempfile
 import time
 import uuid
 
 from gsd_simulator_smoke import devices_for_runtime, version
 
+_redactions: set[str] = set()
+
+def redact(text: str) -> str:
+    """Retain fixture masks in memory so later xcresult summaries are sanitized too."""
+    _redactions.update(re.findall(r"::add-mask::([^\s]+)", text))
+    for value in _redactions:
+        text = text.replace(value, "[REDACTED_EPHEMERAL_PASSWORD]")
+    return text
+
 def run(args: list[str], log: Path, timeout: int = 120, env: dict | None = None,
         check: bool = True) -> str:
-    """Wait for the actual process, not pipe EOF held open by simulator children."""
+    """Keep raw XCTest output outside artifacts and wait for the actual process."""
     log.parent.mkdir(parents=True, exist_ok=True)
     print("GSD_NATIVE_COMMAND", args[0], args[1] if len(args) > 1 else "", flush=True)
-    with log.open("wb") as stream:
+    # A private unnamed temporary file cannot be picked up by artifact globbing,
+    # including when GitHub cancels the job before this function completes.
+    with tempfile.TemporaryFile(mode="w+b", dir=os.environ.get("RUNNER_TEMP")) as stream:
         process = subprocess.Popen(args, stdout=stream, stderr=subprocess.STDOUT,
                                    env=env, start_new_session=True)
         try:
-            code = process.wait(timeout=timeout)
-        except subprocess.TimeoutExpired:
-            os.killpg(process.pid, signal.SIGTERM)
             try:
-                process.wait(timeout=15)
+                code = process.wait(timeout=timeout)
             except subprocess.TimeoutExpired:
-                os.killpg(process.pid, signal.SIGKILL)
-                process.wait(timeout=10)
-            sanitize(log)
-            raise
-    sanitize(log)
-    output = log.read_text(encoding="utf-8", errors="replace")
+                try:
+                    os.killpg(process.pid, signal.SIGTERM)
+                except ProcessLookupError:
+                    pass
+                try:
+                    process.wait(timeout=15)
+                except subprocess.TimeoutExpired:
+                    os.killpg(process.pid, signal.SIGKILL)
+                    process.wait(timeout=10)
+                raise
+        finally:
+            stream.seek(0)
+            output = redact(stream.read().decode("utf-8", errors="replace"))
+            log.write_text(output, encoding="utf-8")
     if check and code:
         raise RuntimeError(f"{args[0]} {args[1]} exited {code}; see {log}")
     return output
-
-def sanitize(path: Path) -> None:
-    """Never export transient XCTest fixture passwords in saved activity logs."""
-    text = path.read_text(encoding="utf-8", errors="replace")
-    secrets = re.findall(r"::add-mask::([^\s]+)", text)
-    for value in secrets:
-        text = text.replace(value, "[REDACTED_EPHEMERAL_PASSWORD]")
-    path.write_text(text, encoding="utf-8")
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -91,7 +100,8 @@ def main() -> None:
                            "-destination-timeout", "90", "-parallel-testing-enabled", "NO",
                            "-resultBundlePath", str(folder / "Results.xcresult"),
                            "-testLanguage", language, "-testRegion", "IL" if language == "he" else "US",
-                           "-only-testing:GSDScreenshotTests/GSDCloudReleaseUITests/test01LocalizedNavigationEditorChartsAndRTL"]
+                           "-only-testing:GSDScreenshotTests/GSDCloudReleaseUITests/test01LocalizedNavigationEditorChartsAndRTL",
+                           "-only-testing:GSDScreenshotTests/GSDCloudReleaseUITests/test03LocalizedWidgetView"]
                 if family == "iPad":
                     command.append("-only-testing:GSDScreenshotTests/GSDCloudReleaseUITests/test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload")
                 environment = os.environ.copy()

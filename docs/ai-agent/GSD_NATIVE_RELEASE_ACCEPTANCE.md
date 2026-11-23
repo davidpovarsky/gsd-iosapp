@@ -63,3 +63,9 @@ Dispatch signed release only after that run succeeds:
     gh workflow run gsd-hanlin-agent-ios.yml --repo davidpovarsky/gsd-iosapp --ref <integration-branch> -f mode=release -f source_ref=<same-exact-sha> -f build_number=48 -f validation_run=<successful-run-id>
 
 Do not run duplicate native suites or start a parallel watcher. Generated project/plist artifacts are saved for comparison and later source reconciliation; they are produced by XcodeGen, not edited manually.
+
+## Widget-view and evidence privacy coverage
+
+The same four device/language runs also launch the existing --demo-home harness, which renders the actual TodaysFocusView. The UI test checks its localized title and due-state accessibility text and saves a widget-view screenshot. This is a rendered view check; installation on SpringBoard and the separate WidgetKit timeline lifecycle require their own evidence.
+
+Raw XCTest output is written to a private unnamed temporary file outside artifact directories. Before saving any log or later xcresult summary, the runner redacts every ephemeral fixture password observed in memory. Cancellation cannot cause artifact globbing to collect the raw file. Three real-subprocess regression checks cover success plus later summary redaction, command failure, and timeout. They passed on a POSIX Python runtime; no Xcode result is implied.
