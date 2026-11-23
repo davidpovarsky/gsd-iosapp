@@ -1,0 +1,46 @@
+name: GSD Remote MCP - External HTTPS & OAuth Acceptance
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/hanlin-agent-api-20261122]
+    paths:
+      - '.github/workflows/gsd-mcp-bridge-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  gsd-mcp-public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Local OAuth PKCE, MCP tool catalog and command roundtrip tests
+        run: |
+          node --check bridge/server.mjs
+          node --test bridge/server.test.mjs
+      - name: External TLS and both isolated applications
+        shell: bash
+        run: |
+          set -euo pipefail
+          host="https://torah-social.tail0a6c7d.ts.net:10000"
+          curl -fsS --retry 2 --connect-timeout 10 --max-time 30 "$host/gsd/health" |
+            python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["ok"] and x["name"]=="GSD Remote MCP Bridge"'
+          curl -fsS --connect-timeout 10 --max-time 30 "$host/gsd/.well-known/oauth-protected-resource" |
+            python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["resource"].endswith("/gsd/mcp") and x["authorization_servers"]'
+          curl -fsS --connect-timeout 10 --max-time 30 "$host/gsd/.well-known/oauth-authorization-server" |
+            python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["issuer"].endswith("/gsd") and "refresh_token" in x["grant_types_supported"]'
+          status="$(curl -sS --connect-timeout 10 --max-time 30 \
+            -o /tmp/gsd-unauthorized.json -w '%{http_code}' \
+            -X POST "$host/gsd/mcp" \
+            -H 'Content-Type: application/json' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}')"
+          [[ "$status" == "401" ]] ||
+            { echo "Unauthenticated GSD tools/list MUST return 401; got $status"; exit 1; }
+          curl -fsS --connect-timeout 10 --max-time 30 "$host/health" |
+            python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["ok"] and x["name"]=="Lorvex Remote MCP Bridge"'
+          echo "GSD OAuth + HTTPS ingress verified; Lorvex root unaffected"
