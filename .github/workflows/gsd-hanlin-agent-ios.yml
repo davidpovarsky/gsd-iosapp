@@ -1,56 +1,99 @@
-name: GSD Hanlin Agent - iPad SDK acceptance
+name: GSD Hanlin Agent - Native iPad & ChatGPT MCP Acceptance
 
 on:
   workflow_dispatch:
   push:
     branches:
       - feat/hanlin-agent-api-20261122
+    paths:
+      - 'App/**'
+      - 'GSDKit/**'
+      - 'Packages/GSDHanlinAgent/**'
+      - 'Vendor/**'
+      - 'bridge/**'
+      - 'scripts/build_gsd_hanlin_ipad_ipa.sh'
+      - 'scripts/package_gsd_sideload_ipa.py'
+      - 'scripts/test_package_gsd_sideload_ipa.py'
+      - '.github/workflows/gsd-hanlin-agent-ios.yml'
 
 permissions:
   contents: read
 
 concurrency:
-  group: gsd-hanlin-${{ github.ref }}
+  group: gsd-hanlin-native-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   native-acceptance:
     runs-on: xcode-27
-    timeout-minutes: 55
+    timeout-minutes: 80
     steps:
       - uses: actions/checkout@v4
-      - name: Select Xcode 27 SDK for HanlinAgentSDK
+      - name: Verify Xcode 27 required by HanlinAgentSDK
         shell: bash
         run: |
           set -euo pipefail
           xcodebuild -version
           if ! xcodebuild -version | grep -q '^Xcode 27'; then
             selected="$(find /Applications -maxdepth 1 -type d -name 'Xcode*27*.app' -print | sort -V | tail -1)"
-            if [[ -n "$selected" ]]; then
-              sudo xcode-select -s "$selected/Contents/Developer"
-            fi
+            [[ -n "$selected" ]]
+            sudo xcode-select -s "$selected/Contents/Developer"
           fi
           xcodebuild -version | grep '^Xcode 27'
           xcodebuild -showsdks
-      - name: Verify SDK and 22 host tools (unit tests)
+      - name: Test GSD OAuth PKCE and MCP bridge locally
         shell: bash
         run: |
           set -o pipefail
-          swift test --package-path Packages/GSDHanlinAgent --filter GSDHanlinAgentTests 2>&1 | tee gsd-agent-tests.log
-      - name: Verify GSD iPad/iOS application compiles with embedded Hanlin
+          node --test bridge/server.test.mjs 2>&1 | tee gsd-mcp-node-tests.log
+          python3 scripts/test_package_gsd_sideload_ipa.py -v 2>&1 | tee gsd-ipa-package-tests.log
+      - name: Test GSD Hanlin tools, schema and remote write consent
+        id: tests
+        shell: bash
+        run: |
+          set -o pipefail
+          swift test --package-path Packages/GSDHanlinAgent \
+            --filter GSDHanlinAgentTests -j 3 2>&1 | tee gsd-agent-tests.log
+      - name: Preserve SDK test log before native app build
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Hanlin-Tests-${{ github.run_id }}
+          path: |
+            gsd-agent-tests.log
+            gsd-mcp-node-tests.log
+            gsd-ipa-package-tests.log
+          if-no-files-found: warn
+          retention-days: 21
+      - name: Build native iPad app and both unsigned IPA variants
+        id: build
         if: success() || failure()
         shell: bash
         run: |
           set -o pipefail
-          xcodebuild -project GSD.xcodeproj -scheme GSD -configuration Debug \
-            -destination 'generic/platform=iOS' \
-            ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO build 2>&1 | tee gsd-ipad-build.log
-      - name: Preserve validation evidence
+          bash scripts/build_gsd_hanlin_ipad_ipa.sh 2>&1 | tee gsd-ipad-pipeline.log
+      - name: Upload verified GSD iPad IPA assets
+        if: steps.build.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Hanlin-ChatGPT-MCP-iPad-UNSIGNED-${{ github.run_id }}
+          path: |
+            dist/gsd-hanlin-ipad/*.ipa
+            dist/gsd-hanlin-ipad/*manifest.json
+            dist/gsd-hanlin-ipad/*build-info.json
+            dist/gsd-hanlin-ipad/gsd-ipa-zip-check.txt
+          if-no-files-found: error
+          retention-days: 30
+      - name: Keep native build logs even after failure
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gsd-hanlin-native-evidence-${{ github.run_id }}
+          name: GSD-Hanlin-Native-Evidence-${{ github.run_id }}
           path: |
             gsd-agent-tests.log
-            gsd-ipad-build.log
-          retention-days: 14
+            gsd-mcp-node-tests.log
+            gsd-ipa-package-tests.log
+            gsd-ipad-pipeline.log
+            dist/gsd-hanlin-ipad/gsd-hanlin-build.log
+          if-no-files-found: warn
+          retention-days: 21

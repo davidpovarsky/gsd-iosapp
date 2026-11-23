@@ -15,6 +15,35 @@ public struct GSDHanlinMessage: Identifiable, Sendable {
     }
 }
 
+/// Typed chart data from GSD's canonical get_dashboard tool.
+public struct GSDHanlinDashboard: Decodable, Sendable {
+    public struct Bucket: Identifiable, Sendable {
+        public let name: String
+        public let value: Int
+        public var id: String { name }
+        public init(name: String, value: Int) { self.name = name; self.value = value }
+    }
+    public let total: Int
+    public let open: Int
+    public let completed: Int
+    public let overdue: Int
+    public let saved: Int
+    public let estimatedOpenMinutes: Int
+    public let byQuadrant: [String: Int]
+
+    public func buckets(mode: String) -> [Bucket] {
+        if mode == "status" {
+            return [
+                .init(name: "Open", value: open),
+                .init(name: "Completed", value: completed),
+                .init(name: "Saved", value: saved)
+            ]
+        }
+        return byQuadrant.map { .init(name: $0.key, value: $0.value) }
+            .sorted { $0.name < $1.name }
+    }
+}
+
 /// Native UI state backed by the ACTUAL HanlinAgentSession streaming agent.
 /// The GSD UI must present and resolve pending write approvals; the default is deny.
 @MainActor @Observable
@@ -23,6 +52,7 @@ public final class GSDHanlinAssistantState {
     public private(set) var isRunning = false
     public private(set) var errorMessage: String?
     public private(set) var pendingApproval: GSDHanlinWriteRequest?
+    public private(set) var dashboard: GSDHanlinDashboard?
 
     @ObservationIgnored private let store: TaskStore
     @ObservationIgnored private var bundle: GSDHanlinAgentBundle?
@@ -122,7 +152,12 @@ public final class GSDHanlinAssistantState {
                     if let index = messages.firstIndex(where: { $0.id == responseID }) {
                         messages[index].text += delta
                     }
-                case .toolResult(_, let name, _, _, let failed):
+                case .toolResult(_, let name, let jsonText, _, let failed):
+                    if !failed, name == "get_dashboard",
+                       let data = jsonText.data(using: .utf8),
+                       let decoded = try? JSONDecoder().decode(GSDHanlinDashboard.self, from: data) {
+                        dashboard = decoded
+                    }
                     messages.append(.init(role: .status,
                         text: (failed ? "Tool failed: " : "Tool completed: ") + name))
                 case .toolApprovalRequest(let request):

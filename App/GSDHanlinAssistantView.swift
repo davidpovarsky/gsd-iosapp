@@ -1,5 +1,6 @@
 import Security
 import SwiftUI
+import Charts
 import GSDStore
 import GSDHanlinAgent
 
@@ -8,7 +9,10 @@ import GSDHanlinAgent
 struct GSDHanlinAssistantView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var assistant: GSDHanlinAssistantState
+    let remoteBridge: GSDRemoteBridgeState?
+    @State private var showRemoteBridgeSettings = false
     @State private var prompt = ""
+    @State private var chartBreakdown = "quadrant"
     @State private var showModelSettings = false
     @State private var apiToken = ""
     @State private var configuredToken = ""
@@ -17,7 +21,8 @@ struct GSDHanlinAssistantView: View {
     @AppStorage("gsd.hanlin.model") private var modelID = ""
     @AppStorage("gsd.hanlin.endpoint") private var endpoint = "https://openrouter.ai/api/v1"
 
-    init(store: TaskStore) {
+    init(store: TaskStore, remoteBridge: GSDRemoteBridgeState?) {
+        self.remoteBridge = remoteBridge
         _assistant = State(initialValue: GSDHanlinAssistantState(store: store))
     }
 
@@ -48,6 +53,9 @@ struct GSDHanlinAssistantView: View {
                                     if entry.role != .user { Spacer(minLength: 36) }
                                 }
                                 .id(entry.id)
+                            }
+                            if let dashboard = assistant.dashboard {
+                                visualDashboard(dashboard)
                             }
                             if assistant.isRunning {
                                 ProgressView("Working…")
@@ -92,6 +100,9 @@ struct GSDHanlinAssistantView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) { Button("Close") { dismiss() } }
                 ToolbarItem(placement: .topBarTrailing) {
+                    Button("MCP", systemImage: "network") { showRemoteBridgeSettings = true }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("Model", systemImage: "gearshape") { showModelSettings = true }
                 }
             }
@@ -104,6 +115,13 @@ struct GSDHanlinAssistantView: View {
                 Task { await assistant.cancel() }
             }
             .sheet(isPresented: $showModelSettings) { settings }
+            .sheet(isPresented: $showRemoteBridgeSettings) {
+                if let remoteBridge {
+                    GSDRemoteBridgeSettingsView(bridge: remoteBridge)
+                } else {
+                    ContentUnavailableView("MCP not ready", systemImage: "network.slash")
+                }
+            }
             .confirmationDialog(
                 "Allow the AI to modify your tasks?",
                 isPresented: Binding(
@@ -117,6 +135,36 @@ struct GSDHanlinAssistantView: View {
                 Text(assistant.pendingApproval?.description ?? "The requested change needs approval.")
             }
         }
+    }
+
+    @ViewBuilder
+    private func visualDashboard(_ summary: GSDHanlinDashboard) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("GSD task dashboard").font(.headline)
+            HStack {
+                Label("\(summary.open) open", systemImage: "circle.dotted")
+                Spacer()
+                Label("\(summary.completed) done", systemImage: "checkmark.circle")
+            }.font(.caption)
+            Picker("Chart breakdown", selection: $chartBreakdown) {
+                Text("Priority matrix").tag("quadrant")
+                Text("Status").tag("status")
+            }
+            .pickerStyle(.segmented)
+            Chart(summary.buckets(mode: chartBreakdown)) { bucket in
+                BarMark(x: .value("Group", bucket.name),
+                        y: .value("Tasks", bucket.value))
+                    .foregroundStyle(by: .value("Group", bucket.name))
+            }
+            .chartLegend(.hidden)
+            .frame(height: 180)
+            .accessibilityLabel("Interactive task metrics")
+            Text("\(summary.overdue) overdue · \(summary.estimatedOpenMinutes) estimated minutes remaining")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
+        .padding()
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 18))
     }
 
     private var settings: some View {
@@ -226,4 +274,76 @@ private enum GSDHanlinKeychain {
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(result))
         }
     }
+}
+
+/// User-driven OAuth linking. The iPad generates a private device credential,
+/// registers its actual SDK tool catalog, and displays a short-lived one-time
+/// code. No server-side copy of GSD's private database is created.
+struct GSDRemoteBridgeSettingsView: View {
+  @Environment(\.dismiss) private var dismiss
+  @Bindable var bridge: GSDRemoteBridgeState
+
+  var body: some View {
+    NavigationStack {
+      Form {
+        Section("Cloudflare / MCP bridge") {
+          TextField("HTTPS bridge URL", text: $bridge.endpointText)
+            .textContentType(.URL)
+            .autocorrectionDisabled()
+          Text("The address of your private GSD MCP relay. It must use HTTPS.")
+            .font(.caption).foregroundStyle(.secondary)
+          HStack {
+            Image(systemName: bridge.linked ? "checkmark.shield.fill" : "network")
+              .foregroundStyle(bridge.linked ? Color.green : Color.secondary)
+            VStack(alignment: .leading) {
+              Text(bridge.status)
+                .font(.callout)
+              if let last = bridge.lastTool {
+                Text("Last tool: " + last).font(.caption).foregroundStyle(.secondary)
+              }
+            }
+          }
+          Button {
+            Task { await bridge.pair() }
+          } label: {
+            if bridge.isPairing {
+              ProgressView("Connectingâ€¦")
+            } else {
+              Label("Pair this iPad with ChatGPT", systemImage: "link")
+            }
+          }
+          .disabled(bridge.isPairing || bridge.endpointText.isEmpty)
+        }
+
+        if let code = bridge.pairingCode {
+          Section("One-time pairing code") {
+            Text(code)
+              .font(.system(.largeTitle, design: .monospaced, weight: .bold))
+              .textSelection(.enabled)
+              .accessibilityLabel("One-time ChatGPT pairing code: " + code)
+            Text("In ChatGPT on the web, connect a custom MCP server at this HTTPS address with OAuth. When ChatGPT opens the GSD sign-in page, enter this code. The code expires after 10 minutes.")
+              .font(.callout)
+            Text("You do not need to share your GSD database, Apple ID or API keys with the bridge.")
+              .font(.caption).foregroundStyle(.secondary)
+          }
+        }
+        Section("When can ChatGPT use tools?") {
+          Label("Keep GSD open in the foreground while ChatGPT uses the tools.", systemImage: "ipad")
+          Label("Task changes require approval on this iPad.", systemImage: "checkmark.shield")
+          Label("The server stores only device pairing and temporary requests, not your tasks.", systemImage: "lock.shield")
+          if bridge.linked {
+            Button("Disconnect ChatGPT and revoke access", role: .destructive) {
+              Task { await bridge.disconnect() }
+            }
+          }
+        }
+      }
+      .navigationTitle("ChatGPT MCP")
+      .toolbar {
+        ToolbarItem(placement: .confirmationAction) {
+          Button("Done") { dismiss() }
+        }
+      }
+    }
+  }
 }

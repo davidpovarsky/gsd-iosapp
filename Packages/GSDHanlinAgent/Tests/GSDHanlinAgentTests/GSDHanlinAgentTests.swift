@@ -94,4 +94,53 @@ final class GSDHanlinAgentTests: XCTestCase {
         let rows = try await store.fetchAllTasks()
         XCTAssertTrue(rows.isEmpty)
     }
+
+    func testRemoteReadAndDenyByDefault() async throws {
+        let (store, context, _) = try fixture()
+        let host = GSDHanlinHost(store: store, context: context)
+        let query = await host.invokeRemoteTool(
+            name: "get_dashboard", argumentsJSON: Data("{}".utf8),
+            remoteRequestID: "remote-read-summary-123")
+        XCTAssertFalse(query.isError)
+        let decoded = try JSONDecoder().decode(GSDHanlinDashboard.self, from: Data(query.text.utf8))
+        XCTAssertEqual(decoded.total, 0)
+        let denied = await host.invokeRemoteTool(
+            name: "create_task", argumentsJSON: Data(#"{"title":"Not approved"}"#.utf8),
+            remoteRequestID: "remote-denied-write-123")
+        XCTAssertTrue(denied.isError)
+        let tasks = try await store.fetchAllTasks()
+        XCTAssertTrue(tasks.isEmpty)
+    }
+
+    func testRemoteApprovedCreateReplayDoesNotDuplicate() async throws {
+        let (store, context, _) = try fixture()
+        let host = GSDHanlinHost(store: store, context: context, writeAuthorizer: { _ in true })
+        let id = "remote-create-confirmed-12345"
+        let first = await host.invokeRemoteTool(
+            name: "create_task", argumentsJSON: Data(#"{"title":"Prepare my week","urgent":true}"#.utf8),
+            remoteRequestID: id)
+        XCTAssertFalse(first.isError, first.text)
+        let replay = await host.invokeRemoteTool(
+            name: "create_task", argumentsJSON: Data(#"{"title":"Prepare my week","urgent":true}"#.utf8),
+            remoteRequestID: id)
+        XCTAssertFalse(replay.isError)
+        XCTAssertEqual(replay.text, first.text)
+        let tasks = try await store.fetchAllTasks()
+        XCTAssertEqual(tasks.count, 1)
+        XCTAssertEqual(tasks.first?.title, "Prepare my week")
+    }
+
+    func testRemoteRejectsSchemaAndUnlistedActions() async throws {
+        let (store, context, _) = try fixture()
+        let host = GSDHanlinHost(store: store, context: context)
+        let bad = await host.invokeRemoteTool(
+            name: "delete_all", argumentsJSON: Data("{}".utf8),
+            remoteRequestID: "remote-unknown-12345")
+        XCTAssertTrue(bad.isError)
+        let invalid = await host.invokeRemoteTool(
+            name: "list_tasks", argumentsJSON: Data(#"{"limit":-100}"#.utf8),
+            remoteRequestID: "remote-invalid-json-12345")
+        XCTAssertTrue(invalid.isError)
+    }
+
 }

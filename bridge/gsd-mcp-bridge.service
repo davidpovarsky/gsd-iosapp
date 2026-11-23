@@ -1,0 +1,27 @@
+[Unit]
+Description=GSD Hanlin Remote MCP OAuth Bridge
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/gsd-mcp-bridge
+Environment=GSD_BRIDGE_PORT=8768
+Environment=GSD_BRIDGE_HOST=127.0.0.1
+Environment=GSD_BRIDGE_STATE=/home/ubuntu/gsd-mcp-bridge/bridge-state.json
+EnvironmentFile=-/etc/gsd-mcp-bridge.env
+ExecStart=/usr/local/bin/node /home/ubuntu/gsd-mcp-bridge/server.mjs
+Restart=on-failure
+RestartSec=4
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/home/ubuntu/gsd-mcp-bridge
+ProtectHome=read-only
+LimitNOFILE=1024
+
+[Install]
+WantedBy=multi-user.target
