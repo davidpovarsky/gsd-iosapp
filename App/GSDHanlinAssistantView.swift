@@ -253,7 +253,7 @@ struct GSDHanlinAssistantView: View {
 }
 
 private enum GSDHanlinKeychain {
-    private static let service = "dev.vinny.gsd.hanlin-agent"
+    private static let service = "com.itorah.gsd.hanlin-agent"
     private static let account = "current-provider-api-key"
 
     static func read() -> String {

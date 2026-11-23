@@ -14,7 +14,7 @@ import GSDModel
 /// device-to-device restore — a restored device should re-authenticate (unchanged from the
 /// app-private item this replaces). Foundation + Security only; no I/O beyond the keychain.
 public enum SharedTokenKeychain {
-    public static let service = "dev.vinny.gsd.auth"
+    public static let service = "com.itorah.gsd.auth"
     public static let account = "pocketbase-token"
     public static let accessGroup = AppGroup.id
 

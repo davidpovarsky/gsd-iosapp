@@ -100,7 +100,7 @@ final class ShareViewController: UIViewController {
             onComplete: { [weak self] in self?.extensionContext?.completeRequest(returningItems: nil) },
             onCancel: { [weak self] in
                 self?.extensionContext?.cancelRequest(
-                    withError: NSError(domain: "dev.vinny.gsd.share", code: 0))
+                    withError: NSError(domain: "com.itorah.gsd.share", code: 0))
             }
         )
         let host = UIHostingController(rootView: composeView)

@@ -12,7 +12,7 @@ import UIKit
 enum ReminderActionInbox {
     private struct Pending { let action: String; let taskID: String; let done: () -> Void }
 
-    private static let log = Logger(subsystem: "dev.vinny.gsd", category: "reminder-actions")
+    private static let log = Logger(subsystem: "com.itorah.gsd", category: "reminder-actions")
     private static var handler: ReminderActionHandler?
     private static var waiting: [Pending] = []
     /// One action at a time: each opens and closes the database, and the database is process-wide.

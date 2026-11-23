@@ -88,7 +88,7 @@ public enum TaskStoreError: Error, LocalizedError, Equatable {
 @MainActor
 @Observable
 public final class TaskStore {
-    private static let log = Logger(subsystem: "dev.vinny.gsd", category: "store")
+    private static let log = Logger(subsystem: "com.itorah.gsd", category: "store")
     public private(set) var tasks: [Task] = []
     /// True once the task observer has delivered its first snapshot. Lets the UI tell
     /// "loaded, and empty" apart from "not loaded yet" — `tasks` starts empty either way.

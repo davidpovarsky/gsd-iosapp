@@ -26,7 +26,7 @@ final class SpotlightIndexer {
     private static func index(tasks: [Task], in index: CSSearchableIndex) async {
         let activeItems = tasks.filter { !$0.completed && !$0.isSaved }.map(searchableItem)
         await withCheckedContinuation { continuation in
-            index.deleteSearchableItems(withDomainIdentifiers: ["dev.vinny.gsd.tasks"]) { _ in
+            index.deleteSearchableItems(withDomainIdentifiers: ["com.itorah.gsd.tasks"]) { _ in
                 index.indexSearchableItems(activeItems) { _ in continuation.resume() }
             }
         }
@@ -41,7 +41,7 @@ final class SpotlightIndexer {
         // NSUserActivity (none here) — a dangling value misuses the field.
         let item = CSSearchableItem(
             uniqueIdentifier: task.id,
-            domainIdentifier: "dev.vinny.gsd.tasks",
+            domainIdentifier: "com.itorah.gsd.tasks",
             attributeSet: attributes
         )
         // The property is null_resettable: nil RESETS to the ~30-day default TTL.

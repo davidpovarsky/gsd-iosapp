@@ -14,7 +14,7 @@ import GSDStore
 /// sweep runs directly. NOT relied on for timely reminders (those are pre-scheduled, §9.1).
 /// The identifier must match `project.yml`'s `BGTaskSchedulerPermittedIdentifiers`.
 enum BackgroundRefresh {
-    static let taskIdentifier = "dev.vinny.gsd.refresh"
+    static let taskIdentifier = "com.itorah.gsd.refresh"
 
     /// Register the handler — call ONCE, early in app launch (before the scene appears).
     ///

@@ -2,8 +2,8 @@ import UIKit
 import GSDSnapshot
 
 enum QuickAction: String {
-    case newTask = "dev.vinny.gsd.new-task"
-    case todayFocus = "dev.vinny.gsd.today-focus"
+    case newTask = "com.itorah.gsd.new-task"
+    case todayFocus = "com.itorah.gsd.today-focus"
 
     var route: DeepLinkRoute {
         switch self {

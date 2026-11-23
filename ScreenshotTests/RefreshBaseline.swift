@@ -226,10 +226,10 @@ final class RefreshBaseline: XCTestCase {
         app.typeKey("n", modifierFlags: .command); pause(1.5)
         XCTAssertTrue(element(app, "task-editor").waitForExistence(timeout: 5), "editor never opened")
         save(app, "swap-regular-before")
-        post("dev.vinny.gsd.demo.window.compact"); pause(2.5)
+        post("com.itorah.gsd.demo.window.compact"); pause(2.5)
         XCTAssertTrue(element(app, "task-editor").exists, "the editor did not survive the swap to compact")
         save(app, "swap-compact-editor")
-        post("dev.vinny.gsd.demo.window.regular"); pause(2.5)
+        post("com.itorah.gsd.demo.window.regular"); pause(2.5)
         XCTAssertTrue(element(app, "task-editor").exists, "the editor did not survive the swap back")
         save(app, "swap-regular-editor")
         #else
@@ -253,14 +253,14 @@ final class RefreshBaseline: XCTestCase {
         let trend = element(app, label: "Completion Trend")
         XCTAssertTrue(trend.waitForExistence(timeout: 5), "dashboard never appeared in the regular root")
 
-        post("dev.vinny.gsd.demo.window.compact"); pause(2.5)
+        post("com.itorah.gsd.demo.window.compact"); pause(2.5)
         XCTAssertTrue(trend.waitForExistence(timeout: 5), "Dashboard did not survive the swap to compact")
 
         chooseViewMenuItem(app, "Settings")
         let showCompleted = element(app, label: "Show Completed Tasks")
         XCTAssertTrue(showCompleted.waitForExistence(timeout: 5), "settings never appeared in the compact root")
 
-        post("dev.vinny.gsd.demo.window.regular"); pause(2.5)
+        post("com.itorah.gsd.demo.window.regular"); pause(2.5)
         XCTAssertTrue(showCompleted.waitForExistence(timeout: 5), "Settings did not survive the swap back to regular")
         #else
         throw XCTSkip("widths run on the Mac")

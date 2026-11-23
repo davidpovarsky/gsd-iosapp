@@ -22,7 +22,7 @@ public protocol ArchiveRepository: Sendable {
 public final class GRDBArchiveRepository: ArchiveRepository {
     private let dbWriter: any DatabaseWriter
     private let now: @Sendable () -> Date
-    private let observerQueue = DispatchQueue(label: "dev.vinny.gsd.archive-observer")
+    private let observerQueue = DispatchQueue(label: "com.itorah.gsd.archive-observer")
 
     public init(_ database: AppDatabase, now: @escaping @Sendable () -> Date = { Date() }) {
         self.dbWriter = database.writer

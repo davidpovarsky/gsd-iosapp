@@ -1,0 +1,23 @@
+[Unit]
+Description=GSD Cloud PocketBase task and accounts server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/mnt/development/projects/gsd-cloud
+ExecStart=/mnt/development/projects/gsd-cloud/pocketbase serve --http=127.0.0.1:8095 --dir=/mnt/development/projects/gsd-cloud/pb_data --hooksDir=/mnt/development/projects/gsd-cloud/pb_hooks --migrationsDir=/mnt/development/projects/gsd-cloud/pb_migrations
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/mnt/development/projects/gsd-cloud
+ProtectHome=read-only
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target

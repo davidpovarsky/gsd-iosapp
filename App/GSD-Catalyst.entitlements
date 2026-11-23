@@ -13,7 +13,7 @@
     <!-- Same App Group as iOS — Catalyst uses the iOS-style `group.` identifier. -->
     <key>com.apple.security.application-groups</key>
     <array>
-        <string>group.dev.vinny.gsd</string>
+        <string>group.com.itorah.gsd</string>
     </array>
 </dict>
 </plist>

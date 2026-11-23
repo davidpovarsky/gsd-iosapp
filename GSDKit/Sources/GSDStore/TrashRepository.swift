@@ -41,7 +41,7 @@ public protocol TrashRepository: Sendable {
 public final class GRDBTrashRepository: TrashRepository {
     private let dbWriter: any DatabaseWriter
     private let now: @Sendable () -> Date
-    private let observerQueue = DispatchQueue(label: "dev.vinny.gsd.trash-observer")
+    private let observerQueue = DispatchQueue(label: "com.itorah.gsd.trash-observer")
 
     public init(_ database: AppDatabase, now: @escaping @Sendable () -> Date = { Date() }) {
         self.dbWriter = database.writer

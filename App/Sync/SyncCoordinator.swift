@@ -254,7 +254,7 @@ final class SyncCoordinator {
                 }
             }
         }
-        m.start(queue: DispatchQueue(label: "dev.vinny.gsd.reachability"))
+        m.start(queue: DispatchQueue(label: "com.itorah.gsd.reachability"))
         monitor = m
     }
 

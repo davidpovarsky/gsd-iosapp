@@ -38,6 +38,31 @@ public struct AuthService: Sendable {
         return result
     }
 
+    /// One cloud account for native GSD and for the ChatGPT MCP connector.
+    /// Credentials are sent only to the user's own HTTPS account server.
+    /// Display only providers actually configured by our account server.
+    public func enabledOAuthProviders() async -> [String] {
+        (try? await client.authMethods().providers.map(\.name)) ?? []
+    }
+
+    public func signInWithEmail(_ email: String, password: String) async throws -> AuthResult {
+        let address = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard address.contains("@"), address.utf8.count <= 254,
+              password.count >= 10 else { throw AuthError.invalidCredentials }
+        let result = try await client.authWithPassword(email: address, password: password)
+        tokenStore.save(result.token)
+        return result
+    }
+
+    public func createAccountWithEmail(_ email: String, password: String) async throws -> AuthResult {
+        let address = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard address.contains("@"), address.utf8.count <= 254,
+              password.count >= 10 else { throw AuthError.invalidCredentials }
+        let result = try await client.registerPasswordAccount(email: address, password: password)
+        tokenStore.save(result.token)
+        return result
+    }
+
     public func signOut() { tokenStore.clear() }
 
     /// The signed-in PocketBase user id from the STORED token (no validation, no refresh) —

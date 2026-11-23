@@ -45,7 +45,7 @@ public protocol TaskRepository: Sendable {
 public final class GRDBTaskRepository: TaskRepository {
     private let dbWriter: any DatabaseWriter
     private let now: @Sendable () -> Date
-    private let observerQueue = DispatchQueue(label: "dev.vinny.gsd.task-observer")
+    private let observerQueue = DispatchQueue(label: "com.itorah.gsd.task-observer")
 
     public init(_ database: AppDatabase, now: @escaping @Sendable () -> Date = { Date() }) {
         self.dbWriter = database.writer

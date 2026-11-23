@@ -11,6 +11,11 @@ import GSDSync
 final class SessionStore {
     private(set) var email: String?
     private(set) var inProgress = false
+    private(set) var enabledOAuthProviders: [String] = []
+
+    func loadEnabledOAuthProviders() async {
+        enabledOAuthProviders = await auth.enabledOAuthProviders()
+    }
     private(set) var lastError: String?
     /// What to tell the user about which account they landed on, or nil when there is
     /// nothing worth saying (Google/GitHub). Reset on sign-out.
@@ -87,6 +92,33 @@ final class SessionStore {
             // user dismissed — silent, stay signed out, no banner
         } catch {
             lastError = String(localized: "Sign-in failed. Please try again.")
+        }
+    }
+
+    /// First-party cloud login. The same account works in ChatGPT even
+    /// when GSD is not running; local pending writes continue to sync safely.
+    func signInWithEmail(_ emailInput: String, password: String, createAccount: Bool) async {
+        guard !inProgress else { return }
+        inProgress = true
+        lastError = nil
+        defer { inProgress = false }
+        await coordinator?.beginSignIn()
+        do {
+            let result: AuthResult
+            if createAccount {
+                result = try await auth.createAccountWithEmail(emailInput, password: password)
+            } else {
+                result = try await auth.signInWithEmail(emailInput, password: password)
+            }
+            email = result.record.email
+            accountNote = nil
+            UserDefaults.standard.set(result.record.email, forKey: emailKey)
+            UserDefaults.standard.set("email", forKey: providerKey)
+            routeAfterSignIn(result)
+        } catch {
+            // Hide low-level networking diagnostics and never echo credentials.
+            lastError = String(localized:
+                "Could not sign in. Check your email, password, or internet connection.")
         }
     }
 

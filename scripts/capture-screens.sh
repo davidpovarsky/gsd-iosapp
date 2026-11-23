@@ -72,7 +72,7 @@ run_sim() {
 
 run_widths() {
   local dest="platform=macOS,variant=Mac Catalyst"
-  local sandbox="$HOME/Library/Containers/dev.vinny.gsd.screenshot-tests.xctrunner/Data/tmp/gsd-screens"
+  local sandbox="$HOME/Library/Containers/com.itorah.gsd.screenshot-tests.xctrunner/Data/tmp/gsd-screens"
   xcodebuild build-for-testing -project GSD.xcodeproj -scheme "$SCHEME" \
     -destination "$dest" -derivedDataPath "$DD" -quiet
   mkdir -p "$sandbox"
@@ -92,7 +92,7 @@ run_mac() {
   local dest="platform=macOS,variant=Mac Catalyst"
   # The Catalyst test runner is sandboxed (read-only outside its container), so the walk
   # writes into the runner's temporary directory and the PNGs are copied out afterwards.
-  local sandbox="$HOME/Library/Containers/dev.vinny.gsd.screenshot-tests.xctrunner/Data/tmp/gsd-screens"
+  local sandbox="$HOME/Library/Containers/com.itorah.gsd.screenshot-tests.xctrunner/Data/tmp/gsd-screens"
   xcodebuild build-for-testing -project GSD.xcodeproj -scheme "$SCHEME" \
     -destination "$dest" -derivedDataPath "$DD" -quiet
   for appearance in light dark; do

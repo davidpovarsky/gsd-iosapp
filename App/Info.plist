@@ -4,7 +4,7 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>dev.vinny.gsd.refresh</string>
+		<string>com.itorah.gsd.refresh</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
@@ -26,7 +26,7 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>dev.vinny.gsd</string>
+			<string>com.itorah.gsd</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>gsd</string>
@@ -49,7 +49,7 @@
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>New Task</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>dev.vinny.gsd.new-task</string>
+			<string>com.itorah.gsd.new-task</string>
 		</dict>
 		<dict>
 			<key>UIApplicationShortcutItemIconType</key>
@@ -59,7 +59,7 @@
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Today's Focus</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>dev.vinny.gsd.today-focus</string>
+			<string>com.itorah.gsd.today-focus</string>
 		</dict>
 	</array>
 	<key>UIBackgroundModes</key>

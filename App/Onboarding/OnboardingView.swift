@@ -11,6 +11,8 @@ struct OnboardingView: View {
     var onAppleSignIn: (() -> Void)? = nil
 
     @State private var page = 0
+    @State private var showCloudLogin = false
+    @Environment(SessionStore.self) private var session
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private let pageCount = 4
@@ -41,6 +43,11 @@ struct OnboardingView: View {
         .frame(maxWidth: 560)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Surface.paper)
+        .sheet(isPresented: $showCloudLogin) { CloudAccountSignInView() }
+        .task { await session.loadEnabledOAuthProviders() }
+        .onChange(of: session.isSignedIn) { _, signedIn in
+            if signedIn { onFinish() }
+        }
     }
 
     // MARK: chrome
@@ -66,20 +73,27 @@ struct OnboardingView: View {
         } else {
             VStack(spacing: 8) {
                 primaryButton(String(localized: "Start using GSD"), action: onFinish)
-                if onAppleSignIn != nil || onGoogleSignIn != nil {
-                    syncSignInButtons
-                    Text(String(localized: "To sync with the web app and your other devices, use the same email you use there."))
-                        .font(.caption)
-                        .foregroundStyle(Surface.ink3)
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
+                syncSignInButtons
+                Text(String(localized: "To sync your tasks and use ChatGPT while this iPad is closed, sign in to GSD Cloud."))
+                    .font(.caption)
+                    .foregroundStyle(Surface.ink3)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }
 
     @ViewBuilder private var syncSignInButtons: some View {
-        if let onAppleSignIn {
+        Button {
+            showCloudLogin = true
+        } label: {
+            ProviderSignInButtonLabel(
+                title: String(localized: "Sign in or create GSD Cloud account"),
+                systemImage: "person.crop.circle.badge.checkmark")
+        }
+        .buttonStyle(.plain)
+
+        if session.enabledOAuthProviders.contains("apple"), let onAppleSignIn {
             // Hand-rendered "Sign in with Apple" (see `AppleSignInButtonLabel`) — shared with
             // SettingsView so the two renditions stay identical. Drives the same web-redirect
             // flow as Google (Guideline 4.8), so the native button can't be used.
@@ -89,7 +103,7 @@ struct OnboardingView: View {
             .buttonStyle(.plain)
         }
 
-        if let onGoogleSignIn {
+        if session.enabledOAuthProviders.contains("google"), let onGoogleSignIn {
             Button(action: onGoogleSignIn) {
                 ProviderSignInButtonLabel(title: String(localized: "Sign in with Google"),
                                           systemImage: "person.crop.circle")

@@ -1,6 +1,6 @@
 name: GSD
 options:
-  bundleIdPrefix: dev.vinny
+  bundleIdPrefix: com.itorah
   deploymentTarget:
     iOS: "27.0"
     watchOS: "26.0"
@@ -15,8 +15,8 @@ settings:
     # Version is project-wide: the app and ALL embedded extensions must share one
     # CFBundleShortVersionString/CFBundleVersion (App Store rule). Bump these two lines
     # per release — never per-target (that's how the app/extension versions drifted apart).
-    MARKETING_VERSION: "4.0.1"
-    CURRENT_PROJECT_VERSION: "47"
+    MARKETING_VERSION: "4.1.0"
+    CURRENT_PROJECT_VERSION: "48"
     # Xcode 26 "recommended settings" — declared here so they survive `xcodegen
     # generate` (clicking "Perform Changes" in Xcode would edit the generated pbxproj
     # and be wiped). These are already the SDK-default resolved values; made explicit
@@ -65,22 +65,22 @@ targets:
           UIColorName: LaunchBackground
           UIImageName: LaunchMark
           UIImageRespectsSafeAreaInsets: true
-        # `fetch` only: the sole background task is a BGAppRefreshTask (dev.vinny.gsd.refresh).
+        # `fetch` only: the sole background task is a BGAppRefreshTask (com.itorah.gsd.refresh).
         # Declaring `processing` with no BGProcessingTask is an App Review question-magnet.
         UIBackgroundModes:
           - fetch
         BGTaskSchedulerPermittedIdentifiers:
-          - dev.vinny.gsd.refresh
+          - com.itorah.gsd.refresh
         CFBundleURLTypes:
-          - CFBundleURLName: dev.vinny.gsd
+          - CFBundleURLName: com.itorah.gsd
             CFBundleURLSchemes:
               - gsd
         UIApplicationShortcutItems:
-          - UIApplicationShortcutItemType: dev.vinny.gsd.new-task
+          - UIApplicationShortcutItemType: com.itorah.gsd.new-task
             UIApplicationShortcutItemTitle: New Task
             UIApplicationShortcutItemSubtitle: Capture in GSD
             UIApplicationShortcutItemIconType: UIApplicationShortcutIconTypeAdd
-          - UIApplicationShortcutItemType: dev.vinny.gsd.today-focus
+          - UIApplicationShortcutItemType: com.itorah.gsd.today-focus
             UIApplicationShortcutItemTitle: Today's Focus
             UIApplicationShortcutItemSubtitle: Open priority tasks
             UIApplicationShortcutItemIconType: UIApplicationShortcutIconTypeFavorite
@@ -111,14 +111,14 @@ targets:
         embed: true
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.vinny.gsd
+        PRODUCT_BUNDLE_IDENTIFIER: com.itorah.gsd
         SWIFT_VERSION: "6.0"
         GENERATE_INFOPLIST_FILE: "NO"
         CODE_SIGN_ENTITLEMENTS: App/GSD.entitlements
         CODE_SIGN_STYLE: Automatic
         # --- Mac Catalyst ---
         SUPPORTS_MACCATALYST: "YES"
-        # Keep dev.vinny.gsd on both platforms (one App Store Connect record).
+        # Keep com.itorah.gsd on both platforms (one App Store Connect record).
         DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER: "NO"
         # macOS-SDK (Catalyst) build uses sandbox entitlements; iOS keeps GSD.entitlements.
         "CODE_SIGN_ENTITLEMENTS[sdk=macosx*]": App/GSD-Catalyst.entitlements
@@ -137,7 +137,7 @@ targets:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.vinny.gsd.widgets
+        PRODUCT_BUNDLE_IDENTIFIER: com.itorah.gsd.widgets
         SWIFT_VERSION: "6.0"
         GENERATE_INFOPLIST_FILE: "NO"
         CODE_SIGN_ENTITLEMENTS: Widgets/GSDWidgets.entitlements
@@ -160,10 +160,10 @@ targets:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         WKApplication: true
-        WKCompanionAppBundleIdentifier: dev.vinny.gsd
+        WKCompanionAppBundleIdentifier: com.itorah.gsd
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.vinny.gsd.watchkitapp
+        PRODUCT_BUNDLE_IDENTIFIER: com.itorah.gsd.watchkitapp
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         SWIFT_VERSION: "6.0"
         GENERATE_INFOPLIST_FILE: "NO"
@@ -194,7 +194,7 @@ targets:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.vinny.gsd.watchkitapp.widgets
+        PRODUCT_BUNDLE_IDENTIFIER: com.itorah.gsd.watchkitapp.widgets
         SWIFT_VERSION: "6.0"
         GENERATE_INFOPLIST_FILE: "NO"
         CODE_SIGN_ENTITLEMENTS: WatchWidgets/GSDWatchWidgets.entitlements
@@ -225,14 +225,14 @@ targets:
               NSExtensionActivationSupportsText: true
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.vinny.gsd.share
+        PRODUCT_BUNDLE_IDENTIFIER: com.itorah.gsd.share
         SWIFT_VERSION: "6.0"
         GENERATE_INFOPLIST_FILE: "NO"
         CODE_SIGN_ENTITLEMENTS: ShareExtension/GSDShareExtension.entitlements
         CODE_SIGN_STYLE: Automatic
         # --- Mac Catalyst --- so GSD is a share target on macOS too.
         SUPPORTS_MACCATALYST: "YES"
-        # Keep dev.vinny.gsd.share on both platforms (one App Store Connect record).
+        # Keep com.itorah.gsd.share on both platforms (one App Store Connect record).
         DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER: "NO"
         # macOS-SDK (Catalyst) build needs sandbox entitlements; iOS keeps its own file.
         "CODE_SIGN_ENTITLEMENTS[sdk=macosx*]": ShareExtension/GSDShareExtension-Catalyst.entitlements
@@ -255,7 +255,7 @@ targets:
       - target: GSD
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.vinny.gsd.screenshot-tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.itorah.gsd.screenshot-tests
         SWIFT_VERSION: "6.0"
         TEST_TARGET_NAME: GSD
         GENERATE_INFOPLIST_FILE: "YES"

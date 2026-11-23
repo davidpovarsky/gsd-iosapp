@@ -32,14 +32,14 @@ struct WatchReminderRouteTests {
 
     @Test func aTapOrUnknownActionBecomesNothing() {
         #expect(WatchReminderRoute.kind(forAction: "com.apple.UNNotificationDefaultActionIdentifier", taskID: "a") == nil)
-        #expect(WatchReminderRoute.kind(forAction: "dev.vinny.gsd.reminder.future", taskID: "a") == nil)
+        #expect(WatchReminderRoute.kind(forAction: "com.itorah.gsd.reminder.future", taskID: "a") == nil)
     }
 
     @Test func actionIDsKeepTheirShippedValues() {
         // Reminders already scheduled on a device match their category by these strings.
-        #expect(ReminderAction.categoryID == "dev.vinny.gsd.reminder")
-        #expect(ReminderAction.completeID == "dev.vinny.gsd.reminder.complete")
-        #expect(ReminderAction.snoozeID == "dev.vinny.gsd.reminder.snooze1h")
+        #expect(ReminderAction.categoryID == "com.itorah.gsd.reminder")
+        #expect(ReminderAction.completeID == "com.itorah.gsd.reminder.complete")
+        #expect(ReminderAction.snoozeID == "com.itorah.gsd.reminder.snooze1h")
     }
 
     // MARK: the notification scene

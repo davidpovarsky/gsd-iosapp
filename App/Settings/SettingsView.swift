@@ -31,6 +31,7 @@ struct SettingsView: View {
     @State private var authIsDenied = false
 
     @State private var showDeleteAccount = false
+    @State private var showCloudAccountLogin = false
     /// Palette "Send feedback" pushes the Feedback screen via `.gsdShowFeedback`.
     @State private var showFeedback = false
 
@@ -66,6 +67,12 @@ struct SettingsView: View {
                 archiveSettings = store.archiveSettings
                 notificationSettings = store.notificationSettings
                 refreshAuthStatus()
+            }
+            .task {
+                await session.loadEnabledOAuthProviders()
+            }
+            .sheet(isPresented: $showCloudAccountLogin) {
+                CloudAccountSignInView()
             }
         }
     }
@@ -146,6 +153,17 @@ struct SettingsView: View {
                 .disabled(session.inProgress)
             } else {
                 Button {
+                    showCloudAccountLogin = true
+                } label: {
+                    ProviderSignInButtonLabel(
+                        title: String(localized: "Sign in or create GSD Cloud account"),
+                        systemImage: "person.crop.circle.badge.checkmark")
+                }
+                .buttonStyle(.plain)
+                .disabled(session.inProgress)
+
+                if session.enabledOAuthProviders.contains("google") {
+                Button {
                     _Concurrency.Task { await session.signIn(provider: "google") }
                 } label: {
                     if session.inProgress {
@@ -157,7 +175,9 @@ struct SettingsView: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(session.inProgress)
+                }
 
+                if session.enabledOAuthProviders.contains("apple") {
                 // Hand-rendered "Sign in with Apple" (see `AppleSignInButtonLabel`): drives the
                 // same web-redirect flow as Google (Guideline 4.8), so the native button can't be
                 // used. Appearance lives in one shared view to stay identical to Onboarding's.
@@ -168,7 +188,9 @@ struct SettingsView: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(session.inProgress)
+                }
 
+                if session.enabledOAuthProviders.contains("github") {
                 Button {
                     _Concurrency.Task { await session.signIn(provider: "github") }
                 } label: {
@@ -177,6 +199,7 @@ struct SettingsView: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(session.inProgress)
+                }
 
                 Text(String(localized: "To sync with the web app and your other devices, sign in with the same email you use there."))
                     .font(.footnote)

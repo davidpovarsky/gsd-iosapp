@@ -10,7 +10,7 @@ public enum HarnessLaunch {
     public static let argumentPrefix = "--demo-"
     /// Never the App Group suite, so `@AppStorage(store: .shared)` and the store's settings read
     /// and write a suite the real app never opens.
-    public static let defaultsSuiteName = "dev.vinny.gsd.harness"
+    public static let defaultsSuiteName = "com.itorah.gsd.harness"
 
     /// True when this process was launched by the harness. Decided once, before anything is built.
     public static let isIsolated: Bool = isolates(arguments: ProcessInfo.processInfo.arguments)

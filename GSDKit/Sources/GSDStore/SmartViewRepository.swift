@@ -17,7 +17,7 @@ public protocol SmartViewRepository: Sendable {
 
 public final class GRDBSmartViewRepository: SmartViewRepository {
     private let dbWriter: any DatabaseWriter
-    private let observerQueue = DispatchQueue(label: "dev.vinny.gsd.smartview-observer")
+    private let observerQueue = DispatchQueue(label: "com.itorah.gsd.smartview-observer")
 
     public init(_ database: AppDatabase) { self.dbWriter = database.writer }
 

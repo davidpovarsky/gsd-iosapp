@@ -12,7 +12,7 @@ public struct AuthConfig: Sendable {
     /// The owner's live backend + the configured bounce redirect (set up + tested).
     public static let live = AuthConfig(
         baseURL: PocketBaseEndpoint.liveBaseURL,
-        redirectURI: "https://api.vinny.io/ios-oauth-redirect/",
+        redirectURI: "https://torah-social.tail0a6c7d.ts.net:10000/gsd/ios-oauth-redirect/",
         callbackScheme: "gsd")
 }
 
@@ -36,4 +36,5 @@ public enum AuthError: Error, Equatable, Sendable {
     case missingCode
     case providerNotFound(String)
     case notSignedIn
+    case invalidCredentials
 }

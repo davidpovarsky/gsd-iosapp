@@ -3,13 +3,13 @@ import GSDStore
 import GSDSnapshot
 
 extension Notification.Name {
-    static let gsdOpenDeepLink = Notification.Name("dev.vinny.gsd.openDeepLink")
-    static let gsdShowCommandPalette = Notification.Name("dev.vinny.gsd.showCommandPalette")
-    static let gsdShowAbout = Notification.Name("dev.vinny.gsd.showAbout")
-    static let gsdShowHelp = Notification.Name("dev.vinny.gsd.showHelp")
-    static let gsdShowFeedback = Notification.Name("dev.vinny.gsd.showFeedback")
-    static let gsdShowWhatsNew = Notification.Name("dev.vinny.gsd.showWhatsNew")
-    static let gsdSyncNow = Notification.Name("dev.vinny.gsd.syncNow")
+    static let gsdOpenDeepLink = Notification.Name("com.itorah.gsd.openDeepLink")
+    static let gsdShowCommandPalette = Notification.Name("com.itorah.gsd.showCommandPalette")
+    static let gsdShowAbout = Notification.Name("com.itorah.gsd.showAbout")
+    static let gsdShowHelp = Notification.Name("com.itorah.gsd.showHelp")
+    static let gsdShowFeedback = Notification.Name("com.itorah.gsd.showFeedback")
+    static let gsdShowWhatsNew = Notification.Name("com.itorah.gsd.showWhatsNew")
+    static let gsdSyncNow = Notification.Name("com.itorah.gsd.syncNow")
 }
 
 enum DeepLinkHandoff {

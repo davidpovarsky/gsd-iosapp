@@ -4,7 +4,7 @@ import Foundation
 /// This is the single source of truth for the identifier; it MUST match the
 /// `com.apple.security.application-groups` entitlement in every target.
 public enum AppGroup {
-    public static let id = "group.dev.vinny.gsd"
+    public static let id = "group.com.itorah.gsd"
     /// `UserDefaults(suiteName: id)` key for the stable per-device sync identity (`DeviceIdentity`
     /// in GSDStore writes it; the GRDB-free Share Extension reads it to stamp a direct push).
     public static let deviceIDKey = "deviceId"

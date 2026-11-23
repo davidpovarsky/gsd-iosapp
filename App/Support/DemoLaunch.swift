@@ -40,8 +40,8 @@ enum DemoLaunch {
 /// is inert without the argument.
 enum DemoWindow {
     static let argument = "--demo-window"
-    static let compactNotification = "dev.vinny.gsd.demo.window.compact"
-    static let regularNotification = "dev.vinny.gsd.demo.window.regular"
+    static let compactNotification = "com.itorah.gsd.demo.window.compact"
+    static let regularNotification = "com.itorah.gsd.demo.window.regular"
     static let compact = CGSize(width: 420, height: 860)
     static let regular = CGSize(width: 1100, height: 860)
 

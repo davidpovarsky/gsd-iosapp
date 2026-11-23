@@ -1,0 +1,560 @@
+[
+  {
+    "name": "list_tasks",
+    "title": "List tasks",
+    "description": "Search and filter active GSD tasks",
+    "writes": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "all",
+            "open",
+            "completed"
+          ]
+        },
+        "quadrant": {
+          "type": "string",
+          "enum": [
+            "do_first",
+            "schedule",
+            "delegate",
+            "eliminate"
+          ]
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_task",
+    "title": "Get task",
+    "description": "Get one task by its exact local ID",
+    "writes": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_dashboard",
+    "title": "Task dashboard",
+    "description": "Overview and totals grouped by priority and due date",
+    "writes": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_tags",
+    "title": "List tags",
+    "description": "List tags used in the local task database",
+    "writes": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_smart_views",
+    "title": "Smart views",
+    "description": "List saved GSD smart views",
+    "writes": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_saved_tasks",
+    "title": "Saved tasks",
+    "description": "Read tasks saved for later",
+    "writes": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_archived_tasks",
+    "title": "Archived tasks",
+    "description": "Read archived task records",
+    "writes": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_trashed_tasks",
+    "title": "Trashed tasks",
+    "description": "Read recoverable trash records",
+    "writes": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "create_task",
+    "title": "Create task",
+    "description": "Create a task in GSD's canonical write path",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600
+        },
+        "urgent": {
+          "type": "boolean"
+        },
+        "important": {
+          "type": "boolean"
+        },
+        "due_at": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "tags": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30
+          }
+        },
+        "estimate_minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10080
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "update_task",
+    "title": "Update task",
+    "description": "Change editable fields without overwriting newer data",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600
+        },
+        "urgent": {
+          "type": "boolean"
+        },
+        "important": {
+          "type": "boolean"
+        },
+        "due_at": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "clear_due": {
+          "type": "boolean"
+        },
+        "tags": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30
+          }
+        },
+        "estimate_minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10080
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "set_completed",
+    "title": "Complete or reopen",
+    "description": "Set the completion state with recurrence handling",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "completed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "completed"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "delete_task",
+    "title": "Move task to trash",
+    "description": "Soft-delete a task; recoverable in Trash",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "add_subtask",
+    "title": "Add subtask",
+    "description": "Append a subtask to an existing task",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "toggle_subtask",
+    "title": "Toggle subtask",
+    "description": "Switch a subtask completion state",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "subtask_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "id",
+        "subtask_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "add_dependency",
+    "title": "Add dependency",
+    "description": "Block one task on another task",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "dependency_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "id",
+        "dependency_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "remove_dependency",
+    "title": "Remove dependency",
+    "description": "Remove a dependency edge",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "dependency_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "id",
+        "dependency_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "bulk_complete",
+    "title": "Bulk complete",
+    "description": "Complete several tasks using GSD's bulk service",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        }
+      },
+      "required": [
+        "ids"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "bulk_add_tags",
+    "title": "Bulk add tags",
+    "description": "Add tags to multiple tasks",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "tags": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30
+          }
+        }
+      },
+      "required": [
+        "ids",
+        "tags"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "bulk_move",
+    "title": "Bulk reprioritize",
+    "description": "Move tasks into a chosen matrix quadrant",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "quadrant": {
+          "type": "string",
+          "enum": [
+            "do_first",
+            "schedule",
+            "delegate",
+            "eliminate"
+          ]
+        }
+      },
+      "required": [
+        "ids",
+        "quadrant"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "set_focus",
+    "title": "Focus pick",
+    "description": "Set or clear one of the three daily focus slots",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "date": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10
+        },
+        "rank": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "clear": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "start_timer",
+    "title": "Start timer",
+    "description": "Start time tracking on an active task",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "stop_timer",
+    "title": "Stop timer",
+    "description": "Stop time tracking on a task",
+    "writes": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

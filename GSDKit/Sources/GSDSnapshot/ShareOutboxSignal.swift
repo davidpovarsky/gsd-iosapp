@@ -19,7 +19,7 @@ import Foundation
 public enum ShareOutboxSignal {
     /// Shared constant name; both processes must use the exact same string. Kept as a
     /// `String` (Sendable) — a `static let CFString` trips Swift 6's global-safety check.
-    private static let name = "dev.vinny.gsd.share-outbox.didWrite"
+    private static let name = "com.itorah.gsd.share-outbox.didWrite"
 
     /// Posted by the writer (the Share Extension) after a successful outbox write.
     public static func post() {

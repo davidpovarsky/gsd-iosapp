@@ -23,6 +23,6 @@
 	<key>WKApplication</key>
 	<true/>
 	<key>WKCompanionAppBundleIdentifier</key>
-	<string>dev.vinny.gsd</string>
+	<string>com.itorah.gsd</string>
 </dict>
 </plist>

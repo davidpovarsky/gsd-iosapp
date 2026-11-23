@@ -22,7 +22,7 @@ struct HarnessLaunchTests {
 
     @Test func theIsolatedDefaultsSuiteIsNotTheAppGroup() {
         #expect(HarnessLaunch.defaultsSuiteName != StoreLocation.appGroupID)
-        #expect(HarnessLaunch.defaultsSuiteName.hasPrefix("dev.vinny.gsd."))
+        #expect(HarnessLaunch.defaultsSuiteName.hasPrefix("com.itorah.gsd."))
     }
 
     @Test func isolatedDefaultsStartEmptyOnEveryLaunch() {

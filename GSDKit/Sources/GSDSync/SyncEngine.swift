@@ -42,7 +42,7 @@ private struct NoTombstones: TombstoneRepository {
 /// (preserving the wire `client_updated_at`; never re-stamping; never enqueuing). `actor` for state
 /// safety; single-flight is an explicit `isSyncing` drop. The `sync()` orchestration is added in Group C.
 public actor SyncEngine {
-    private static let log = Logger(subsystem: "dev.vinny.gsd", category: "sync")
+    private static let log = Logger(subsystem: "com.itorah.gsd", category: "sync")
     private let client: PocketBaseClient
     private let tasks: any TaskRepository
     private let queue: any SyncQueueRepository

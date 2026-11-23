@@ -1,0 +1,29 @@
+[Unit]
+Description=GSD Cloud Account API and ChatGPT MCP OAuth Gateway
+After=network-online.target gsd-pocketbase.service
+Wants=network-online.target
+Requires=gsd-pocketbase.service
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/mnt/development/projects/gsd-cloud/gateway
+Environment=GSD_CLOUD_PORT=8770
+Environment=GSD_CLOUD_HOST=127.0.0.1
+Environment=GSD_POCKETBASE_ORIGIN=http://127.0.0.1:8095
+Environment=GSD_CLOUD_STATE_DIR=/mnt/development/projects/gsd-cloud/gateway-state
+EnvironmentFile=-/etc/gsd-cloud-gateway.env
+ExecStart=/usr/local/bin/node /mnt/development/projects/gsd-cloud/gateway/server.mjs
+Restart=on-failure
+RestartSec=4
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/mnt/development/projects/gsd-cloud/gateway-state
+ProtectHome=read-only
+LimitNOFILE=2048
+
+[Install]
+WantedBy=multi-user.target

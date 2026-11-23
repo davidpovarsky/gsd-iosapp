@@ -5,10 +5,10 @@ import GSDStore
 extension Notification.Name {
     /// Posted by `TaskActions.delete` after the store commits, carrying the deleted `Task`
     /// snapshot as the notification object so the root undo window can offer restore.
-    static let gsdTaskDeleted = Notification.Name("dev.vinny.gsd.taskDeleted")
-    static let gsdTaskSaved = Notification.Name("dev.vinny.gsd.taskSaved")
+    static let gsdTaskDeleted = Notification.Name("com.itorah.gsd.taskDeleted")
+    static let gsdTaskSaved = Notification.Name("com.itorah.gsd.taskSaved")
     /// Posted by `TaskActions.markUrgent`, carrying the task as it was BEFORE the move.
-    static let gsdTaskMarkedUrgent = Notification.Name("dev.vinny.gsd.taskMarkedUrgent")
+    static let gsdTaskMarkedUrgent = Notification.Name("com.itorah.gsd.taskMarkedUrgent")
 }
 
 enum UndoTaskAction {
