@@ -5,10 +5,13 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import plistlib
 import re
+import shutil
 import subprocess
+import tempfile
 import time
 import uuid
 
@@ -27,33 +30,52 @@ PREFERRED_DEVICE_TYPES = {
 }
 
 
+def captured_output(stream, limit: int | None = None) -> str:
+    # Snapshot a regular file; a descendant retaining its descriptor cannot hold EOF open.
+    size = stream.seek(0, os.SEEK_END)
+    start = max(0, size - limit) if limit is not None else 0
+    stream.seek(start)
+    text = stream.read(size - start).decode("utf-8", errors="replace")
+    return ("[earlier output truncated]\n" if start else "") + text
+
+
 def run(command: list[str], log: Path, timeout: int = 120,
-        check: bool = True) -> str:
+        check: bool = True, output_limit: int | None = None) -> str:
     started = time.monotonic()
     stamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
     heading = f"[{stamp}] $ {' '.join(command)} (timeout={timeout}s)\n"
     print(heading, end="", flush=True)
-    with log.open("a", encoding="utf-8") as stream:
+    with log.open("a", encoding="utf-8") as stream, \
+            tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:
         stream.write(heading)
         stream.flush()
+        process = subprocess.Popen(command, stdout=stdout, stderr=stderr)
         try:
-            result = subprocess.run(command, capture_output=True, text=True,
-                                    timeout=timeout)
+            returncode = process.wait(timeout=timeout)
         except subprocess.TimeoutExpired as error:
-            partial = "".join(
-                value.decode("utf-8", errors="replace") if isinstance(value, bytes) else value
-                for value in (error.stdout or "", error.stderr or ""))
-            message = partial + f"\nTIMEOUT after {time.monotonic() - started:.1f}s\n"
+            returncode_at_deadline = process.poll()
+            stop_note = ""
+            try:
+                process.kill()
+                process.wait(timeout=10)
+            except (OSError, subprocess.TimeoutExpired) as stop_error:
+                stop_note = f"\nDirect-process cleanup failed: {stop_error}"
+            error.output = captured_output(stdout, output_limit)
+            error.stderr = captured_output(stderr, output_limit)
+            message = (error.output + error.stderr
+                       + f"\nTIMEOUT waiting for direct process after {time.monotonic() - started:.1f}s"
+                       + f"; returncodeAtDeadline={returncode_at_deadline}"
+                       + f"; returncodeAfterKill={process.returncode}{stop_note}\n")
             stream.write(message)
             print(message, end="", flush=True)
             raise
-        output = result.stdout + result.stderr
-        footer = f"\nexit={result.returncode}; elapsed={time.monotonic() - started:.1f}s\n"
-        stream.write(output + footer)
-    print(output + footer, end="", flush=True)
-    if check and result.returncode:
-        raise RuntimeError(f"Command failed ({result.returncode}): {' '.join(command)}")
-    return result.stdout
+        output, errors = captured_output(stdout, output_limit), captured_output(stderr, output_limit)
+        footer = f"\nexit={returncode}; elapsed={time.monotonic() - started:.1f}s; wait=direct-process\n"
+        stream.write(output + errors + footer)
+    print(output + errors + footer, end="", flush=True)
+    if check and returncode:
+        raise subprocess.CalledProcessError(returncode, command, output=output, stderr=errors)
+    return output
 
 
 def version(value: str) -> tuple[int, ...]:
@@ -119,6 +141,81 @@ def boot_device(device_id: str, log: Path, receipt: dict) -> None:
             run(["xcrun", "simctl", "shutdown", device_id], log)
 
 
+def install_resource_snapshot(app: Path, runtime: dict) -> dict:
+    snapshot = {
+        "cpuCount": os.cpu_count(),
+        "freeDiskBytes": shutil.disk_usage(app).free,
+        "runtimeBundleExists": Path(runtime["bundlePath"]).is_dir(),
+    }
+    if hasattr(os, "getloadavg"):
+        snapshot["loadAverage"] = list(os.getloadavg())
+    return snapshot
+
+
+def install_diagnostics(device_id: str, app: Path, runtime: dict, log: Path) -> None:
+    # Best-effort evidence only: neither an installed container nor diagnostic success
+    # substitutes for the single install command returning zero.
+    deadline = time.monotonic() + 75
+    with log.open("a", encoding="utf-8") as stream:
+        try:
+            stream.write(json.dumps(install_resource_snapshot(app, runtime)) + "\n")
+        except (OSError, KeyError) as error:
+            stream.write(f"Resource snapshot failed: {error}\n")
+    host_predicate = ('process == "simdiskimaged" OR process == "cryptexd" '
+                      'OR subsystem BEGINSWITH "com.apple.CoreSimulator"')
+    device_predicate = ('process == "installd" OR process == "installcoordinationd" '
+                        'OR eventMessage CONTAINS "dev.vinny.gsd"')
+    commands = [
+        ["sysctl", "hw.memsize", "hw.ncpu", "vm.swapusage"],
+        ["vm_stat"],
+        ["ps", "-axo", "pid,ppid,pcpu,pmem,etime,comm"],
+        ["xcrun", "simctl", "list", "devices", "--json"],
+        ["/usr/bin/log", "show", "--style", "compact", "--last", "5m",
+         "--predicate", host_predicate],
+        ["xcrun", "simctl", "spawn", device_id, "log", "show", "--style", "compact",
+         "--last", "5m", "--predicate", device_predicate],
+        ["xcrun", "simctl", "get_app_container", device_id, "dev.vinny.gsd", "app"],
+    ]
+    for command in commands:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            with log.open("a", encoding="utf-8") as stream:
+                stream.write("Installation diagnostic budget exhausted (75 seconds).\n")
+            break
+        try:
+            run(command, log, timeout=min(15, remaining), check=False, output_limit=24000)
+        except (OSError, subprocess.SubprocessError) as error:
+            with log.open("a", encoding="utf-8") as stream:
+                stream.write(f"Diagnostic command failed: {error}\n")
+
+
+def install_app(device_id: str, app: Path, runtime: dict, log: Path, receipt: dict) -> None:
+    # Observed cold-boot command waits reached 104-145s. This one install gets
+    # a bounded 300s direct-process deadline; never retry the installation.
+    details = {"attempts": 1, "timeoutSeconds": 300, "status": "running"}
+    receipt["installation"] = details
+    try:
+        details["resourcesBefore"] = install_resource_snapshot(app, runtime)
+    except (OSError, KeyError) as error:
+        details["resourceSnapshotError"] = str(error)
+    started = time.monotonic()
+    try:
+        run(["xcrun", "simctl", "install", device_id, str(app)], log, timeout=300)
+    except (OSError, subprocess.SubprocessError) as error:
+        details.update(status="timed_out" if isinstance(error, subprocess.TimeoutExpired) else "failed",
+                       elapsedSeconds=round(time.monotonic() - started, 1))
+        if isinstance(error, subprocess.CalledProcessError):
+            details["exitCode"] = error.returncode
+        diagnostic_log = log.with_name(log.stem + "-installation-diagnostics.log")
+        details["diagnosticLog"] = diagnostic_log.name
+        try:
+            install_diagnostics(device_id, app, runtime, diagnostic_log)
+        except (OSError, subprocess.SubprocessError) as diagnostic_error:
+            details["diagnosticError"] = str(diagnostic_error)
+        raise
+    details.update(status="passed", exitCode=0, elapsedSeconds=round(time.monotonic() - started, 1))
+
+
 def smoke_device(family: str, device_type: dict, runtime: dict, app: Path,
                  bundle_id: str, executable: str, output: Path) -> dict:
     log = output / f"{family.lower()}.log"
@@ -135,7 +232,7 @@ def smoke_device(family: str, device_type: dict, runtime: dict, app: Path,
         receipt["deviceID"] = device_id
         boot_device(device_id, log, receipt)
         receipt["stage"] = "install"
-        run(["xcrun", "simctl", "install", device_id, str(app)], log)
+        install_app(device_id, app, runtime, log, receipt)
         receipt["stage"] = "launch"
         launch = run(["xcrun", "simctl", "launch", device_id, bundle_id], log)
         match = re.search(rf"(?m)^{re.escape(bundle_id)}:\s*(\d+)\s*$", launch)

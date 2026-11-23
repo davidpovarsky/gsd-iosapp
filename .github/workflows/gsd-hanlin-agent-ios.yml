@@ -2,6 +2,20 @@ name: GSD Hanlin Agent - Native iPad & ChatGPT MCP Acceptance
 
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: Full native acceptance or verified simulator recovery
+        type: choice
+        required: true
+        default: full
+        options:
+          - full
+          - simulator_recovery
+      source_run:
+        description: Pinned native source run for simulator recovery
+        type: string
+        required: false
+        default: '45113033128'
   push:
     branches:
       - feat/hanlin-agent-api-20261122
@@ -26,6 +40,7 @@ concurrency:
 
 jobs:
   native-acceptance:
+    if: github.event_name != 'workflow_dispatch' || inputs.mode != 'simulator_recovery'
     runs-on: xcode-27
     timeout-minutes: 80
     steps:
@@ -168,3 +183,59 @@ jobs:
             dist/gsd-hanlin-ipad/gsd-hanlin-build.log
           if-no-files-found: warn
           retention-days: 21
+
+  simulator-recovery:
+    if: github.event_name == 'workflow_dispatch' && inputs.mode == 'simulator_recovery'
+    runs-on: xcode-27
+    timeout-minutes: 65
+    permissions:
+      contents: read
+      actions: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_RUN: ${{ inputs.source_run }}
+      RECOVERY_CACHE: ${{ runner.temp }}/gsd-native-recovery-${{ github.run_id }}
+      RECOVERY_EVIDENCE: dist/gsd-native-recovery
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Select Xcode 27 for simulator recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! xcodebuild -version | grep -q '^Xcode 27'; then
+            selected="$(find /Applications -maxdepth 1 -type d -name 'Xcode*27*.app' -print | sort -V | tail -1)"
+            [[ -n "$selected" ]]
+            sudo xcode-select -s "$selected/Contents/Developer"
+          fi
+          xcodebuild -version | grep '^Xcode 27'
+      - name: Verify source build and immutable artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/gsd_native_recovery.py prepare \
+            --source-run "$SOURCE_RUN" \
+            --expected-source-sha d44649ed9bb0cc0eab9fb0d12c9ec63a71cd41ca \
+            --cache "$RECOVERY_CACHE" --output "$RECOVERY_EVIDENCE"
+      - name: Run both simulator families against the verified binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/gsd_simulator_smoke.py \
+            --app "$RECOVERY_CACHE/application/GSD.app" \
+            --output "$RECOVERY_EVIDENCE/smoke" \
+            2>&1 | tee "$RECOVERY_EVIDENCE/smoke-console.log"
+      - name: Verify combined native acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/gsd_native_recovery.py finalize --output "$RECOVERY_EVIDENCE"
+      - name: Preserve recovery metadata and simulator evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Hanlin-Native-Recovery-${{ github.run_id }}
+          path: dist/gsd-native-recovery/
+          if-no-files-found: error
+          retention-days: 30
