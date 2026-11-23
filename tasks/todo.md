@@ -2,11 +2,12 @@
 
 ### Resuming From Here
 
-- Scope: restore the already requested GSD native iPad + Hanlin + ChatGPT MCP delivery. Lorvex is outside this repair.
-- FIX_REPRODUCED: native run 45094695724 failed in GSDHanlinHost because the remote adapter referenced GSDHanlinArgs and objectIDs, which belong to a different host contract. The existing GSD contract is GSDHanlinArguments/taskIDs; args.name is also not a GSD field.
-- Verification owner: current coordinator runs one native acceptance pipeline (existing seven Hanlin tests and arm64 IPA export). Reuse unchanged packaging evidence; public subpath OAuth and sideload-readiness reviews have separate owners.
-- Done: remote contract mapping, polling ownership, active-surface approvals and public OAuth fixes. External acceptance 45100655342 passed and its synthetic fixture was removed.
-- Next native gate: run 45100448844 passed all seven SDK tests but exposed SwiftUI type-check complexity in ContentView. Split the modifier chain into small opaque boundaries, preserving state and order. Rebuild, launch both simulator families, verify IPA archives and publish.
+- Scope: restore the requested GSD iPad + Hanlin + ChatGPT MCP delivery; Lorvex is outside this repair.
+- Done: actual remote contract mapping, polling ownership, active-surface approvals, public OAuth subpath/discovery, and SwiftUI type-check decomposition.
+- Public acceptance 45100655342: twelve checkpoints passed; exact synthetic fixture removed; existing user devices preserved.
+- Native acceptance 45101502774 on b5c78c3: all seven Hanlin, two MCP and three packaging tests passed; device/IPA and simulator builds passed; normal iPhone launch and screenshot passed and were visually reviewed.
+- Remaining native failure: iPad bootstatus timed out before app installation. The corrected harness chooses supported modern devices, logs timeout output and permits one pre-install reboot; both families remain required.
+- CI now preserves IPA assets immediately after build and the simulator app before launch. Run the corrected native gate, inspect IPA hashes and screenshots, publish prerelease, update Asana.
 - Physical iPad installation and personal ChatGPT authorization remain unverified until observed.
 
 # Native sync ports: confirm before absence, guarded task writes (2026-11-19)
