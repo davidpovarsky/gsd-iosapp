@@ -21,10 +21,12 @@ settings:
     CURRENT_PROJECT_VERSION: "48"
     # Xcode 26 "recommended settings" — declared here so they survive `xcodegen
     # generate` (clicking "Perform Changes" in Xcode would edit the generated pbxproj
-    # and be wiped). These are already the SDK-default resolved values; made explicit
-    # so Xcode stops prompting. No run-script build phases exist for sandboxing to gate.
+    # and be wiped). Keep these choices explicit for consistent generated projects.
+    # No run-script build phases exist for sandboxing to gate.
     ENABLE_USER_SCRIPT_SANDBOXING: "YES"
-    STRING_CATALOG_GENERATE_SYMBOLS: "YES"
+    # Existing literal keys include intentional case/punctuation variants.
+    # Localization catalogs stay enabled; their unused Swift accessors do not.
+    STRING_CATALOG_GENERATE_SYMBOLS: "NO"
     SWIFT_EMIT_LOC_STRINGS: "YES"
     LOCALIZATION_PREFERS_STRING_CATALOGS: "YES"
     ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOL_FRAMEWORK_EXTENSIONS: "NO"
@@ -345,3 +347,4 @@ schemes:
       config: Debug
       targets:
         - GSDScreenshotTests
+

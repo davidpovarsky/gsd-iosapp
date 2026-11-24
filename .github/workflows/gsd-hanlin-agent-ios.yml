@@ -17,6 +17,10 @@ on:
         description: Successful validation run ID for this exact source (release only)
         required: false
         type: string
+      package_tests_run:
+        description: Prior run with successful unchanged package tests (validate only)
+        required: false
+        type: string
       build_number:
         description: Unused App Store Connect build number
         required: true
@@ -77,6 +81,7 @@ jobs:
           regions = re.search(r"knownRegions = \((.*?)\);", text, re.S)
           assert regions and all(re.search(r"\b" + lang + r"\b", regions[1]) for lang in ("en", "he", "Base")), "Generated regions missing"
           assert "Vendor/HanlinSDK" in text, "Canonical SDK project reference missing"
+          assert "STRING_CATALOG_GENERATE_SYMBOLS = NO;" in text, "Unused catalog symbols must stay disabled"
           print("GSD_GENERATED_PROJECT_REGION_AND_SDK_PASS")
           PY
       - name: Resolve public dependencies before executing tests
@@ -84,12 +89,23 @@ jobs:
         run: |
           python3 scripts/resolve_gsd_dependencies.py --package Packages/GSDHanlinAgent --package GSDKit \
             --output "$OUTPUT/logs/dependency-resolution"
+      - name: Verify reusable package tests against identical source and toolchain
+        if: inputs.package_tests_run != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PACKAGE_TESTS_RUN: ${{ inputs.package_tests_run }}
+        shell: bash
+        run: |
+          python3 scripts/verify_gsd_package_evidence.py --run-id "$PACKAGE_TESTS_RUN" \
+            --current-sha "$GSD_SOURCE_SHA" --output "$OUTPUT/package-contract-evidence.json"
       - name: Validate Hanlin tools and official ChatGPT contracts
+        if: inputs.package_tests_run == ''
         shell: bash
         run: |
           set -euo pipefail
           swift test --package-path Packages/GSDHanlinAgent -j 3 2>&1 | tee "$OUTPUT/logs/hanlin-tests.log"
       - name: Validate account, cloud and sync conflict contracts
+        if: inputs.package_tests_run == ''
         shell: bash
         run: |
           set -euo pipefail
@@ -158,12 +174,17 @@ jobs:
           ui = json.loads((output / "ui/native-ui-receipt.json").read_text())
           bundles = json.loads((output / "compiled-bundles.json").read_text())
           assert ui["passed"] and bundles["passed"]
+          package_path = output / "package-contract-evidence.json"
+          packages = json.loads(package_path.read_text()) if package_path.exists() else {
+              "passed": True, "mode": "executed", "current_source_sha": os.environ["GSD_SOURCE_SHA"],
+              "source_sha": os.environ["GSD_SOURCE_SHA"], "run_id": os.environ["GITHUB_RUN_ID"]}
+          assert packages["passed"] and packages["current_source_sha"] == os.environ["GSD_SOURCE_SHA"]
           receipt = {"passed": True, "source_sha": os.environ["GSD_SOURCE_SHA"],
                      "build": os.environ["GSD_BUILD_NUMBER"], "run_id": os.environ["GITHUB_RUN_ID"],
                      "workflow": ".github/workflows/gsd-hanlin-agent-ios.yml",
                      "generated_project_sha256": hashlib.sha256(pathlib.Path("GSD.xcodeproj/project.pbxproj").read_bytes()).hexdigest(),
                      "hanlin_lock_sha256": hashlib.sha256(pathlib.Path("HanlinSDK.lock.json").read_bytes()).hexdigest(),
-                     "ui": ui, "bundles": bundles}
+                     "ui": ui, "bundles": bundles, "package_contracts": packages}
           (output / "native-acceptance.json").write_text(json.dumps(receipt, indent=2) + "\n")
           PY
       - name: Preserve successful validation receipt
@@ -196,6 +217,7 @@ jobs:
           path: |
             dist/gsd-native-release/logs/
             dist/gsd-native-release/compiled-bundles.json
+            dist/gsd-native-release/package-contract-evidence.json
             dist/gsd-native-release/ui/**/*.png
             dist/gsd-native-release/ui/**/*.json
             dist/gsd-native-release/ui/**/*.log
@@ -345,3 +367,4 @@ jobs:
             dist/gsd-native-release/logs/
           if-no-files-found: warn
           retention-days: 30
+
