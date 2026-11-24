@@ -21,7 +21,8 @@ final class GSDSystemSurfaceUITests: XCTestCase {
     private var installedBundles = Set<String>()
     private var observations: [String: Any] = [:]
 
-    override func setUpWithError() throws {
+    // XCTest setup is nonisolated; prepare from each MainActor test before UI access.
+    private func prepareSystemSurfaceTest() throws {
         continueAfterFailure = false
         #if !targetEnvironment(simulator)
         throw SystemSurfaceFailure(message: "This supplemental class is simulator-only.")
@@ -52,6 +53,7 @@ final class GSDSystemSurfaceUITests: XCTestCase {
     }
 
     func test00RecordSystemSurfaceDiscovery() throws {
+        try prepareSystemSurfaceTest()
         // No guessed widget-gallery, Safari-share or Shortcuts action selectors.
         XCUIDevice.shared.press(.home)
         try captureRaw("00-home-screen")
@@ -75,6 +77,7 @@ final class GSDSystemSurfaceUITests: XCTestCase {
     }
 
     func test01TextShareExtensionRoundTripAndCancellation() throws {
+        try prepareSystemSurfaceTest()
         observations["discoveryOnly"] = false
         try observe("shareText", status: "incomplete", details: [
             "payloadKind": "String from the existing task ShareLink",
