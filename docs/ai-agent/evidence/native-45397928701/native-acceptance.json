@@ -1,0 +1,179 @@
+{
+  "passed": true,
+  "source_sha": "71b1b7ce4adf7bea2ddacfc683a69906d6acd6ae",
+  "build": "48",
+  "run_id": "45397928701",
+  "workflow": ".github/workflows/gsd-hanlin-agent-ios.yml",
+  "generated_project_sha256": "34a5cd5423a1ca6174b392a03a54487831bf893c3d7a899f6c74f8498a8be048",
+  "hanlin_lock_sha256": "495a57ddb8dad31258234f16543a26e431a9e9880a38d9601b8b89b8b23ea045",
+  "ui": {
+    "passed": true,
+    "timestamp": "2026-11-24T13:15:12.410693+00:00",
+    "profile": "native-release",
+    "selectedFamilies": [
+      "iPhone",
+      "iPad"
+    ],
+    "runs": [
+      {
+        "family": "iPhone",
+        "language": "en",
+        "deviceType": "iPhone 17 Pro",
+        "runtime": "27.2",
+        "runtimeBuild": "24B8117",
+        "passed": true,
+        "cloudRoundTrip": false,
+        "commandTimeoutSeconds": 1200,
+        "simulatorId": "4BCBF9DB-CF87-4121-9352-77BF51D4DCCF",
+        "selectedTests": [
+          "test01LocalizedNavigationEditorChartsAndRTL",
+          "test03LocalizedWidgetView",
+          "test04LocalizedHanlinProvidersAndChatGPTAccount"
+        ],
+        "verifiedPassedTests": [
+          "test01LocalizedNavigationEditorChartsAndRTL",
+          "test03LocalizedWidgetView",
+          "test04LocalizedHanlinProvidersAndChatGPTAccount"
+        ]
+      },
+      {
+        "family": "iPhone",
+        "language": "he",
+        "deviceType": "iPhone 17 Pro",
+        "runtime": "27.2",
+        "runtimeBuild": "24B8117",
+        "passed": true,
+        "cloudRoundTrip": false,
+        "commandTimeoutSeconds": 1200,
+        "simulatorId": "458F5704-4252-491A-9425-8E9425575591",
+        "selectedTests": [
+          "test01LocalizedNavigationEditorChartsAndRTL",
+          "test03LocalizedWidgetView",
+          "test04LocalizedHanlinProvidersAndChatGPTAccount"
+        ],
+        "verifiedPassedTests": [
+          "test01LocalizedNavigationEditorChartsAndRTL",
+          "test03LocalizedWidgetView",
+          "test04LocalizedHanlinProvidersAndChatGPTAccount"
+        ]
+      },
+      {
+        "family": "iPad",
+        "language": "en",
+        "deviceType": "iPad Pro 13-inch (M5)",
+        "runtime": "27.2",
+        "runtimeBuild": "24B8117",
+        "passed": true,
+        "cloudRoundTrip": false,
+        "commandTimeoutSeconds": 1200,
+        "simulatorId": "1F98466A-A658-418E-A318-0D45AD4F491B",
+        "selectedTests": [
+          "test01LocalizedNavigationEditorChartsAndRTL",
+          "test03LocalizedWidgetView",
+          "test04LocalizedHanlinProvidersAndChatGPTAccount"
+        ],
+        "verifiedPassedTests": [
+          "test01LocalizedNavigationEditorChartsAndRTL",
+          "test03LocalizedWidgetView",
+          "test04LocalizedHanlinProvidersAndChatGPTAccount"
+        ]
+      },
+      {
+        "family": "iPad",
+        "language": "he",
+        "deviceType": "iPad Pro 13-inch (M5)",
+        "runtime": "27.2",
+        "runtimeBuild": "24B8117",
+        "passed": true,
+        "cloudRoundTrip": true,
+        "commandTimeoutSeconds": 1800,
+        "simulatorId": "2FAFC771-986D-46CB-9955-3327A97FA4BA",
+        "selectedTests": [
+          "test01LocalizedNavigationEditorChartsAndRTL",
+          "test03LocalizedWidgetView",
+          "test04LocalizedHanlinProvidersAndChatGPTAccount",
+          "test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload"
+        ],
+        "verifiedPassedTests": [
+          "test01LocalizedNavigationEditorChartsAndRTL",
+          "test03LocalizedWidgetView",
+          "test04LocalizedHanlinProvidersAndChatGPTAccount",
+          "test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload"
+        ]
+      }
+    ]
+  },
+  "bundles": {
+    "passed": true,
+    "signed": false,
+    "targets": [
+      {
+        "bundleId": "com.itorah.gsd",
+        "version": "4.1.0",
+        "build": "48",
+        "relativePath": ".",
+        "hebrewStringCount": 966,
+        "localizations": [
+          "en",
+          "he"
+        ],
+        "signatureVerified": false
+      },
+      {
+        "bundleId": "com.itorah.gsd.share",
+        "version": "4.1.0",
+        "build": "48",
+        "relativePath": "PlugIns/GSDShareExtension.appex",
+        "hebrewStringCount": 17,
+        "localizations": [
+          "en",
+          "he"
+        ],
+        "signatureVerified": false
+      },
+      {
+        "bundleId": "com.itorah.gsd.widgets",
+        "version": "4.1.0",
+        "build": "48",
+        "relativePath": "PlugIns/GSDWidgets.appex",
+        "hebrewStringCount": 10,
+        "localizations": [
+          "en",
+          "he"
+        ],
+        "signatureVerified": false
+      },
+      {
+        "bundleId": "com.itorah.gsd.watchkitapp.widgets",
+        "version": "4.1.0",
+        "build": "48",
+        "relativePath": "Watch/GSDWatch.app/PlugIns/GSDWatchWidgets.appex",
+        "hebrewStringCount": 20,
+        "localizations": [
+          "en",
+          "he"
+        ],
+        "signatureVerified": false
+      },
+      {
+        "bundleId": "com.itorah.gsd.watchkitapp",
+        "version": "4.1.0",
+        "build": "48",
+        "relativePath": "Watch/GSDWatch.app",
+        "hebrewStringCount": 44,
+        "localizations": [
+          "en",
+          "he"
+        ],
+        "signatureVerified": false
+      }
+    ]
+  },
+  "package_contracts": {
+    "passed": true,
+    "mode": "executed",
+    "current_source_sha": "71b1b7ce4adf7bea2ddacfc683a69906d6acd6ae",
+    "source_sha": "71b1b7ce4adf7bea2ddacfc683a69906d6acd6ae",
+    "run_id": "45397928701"
+  }
+}

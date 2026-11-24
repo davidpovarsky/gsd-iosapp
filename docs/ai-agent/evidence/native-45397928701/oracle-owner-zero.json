@@ -1,0 +1,19 @@
+{
+  "counts": {
+    "gsd_library": 0,
+    "tasks": 0,
+    "users": 0
+  },
+  "finished_at": "2026-11-24T13:37:06.917691+00:00",
+  "owner": "3leycx6ntg6uhsq",
+  "passed": true,
+  "production_equivalent_source": "168b59aff816e39555acbf8535aaefaec19ee195",
+  "read_only": true,
+  "release_run": 45401779393,
+  "source_sha": "71b1b7ce4adf7bea2ddacfc683a69906d6acd6ae",
+  "started_at": "2026-11-24T13:37:06.916491+00:00",
+  "status": "zero",
+  "transaction_read_at": "2026-11-24T13:37:06.917528+00:00",
+  "transaction_started_at": "2026-11-24T13:37:06.916801+00:00",
+  "validation_run": 45397928701
+}

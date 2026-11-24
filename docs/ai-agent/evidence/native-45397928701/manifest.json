@@ -1,0 +1,60 @@
+{
+  "source_sha": "71b1b7ce4adf7bea2ddacfc683a69906d6acd6ae",
+  "validation_run": 45397928701,
+  "release_run": 45401779393,
+  "images_are_original": true,
+  "scope": "Root-selected native account lifecycle screenshots and readonly Oracle proof; not physical installation or personalChatGPTconsent",
+  "files": [
+    {
+      "path": "oracle-owner-zero.json",
+      "bytes": 595,
+      "sha256": "5a5b5d3b92ee7cc7dacec47482145b263ec42b382833d6035a04f49961950477"
+    },
+    {
+      "path": "native-acceptance.json",
+      "bytes": 5471,
+      "sha256": "f099c5115a52e521e61bdcca41499326372999ff540c9dbc4df6e5b7c2164cd7"
+    },
+    {
+      "path": "ipad-he/08-account-created.png",
+      "bytes": 426289,
+      "sha256": "07e2a47daa4bb86a6c9052d6dd6d64c259b036a4b9f1683635e7ea6db3be8faa"
+    },
+    {
+      "path": "ipad-he/08-account-created.geometry.json",
+      "bytes": 594,
+      "sha256": "37959f827f2b78df7c7a09eb14b85ac8bd4d925b14fc4de80e4d80bc38df05be"
+    },
+    {
+      "path": "ipad-he/09-closed-app-cloud-task.png",
+      "bytes": 1603103,
+      "sha256": "78b63397e6b8547925cedca912a8b8db8284f79d44394f76476106a7eb6dc785"
+    },
+    {
+      "path": "ipad-he/09-closed-app-cloud-task.geometry.json",
+      "bytes": 600,
+      "sha256": "bd9dcb073b7b4e4ceb7e92471b9ea5ac7adef00625de53e869d8c3d0300aa2bf"
+    },
+    {
+      "path": "ipad-he/10-cloud-round-trip.png",
+      "bytes": 1613841,
+      "sha256": "3233689527b00bee9b616625f855d038238c59332e7b8f9dc065f5f810cfe54e"
+    },
+    {
+      "path": "ipad-he/10-cloud-round-trip.geometry.json",
+      "bytes": 595,
+      "sha256": "40015d82c1696ff5230af1edc108ecfb497fdbbe0a07759bf2a8fcc24a41f931"
+    },
+    {
+      "path": "ipad-he/18-account-deleted-signed-out.png",
+      "bytes": 415989,
+      "sha256": "0d10ea12bfb8a3f00af7c5d0335f76f52050cb1a699fb27c836237e88e306dbb"
+    },
+    {
+      "path": "ipad-he/18-account-deleted-signed-out.geometry.json",
+      "bytes": 605,
+      "sha256": "f486e30fb1309ed79643e179c8c7b90358d8409fe108fd598dc81ddb7fd6d5b9"
+    }
+  ],
+  "created_at": "2026-11-24T13:48:12.466166+00:00"
+}

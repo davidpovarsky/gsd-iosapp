@@ -1,0 +1,33 @@
+{
+  "appFrame" : {
+    "height" : 1032,
+    "width" : 1376,
+    "x" : 0,
+    "y" : 0
+  },
+  "captureSource" : "XCUIScreen.main",
+  "deviceOrientation" : 3,
+  "displayedHeight" : 2064,
+  "displayedWidth" : 2752,
+  "imageOrientation" : 2,
+  "language" : "he",
+  "name" : "10-cloud-round-trip",
+  "orientationMatchesApp" : true,
+  "pixelHeight" : 2752,
+  "pixelWidth" : 2064,
+  "schemaVersion" : 1,
+  "windowFrames" : [
+    {
+      "height" : 1032,
+      "width" : 1376,
+      "x" : 0,
+      "y" : 0
+    },
+    {
+      "height" : 1032,
+      "width" : 1376,
+      "x" : 0,
+      "y" : 0
+    }
+  ]
+}
