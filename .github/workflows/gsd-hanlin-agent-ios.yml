@@ -32,7 +32,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: gsd-native-apple-${{ github.ref_name }}
+  group: gsd-native-apple
   cancel-in-progress: false
 
 env:
