@@ -8,13 +8,13 @@ on:
         required: true
         type: string
       mode:
-        description: Validate source, or release the same already validated source
+        description: Validate, release, or smoke-test the validated Watch binary
         required: true
         type: choice
         default: validate
-        options: [validate, release]
+        options: [validate, release, watch-smoke]
       validation_run:
-        description: Successful validation run ID for this exact source (release only)
+        description: Successful validation run ID for this exact source (release or Watch smoke)
         required: false
         type: string
       package_tests_run:
@@ -32,7 +32,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: gsd-native-apple
+  group: ${{ inputs.mode == 'watch-smoke' && 'gsd-watch-smoke' || 'gsd-native-apple' }}
   cancel-in-progress: false
 
 env:
@@ -466,5 +466,41 @@ jobs:
           path: |
             dist/gsd-native-release/*.json
             dist/gsd-native-release/logs/
+          if-no-files-found: warn
+          retention-days: 30
+
+  watch-smoke:
+    if: inputs.mode == 'watch-smoke'
+    runs-on: xcode-27
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Verify harness identity and accepted binary inputs
+        shell: bash
+        env:
+          VALIDATION_RUN: ${{ inputs.validation_run }}
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" = "$GITHUB_SHA" ]]
+          [[ "$GSD_SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$GSD_BUILD_NUMBER" =~ ^[0-9]+$ ]]
+          [[ "$VALIDATION_RUN" =~ ^[0-9]+$ ]]
+          python3 scripts/gsd_watch_smoke.py --source-sha "$GSD_SOURCE_SHA" \
+            --run-id "$VALIDATION_RUN" --build "$GSD_BUILD_NUMBER" \
+            --output "$OUTPUT/watch-smoke"
+      - name: Preserve Watch launch evidence and raw screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Watch-Smoke-${{ github.run_id }}
+          path: |
+            dist/gsd-native-release/watch-smoke/*.json
+            dist/gsd-native-release/watch-smoke/*.log
+            dist/gsd-native-release/watch-smoke/*.png
           if-no-files-found: warn
           retention-days: 30
