@@ -41,4 +41,3 @@ crash or the prior XCTest interruption stall.
 The focused receipt covers Python syntax, exact reversible source changes and
 budget arithmetic only. Runtime evidence remains required on the new immutable
 application candidate.
-
