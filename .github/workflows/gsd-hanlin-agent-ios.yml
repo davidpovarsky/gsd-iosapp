@@ -494,7 +494,7 @@ jobs:
           set -euo pipefail
           python3 scripts/gsd_appstore_connect.py profiles --output "$OUTPUT/profiles.json"
           python3 - <<'PY'
-          import base64, json, os, sys
+          import base64, hashlib, json, os, re, subprocess, sys
           from pathlib import Path
           sys.path.insert(0, "scripts")
           from gsd_appstore_connect import decode_profile, validate_profile
@@ -502,11 +502,18 @@ jobs:
           folder = Path.home() / "Library/Developer/Xcode/UserData/Provisioning Profiles"
           profiles = json.loads(Path(os.environ["OUTPUT"], "profiles.json").read_text())
           assert len(profiles) == 5
+          identities = subprocess.check_output(
+              ["security", "find-identity", "-v", "-p", "codesigning", os.environ["SIGNING_KEYCHAIN"]],
+              text=True,
+          )
+          fingerprints = set(re.findall(r'\b([A-F0-9]{40})\s+"Apple Distribution:', identities))
           for row in profiles:
               path = folder / (row["uuid"] + ".mobileprovision")
               _, profile = decode_profile(base64.b64encode(path.read_bytes()).decode("ascii"))
               validate_profile(profile, row["bundleId"])
               assert profile["UUID"] == row["uuid"] and profile["Name"] == row["name"]
+              assert any(hashlib.sha1(cert).hexdigest().upper() in fingerprints
+                         for cert in profile["DeveloperCertificates"]), row["bundleId"]
           print("GSD_SCALEWAY_EXISTING_APP_STORE_PROFILES_VERIFIED")
           PY
       - name: Archive signed GSD release
