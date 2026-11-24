@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "scope": "Recorded actual XCTest outcome classification plus mocked runner control-flow and existing log redaction checks; no new native execution or UI tests",
+  "cases": [
+    "actual-current-HE-complete-assertion-failure-classified",
+    "non65-hard-abort",
+    "infrastructure-command-hard-abort",
+    "missing-terminal-test-hard-abort",
+    "crash-hard-abort",
+    "teardown-error-hard-abort",
+    "skipped-hard-abort",
+    "count-mismatch-hard-abort"
+  ],
+  "additional_control_flow_checks": [
+    "all4-existing13-tests-run-after-classified-assertion-and-full-receipt-fails",
+    "boot-failure-hard-aborts-with-owned-delete-attempt",
+    "summary-failure-hard-aborts-with-owned-delete-attempt",
+    "shutdown-timeout-hard-aborts-with-owned-delete-attempt",
+    "delete-failure-hard-aborts-with-owned-delete-attempt"
+  ],
+  "existing_redaction_checks_passed": 3,
+  "source_base": "afffaedade366b68ee8a4d7955801446ddd31e1a",
+  "runtime_evidence_run": "https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45331797470",
+  "runtime_evidence_artifact": 14894120181,
+  "artifact_sha256": "c3ee7a597776f7155bf12c05ad17ca1dd3c5f9bbe8c7618b34345b7499782dc7",
+  "native_run_dispatched": false
+}
