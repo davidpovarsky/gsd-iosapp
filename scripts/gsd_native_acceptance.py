@@ -152,7 +152,7 @@ def main() -> None:
                 run(["xcrun", "simctl", "bootstatus", device_id, "-b"], folder / "bootstatus.log", timeout=300)
                 command = ["xcodebuild", "test-without-building", "-xctestrun", str(xctestrun),
                            "-destination", "platform=iOS Simulator,id=" + device_id,
-                           "-destination-timeout", "90", "-parallel-testing-enabled", "NO",
+                           "-destination-timeout", "90", "-parallel-testing-enabled", "NO", "-collect-test-diagnostics", "never",
                            "-resultBundlePath", str(folder / "Results.xcresult"),
                            "-testLanguage", language, "-testRegion", "IL" if language == "he" else "US"]
                 selected_tests = ["test04LocalizedHanlinProvidersAndChatGPTAccount"]

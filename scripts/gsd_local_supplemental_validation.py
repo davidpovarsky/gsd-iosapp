@@ -430,7 +430,7 @@ def run_ui(kind: str,manager: OwnedDevices,receipt: dict,products: Path,xctestru
  if kind=="share":environment["TEST_RUNNER_GSD_SYSTEM_INSTALLED_BUNDLE_IDS"]=json.dumps(identifiers)
  result=manager.private/(kind+".xcresult")
  command=["xcodebuild","test-without-building","-xctestrun",str(xctestrun),"-destination","platform=iOS Simulator,id="+device,
-  "-destination-timeout","90","-parallel-testing-enabled","NO","-resultBundlePath",str(result),"-testLanguage",language,"-testRegion","IL" if language=="he" else "US"]
+  "-destination-timeout","90","-parallel-testing-enabled","NO","-collect-test-diagnostics","never","-resultBundlePath",str(result),"-testLanguage",language,"-testRegion","IL" if language=="he" else "US"]
  command.extend("-only-testing:GSDScreenshotTests/"+name for name in TESTS[kind])
  code,log=manager.run(command,timeout=1200 if kind=="share" else 600,check=False,environment=environment)
  observation_path=ui/("system-surface-observations.json" if kind=="share" else "siwc-preconsent-observation.json")
