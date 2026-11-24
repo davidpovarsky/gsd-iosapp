@@ -196,7 +196,7 @@ struct DashboardView: View {
                 VStack(spacing: 2) {
                     Text("\(s.activeCount)").font(.serif(.title).weight(.semibold)).monospacedDigit()
                         .foregroundStyle(Surface.ink)
-                    Text(String(localized: "active")).font(.caption).foregroundStyle(Surface.ink3)
+                    Text(String(localized: "Tasks")).font(.caption).foregroundStyle(Surface.ink3)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
