@@ -1,0 +1,22 @@
+{
+  "accounts_created": 0,
+  "certificate_validation": true,
+  "checks": [
+    "public_https_health",
+    "oauth_discovery_contract",
+    "he_accept_language_form_hint",
+    "en_accept_language_form_hint",
+    "same_origin_selector_preserves_all_oauth_fields_and_expiry",
+    "missing_or_cross_origin_selector_rejected_without_mutation",
+    "invalid_locale_rejected",
+    "he_en_invalid_and_expired_terminal_errors",
+    "explicit_ui_locales_precedence",
+    "no_account_or_grant_created"
+  ],
+  "completed_at": "2026-11-24T01:12:52.650085+00:00",
+  "fixture_cleanup_pending": true,
+  "forced_public_ip": "185.40.234.55",
+  "grants_created": 0,
+  "result": "PASS",
+  "revision": "b46cc29656a56acb4dd2a359c64bc8a61dc62a12"
+}

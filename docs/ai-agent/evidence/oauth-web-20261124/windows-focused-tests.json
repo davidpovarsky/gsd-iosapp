@@ -1,0 +1,48 @@
+{
+  "source_commit": "b2dafb4fa130a8deed44caa65475b33c393c7eac",
+  "source_binding": "The tested working-tree server hash matches the subsequently committed b2dafb4 source. The focused checks ran before that commit was created.",
+  "execution_scope": "Windows Node HTTP fixtures and syntax/diff checks; not real-browser or personal authorization proof",
+  "sentinel_job_id": "job_0d518aeb088e",
+  "started_at": "2026-11-24T01:25:35.227919+00:00",
+  "finished_at": "2026-11-24T01:25:50.180215+00:00",
+  "exit_code": 0,
+  "commands": [
+    {
+      "command": [
+        "node",
+        "--check",
+        "cloud/gateway/server.mjs"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "cloud/gateway/oauth-localization.test.mjs"
+      ],
+      "exit": 0,
+      "stdout": "TAP version 13\n# Subtest: OAuth page negotiates supported ui_locales then weighted Accept-Language\nok 1 - OAuth page negotiates supported ui_locales then weighted Accept-Language\n  ---\n  duration_ms: 1178.6167\n  type: 'test'\n  ...\n# Subtest: OAuth forms include localized password guidance and a language-only same-origin action\nok 2 - OAuth forms include localized password guidance and a language-only same-origin action\n  ---\n  duration_ms: 17.9848\n  type: 'test'\n  ...\n# Subtest: OAuth validation keeps pending language and never reflects submitted or upstream markup\nok 3 - OAuth validation keeps pending language and never reflects submitted or upstream markup\n  ---\n  duration_ms: 36.616\n  type: 'test'\n  ...\n# Subtest: OAuth terminal errors are localized documents and preserve the pending request language\nok 4 - OAuth terminal errors are localized documents and preserve the pending request language\n  ---\n  duration_ms: 34.0478\n  type: 'test'\n  ...\n# Subtest: OAuth language switch changes only language and does not create or extend authorization\nok 5 - OAuth language switch changes only language and does not create or extend authorization\n  ---\n  duration_ms: 162.683\n  type: 'test'\n  ...\n# Subtest: OAuth language switch rejects foreign, null or absent origin, invalid locales and inherited request names\nok 6 - OAuth language switch rejects foreign, null or absent origin, invalid locales and inherited request names\n  ---\n  duration_ms: 22.43\n  type: 'test'\n  ...\n# Subtest: OAuth login after language switch retains original state, PKCE, client, redirect and scopes\nok 7 - OAuth login after language switch retains original state, PKCE, client, redirect and scopes\n  ---\n  duration_ms: 274.8151\n  type: 'test'\n  ...\n# GSD gateway error Error\n# Subtest: Malformed browser requests get localized HTML while OAuth protocol errors remain JSON\nok 8 - Malformed browser requests get localized HTML while OAuth protocol errors remain JSON\n  ---\n  duration_ms: 45.0032\n  type: 'test'\n  ...\n# Subtest: OAuth expiration during account rejection keeps the selected language after pending cleanup\nok 9 - OAuth expiration during account rejection keeps the selected language after pending cleanup\n  ---\n  duration_ms: 20.7821\n  type: 'test'\n  ...\n# Subtest: OAuth browser documents preserve same-origin form Origin without cross-origin referrers\nok 10 - OAuth browser documents preserve same-origin form Origin without cross-origin referrers\n  ---\n  duration_ms: 16.1318\n  type: 'test'\n  ...\n1..10\n# tests 10\n# suites 0\n# pass 10\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 2994.9384\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "test_count": 10,
+  "passed": 10,
+  "failed": 0,
+  "skipped": 0,
+  "duration_ms": 2994.9384,
+  "tested_server_sha256": "185af9c292b6f0651b7e757d68d1f911d7e5be690e4cc49de2bf8604496819a2"
+}

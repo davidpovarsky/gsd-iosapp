@@ -1,0 +1,35 @@
+{
+  "before_sha256": "0e848d289206cbf014de8c3238c218c385c8c701a0f83d242728b9a0ed797594",
+  "canonical_git_lf_sha256": "cf04a971541e4fac91c1039352db0862a2246b3132bdc8f171422c36813a6af2",
+  "deployed_at": "2026-11-24T01:10:46.247189+00:00",
+  "disk_free_bytes": {
+    "/": 167006208,
+    "/mnt/development/projects/gsd-cloud": 1814761472
+  },
+  "gateway": "MainPID=3409820\nExecMainStartTimestamp=Tue 2026-11-24 01:10:45 UTC\nActiveState=active",
+  "gateway_key_preserved": true,
+  "gateway_state_bytes_preserved": true,
+  "health": {
+    "body": {
+      "mode": "cloud-account",
+      "name": "GSD Cloud",
+      "ok": true,
+      "version": "1.0.0"
+    },
+    "status": 200
+  },
+  "line_endings": "766 LF converted to approved tested CRLF bytes",
+  "node_syntax_check": "PASS",
+  "other_services": {
+    "gsd-mcp-bridge.service": "MainPID=2118307\nExecMainStartTimestamp=Mon 2026-11-23 04:19:56 UTC\nActiveState=active",
+    "gsd-pocketbase.service": "MainPID=3365518\nExecMainStartTimestamp=Mon 2026-11-23 23:42:01 UTC\nActiveState=active",
+    "lorvex-cf-quick.service": "MainPID=1807512\nExecMainStartTimestamp=Mon 2026-11-23 00:34:21 UTC\nActiveState=active",
+    "lorvex-cloud-backup.service": "MainPID=0\nExecMainStartTimestamp=Mon 2026-11-23 22:59:27 UTC\nActiveState=inactive",
+    "lorvex-cloud.service": "MainPID=3336621\nExecMainStartTimestamp=Mon 2026-11-23 22:57:47 UTC\nActiveState=active",
+    "lorvex-mcp-bridge.service": "MainPID=3287789\nExecMainStartTimestamp=Mon 2026-11-23 22:14:21 UTC\nActiveState=active"
+  },
+  "other_services_unchanged": true,
+  "revision": "b46cc29656a56acb4dd2a359c64bc8a61dc62a12",
+  "sentinel_policy_changed": false,
+  "server_sha256": "6dbbf8d84dd1509b38f12a30eb0d5d2f2a9d6cc2d151ac4a4eedb9f5b3c8183f"
+}
