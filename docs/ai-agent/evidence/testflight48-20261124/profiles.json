@@ -1,0 +1,52 @@
+[
+  {
+    "target": "GSD",
+    "bundleId": "com.itorah.gsd",
+    "resourceId": "W3Y53QA5N9",
+    "uuid": "07967a1f-d03d-480a-a385-971692fc9d7a",
+    "name": "GSD_Tasks_MAIN_AppStore_20261123",
+    "teamId": "NA6HPWARQ2",
+    "expiration": "2027-09-07T07:25:00",
+    "installed": false
+  },
+  {
+    "target": "GSDWidgets",
+    "bundleId": "com.itorah.gsd.widgets",
+    "resourceId": "ZQYQ8MAFQM",
+    "uuid": "8e6331b2-89e5-4196-9d63-05dae4cd013c",
+    "name": "GSD_Tasks_WIDGETS_AppStore_20261123",
+    "teamId": "NA6HPWARQ2",
+    "expiration": "2027-09-07T07:25:00",
+    "installed": false
+  },
+  {
+    "target": "GSDShareExtension",
+    "bundleId": "com.itorah.gsd.share",
+    "resourceId": "T3PT6D28M5",
+    "uuid": "7181b8c1-5b75-4806-8c9d-6f1a08e2c8c6",
+    "name": "GSD_Tasks_SHARE_AppStore_20261123",
+    "teamId": "NA6HPWARQ2",
+    "expiration": "2027-09-07T07:25:00",
+    "installed": false
+  },
+  {
+    "target": "GSDWatch",
+    "bundleId": "com.itorah.gsd.watchkitapp",
+    "resourceId": "328CCSR5CS",
+    "uuid": "08eba580-912d-45a6-ae87-1a919681e002",
+    "name": "GSD_Tasks_WATCH_AppStore_20261123",
+    "teamId": "NA6HPWARQ2",
+    "expiration": "2027-09-07T07:25:00",
+    "installed": false
+  },
+  {
+    "target": "GSDWatchWidgets",
+    "bundleId": "com.itorah.gsd.watchkitapp.widgets",
+    "resourceId": "H2T8YA3UQP",
+    "uuid": "87487730-eae7-410d-93df-7d9db785e651",
+    "name": "GSD_Tasks_WATCHWIDGETS_AppStore_20261123",
+    "teamId": "NA6HPWARQ2",
+    "expiration": "2027-09-07T07:25:00",
+    "installed": false
+  }
+]

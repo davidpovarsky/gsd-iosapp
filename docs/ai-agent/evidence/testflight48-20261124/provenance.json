@@ -1,0 +1,35 @@
+{
+  "actualAppSource": "71b1b7ce4adf7bea2ddacfc683a69906d6acd6ae",
+  "productionInputsEquivalentTo": "168b59aff816e39555acbf8535aaefaec19ee195",
+  "workflowHead": "d0c5b9649a95e34aef0d4a641a28e2b7382bec0f",
+  "validationRun": "45397928701",
+  "releaseRun": "45401779393",
+  "nativeReceiptArtifact": {
+    "id": 14924405431,
+    "sha256": "57b0ec55d884f40f4842acd86a7c774bdafa70820a6c37e298b47ce6d8a8d278",
+    "bytes": 1241
+  },
+  "nativeEvidenceArtifact": {
+    "id": 14923656158,
+    "sha256": "7a9982bc82a7f15fffcac133bdddebb238c35893cf219c8e6c2eebfec15e08a4",
+    "bytes": 90068222
+  },
+  "releaseEvidenceArtifact": {
+    "id": 14924926887,
+    "sha256": "5691be32c03fdab2e2c51df3bc71950a5b0a96cd8aaa0062dbecd4481422a49a",
+    "bytes": 172752
+  },
+  "nativeUI": {
+    "passed": 13,
+    "failed": 0,
+    "skipped": 0,
+    "profiles": 4,
+    "runtime": "27.2",
+    "runtimeBuild": "24B8117",
+    "buildXcode": "27.1 (27A9275)",
+    "testDriverXcode": "27.0 (27A266a)"
+  },
+  "simulatorCleanupScope": "Successful shutdown/delete logs; no independently retained final membership inventory.",
+  "ipaRetention": "Original signed IPA retained on the existing Scaleway release host; not republished in this public repository.",
+  "verificationScope": "Signed release, Apple VALID/IN_BETA_TESTING and exact owner-only internal association. No observed email delivery or physical installation."
+}

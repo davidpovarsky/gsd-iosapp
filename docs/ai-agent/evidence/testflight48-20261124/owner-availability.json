@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "timestamp": "2026-11-24T13:42:44.875903+00:00",
+  "appId": "6838520892",
+  "buildId": "04715dbf-3b05-4d01-ba3d-d0b0e580d257",
+  "build": "48",
+  "groupId": "791ccd13-9b19-46c4-b1c6-380887f27edb",
+  "groupName": "GSD Owner Testing",
+  "isInternalGroup": true,
+  "hasAccessToAllBuilds": false,
+  "publicLinkEnabled": false,
+  "buildIds": [
+    "04715dbf-3b05-4d01-ba3d-d0b0e580d257"
+  ],
+  "testerCount": 1,
+  "verifiedAccountHolderOnly": true,
+  "testerState": "INVITED",
+  "inviteType": "EMAIL",
+  "processingState": "VALID",
+  "internalBuildState": "IN_BETA_TESTING",
+  "localizations": [
+    {
+      "id": "8a2f62d5-a3d5-4437-bbef-251729b40879",
+      "locale": "en-US",
+      "chars": 1362,
+      "matchesApproved": true
+    },
+    {
+      "id": "d1348a72-295f-4a4a-90c3-f86384e0c25a",
+      "locale": "he",
+      "chars": 1104,
+      "matchesApproved": true
+    }
+  ],
+  "explicitInvitationRequestSent": false,
+  "emailDeliveryObserved": false,
+  "physicalInstallObserved": false,
+  "personalChatGPTGrantVerified": false,
+  "privateOwnerIdentityOmitted": true
+}
