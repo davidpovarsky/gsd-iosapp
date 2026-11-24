@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "checks": [
+    "Actual complete dedicated source/head/receipt accepted",
+    "App SHA cannot substitute workflow SHA",
+    "Unexpected run attempt rejected",
+    "Failed parent rejected",
+    "Incomplete selected-case membership rejected",
+    "Unexpected runtime build rejected",
+    "Missing successful package proof rejected",
+    "Actual product artifact and inner digest accepted",
+    "Wrong product artifact rejected",
+    "Wrong outer artifact digest rejected",
+    "Wrong actual inner product digest rejected",
+    "Successful create is confirmed by exact new inventory ownership",
+    "Lost create response retains exact owned UUID for existing finally cleanup without repeat create",
+    "Ambiguous post-timeout devices are not adopted",
+    "Same-name different-runtime device is not adopted",
+    "Invalid create stdout fails while retaining unambiguous owned UUID for cleanup",
+    "A pre-existing exact-name UUID is not adopted"
+  ],
+  "count": 17,
+  "source_sha256_lf": "b4953223bd7f063decbbe359192b5bcf09f939fc30731636aed15962e9926798",
+  "existing_accepted_controls": 42,
+  "existing_controls_rerun": false,
+  "scope": "Only new dedicated validation provenance and uncertain-create ownership; no simulator/runtime execution."
+}

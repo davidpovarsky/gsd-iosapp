@@ -1,3 +1,15 @@
+## Successful dedicated validation binding — 2026-11-24
+
+The auxiliary Watch harness may now consume the completed full native run45397928701. Its immutable application source is71b1b7ce4adf7bea2ddacfc683a69906d6acd6ae and workflow head isd0c5b9649a95e34aef0d4a641a28e2b7382bec0f. These identities are checked separately. This is a successful original four-profile/13-test acceptance, not a composed or partial receipt.
+
+The new path pins attempt1, build48, the exact selected/verified13cases, successful package proof, iOS27.2/24B8117, receipt artifact14924405431/digest57b0ec55d884f40f4842acd86a7c774bdafa70820a6c37e298b47ce6d8a8d278 and product artifact14921503382/digest881712bd03e5e6fd3ef0649805fc2bf661ba5fa60d6982215eb8c2018b05c209. The actual inner archive must hash tocfc50d90f996967ec968d967f56f656d128f1fe9d0d4be7d531fc72f0449428d. Both artifact ZIP and inner bytes were independently hashed from the preserved GitHub download before implementing the binding.
+
+Existing ordinary same-source validation and previously reviewed composed-source paths remain supported. Product source/manifest/bundle audits, archive traversal guards, source-helper equality, process liveness, raw EN/HE Watch capture and independent shutdown/delete/final absence checks are unchanged. Workflow, runner label and job budget are unchanged; no application or dependency rebuild is added.
+
+A create operation now saves its unique requested name, runtime and preexisting UUID boundary. If creation times out or loses output, a single bounded inventory reconciliation may retain only one exact new owned UUID for the existing finally cleanup. Creation is never retried; ambiguous or foreign devices are never adopted. Invalid stdout still fails, even if cleanup ownership can be recovered.
+
+Only the new binding and uncertain-create risks receive focused controls. The42previously accepted controls are retained without rerunning them. These checks do not constitute Watch runtime acceptance. Actual launch/liveness/localization remains pending one auxiliary watch-smoke run; no WatchConnectivity, complication, Siri, VoiceOver or physical-device claim is introduced.
+
 # Watch binary smoke — bounded additional acceptance
 
 The auxiliary `watch-smoke` workflow mode requires a **completed, successful**

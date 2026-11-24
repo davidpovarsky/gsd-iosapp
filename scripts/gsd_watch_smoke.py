@@ -36,6 +36,17 @@ COMPOSED_PRODUCT_ARTIFACT = 14897632059
 COMPOSED_OUTER_HASH = "0396371b6530b09d0d405df887291f248193813e58986f734a58b11bb87749c5"
 COMPOSED_INNER_HASH = "14cd82477fd8956d9d4f173ee98aa10d26244857f1b5fd8b73a23ad4c1c6be9b"
 
+# Reviewed successful validation used a dedicated workflow head while checking
+# out the immutable app source. This is not a composed or partial receipt.
+DEDICATED_SOURCE = "71b1b7ce4adf7bea2ddacfc683a69906d6acd6ae"
+DEDICATED_HEAD = "d0c5b9649a95e34aef0d4a641a28e2b7382bec0f"
+DEDICATED_RUN = "45397928701"
+DEDICATED_RECEIPT_ARTIFACT = 14924405431
+DEDICATED_RECEIPT_OUTER_HASH = "57b0ec55d884f40f4842acd86a7c774bdafa70820a6c37e298b47ce6d8a8d278"
+DEDICATED_PRODUCT_ARTIFACT = 14921503382
+DEDICATED_OUTER_HASH = "881712bd03e5e6fd3ef0649805fc2bf661ba5fa60d6982215eb8c2018b05c209"
+DEDICATED_INNER_HASH = "cfc50d90f996967ec968d967f56f656d128f1fe9d0d4be7d531fc72f0449428d"
+
 
 def api(path: str) -> dict:
     result = subprocess.run(["gh", "api", "repos/" + REPOSITORY + "/" + path],
@@ -81,6 +92,21 @@ def product_run_for_validation(parent: dict, receipt: dict, source: str, run_id:
     assert parent["status"] == "completed" and parent["conclusion"] == "success", "Validation must succeed first"
     assert parent["path"] == WORKFLOW and str(parent["id"]) == run_id
     verify_parent(receipt, source, run_id, build)
+    if source == DEDICATED_SOURCE and run_id == DEDICATED_RUN:
+        assert parent["head_sha"] == DEDICATED_HEAD and parent["run_attempt"] == 1 and build == "48"
+        assert receipt.get("compiled_product_run_id", run_id) == run_id
+        assert receipt["package_contracts"]["passed"] is True
+        total = 0
+        for profile in receipt["ui"]["runs"]:
+            tests = ["test01LocalizedNavigationEditorChartsAndRTL", "test03LocalizedWidgetView",
+                     "test04LocalizedHanlinProvidersAndChatGPTAccount"]
+            if (profile["family"], profile["language"]) == ("iPad", "he"):
+                tests.append("test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload")
+            assert profile["selectedTests"] == tests and profile["verifiedPassedTests"] == tests
+            assert (profile["runtime"], profile["runtimeBuild"]) == ("27.2", "24B8117")
+            total += len(tests)
+        assert total == 13
+        return run_id
     if parent["head_sha"] == source:
         assert receipt.get("compiled_product_run_id", run_id) == run_id, "Ordinary validation must own its products"
         return run_id
@@ -103,6 +129,12 @@ def product_run_for_validation(parent: dict, receipt: dict, source: str, run_id:
     return COMPOSED_PRODUCT_RUN
 
 
+def verify_dedicated_product(artifact: dict, manifest: dict) -> None:
+    assert artifact["id"] == DEDICATED_PRODUCT_ARTIFACT
+    assert artifact["digest"] == "sha256:" + DEDICATED_OUTER_HASH
+    assert manifest["sha256"] == DEDICATED_INNER_HASH
+
+
 def retrieve_products(args: argparse.Namespace, report: dict) -> Path:
     parent = api("actions/runs/" + args.run_id)
     assert parent["status"] == "completed" and parent["conclusion"] == "success", "Parent must succeed first"
@@ -112,6 +144,10 @@ def retrieve_products(args: argparse.Namespace, report: dict) -> Path:
     receipts = [a for a in validation_entries if a["name"] == receipt_name and not a["expired"]]
     assert len(receipts) == 1 and str(receipts[0]["workflow_run"]["id"]) == args.run_id
     assert receipts[0]["workflow_run"]["head_sha"] == parent["head_sha"]
+    dedicated = args.source_sha == DEDICATED_SOURCE and args.run_id == DEDICATED_RUN
+    if dedicated:
+        assert receipts[0]["id"] == DEDICATED_RECEIPT_ARTIFACT
+        assert receipts[0]["digest"] == "sha256:" + DEDICATED_RECEIPT_OUTER_HASH
     downloaded = args.output / "download"
     run(["gh", "run", "download", args.run_id, "--repo", REPOSITORY, "--name", receipt_name,
          "--dir", str(downloaded / "receipt")], args.output / "retrieval.log")
@@ -119,14 +155,15 @@ def retrieve_products(args: argparse.Namespace, report: dict) -> Path:
     product_run = product_run_for_validation(parent, receipt, args.source_sha, args.run_id, args.build)
     composed = product_run != args.run_id
     product_parent = api("actions/runs/" + product_run) if composed else parent
-    assert product_parent["status"] == "completed" and product_parent["head_sha"] == args.source_sha
+    expected_product_head = DEDICATED_HEAD if dedicated else args.source_sha
+    assert product_parent["status"] == "completed" and product_parent["head_sha"] == expected_product_head
     assert product_parent["path"] == WORKFLOW
     if composed:
         assert product_parent["conclusion"] == "cancelled" and product_parent["run_attempt"] == 1
     entries = api("actions/runs/" + product_run + "/artifacts?per_page=100")["artifacts"] if composed else validation_entries
     name = "GSD-Simulator-BuildProducts-" + product_run
     artifacts = [a for a in entries if a["name"] == name and not a["expired"]]
-    assert len(artifacts) == 1 and artifacts[0]["workflow_run"]["head_sha"] == args.source_sha
+    assert len(artifacts) == 1 and artifacts[0]["workflow_run"]["head_sha"] == expected_product_head
     assert str(artifacts[0]["workflow_run"]["id"]) == product_run
     if composed:
         assert artifacts[0]["id"] == COMPOSED_PRODUCT_ARTIFACT
@@ -138,11 +175,14 @@ def retrieve_products(args: argparse.Namespace, report: dict) -> Path:
     run(["gh", "run", "download", product_run, "--repo", REPOSITORY, "--name", name,
          "--dir", str(downloaded / "products")], args.output / "retrieval.log")
     manifest = verify_archive(downloaded / "products", args.source_sha, product_run, args.build)
+    if dedicated:
+        verify_dedicated_product(artifacts[0], manifest)
     if composed:
         assert manifest["sha256"] == COMPOSED_INNER_HASH == receipt["compiled_product_sha256"]
     report["provenance"] = {"source_sha": args.source_sha, "native_run_id": args.run_id,
         "validation_head_sha": parent["head_sha"], "compiled_product_run_id": product_run,
         "compiled_product_run_conclusion": product_parent["conclusion"], "composed_acceptance": composed,
+        "dedicated_workflow_validation": dedicated,
         "build": args.build, "artifact_id": artifacts[0]["id"],
         "github_artifact_digest": artifacts[0].get("digest"), "product_zip_sha256": manifest["sha256"],
         "simulator_helper_sha256": actual, "parent_native_receipt_verified": True}
@@ -189,15 +229,53 @@ def select_pair(inventory: dict, bundles: dict) -> dict:
     raise RuntimeError("No compatible installed watchOS/iOS simulator pair")
 
 
+def exact_owned_device(inventory: dict, name: str, runtime: str, before: set[str]) -> str:
+    matches = [device["udid"] for device in inventory.get("devices", {}).get(runtime, [])
+               if device.get("name") == name and device.get("udid") not in before
+               and re.fullmatch(r"[A-Fa-f0-9-]{36}", device.get("udid", ""))]
+    assert len(matches) == 1, "New Watch-smoke simulator ownership is absent or ambiguous"
+    return matches[0]
+
+
+def create_owned_device(family: str, choice: dict, output: Path, report: dict) -> str:
+    log = output / "simulators.log"
+    before_inventory = json.loads(run(["xcrun", "simctl", "list", "--json"], log, timeout=60))
+    before = {device["udid"] for group in before_inventory.get("devices", {}).values() for device in group}
+    runtime = choice["runtime"]["identifier"]
+    name = "GSD-WatchSmoke-" + family + "-" + os.environ["GITHUB_RUN_ID"] + "-" + uuid.uuid4().hex[:8]
+    request = {"name": name, "runtime": runtime, "preexisting_device_count": len(before)}
+    report.setdefault("creation_requests", {})[family] = request
+
+    def retain_owned(device: str) -> None:
+        report["devices"][family] = {"id": device, "type": choice["type"]["identifier"],
+            "runtime": runtime, "runtimeVersion": choice["runtime"]["version"]}
+
+    try:
+        result = run(["xcrun", "simctl", "create", name, choice["type"]["identifier"], runtime], log).strip()
+    except (OSError, RuntimeError, subprocess.SubprocessError):
+        # One create may succeed even if its response is lost. Reconcile once
+        # using the exact new name/runtime/UUID boundary; never repeat create.
+        try:
+            current = json.loads(run(["xcrun", "simctl", "list", "--json"], log, timeout=60))
+            retain_owned(exact_owned_device(current, name, runtime, before))
+            request["ownership_reconciled_after_create_error"] = True
+        except (OSError, RuntimeError, subprocess.SubprocessError, AssertionError, ValueError):
+            request["reconciliation"] = "No unambiguous new exact-name/runtime UUID established"
+        raise
+    if re.fullmatch(r"[A-Fa-f0-9-]{36}", result) and result not in before:
+        retain_owned(result)
+        request["ownership_source"] = "Successful own create response; inventory confirmation follows"
+    current = json.loads(run(["xcrun", "simctl", "list", "--json"], log, timeout=60))
+    owned = exact_owned_device(current, name, runtime, before)
+    retain_owned(owned)
+    assert result == owned, "simctl create output differs from observed owned device"
+    return owned
+
+
 def prepare_pair(selected: dict, bundles: dict, output: Path, report: dict) -> None:
     log = output / "simulators.log"
     for family in ("phone", "watch"):
-        choice = selected[family]
-        device = run(["xcrun", "simctl", "create", "GSD-WatchSmoke-" + family + "-" + uuid.uuid4().hex[:8],
-                      choice["type"]["identifier"], choice["runtime"]["identifier"]], log).strip()
-        assert re.fullmatch(r"[0-9A-Fa-f-]{36}", device), "Unexpected created device ID"
-        report["devices"][family] = {"id": device, "type": choice["type"]["identifier"],
-            "runtime": choice["runtime"]["identifier"], "runtimeVersion": choice["runtime"]["version"]}
+        create_owned_device(family, selected[family], output, report)
     devices = report["devices"]
     run(["xcrun", "simctl", "pair", devices["watch"]["id"], devices["phone"]["id"]], log)
     pairs = json.loads(run(["xcrun", "simctl", "list", "pairs", "--json"], log))["pairs"]
