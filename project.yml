@@ -43,6 +43,8 @@ targets:
     platform: iOS
     sources:
       - App
+      - path: THIRD_PARTY_NOTICES.md
+        buildPhase: resources
       # The marketing-demo faux Home Screen renders the real widget view in-app; compiling
       # these two GSDWidgets sources into the app too keeps a single source of truth.
       - Widgets/TodaysFocusView.swift

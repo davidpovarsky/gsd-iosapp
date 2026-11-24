@@ -17177,6 +17177,40 @@
           }
         }
       }
+    },
+    "Open Source Licenses": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Source Licenses"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "רישיונות קוד פתוח"
+          }
+        }
+      }
+    },
+    "The license document could not be loaded.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The license document could not be loaded."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לטעון את מסמך הרישיונות."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

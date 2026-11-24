@@ -525,6 +525,13 @@ struct SettingsView: View {
             Link(String(localized: "Contact Support"), destination: URL(string: "mailto:gsdapp@vinny.dev?subject=GSD%20Task%20Manager%20Support")!)
                 .foregroundStyle(Surface.ink)
             NavigationLink {
+                ThirdPartyNoticesView()
+            } label: {
+                Label(String(localized: "Open Source Licenses"), systemImage: "doc.text")
+            }
+            .foregroundStyle(Surface.ink)
+            .accessibilityIdentifier("gsd.settings.open-source-licenses")
+            NavigationLink {
                 WhatsNewView()
             } label: {
                 Label(String(localized: "What's New"), systemImage: "sparkles")
