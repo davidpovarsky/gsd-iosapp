@@ -50,7 +50,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
     }
 
     private func application(demo: Bool) -> XCUIApplication {
-        let app = XCUIApplication()
+        let app = XCUIApplication(bundleIdentifier: "com.itorah.gsd")
         app.launchArguments = (demo ? ["--demo-seed"] : []) +
             ["-AppleLanguages", "(\(language))", "-AppleLocale", hebrew ? "he_IL" : "en_US"]
         return app
@@ -456,6 +456,94 @@ final class GSDCloudReleaseUITests: XCTestCase {
         app.terminate()
     }
 
+
+    /// Record only structural/input-equivalence facts; never store a credential value.
+    private func accountFieldState(_ field: XCUIElement, expected: String) -> [String: Any] {
+        var state: [String: Any] = [
+            "exists": field.exists, "expectedCharacterCount": expected.count,
+            "credentialValueRecorded": false
+        ]
+        guard field.exists else { return state }
+        state["enabled"] = field.isEnabled
+        state["hittable"] = field.isHittable
+        state["frame"] = captureFrame(field.frame)
+        if let value = field.value as? String {
+            let visibleValue = accessibilityTextWithoutBidiControls(value)
+            state["valueAvailable"] = true
+            state["valueCharacterCount"] = value.count
+            state["matchesExpectedText"] = visibleValue == expected
+            state["isEmpty"] = value.isEmpty
+            state["isPlaceholder"] = value == field.placeholderValue
+            state["containsOnlyMaskCharacters"] = !value.isEmpty && value.unicodeScalars.allSatisfy {
+                $0.value == 0x2022 || $0.value == 0x25CF || $0.value == 0x25CB || $0.value == 0x2A
+            }
+            state["containsBidiControls"] = visibleValue != value
+        } else {
+            state["valueAvailable"] = false
+            state["matchesExpectedText"] = false
+        }
+        return state
+    }
+
+    private func accountInputCheckpoint(
+        _ name: String, email: XCUIElement, password: XCUIElement,
+        confirmation: XCUIElement?, submit: XCUIElement,
+        expectedEmail: String, expectedPassword: String, waitResult: XCTWaiter.Result? = nil
+    ) throws -> [String: Any] {
+        var checkpoint: [String: Any] = [
+            "schemaVersion": 1, "diagnosticOnly": true, "name": name,
+            "language": language, "credentialValuesRecorded": false,
+            "stage": "before-input-state-query"
+        ]
+        // Persist the boundary first in case a remote accessibility query fails.
+        try saveAccountInputCheckpoint(checkpoint, name: name)
+        checkpoint["email"] = accountFieldState(email, expected: expectedEmail)
+        checkpoint["password"] = accountFieldState(password, expected: expectedPassword)
+        if let confirmation {
+            checkpoint["confirmation"] = accountFieldState(confirmation, expected: expectedPassword)
+        }
+        checkpoint["submitExists"] = submit.exists
+        checkpoint["submitEnabled"] = submit.isEnabled
+        checkpoint["submitHittable"] = submit.isHittable
+        if let waitResult { checkpoint["enabledWaitResult"] = waitResult.rawValue }
+        checkpoint["stage"] = "input-state-recorded"
+        try saveAccountInputCheckpoint(checkpoint, name: name)
+        return checkpoint
+    }
+
+    private func saveAccountInputCheckpoint(_ checkpoint: [String: Any], name: String) throws {
+        let data = try JSONSerialization.data(withJSONObject: checkpoint, options: [.prettyPrinted, .sortedKeys])
+        let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+        attachment.name = "\(language)-\(name)-\(checkpoint["stage"] as? String ?? "unknown")"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        if let destination = ProcessInfo.processInfo.environment["GSD_SCREENSHOT_DIR"] {
+            let directory = URL(fileURLWithPath: destination, isDirectory: true)
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            try data.write(to: directory.appendingPathComponent(name + ".input.json"), options: .atomic)
+        }
+    }
+
+    private func waitForAccountSubmission(
+        name: String, email: XCUIElement, password: XCUIElement,
+        confirmation: XCUIElement?, submit: XCUIElement,
+        expectedEmail: String, expectedPassword: String
+    ) throws {
+        _ = try accountInputCheckpoint(
+            name + "-before-wait", email: email, password: password, confirmation: confirmation,
+            submit: submit, expectedEmail: expectedEmail, expectedPassword: expectedPassword)
+        let enabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "enabled == true"), object: submit)
+        let result = XCTWaiter.wait(for: [enabled], timeout: 10)
+        let state = try accountInputCheckpoint(
+            name + "-after-wait", email: email, password: password, confirmation: confirmation,
+            submit: submit, expectedEmail: expectedEmail, expectedPassword: expectedPassword, waitResult: result)
+        let emailState = state["email"] as? [String: Any]
+        try requireAcceptance(emailState?["matchesExpectedText"] as? Bool == true,
+                              "Native account email input did not match the disposable fixture")
+        try requireAcceptance(result == .completed, "Native account submission did not become enabled after input")
+    }
+
     func test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload() async throws {
         guard ProcessInfo.processInfo.environment["GSD_CLOUD_SYSTEM_TEST"] == "1" else {
             throw XCTSkip("Live cloud acceptance requires explicit CI opt-in")
@@ -478,6 +566,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
         let mode = app.segmentedControls["gsd.cloud.mode"]
         try requireAcceptance(mode.waitForExistence(timeout: 5), "Native account mode picker is missing")
         mode.buttons[label("Create account", "יצירת חשבון")].tap()
+        try capture(app, "08-account-signup-before-input")
         let email = app.textFields["gsd.cloud.email"]
         try requireAcceptance(email.waitForExistence(timeout: 5), "Native cloud email field is missing")
         email.tap()
@@ -491,6 +580,9 @@ final class GSDCloudReleaseUITests: XCTestCase {
         confirmation.typeText(fixture.password)
         let submit = app.buttons["gsd.cloud.submit"]
         try requireAcceptance(submit.label == label("Create GSD account", "יצירת חשבון GSD"), "Native signup action label is not localized")
+        try waitForAccountSubmission(name: "08-signup-input", email: email, password: password,
+                                     confirmation: confirmation, submit: submit,
+                                     expectedEmail: fixture.email, expectedPassword: fixture.password)
         try requireAcceptance(submit.isEnabled, "Valid native signup must enable submission")
         for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
         try requireAcceptance(submit.isHittable, "Native signup action is obscured")
@@ -519,6 +611,9 @@ final class GSDCloudReleaseUITests: XCTestCase {
         password.tap()
         password.typeText(fixture.password)
         try requireAcceptance(submit.label == label("Sign in to GSD Cloud", "התחברות ל־GSD Cloud"), "Native sign-in action label is not localized")
+        try waitForAccountSubmission(name: "08-signin-input", email: email, password: password,
+                                     confirmation: nil, submit: submit,
+                                     expectedEmail: fixture.email, expectedPassword: fixture.password)
         try requireAcceptance(submit.isEnabled, "Valid native sign-in must enable submission")
         for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
         try requireAcceptance(submit.isHittable, "Native sign-in action is obscured")
