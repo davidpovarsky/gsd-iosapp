@@ -1,0 +1,33 @@
+{
+  "appFrame" : {
+    "height" : 874,
+    "width" : 402,
+    "x" : 0,
+    "y" : 0
+  },
+  "captureSource" : "XCUIScreen.main",
+  "deviceOrientation" : 1,
+  "displayedHeight" : 2622,
+  "displayedWidth" : 1206,
+  "imageOrientation" : 0,
+  "language" : "he",
+  "name" : "13-hanlin-provider-options",
+  "orientationMatchesApp" : true,
+  "pixelHeight" : 2622,
+  "pixelWidth" : 1206,
+  "schemaVersion" : 1,
+  "windowFrames" : [
+    {
+      "height" : 874,
+      "width" : 402,
+      "x" : 0,
+      "y" : 0
+    },
+    {
+      "height" : 874,
+      "width" : 402,
+      "x" : 0,
+      "y" : 0
+    }
+  ]
+}

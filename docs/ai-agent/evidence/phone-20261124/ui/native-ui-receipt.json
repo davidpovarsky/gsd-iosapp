@@ -1,0 +1,45 @@
+{
+  "passed": false,
+  "timestamp": "2026-11-24T07:25:36.197138+00:00",
+  "profile": "native-release",
+  "runs": [
+    {
+      "family": "iPhone",
+      "language": "en",
+      "deviceType": "iPhone 17 Pro",
+      "runtime": "27.2",
+      "passed": true,
+      "cloudRoundTrip": false,
+      "simulatorId": "079F56A6-BA93-4644-920D-7A951F72FBEC",
+      "selectedTests": [
+        "test01LocalizedNavigationEditorChartsAndRTL",
+        "test03LocalizedWidgetView",
+        "test04LocalizedHanlinProvidersAndChatGPTAccount"
+      ],
+      "verifiedPassedTests": [
+        "test01LocalizedNavigationEditorChartsAndRTL",
+        "test03LocalizedWidgetView",
+        "test04LocalizedHanlinProvidersAndChatGPTAccount"
+      ]
+    },
+    {
+      "family": "iPhone",
+      "language": "he",
+      "deviceType": "iPhone 17 Pro",
+      "runtime": "27.2",
+      "passed": true,
+      "cloudRoundTrip": false,
+      "simulatorId": "05C0847B-9653-4FB9-8809-42FCC33FCC93",
+      "selectedTests": [
+        "test01LocalizedNavigationEditorChartsAndRTL",
+        "test03LocalizedWidgetView",
+        "test04LocalizedHanlinProvidersAndChatGPTAccount"
+      ],
+      "verifiedPassedTests": [
+        "test01LocalizedNavigationEditorChartsAndRTL",
+        "test03LocalizedWidgetView",
+        "test04LocalizedHanlinProvidersAndChatGPTAccount"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,612 @@
+{
+  "schemaVersion": 1,
+  "scope": "phone-only; parent run cancelled; full release acceptance remains false",
+  "source": "37764f1a56a0678e5c4cb4cbd683ab3f44eb2fdc",
+  "run": 45343781703,
+  "artifact": {
+    "id": 14898584445,
+    "sha256": "483af6eb599df092919fafdea691ada6419967a9f0f1d3bb60f0be639e0047e9",
+    "bytes": 12178171
+  },
+  "publicationPolicy": "Nine selected original PNGs and retained JSON copied byte-for-byte; no rotation, crop, re-encoding or annotation.",
+  "review": {
+    "savedPNGs": 36,
+    "uniquePNGsVisuallyInspected": 30,
+    "selectedPNGsCommitted": 9,
+    "geometryReceiptsCommitted": 36,
+    "completedPhoneTests": 6,
+    "fullReceiptPassed": false,
+    "ipadAcceptanceProven": false,
+    "liveCloudRoundTripProven": false
+  },
+  "rawAccessibility": {
+    "en": {
+      "rawLabel": "Recurring Tasks, 1 tasks",
+      "normalizedVisibleLabel": "Recurring Tasks, 1 tasks",
+      "receipt": "ui/iphone-en/screenshots/05-recurring-accessibility-label.json"
+    },
+    "he": {
+      "rawLabel": "⁨משימות חוזרות⁩, מספר המשימות: 1",
+      "normalizedVisibleLabel": "משימות חוזרות, מספר המשימות: 1",
+      "receipt": "ui/iphone-he/screenshots/05-recurring-accessibility-label.json"
+    }
+  },
+  "byteIdenticalPNGGroups": [
+    [
+      "ui/iphone-en/screenshots/01-matrix-diagnostic-before-assertion.png",
+      "ui/iphone-en/screenshots/01-matrix.png"
+    ],
+    [
+      "ui/iphone-en/screenshots/05-browse-diagnostic-before-assertion.png",
+      "ui/iphone-en/screenshots/05-browse.png"
+    ],
+    [
+      "ui/iphone-en/screenshots/14-chatgpt-account-before-consent.png",
+      "ui/iphone-en/screenshots/14-chatgpt-account-diagnostic-before-assertion.png"
+    ],
+    [
+      "ui/iphone-he/screenshots/01-matrix-diagnostic-before-assertion.png",
+      "ui/iphone-he/screenshots/01-matrix.png"
+    ],
+    [
+      "ui/iphone-he/screenshots/05-browse-diagnostic-before-assertion.png",
+      "ui/iphone-he/screenshots/05-browse.png"
+    ],
+    [
+      "ui/iphone-he/screenshots/14-chatgpt-account-before-consent.png",
+      "ui/iphone-he/screenshots/14-chatgpt-account-diagnostic-before-assertion.png"
+    ]
+  ],
+  "allReviewedImages": [
+    {
+      "path": "ui/iphone-en/screenshots/01-matrix-diagnostic-before-assertion.png",
+      "bytes": 423896,
+      "sha256": "70c1a5f6f2d988c0b8515d1470626ef69d9f1587984413e223fc368a9e88fe47",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/01-matrix-diagnostic-before-assertion.geometry.json",
+      "geometrySha256": "35c00c0efea2624d6e3f0749862b56f21b979aada3368318c40ecca791d74ac6"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/01-matrix.png",
+      "bytes": 423896,
+      "sha256": "70c1a5f6f2d988c0b8515d1470626ef69d9f1587984413e223fc368a9e88fe47",
+      "committed": true,
+      "geometryPath": "ui/iphone-en/screenshots/01-matrix.geometry.json",
+      "geometrySha256": "7312bfa0f61690e4d243387cc42d1c9b37cf8e692644ca31a438b76fe2857a1b"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/02-editor.png",
+      "bytes": 195845,
+      "sha256": "1d48660a037977bfeff0447a04c39b06f7c08711966d400c783b418439877262",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/02-editor.geometry.json",
+      "geometrySha256": "d484ed11209c91deb81c804f8438af2d3d1c7385322df3bd10b21b5fe2211675"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/03-context-menu.png",
+      "bytes": 578752,
+      "sha256": "ee2c87bf1d41b51879d1e291546022d95b981c312ee573f91ac760ae53169e99",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/03-context-menu.geometry.json",
+      "geometrySha256": "3787691adb431a35ca67079211c17aaec937c9b77ed27d5e6a47c65511a8a69b"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/04-dashboard-diagnostic-before-assertion.png",
+      "bytes": 1062963,
+      "sha256": "a3ba3209ebf962ba72c62ac61a486bc85311de8bb13ad3fe8d83b0ea678a317b",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/04-dashboard-diagnostic-before-assertion.geometry.json",
+      "geometrySha256": "776b3aaffc6173808bbadf935e2e08a3414d8963f48682c99be97bb34f0236ca"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/04-dashboard.png",
+      "bytes": 1074278,
+      "sha256": "1c16090a1bca386f7b87d532cdddffb1a9ae97c88b550c4001e13c09a5e2862e",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/04-dashboard.geometry.json",
+      "geometrySha256": "2c2e3b8c0f1ed8754a390f6fa5fbe97007c6c0ae1f3fbca00cec66be4de63c3c"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/05-browse-diagnostic-before-assertion.png",
+      "bytes": 251776,
+      "sha256": "9719ee18f7c6979b375120765b62d872fa3beea8581015d70bc4fc8773b387f8",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/05-browse-diagnostic-before-assertion.geometry.json",
+      "geometrySha256": "972b15ace83b20c1fbb4ef3e36daa186a794f9cb86a1a4b8c084adbff8774cc6"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/05-browse.png",
+      "bytes": 251776,
+      "sha256": "9719ee18f7c6979b375120765b62d872fa3beea8581015d70bc4fc8773b387f8",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/05-browse.geometry.json",
+      "geometrySha256": "bda553fb5384bccd76302eb6bf92ed6925cdb9b3237b9c9c8dfae9bf9f7292ab"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/05-recurring-tasks-opened.png",
+      "bytes": 176433,
+      "sha256": "67e3d8f83c801345ba1958bf0d3c73a3cfd4c17c011e80039c48986cdf1326d2",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/05-recurring-tasks-opened.geometry.json",
+      "geometrySha256": "21382e15f6bc2ad763f85a128a1974388b1bdbab4bf83abaf40c43cf2b0a473d"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/06-settings.png",
+      "bytes": 290019,
+      "sha256": "e1a7739907eb4ac336e459e40cfdce42d2a88fadab642c8b603a875cc3cc955b",
+      "committed": true,
+      "geometryPath": "ui/iphone-en/screenshots/06-settings.geometry.json",
+      "geometrySha256": "3ca1bcca9ae75ba0b6fdc80892bc62ccb7f008a30d26049b19a795a65a18dcb0"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/07-account-sign-in.png",
+      "bytes": 159005,
+      "sha256": "3f8faf3c3a67c662cc456d7e9c86b30c76402b51c79b910da2c126fd5eb2fef9",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/07-account-sign-in.geometry.json",
+      "geometrySha256": "f2cda02c5e303908aaac5e97611da23ca4b6c1ce658af37beff48f562b063b62"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/11-widget-view.png",
+      "bytes": 578418,
+      "sha256": "cd003b5f062f53dd419f2a361219dccd40dd3fbbb45c5b6f9c5fc465d16bf1b4",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/11-widget-view.geometry.json",
+      "geometrySha256": "8949adfca813952d767e706f1cfe529719d4f90c033353522c6dea8a185790b1"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/12-hanlin-model-settings.png",
+      "bytes": 165583,
+      "sha256": "faacc84c298a0590cb44a3f6dce68f0494dc8f784b191651a21f4f4f054fd7c0",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/12-hanlin-model-settings.geometry.json",
+      "geometrySha256": "d5b9a811947ed72c2131c622e32b9966122a0912892894067ea70dfba8e9a9db"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/13-hanlin-provider-options.png",
+      "bytes": 257173,
+      "sha256": "849677a2bd44d5f2b717646d781b4ee0a7e6ae2831af3d319ef82afd212d447b",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/13-hanlin-provider-options.geometry.json",
+      "geometrySha256": "b11ce6a7a243f052387f08f9ace80cba7e07e8b69625dec3008c93e14d74965f"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/14-chatgpt-account-before-consent.png",
+      "bytes": 187795,
+      "sha256": "e5f8f12ada0e9a5262ef26383b48fe85cd1b3570cfafefde1c8168fb48180fff",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/14-chatgpt-account-before-consent.geometry.json",
+      "geometrySha256": "5510357b8e0408b9e7c011b77589579b4bb7eb1a1d5d36dd1449c9829d56bccf"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/14-chatgpt-account-diagnostic-before-assertion.png",
+      "bytes": 187795,
+      "sha256": "e5f8f12ada0e9a5262ef26383b48fe85cd1b3570cfafefde1c8168fb48180fff",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/14-chatgpt-account-diagnostic-before-assertion.geometry.json",
+      "geometrySha256": "404952e788d229d6e3e976b79809095ef4e8d8b423a4a89192fefbf6898adc55"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/15-hanlin-assistant.png",
+      "bytes": 214491,
+      "sha256": "856e12f3900b10684b620f270e8a42f862bbe98471993d2bdd5bbd2e37f00ec0",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/15-hanlin-assistant.geometry.json",
+      "geometrySha256": "fd06d4944d9e343c0e7e4beaa9f8e946411353c06cb3e0fa28c2d155a136c280"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/16-cloud-plugin-connection.png",
+      "bytes": 222039,
+      "sha256": "708ebe4913b85583c2cf71c2fc2f0cc9f3dccd5bb156d311d4aab4869b4513b8",
+      "committed": false,
+      "geometryPath": "ui/iphone-en/screenshots/16-cloud-plugin-connection.geometry.json",
+      "geometrySha256": "365b2ef951cf0300f23415a2f6d8841aadf3e37e544cc778012c663c655d7cc0"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/01-matrix-diagnostic-before-assertion.png",
+      "bytes": 405006,
+      "sha256": "a3cf7ba9df7a39c245eb8ac2bd598a43edd156cddf652a6723ac01041fd4873e",
+      "committed": false,
+      "geometryPath": "ui/iphone-he/screenshots/01-matrix-diagnostic-before-assertion.geometry.json",
+      "geometrySha256": "80701f1d0ca1bc1484e2b90035da552452a51fef6b812201935c01b9c22528be"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/01-matrix.png",
+      "bytes": 405006,
+      "sha256": "a3cf7ba9df7a39c245eb8ac2bd598a43edd156cddf652a6723ac01041fd4873e",
+      "committed": true,
+      "geometryPath": "ui/iphone-he/screenshots/01-matrix.geometry.json",
+      "geometrySha256": "ce40b855ce15b922c7acfcfaad09e0b02406bea3aa383e0126fa114ea993d97b"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/02-editor.png",
+      "bytes": 177757,
+      "sha256": "adbf806ee92911ce52935cbb38e0a6f7bde5190fbf1856c8045faa6da5b921ae",
+      "committed": false,
+      "geometryPath": "ui/iphone-he/screenshots/02-editor.geometry.json",
+      "geometrySha256": "74cd210e3cdfd56aeaf54bfb1b7c75641576134db7cfb04235b22d7e3ad655de"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/03-context-menu.png",
+      "bytes": 549340,
+      "sha256": "dd5ba9e8a40487863045457dee6776832a02b62ff8975551fff992bc9a1d0fb1",
+      "committed": false,
+      "geometryPath": "ui/iphone-he/screenshots/03-context-menu.geometry.json",
+      "geometrySha256": "12df6357bbd4b80b7866263a67c1c7d4db27abef033c2e92c1bd1741ba88949c"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/04-dashboard-diagnostic-before-assertion.png",
+      "bytes": 1036856,
+      "sha256": "284fda1b7d14bb455c6c7d9b34a2be3ad47aa290b28111ab7f9da90a0423d4aa",
+      "committed": false,
+      "geometryPath": "ui/iphone-he/screenshots/04-dashboard-diagnostic-before-assertion.geometry.json",
+      "geometrySha256": "784e373cf4bac60252750ebb52afdea6db800c92d6bf84a3e9b4313c80c0e67f"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/04-dashboard.png",
+      "bytes": 1044930,
+      "sha256": "1482a5ce9f1e4e62cefdce78e09ae2f825d6b7257c6bf2789d45e437e4c52f8e",
+      "committed": true,
+      "geometryPath": "ui/iphone-he/screenshots/04-dashboard.geometry.json",
+      "geometrySha256": "b828fabf2c1877db20ee91eeddbfda802821fad1c581ee6eb58072a5a6bfd23b"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/05-browse-diagnostic-before-assertion.png",
+      "bytes": 218542,
+      "sha256": "073e83d285b98bda9cecf8f861e6151a302306566d420f865f1fa90f06379c40",
+      "committed": false,
+      "geometryPath": "ui/iphone-he/screenshots/05-browse-diagnostic-before-assertion.geometry.json",
+      "geometrySha256": "3421b0c5d943ab5703d321a8e4848a7adbbb94709397664a767692979c6c4bfc"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/05-browse.png",
+      "bytes": 218542,
+      "sha256": "073e83d285b98bda9cecf8f861e6151a302306566d420f865f1fa90f06379c40",
+      "committed": true,
+      "geometryPath": "ui/iphone-he/screenshots/05-browse.geometry.json",
+      "geometrySha256": "0971c2307980736baadc8da93d0154fc47f3fc90cd4cd0a0a5fd5f75f5c187d6"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/05-recurring-tasks-opened.png",
+      "bytes": 164980,
+      "sha256": "bbff7aff6017cdfd2165866e53507d2b935289977091f6559e678708df4c3790",
+      "committed": false,
+      "geometryPath": "ui/iphone-he/screenshots/05-recurring-tasks-opened.geometry.json",
+      "geometrySha256": "a526e3fe6c4486a261d5a311e236eb47d614ac8d84ad6628f8b5318c42c2744c"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/06-settings.png",
+      "bytes": 243571,
+      "sha256": "86aea538b1069c861692d797f0d5b176c5d83eabbfb41df057afc3be82aa7f12",
+      "committed": true,
+      "geometryPath": "ui/iphone-he/screenshots/06-settings.geometry.json",
+      "geometrySha256": "eec6535d2b4487546b4fe6a2f6bdcc9723add50ca94783346ea9b5f49f39a0e0"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/07-account-sign-in.png",
+      "bytes": 146101,
+      "sha256": "9b265332338743eee00c5b09995f3ccb37ce15a3704bc462c8e1e4537f648da6",
+      "committed": true,
+      "geometryPath": "ui/iphone-he/screenshots/07-account-sign-in.geometry.json",
+      "geometrySha256": "06752818c155a150c6feb95f706fce649f1e25faaa8e8d4801163b305e8de272"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/11-widget-view.png",
+      "bytes": 572934,
+      "sha256": "2c6558f10bbe3b643ce5afe83d9c8f3096d0323380f3425b8f94e0e5529b15f6",
+      "committed": false,
+      "geometryPath": "ui/iphone-he/screenshots/11-widget-view.geometry.json",
+      "geometrySha256": "951ee4a35b0ac4480eab433a0ad18d52ca8c737e2bff611221fc1a8df0fafcd8"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/12-hanlin-model-settings.png",
+      "bytes": 152876,
+      "sha256": "99d4d328fc91a759ea55ad0a153b3c01abeff4f1ba5b57c93a02e330f9ae4289",
+      "committed": false,
+      "geometryPath": "ui/iphone-he/screenshots/12-hanlin-model-settings.geometry.json",
+      "geometrySha256": "fce336a60f9861044e231be04c87b6e93de9058386291cf04bc3d3e6dd5375b9"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/13-hanlin-provider-options.png",
+      "bytes": 242054,
+      "sha256": "8228faa0c52c27ea4e5bfce23fa959c2e753c850e4dfb64b8d47cf290119fbf2",
+      "committed": false,
+      "geometryPath": "ui/iphone-he/screenshots/13-hanlin-provider-options.geometry.json",
+      "geometrySha256": "3f508a08cdca442d5f752011fdc44a832dcdebd1269170368f87186d329f07e1"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/14-chatgpt-account-before-consent.png",
+      "bytes": 187516,
+      "sha256": "c71078fbed52e67bd682835a29a5fdf3937368dabed29d380639cad65b66a263",
+      "committed": true,
+      "geometryPath": "ui/iphone-he/screenshots/14-chatgpt-account-before-consent.geometry.json",
+      "geometrySha256": "7eeffad0f2ba1cd7c69967554892e6b2cec519fd881723a3bb50d51dd31d2cae"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/14-chatgpt-account-diagnostic-before-assertion.png",
+      "bytes": 187516,
+      "sha256": "c71078fbed52e67bd682835a29a5fdf3937368dabed29d380639cad65b66a263",
+      "committed": false,
+      "geometryPath": "ui/iphone-he/screenshots/14-chatgpt-account-diagnostic-before-assertion.geometry.json",
+      "geometrySha256": "021d4545cfba95ef5de5a07f45dcd08dd6d49d3a05f3b277d65d2dcf356809aa"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/15-hanlin-assistant.png",
+      "bytes": 205249,
+      "sha256": "76d323c5aa5940b71d7a8314a0ccd910d8cadf413ee2f02f2234002149b6b11c",
+      "committed": false,
+      "geometryPath": "ui/iphone-he/screenshots/15-hanlin-assistant.geometry.json",
+      "geometrySha256": "effd7912c760c7d75016a33405a54c0fd94305e01cfc52ac957b7958fec418f2"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/16-cloud-plugin-connection.png",
+      "bytes": 203684,
+      "sha256": "6c4a0c73d4610c89dda9aa199f2d4687d0e5b4577afdf1a9b91da5b050f12a21",
+      "committed": true,
+      "geometryPath": "ui/iphone-he/screenshots/16-cloud-plugin-connection.geometry.json",
+      "geometrySha256": "9cee7f1b38ca10b7eb79c0e335e1049a47834af7a08f6a9f9a7c259e831a597d"
+    }
+  ],
+  "retainedFiles": [
+    {
+      "path": "artifact-provenance.json",
+      "bytes": 208,
+      "sha256": "e008c39aecbe65acbf5eb2c3d05c88de5b74dc561c7d91030c56036924ade5da"
+    },
+    {
+      "path": "cancellation-scope.json",
+      "bytes": 1223,
+      "sha256": "1aa1c22cebc06bdd059f651ff2bcf54b0c7bc9879b38ceee5056b6b354d1d91a"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/01-matrix-diagnostic-before-assertion.geometry.json",
+      "bytes": 522,
+      "sha256": "35c00c0efea2624d6e3f0749862b56f21b979aada3368318c40ecca791d74ac6"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/01-matrix.geometry.json",
+      "bytes": 494,
+      "sha256": "7312bfa0f61690e4d243387cc42d1c9b37cf8e692644ca31a438b76fe2857a1b"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/01-matrix.png",
+      "bytes": 423896,
+      "sha256": "70c1a5f6f2d988c0b8515d1470626ef69d9f1587984413e223fc368a9e88fe47"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/02-editor.geometry.json",
+      "bytes": 494,
+      "sha256": "d484ed11209c91deb81c804f8438af2d3d1c7385322df3bd10b21b5fe2211675"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/03-context-menu.geometry.json",
+      "bytes": 585,
+      "sha256": "3787691adb431a35ca67079211c17aaec937c9b77ed27d5e6a47c65511a8a69b"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/04-dashboard-diagnostic-before-assertion.geometry.json",
+      "bytes": 610,
+      "sha256": "776b3aaffc6173808bbadf935e2e08a3414d8963f48682c99be97bb34f0236ca"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/04-dashboard.geometry.json",
+      "bytes": 582,
+      "sha256": "2c2e3b8c0f1ed8754a390f6fa5fbe97007c6c0ae1f3fbca00cec66be4de63c3c"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/05-browse-diagnostic-before-assertion.geometry.json",
+      "bytes": 607,
+      "sha256": "972b15ace83b20c1fbb4ef3e36daa186a794f9cb86a1a4b8c084adbff8774cc6"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/05-browse.geometry.json",
+      "bytes": 579,
+      "sha256": "bda553fb5384bccd76302eb6bf92ed6925cdb9b3237b9c9c8dfae9bf9f7292ab"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/05-recurring-accessibility-label.json",
+      "bytes": 494,
+      "sha256": "ca5a830ac53c95e69ae4ac017fbea7f543f479ac49d4d18a507e12ea57e60748"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/05-recurring-tasks-opened.geometry.json",
+      "bytes": 595,
+      "sha256": "21382e15f6bc2ad763f85a128a1974388b1bdbab4bf83abaf40c43cf2b0a473d"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/06-settings.geometry.json",
+      "bytes": 581,
+      "sha256": "3ca1bcca9ae75ba0b6fdc80892bc62ccb7f008a30d26049b19a795a65a18dcb0"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/06-settings.png",
+      "bytes": 290019,
+      "sha256": "e1a7739907eb4ac336e459e40cfdce42d2a88fadab642c8b603a875cc3cc955b"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/07-account-sign-in.geometry.json",
+      "bytes": 588,
+      "sha256": "f2cda02c5e303908aaac5e97611da23ca4b6c1ce658af37beff48f562b063b62"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/11-widget-view.geometry.json",
+      "bytes": 499,
+      "sha256": "8949adfca813952d767e706f1cfe529719d4f90c033353522c6dea8a185790b1"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/12-hanlin-model-settings.geometry.json",
+      "bytes": 509,
+      "sha256": "d5b9a811947ed72c2131c622e32b9966122a0912892894067ea70dfba8e9a9db"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/13-hanlin-provider-options.geometry.json",
+      "bytes": 596,
+      "sha256": "b11ce6a7a243f052387f08f9ace80cba7e07e8b69625dec3008c93e14d74965f"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/14-chatgpt-account-before-consent.geometry.json",
+      "bytes": 603,
+      "sha256": "5510357b8e0408b9e7c011b77589579b4bb7eb1a1d5d36dd1449c9829d56bccf"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/14-chatgpt-account-diagnostic-before-assertion.geometry.json",
+      "bytes": 616,
+      "sha256": "404952e788d229d6e3e976b79809095ef4e8d8b423a4a89192fefbf6898adc55"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/15-hanlin-assistant.geometry.json",
+      "bytes": 589,
+      "sha256": "fd06d4944d9e343c0e7e4beaa9f8e946411353c06cb3e0fa28c2d155a136c280"
+    },
+    {
+      "path": "ui/iphone-en/screenshots/16-cloud-plugin-connection.geometry.json",
+      "bytes": 596,
+      "sha256": "365b2ef951cf0300f23415a2f6d8841aadf3e37e544cc778012c663c655d7cc0"
+    },
+    {
+      "path": "ui/iphone-en/test-summary.json",
+      "bytes": 1023,
+      "sha256": "82ab454e2d82ec5a0578f0e3bb867873471aa8815a8d2930054b7268e63ed7f3"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/01-matrix-diagnostic-before-assertion.geometry.json",
+      "bytes": 522,
+      "sha256": "80701f1d0ca1bc1484e2b90035da552452a51fef6b812201935c01b9c22528be"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/01-matrix.geometry.json",
+      "bytes": 494,
+      "sha256": "ce40b855ce15b922c7acfcfaad09e0b02406bea3aa383e0126fa114ea993d97b"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/01-matrix.png",
+      "bytes": 405006,
+      "sha256": "a3cf7ba9df7a39c245eb8ac2bd598a43edd156cddf652a6723ac01041fd4873e"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/02-editor.geometry.json",
+      "bytes": 494,
+      "sha256": "74cd210e3cdfd56aeaf54bfb1b7c75641576134db7cfb04235b22d7e3ad655de"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/03-context-menu.geometry.json",
+      "bytes": 585,
+      "sha256": "12df6357bbd4b80b7866263a67c1c7d4db27abef033c2e92c1bd1741ba88949c"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/04-dashboard-diagnostic-before-assertion.geometry.json",
+      "bytes": 610,
+      "sha256": "784e373cf4bac60252750ebb52afdea6db800c92d6bf84a3e9b4313c80c0e67f"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/04-dashboard.geometry.json",
+      "bytes": 582,
+      "sha256": "b828fabf2c1877db20ee91eeddbfda802821fad1c581ee6eb58072a5a6bfd23b"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/04-dashboard.png",
+      "bytes": 1044930,
+      "sha256": "1482a5ce9f1e4e62cefdce78e09ae2f825d6b7257c6bf2789d45e437e4c52f8e"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/05-browse-diagnostic-before-assertion.geometry.json",
+      "bytes": 607,
+      "sha256": "3421b0c5d943ab5703d321a8e4848a7adbbb94709397664a767692979c6c4bfc"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/05-browse.geometry.json",
+      "bytes": 579,
+      "sha256": "0971c2307980736baadc8da93d0154fc47f3fc90cd4cd0a0a5fd5f75f5c187d6"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/05-browse.png",
+      "bytes": 218542,
+      "sha256": "073e83d285b98bda9cecf8f861e6151a302306566d420f865f1fa90f06379c40"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/05-recurring-accessibility-label.json",
+      "bytes": 641,
+      "sha256": "bbc48088ea0c6345d2cf98be5222c9dbf34c92ce48c5ef966bf2fe03f2da6c98"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/05-recurring-tasks-opened.geometry.json",
+      "bytes": 595,
+      "sha256": "a526e3fe6c4486a261d5a311e236eb47d614ac8d84ad6628f8b5318c42c2744c"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/06-settings.geometry.json",
+      "bytes": 581,
+      "sha256": "eec6535d2b4487546b4fe6a2f6bdcc9723add50ca94783346ea9b5f49f39a0e0"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/06-settings.png",
+      "bytes": 243571,
+      "sha256": "86aea538b1069c861692d797f0d5b176c5d83eabbfb41df057afc3be82aa7f12"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/07-account-sign-in.geometry.json",
+      "bytes": 588,
+      "sha256": "06752818c155a150c6feb95f706fce649f1e25faaa8e8d4801163b305e8de272"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/07-account-sign-in.png",
+      "bytes": 146101,
+      "sha256": "9b265332338743eee00c5b09995f3ccb37ce15a3704bc462c8e1e4537f648da6"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/11-widget-view.geometry.json",
+      "bytes": 499,
+      "sha256": "951ee4a35b0ac4480eab433a0ad18d52ca8c737e2bff611221fc1a8df0fafcd8"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/12-hanlin-model-settings.geometry.json",
+      "bytes": 509,
+      "sha256": "fce336a60f9861044e231be04c87b6e93de9058386291cf04bc3d3e6dd5375b9"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/13-hanlin-provider-options.geometry.json",
+      "bytes": 596,
+      "sha256": "3f508a08cdca442d5f752011fdc44a832dcdebd1269170368f87186d329f07e1"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/14-chatgpt-account-before-consent.geometry.json",
+      "bytes": 603,
+      "sha256": "7eeffad0f2ba1cd7c69967554892e6b2cec519fd881723a3bb50d51dd31d2cae"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/14-chatgpt-account-before-consent.png",
+      "bytes": 187516,
+      "sha256": "c71078fbed52e67bd682835a29a5fdf3937368dabed29d380639cad65b66a263"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/14-chatgpt-account-diagnostic-before-assertion.geometry.json",
+      "bytes": 616,
+      "sha256": "021d4545cfba95ef5de5a07f45dcd08dd6d49d3a05f3b277d65d2dcf356809aa"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/15-hanlin-assistant.geometry.json",
+      "bytes": 589,
+      "sha256": "effd7912c760c7d75016a33405a54c0fd94305e01cfc52ac957b7958fec418f2"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/16-cloud-plugin-connection.geometry.json",
+      "bytes": 596,
+      "sha256": "9cee7f1b38ca10b7eb79c0e335e1049a47834af7a08f6a9f9a7c259e831a597d"
+    },
+    {
+      "path": "ui/iphone-he/screenshots/16-cloud-plugin-connection.png",
+      "bytes": 203684,
+      "sha256": "6c4a0c73d4610c89dda9aa199f2d4687d0e5b4577afdf1a9b91da5b050f12a21"
+    },
+    {
+      "path": "ui/iphone-he/test-summary.json",
+      "bytes": 1023,
+      "sha256": "5d434b4817aa4f83dc45da0db9e89706d7a31bc38bd3c88a30c99177b64afb39"
+    },
+    {
+      "path": "ui/native-ui-receipt.json",
+      "bytes": 1344,
+      "sha256": "46f8def1ea7e2a0b3145d52d8108bb4573ab10ba9d66e367e4d92cf6a3facbbf"
+    }
+  ]
+}

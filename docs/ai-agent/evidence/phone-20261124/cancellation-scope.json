@@ -1,0 +1,41 @@
+{
+  "run": 45343781703,
+  "source": "37764f1a56a0678e5c4cb4cbd683ab3f44eb2fdc",
+  "conclusion": "cancelled",
+  "uiStarted": "2026-11-24T07:03:18Z",
+  "cancellationLog": "2026-11-24T07:36:50.595492Z",
+  "runCompletedAt": "2026-11-24T07:37:53Z",
+  "cancellationCause": "unknown; no action issued by native owner, no step17 timeout, native job100minutes/profile20minutes",
+  "artifact": {
+    "id": 14898584445,
+    "sha256": "sha256:483af6eb599df092919fafdea691ada6419967a9f0f1d3bb60f0be639e0047e9",
+    "size": 12178171
+  },
+  "profiles": {
+    "iphone_en": {
+      "passed": 3,
+      "total": 3,
+      "cleanup": "both shutdown/delete logs present; receipt PASS"
+    },
+    "iphone_he": {
+      "passed": 3,
+      "total": 3,
+      "cleanup": "both shutdown/delete logs present; receipt PASS"
+    },
+    "ipad_en": {
+      "created": true,
+      "bootFinished": true,
+      "simulatorId": "19670EF8-3F9F-4208-A0DF-241D4842AA04",
+      "testResult": null,
+      "images": 0,
+      "cleanup": "unverified; no shutdown/delete logs survived"
+    },
+    "ipad_he": {
+      "started": false,
+      "fixtureCreated": false
+    }
+  },
+  "deletionMarker": null,
+  "fullReceiptPassed": false,
+  "releaseAuthorizedByReceipt": false
+}
