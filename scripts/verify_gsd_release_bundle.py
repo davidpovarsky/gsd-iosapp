@@ -90,7 +90,7 @@ def main() -> None:
     location.add_argument("--app", type=Path)
     location.add_argument("--ipa", type=Path)
     parser.add_argument("--signed", action="store_true")
-    parser.add_argument("--build", default="48")
+    parser.add_argument("--build", default="49")
     parser.add_argument("--version", default="4.1.0")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()

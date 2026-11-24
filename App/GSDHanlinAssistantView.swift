@@ -36,6 +36,9 @@ struct GSDHanlinAssistantView: View {
     }
 
     var body: some View {
+        let approvalOwner = assistant
+        let approvalID = approvalOwner.pendingApprovalID
+        let approvalRequest = approvalOwner.pendingApproval
         NavigationStack {
             VStack(spacing: 0) {
                 if assistant.messages.isEmpty {
@@ -79,7 +82,9 @@ struct GSDHanlinAssistantView: View {
                         }
                     }
                 }
-                if let error = assistant.errorMessage {
+                if let failure = assistant.failure {
+                    Text(GSDChatGPTCopy.error(failure)).font(.caption).foregroundStyle(.red).padding(.horizontal)
+                } else if let error = assistant.errorMessage {
                     Text(AssistantCopy.status(error)).font(.caption).foregroundStyle(.red).padding(.horizontal)
                 }
                 if let configurationError {
@@ -100,8 +105,7 @@ struct GSDHanlinAssistantView: View {
                         .onSubmit(send)
                     if assistant.isRunning || isPreparingRequest {
                         Button {
-                            sendTask?.cancel()
-                            Task { await assistant.cancel() }
+                            cancelAssistantRequest()
                         } label: { Image(systemName: "stop.circle") }
                             .accessibilityLabel("Stop AI")
                     } else {
@@ -134,13 +138,12 @@ struct GSDHanlinAssistantView: View {
                 }
             }
             .onDisappear {
-                sendTask?.cancel()
+                cancelAssistantRequest()
                 chatGPT.cancelSignIn()
-                Task { await assistant.cancel() }
             }
             .onChange(of: cloudSession.currentUserID) { _, _ in
-                sendTask?.cancel()
-                Task { await assistant.cancel(); dismiss() }
+                cancelAssistantRequest()
+                dismiss()
             }
             .onChange(of: chatGPT.activeID) { _, _ in
                 Task { await resetAssistantConversation() }
@@ -158,25 +161,29 @@ struct GSDHanlinAssistantView: View {
                 "Allow the AI to modify your tasks?",
                 isPresented: Binding(
                     get: {
-                        !showModelSettings && !showRemoteBridgeSettings && assistant.pendingApproval != nil
+                        !showModelSettings && !showRemoteBridgeSettings && approvalID != nil &&
+                            approvalOwner.pendingApprovalID == approvalID
                     },
                     set: { presented in
-                        if !presented {
-                            // Let a button claim the approval before handling an outside-tap dismissal.
-                            _Concurrency.Task { @MainActor in
-                                if !showModelSettings && !showRemoteBridgeSettings &&
-                                    assistant.pendingApproval != nil {
-                                    assistant.resolveApproval(false)
-                                }
+                        if !presented, !showModelSettings, !showRemoteBridgeSettings, let approvalID {
+                            // A delayed dismissal may only resolve the approval this dialog showed.
+                            _Concurrency.Task { @MainActor [approvalOwner, approvalID] in
+                                approvalOwner.resolveApproval(false, approvalID: approvalID)
                             }
                         }
                     }),
                 titleVisibility: .visible
             ) {
-                Button("Allow change") { assistant.resolveApproval(true) }
-                Button("Deny", role: .cancel) { assistant.resolveApproval(false) }
+                if let approvalID {
+                    Button("Allow change") {
+                        approvalOwner.resolveApproval(true, approvalID: approvalID)
+                    }
+                    Button("Deny", role: .cancel) {
+                        approvalOwner.resolveApproval(false, approvalID: approvalID)
+                    }
+                }
             } message: {
-                Text(assistant.pendingApproval.map { AssistantCopy.approval($0.description) } ?? String(localized: "The requested change needs approval."))
+                Text(approvalRequest.map { AssistantCopy.approval($0.description) } ?? String(localized: "The requested change needs approval."))
             }
             .gsdRemoteWriteApproval(bridge: remoteBridge, isActive: {
                 !showModelSettings && !showRemoteBridgeSettings && assistant.pendingApproval == nil
@@ -274,8 +281,8 @@ struct GSDHanlinAssistantView: View {
                                 return
                             }
                             configurationError = nil
+                            cancelAssistantRequest()
                             showModelSettings = false
-                            Task { await assistant.cancel() }
                             return
                         }
                         guard let url = URL(string: endpoint), url.scheme == "https", url.host != nil,
@@ -287,8 +294,8 @@ struct GSDHanlinAssistantView: View {
                             try GSDHanlinKeychain.save(apiToken)
                             configuredToken = apiToken
                             configurationError = nil
+                            cancelAssistantRequest()
                             showModelSettings = false
-                            Task { await assistant.cancel() }
                         } catch {
                             configurationError = String(localized: "Keychain could not securely store this credential.")
                         }
@@ -299,11 +306,28 @@ struct GSDHanlinAssistantView: View {
     }
 
     @MainActor
-    private func resetAssistantConversation() async {
+    @discardableResult
+    private func cancelAssistantRequest() -> _Concurrency.Task<Void, Never> {
+        // Revoke credential preparation before a delayed lookup can start an old request.
+        requestID = nil
         sendTask?.cancel()
+        sendTask = nil
+        isPreparingRequest = false
+        return assistant.cancelCurrentRequest()
+    }
+
+    @MainActor
+    private func resetAssistantConversation() async {
         let previous = assistant
-        await previous.cancel()
+        let cancellation = cancelAssistantRequest()
+        let resetID = UUID()
+        requestID = resetID
+        isPreparingRequest = true
+        await cancellation.value
+        guard requestID == resetID, assistant === previous else { return }
         assistant = GSDHanlinAssistantState(store: taskStore)
+        requestID = nil
+        isPreparingRequest = false
     }
 
     private func send() {
@@ -314,25 +338,33 @@ struct GSDHanlinAssistantView: View {
         isPreparingRequest = true
         configurationError = nil
         prompt = ""
+        let sendingAssistant = assistant
+        let selectedProvider = provider
+        let selectedModel = modelID
+        let selectedEndpoint = endpoint
+        let selectedCredential = configuredToken
         sendTask = Task { @MainActor in
             defer {
                 if requestID == id { isPreparingRequest = false; sendTask = nil; requestID = nil }
             }
             do {
-                if provider == "ChatGPT" {
+                if selectedProvider == "ChatGPT" {
                     let access = try await chatGPT.accessForInference()
                     try Task.checkCancellation()
-                    await assistant.send(text, modelID: access.modelID,
+                    guard requestID == id, assistant === sendingAssistant else { return }
+                    await sendingAssistant.send(text, modelID: access.modelID,
                         endpoint: "https://api.openai.com/v1/responses",
                         credential: access.token, provider: "ChatGPT")
                 } else {
                     try Task.checkCancellation()
-                    await assistant.send(text, modelID: modelID, endpoint: endpoint,
-                                         credential: configuredToken, provider: provider)
+                    guard requestID == id, assistant === sendingAssistant else { return }
+                    await sendingAssistant.send(text, modelID: selectedModel, endpoint: selectedEndpoint,
+                                                credential: selectedCredential, provider: selectedProvider)
                 }
             } catch is CancellationError {
-                if prompt.isEmpty { prompt = text }
+                if requestID == id, prompt.isEmpty { prompt = text }
             } catch {
+                guard requestID == id, assistant === sendingAssistant else { return }
                 configurationError = String(format: String(localized: "ChatGPT access failed: %@"), GSDChatGPTCopy.error(error))
                 if prompt.isEmpty { prompt = text }
             }
@@ -393,26 +425,28 @@ private struct GSDRemoteWriteApprovalModifier: ViewModifier {
     let isActive: @MainActor () -> Bool
 
     func body(content: Content) -> some View {
+        let owner = bridge
+        let approvalID = owner?.pendingApprovalID
+        let request = owner?.pendingApproval
         content.confirmationDialog(
             "Allow this change from ChatGPT?",
             isPresented: Binding(
-                get: { isActive() && bridge?.pendingApproval != nil },
+                get: { isActive() && approvalID != nil && owner?.pendingApprovalID == approvalID },
                 set: { presented in
-                    if !presented {
-                        // A button action resolves synchronously; defer only no-choice dismissal.
-                        _Concurrency.Task { @MainActor in
-                            if isActive(), bridge?.pendingApproval != nil {
-                                bridge?.resolveApproval(false)
-                            }
+                    if !presented, isActive(), let owner, let approvalID {
+                        _Concurrency.Task { @MainActor [owner, approvalID] in
+                            owner.resolveApproval(false, approvalID: approvalID)
                         }
                     }
                 }),
             titleVisibility: .visible
         ) {
-            Button("Allow change") { bridge?.resolveApproval(true) }
-            Button("Deny", role: .cancel) { bridge?.resolveApproval(false) }
+            if let owner, let approvalID {
+                Button("Allow change") { owner.resolveApproval(true, approvalID: approvalID) }
+                Button("Deny", role: .cancel) { owner.resolveApproval(false, approvalID: approvalID) }
+            }
         } message: {
-            Text(bridge?.pendingApproval.map { AssistantCopy.approval($0.description) } ??
+            Text(request.map { AssistantCopy.approval($0.description) } ??
                  String(localized: "ChatGPT requests permission to modify GSD tasks."))
         }
     }
@@ -444,6 +478,8 @@ private enum AssistantCopy {
         case .status: return status(entry.text)
         case .assistant where entry.text == "No reply text. Review the tool activity or try again.":
             return String(localized: "No reply text. Review the tool activity or try again.")
+        case .assistant where entry.text == "The AI request failed.":
+            return String(localized: "The AI request failed.")
         default: return entry.text
         }
     }

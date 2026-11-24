@@ -16,6 +16,9 @@ const tokenTTL = 3600000;
 const refreshTTL = 30*24*3600000;
 const authTTL = 10*60000;
 const allowedScopes = new Set(['gsd.read','gsd.write','offline_access']);
+const protocolVersion = offered => ['2025-03-26','2025-06-18','2025-11-25'].includes(offered) ? offered : '2025-11-25';
+const toolScopes = tool => tool?.writes ? ['gsd.read','gsd.write'] : ['gsd.read'];
+const toolSecurity = tool => [{type:'oauth2',scopes:toolScopes(tool)}];
 const safeId = x => typeof x === 'string' && /^[A-Za-z0-9_-]{8,160}$/.test(x);
 
 const catalog = JSON.parse(fs.readFileSync(new URL('./tool-catalog.json',import.meta.url),'utf8'));
@@ -125,6 +128,11 @@ export function createGateway({
 }={}) {
   const base=publicOrigin.replace(/\/$/,'');
   const frontPath=new URL(base).pathname.replace(/\/$/,'');
+  const authChallenge=(scopes,error)=>'Bearer resource_metadata="'+base+'/.well-known/oauth-protected-resource", scope="'+scopes.join(' ')+'", error="'+error+'", error_description="'+(error==='insufficient_scope'?'Additional account permission is required.':'Connect your GSD account again.')+'"';
+  const toolAuthError=(scopes,error)=>({isError:true,content:[{type:'text',
+    text:error==='insufficient_scope'?'Connect GSD with the required permissions.':'Connect your GSD account to use this tool.'}],
+    _meta:{'mcp/www_authenticate':[authChallenge(scopes,error)]}});
+
   const stateFile=path.join(stateDir,'gateway-state.json');
   const keyFile=path.join(stateDir,'gateway.key');
   fs.mkdirSync(stateDir,{recursive:true,mode:0o700});
@@ -563,6 +571,7 @@ export function createGateway({
           return json(res,400,{error:'invalid_oauth_redirect'});
         const callback=new URL('gsd://oauth-callback');
         callback.searchParams.set('code',code);
+        callback.searchParams.set('iss',base);
         callback.searchParams.set('state',state);
         res.writeHead(302,{Location:callback.toString(),'Cache-Control':'no-store'});
         return res.end();
@@ -581,7 +590,7 @@ export function createGateway({
       if(u==='/.well-known/oauth-authorization-server'&&method==='GET')
         return json(res,200,{issuer:base,authorization_endpoint:base+'/oauth/authorize',
           token_endpoint:base+'/oauth/token',registration_endpoint:base+'/oauth/register',revocation_endpoint:base+'/oauth/revoke',
-          response_types_supported:['code'],
+          response_types_supported:['code'],authorization_response_iss_parameter_supported:true,
           grant_types_supported:['authorization_code','refresh_token'],
           code_challenge_methods_supported:['S256'],
           token_endpoint_auth_methods_supported:['none'],scopes_supported:[...allowedScopes]});
@@ -649,6 +658,7 @@ export function createGateway({
         save();
         const callback=new URL(pending.redirect);
         callback.searchParams.set('code',code);
+        callback.searchParams.set('iss',base);
         if(pending.state)callback.searchParams.set('state',pending.state);
         res.writeHead(302,{Location:callback.toString(),'Cache-Control':'no-store'});
         return res.end();
@@ -707,7 +717,7 @@ export function createGateway({
         const raw=JSON.parse(await readBody(req,50000));
         if(!raw||raw.jsonrpc!=='2.0')return json(res,400,rpcError(null,'Invalid JSON-RPC',-32600));
         if(raw.method==='initialize')
-          return json(res,200,rpcOk(raw.id,{protocolVersion:'2025-06-18',
+          return json(res,200,rpcOk(raw.id,{protocolVersion:protocolVersion(raw.params?.protocolVersion),
             capabilities:{tools:{listChanged:false}},
             serverInfo:{name:'GSD Cloud MCP',version:'1.0.0'}}));
         if(raw.method==='notifications/initialized'||raw.method?.startsWith('notifications/')){
@@ -715,16 +725,24 @@ export function createGateway({
         }
         if(raw.method==='ping')return json(res,200,rpcOk(raw.id,{}));
         const session=sessionFor(req);
-        if(!session)
+        const requestedTool=raw.method==='tools/call'?byName.get(raw.params?.name):null;
+        const requiredScopes=toolScopes(requestedTool);
+        if(!session){
+          if(requestedTool)return json(res,200,rpcOk(raw.id,toolAuthError(requiredScopes,'invalid_token')));
           return json(res,401,{error:'unauthorized'},
-            {'WWW-Authenticate':'Bearer resource_metadata="'+base+'/.well-known/oauth-protected-resource"'});
-        if(!session.scopes.includes('gsd.read'))
-          return json(res,403,{error:'insufficient_scope'});
+            {'WWW-Authenticate':authChallenge(requiredScopes,'invalid_token')});
+        }
+        if(!requiredScopes.every(scope=>session.scopes.includes(scope))){
+          if(requestedTool)return json(res,200,rpcOk(raw.id,toolAuthError(requiredScopes,'insufficient_scope')));
+          return json(res,403,{error:'insufficient_scope'},
+            {'WWW-Authenticate':authChallenge(requiredScopes,'insufficient_scope')});
+        }
         if(raw.method==='tools/list'){
           const tools=catalog.filter(t=>!t.writes||session.scopes.includes('gsd.write'))
             .map(t=>({name:t.name,description:t.description,inputSchema:t.inputSchema,
               annotations:{readOnlyHint:!t.writes,destructiveHint:t.name==='delete_task',
-                openWorldHint:false}}));
+                openWorldHint:false},securitySchemes:toolSecurity(t),
+               _meta:{securitySchemes:toolSecurity(t)}}));
           return json(res,200,rpcOk(raw.id,{tools}));
         }
         if(raw.method==='tools/call'){
@@ -732,12 +750,11 @@ export function createGateway({
           const def=byName.get(name);
           if(!def||!filterValidArgs(def.inputSchema,args))
             return json(res,200,rpcOk(raw.id,toolError('Invalid tool or parameters')));
-          if(def.writes&&!session.scopes.includes('gsd.write'))
-            return json(res,200,rpcOk(raw.id,toolError('Write permission not granted')));
           try {
             const result=await executeTool(def,args,session);
             return json(res,200,rpcOk(raw.id,{isError:Boolean(result.failures?.length),content:[{type:'text',text:JSON.stringify(result)}]}));
           }catch(error){
+            if(error.http===401)return json(res,200,rpcOk(raw.id,toolAuthError(requiredScopes,'invalid_token')));
             return json(res,200,rpcOk(raw.id,toolError(error.message||'Operation failed')));
           }
         }

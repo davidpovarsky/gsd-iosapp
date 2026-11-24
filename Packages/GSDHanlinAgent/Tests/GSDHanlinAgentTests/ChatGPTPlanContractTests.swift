@@ -70,7 +70,7 @@ struct ChatGPTPlanContractTests: Sendable {
             hostID: hostID, loopbackPort: 49152, clientID: "issued-gsd-client")
         let signed = try signedIdentity(subject: "account-1", nonce: attempt.nonce)
         let body = try json([
-            "access_token": "fixture-access", "refresh_token": "fixture-refresh",
+            "token_type": "Bearer", "access_token": "fixture-access", "refresh_token": "fixture-refresh",
             "id_token": signed.token, "expires_in": 3600, "scope": "openid profile email offline_access"
         ])
         let session = stubSession { request in
@@ -93,7 +93,7 @@ struct ChatGPTPlanContractTests: Sendable {
     @Test func refreshRotatesCredentialAndValidatesNewIdentity() async throws {
         let signed = try signedIdentity(subject: "account-1")
         let body = try json([
-            "access_token": "rotated-access", "refresh_token": "rotated-refresh+suffix",
+            "token_type": "Bearer", "access_token": "rotated-access", "refresh_token": "rotated-refresh+suffix",
             "id_token": signed.token, "expires_in": 600,
             "earliest_refresh_at": instant.timeIntervalSince1970 + 450,
             "scope": "openid resource.invoke chatgpt.tokens.use.direct"
@@ -118,7 +118,7 @@ struct ChatGPTPlanContractTests: Sendable {
     @Test func refreshRejectsSignedIdentityForDifferentSubject() async throws {
         let signed = try signedIdentity(subject: "different-account")
         let body = try json([
-            "access_token": "rotated-access", "refresh_token": "rotated-refresh",
+            "token_type": "Bearer", "access_token": "rotated-access", "refresh_token": "rotated-refresh",
             "id_token": signed.token, "expires_in": 600
         ])
         let client = HanlinChatGPTPlanClient(session: stubSession { request in
@@ -144,7 +144,7 @@ struct ChatGPTPlanContractTests: Sendable {
             #expect(status == 400 && code == "invalid_grant")
             #expect(requestID == "request-refresh-fixture")
         }
-        let missing = try json(["access_token": "fixture-access", "expires_in": 600])
+        let missing = try json(["token_type": "Bearer", "access_token": "fixture-access", "expires_in": 600])
         let incomplete = HanlinChatGPTPlanClient(session: stubSession { _ in .init(data: missing) })
         do {
             _ = try await incomplete.refresh(credentials())
@@ -190,7 +190,7 @@ struct ChatGPTPlanContractTests: Sendable {
         #expect(requests.withLock { $0 } == 1)
     }
 
-    @Test func responsesRequestRetainsAll22ToolsUnderOfficialAdditionalToolsContract() throws {
+    @Test func responsesRequestRetainsAll22ToolsUnderCanonicalNamespaceContract() throws {
         let tools: [[String: Any]] = try GSDHanlinToolCatalog.specs.map {
             ["type": "function", "name": $0.alias,
              "parameters": try JSONSerialization.jsonObject(with: $0.schemaJSON())]
@@ -205,14 +205,17 @@ struct ChatGPTPlanContractTests: Sendable {
         let body = try #require(try JSONSerialization.jsonObject(with: prepared.httpBody!) as? [String: Any])
         #expect(body["store"] as? Bool == false && body["stream"] as? Bool == true)
         for key in ["max_output_tokens", "temperature", "top_p", "background", "metadata",
-                    "previous_response_id", "service_tier", "tools"] {
+                    "previous_response_id", "service_tier"] {
             #expect(body[key] == nil)
         }
         let input = try #require(body["input"] as? [[String: Any]])
-        #expect(input.first?["type"] as? String == "additional_tools")
+        #expect(input.count == 1)
         #expect(input.first?["role"] as? String == "developer")
-        #expect(input.last?["role"] as? String == "developer")
-        let transferred = try #require(input.first?["tools"] as? [[String: Any]])
+        let namespaces = try #require(body["tools"] as? [[String: Any]])
+        #expect(namespaces.count == 1)
+        #expect(namespaces.first?["type"] as? String == "namespace")
+        #expect(namespaces.first?["name"] as? String == "hanlin")
+        let transferred = try #require(namespaces.first?["tools"] as? [[String: Any]])
         #expect(transferred.count == 22)
         #expect(Set(transferred.compactMap { $0["name"] as? String }) ==
                 Set(GSDHanlinToolCatalog.specs.map(\.alias)))
@@ -280,7 +283,11 @@ struct ChatGPTPlanContractTests: Sendable {
             Issue.record("Partial text without response.completed was treated as success")
         } catch HanlinChatGPTPlanTransportError.incompleteStream {}
         for terminal in ["response.failed", "response.incomplete", "error"] {
-            let event = "data: {\"type\":\"\(terminal)\",\"error\":{\"code\":\"rate_limit_exceeded\"}}\n\n"
+            let payload: [String: Any] = terminal == "response.incomplete"
+                ? ["type": terminal, "response": ["status": "incomplete",
+                     "incomplete_details": ["reason": "rate_limit_exceeded"]]]
+                : ["type": terminal, "error": ["code": "rate_limit_exceeded"]]
+            let event = "data: " + String(decoding: try json(payload), as: UTF8.self) + "\n\n"
             let failed = streamFetch(chunks: [Data(delta.utf8), Data(event.utf8)])
             do {
                 let response = try await failed(request())
@@ -308,7 +315,7 @@ struct ChatGPTPlanContractTests: Sendable {
                 }, requiresApproval: spec.writes)
         }
         let configuration = HanlinChatModelConfiguration(
-            modelID: "fixture-model", company: "OpenAI", apiType: "openai-responses",
+            modelID: "fixture-model", company: "OpenAI", apiType: "openai-chatgpt-plan",
             endpoint: URL(string: "https://api.openai.com/v1/responses")!,
             apiKey: "fixture-plan-access", supportsToolUse: true)
         // Inject only the physical transport. The original engine must select the
@@ -317,10 +324,12 @@ struct ChatGPTPlanContractTests: Sendable {
             fetchCount.withLock { $0 += 1 }
             let body = try #require(try JSONSerialization.jsonObject(with: request.httpBody!) as? [String: Any])
             #expect(body["store"] as? Bool == false && body["stream"] as? Bool == true)
-            #expect(body["max_output_tokens"] == nil && body["tools"] == nil)
-            let input = try #require(body["input"] as? [[String: Any]])
-            let tools = input.filter { $0["type"] as? String == "additional_tools" }
-                .flatMap { $0["tools"] as? [[String: Any]] ?? [] }
+            #expect(body["max_output_tokens"] == nil)
+            let namespaces = try #require(body["tools"] as? [[String: Any]])
+            #expect(namespaces.count == 1)
+            #expect(namespaces.first?["type"] as? String == "namespace")
+            #expect(namespaces.first?["name"] as? String == "hanlin")
+            let tools = try #require(namespaces.first?["tools"] as? [[String: Any]])
             seen.withLock { $0 = Set(tools.compactMap { $0["name"] as? String }) }
             // Stop after inspecting the real provider request; no credentials leave the test.
             throw URLError(.cancelled)

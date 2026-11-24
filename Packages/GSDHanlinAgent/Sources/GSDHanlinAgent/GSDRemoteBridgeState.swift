@@ -46,12 +46,14 @@ public final class GSDRemoteBridgeState {
   public private(set) var isPolling = false
   public private(set) var isPairing = false
   public private(set) var pendingApproval: GSDHanlinWriteRequest?
+  public private(set) var pendingApprovalID: UUID?
   public private(set) var lastTool: String?
 
   @ObservationIgnored private let store: TaskStore
   @ObservationIgnored private var host: GSDHanlinHost?
   @ObservationIgnored private var pollTask: _Concurrency.Task<Void, Never>?
   @ObservationIgnored private var pollGeneration: UUID?
+  @ObservationIgnored private var approvalGeneration = UUID()
   @ObservationIgnored private var approvalContinuation: CheckedContinuation<Bool, Never>?
   @ObservationIgnored private let deviceID: String
 
@@ -72,21 +74,30 @@ public final class GSDRemoteBridgeState {
     }
   }
 
-  public func resolveApproval(_ allowed: Bool) {
+  public func resolveApproval(_ allowed: Bool, approvalID: UUID) {
+    guard pendingApprovalID == approvalID else { return }
+    finishApproval(allowed)
+  }
+
+  private func finishApproval(_ allowed: Bool) {
     let continuation = approvalContinuation
     approvalContinuation = nil
     pendingApproval = nil
+    pendingApprovalID = nil
     continuation?.resume(returning: allowed)
   }
 
-  private func awaitApproval(_ request: GSDHanlinWriteRequest) async -> Bool {
+  func awaitApproval(_ request: GSDHanlinWriteRequest) async -> Bool {
     guard pendingApproval == nil, approvalContinuation == nil,
           !_Concurrency.Task<Never, Never>.isCancelled else { return false }
-    return await withCheckedContinuation {
+    let generation = approvalGeneration
+    let allowed = await withCheckedContinuation {
       (continuation: CheckedContinuation<Bool, Never>) in
+      pendingApprovalID = UUID()
       pendingApproval = request
       approvalContinuation = continuation
     }
+    return allowed && approvalGeneration == generation && !_Concurrency.Task<Never, Never>.isCancelled
   }
 
   private func nativeHost() throws -> GSDHanlinHost {
@@ -176,7 +187,7 @@ public final class GSDRemoteBridgeState {
       linked = pairing.linked
       endpointText = endpoint.absoluteString
       UserDefaults.standard.set(endpointText,forKey:"gsd.mcp.remote.endpoint")
-      status = pairing.linked ? "Linked â€” iPad online" :
+      status = pairing.linked ? "Linked — iPad online" :
         "Enter this code in ChatGPT connection (expires in " +
         String(pairing.expiresInSeconds/60) + " minutes)"
       startPolling()
@@ -201,8 +212,9 @@ public final class GSDRemoteBridgeState {
     pollGeneration = nil
     pollTask = nil
     isPolling = false
-    resolveApproval(false)
-    if status == "iPad online" { status = "Paused â€” reopen GSD" }
+    approvalGeneration = UUID()
+    finishApproval(false)
+    if status.hasPrefix("iPad online") { status = "Paused — reopen GSD" }
   }
 
   private func pollLoop(generation: UUID) async {
@@ -228,8 +240,8 @@ public final class GSDRemoteBridgeState {
         guard pollGeneration == generation, !_Concurrency.Task<Never, Never>.isCancelled else { break }
         let polled = try JSONDecoder().decode(GSDRemotePoll.self,from:data)
         linked = polled.linked
-        status = polled.linked ? "iPad online â€” ChatGPT can read tasks" :
-          "iPad online â€” awaiting ChatGPT pairing"
+        status = polled.linked ? "iPad online — ChatGPT can read tasks" :
+          "iPad online — awaiting ChatGPT pairing"
         for command in polled.commands {
           if _Concurrency.Task<Never, Never>.isCancelled { break }
           let result = await perform(command)

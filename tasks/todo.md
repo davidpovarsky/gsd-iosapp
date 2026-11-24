@@ -612,3 +612,8 @@ Standard test-only scope approved by root: actual SyncCoordinator callback sched
 - No server mutation, package suite rerun, credentials, new engine or CI dispatch from this lane.
 
 - Final Windows syntax receipt: Python and generated Swift parse PASS at 03:14:21 UTC; first parse timeout retained. Mac eight-case runtime remains pending.
+
+
+## 2026-11-24 — Shared SDK and native completion
+
+Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLETION_20261124.md). Existing task history above is preserved. Source owner /root uses isolated branch fix/gsd-latest-sdk-completion-20261124; Apple checks and release use Scaleway. SDK, Lorvex and Cloud lanes have separate owners.

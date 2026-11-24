@@ -1,5 +1,5 @@
 {
-  "revision": "caa4faa509ebf5ba4164408734bb6e0dd3662203",
+  "revision": "bea35c3c2a435d1cc5f7ce93b08a649b104bc10f",
   "products": [
     "HanlinAgentCore",
     "HanlinHostContracts",
@@ -7,5 +7,5 @@
     "HanlinPlatformContracts",
     "HanlinChatCore"
   ],
-  "installerSHA256": "12c414e91f33df22f7cdb1660108a0a11684551219fee1c71724bb2057e62dd3"
+  "installerSHA256": "4cf99955317a83e3d882834fe0235f505af41e335fd1e84e475524081d301677"
 }

@@ -184,7 +184,7 @@ def verify_upload(client: Client, build: str, timeout: int, output: Path) -> Non
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("operation", choices=("profiles", "preflight", "export-options", "verify-upload"))
-    parser.add_argument("--build", default="48")
+    parser.add_argument("--build", default="49")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--install", action="store_true")
     parser.add_argument("--create", action="store_true")
