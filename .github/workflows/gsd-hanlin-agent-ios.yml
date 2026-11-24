@@ -189,25 +189,54 @@ jobs:
             --app .gsd-release-derived/Build/Products/Debug-iphonesimulator/GSD.app \
             --build "$GSD_BUILD_NUMBER" --output "$OUTPUT/compiled-bundles.json"
           python3 - <<'PY'
-          import json, os, pathlib, plistlib, subprocess, sys
+          import json, os, pathlib, plistlib, struct, subprocess, sys
           sys.path.insert(0, "scripts")
           from gsd_appstore_connect import TEAM, APP_GROUP
           from verify_gsd_release_bundle import BUNDLES
+          def simulator_entitlements(executable, identifier):
+              data = executable.read_bytes()
+              assert len(data) >= 32 and struct.unpack_from("<I", data)[0] == 0xfeedfacf, "Expected thin arm64 Mach-O"
+              assert struct.unpack_from("<I", data, 4)[0] == 0x0100000c, "Expected arm64 simulator executable"
+              count, size = struct.unpack_from("<II", data, 16)
+              position, boundary = 32, 32 + size
+              assert boundary <= len(data), "Truncated Mach-O commands"
+              matches = []
+              for _ in range(count):
+                  assert position + 8 <= boundary, "Truncated Mach-O command"
+                  command, length = struct.unpack_from("<II", data, position)
+                  assert length >= 8 and position + length <= boundary, "Invalid Mach-O command length"
+                  if command == 0x19:
+                      assert length >= 72, "Truncated Mach-O segment"
+                      sections = struct.unpack_from("<I", data, position + 64)[0]
+                      assert 72 + sections * 80 <= length, "Truncated Mach-O sections"
+                      for index in range(sections):
+                          section = position + 72 + index * 80
+                          name = data[section:section + 16].split(b"\0")[0]
+                          segment = data[section + 16:section + 32].split(b"\0")[0]
+                          if (segment, name) == (b"__TEXT", b"__entitlements"):
+                              amount = struct.unpack_from("<Q", data, section + 40)[0]
+                              offset = struct.unpack_from("<I", data, section + 48)[0]
+                              assert offset + amount <= len(data), "Truncated simulator entitlements"
+                              matches.append(plistlib.loads(data[offset:offset + amount]))
+                  position += length
+              assert len(matches) == 1, identifier + " must have exactly one runtime entitlement section"
+              entitlements = matches[0]
+              assert entitlements.get("application-identifier") == TEAM + "." + identifier, identifier + " has wrong runtime identity"
+              assert entitlements.get("com.apple.security.application-groups") == [APP_GROUP], identifier + " has wrong runtime App Group"
+              return entitlements
           app = pathlib.Path(".gsd-release-derived/Build/Products/Debug-iphonesimulator/GSD.app")
           signatures = []
           for identifier, relative in BUNDLES.items():
               bundle = app / relative
               subprocess.run(["codesign", "--verify", "--strict", str(bundle)], check=True)
-              raw = subprocess.run(["codesign", "-d", "--entitlements", ":-", str(bundle)],
-                                   check=True, capture_output=True).stdout
-              entitlements = plistlib.loads(raw)
+              info = plistlib.loads((bundle / "Info.plist").read_bytes())
+              entitlements = simulator_entitlements(bundle / info["CFBundleExecutable"], identifier)
               details = subprocess.run(["codesign", "-dv", str(bundle)], check=True, capture_output=True, text=True)
               assert "Signature=adhoc" in details.stderr, identifier + " is not simulator ad-hoc signed"
-              assert entitlements.get("application-identifier") == TEAM + "." + identifier, identifier + " lacks signed app identity"
-              assert entitlements.get("com.apple.security.application-groups") == [APP_GROUP], identifier + " lacks signed App Group"
-              signatures.append({"bundleId": identifier, "entitlements": entitlements})
+              signatures.append({"bundleId": identifier, "runtimeEntitlements": entitlements})
           subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)], check=True)
           receipt = {"passed": True, "simulator_only": True, "signing": "xcode-ad-hoc",
+                     "entitlement_source": "Mach-O __TEXT,__entitlements",
                      "source_sha": os.environ["GSD_SOURCE_SHA"], "targets": signatures}
           pathlib.Path(os.environ["OUTPUT"], "logs/simulator-entitlements.json").write_text(json.dumps(receipt, indent=2) + "\n")
           print("GSD_SIMULATOR_ENTITLEMENTS_PASS", len(signatures))

@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import tempfile
 
 WORKFLOW = ".github/workflows/gsd-hanlin-agent-ios.yml"
 STEPS = (
@@ -26,7 +27,18 @@ def command(arguments: list[str], timeout: int = 90) -> str:
         # Response bodies and redirect URLs can contain credentials. Keep only status metadata.
         http = re.search(r"\bHTTP(?:/[0-9.]+)?[ :]+([45][0-9]{2})\b", result.stderr)
         status = http[1] if http else "unreported"
-        raise RuntimeError(f"Package evidence command failed: {arguments[0]} (exit={result.returncode}; http={status})")
+        categories = (
+            ("redirect", ("redirect",)),
+            ("tls", ("tls", "ssl", "certificate")),
+            ("dns", ("no such host", "name resolution", "resolve host")),
+            ("unsupported", ("unsupported", "not supported", "unknown command", "not implemented", "unrecognized")),
+            ("auth", ("authentication", "unauthorized", "forbidden", "permission denied", "access denied", "resource not accessible")),
+            ("rate-limit", ("rate limit", "too many requests")),
+            ("network", ("connection refused", "connection reset", "network is unreachable", "i/o timeout", "dial tcp")),
+        )
+        found = [name for name, markers in categories if any(marker in result.stderr.lower() for marker in markers)]
+        diagnostic = ",".join(found) or "unclassified"
+        raise RuntimeError(f"Package evidence command failed: {arguments[0]} (exit={result.returncode}; http={status}; categories={diagnostic})")
     return result.stdout
 
 
@@ -109,6 +121,11 @@ def main() -> None:
         match = [step for step in job["steps"] if step["name"] == name]
         if len(match) != 1 or match[0]["conclusion"] != "success":
             raise ValueError("Prior required package evidence did not pass: " + name)
+    # Exercise the release receipt retrieval path with an existing small evidence artifact.
+    with tempfile.TemporaryDirectory(prefix="gsd-evidence-readback-") as destination:
+        command(["gh", "run", "download", args.run_id, "--repo", repository,
+                 "--name", "GSD-Native-Evidence-" + args.run_id, "--dir", destination])
+    print("GSD_PRIOR_ARTIFACT_RETRIEVAL_PASS", args.run_id, flush=True)
     log = command(["gh", "api", prefix + "jobs/" + str(job["id"]) + "/logs"])
     xcode = verify_log_bindings(log, source, command(["xcodebuild", "-version"]))
     if command(["git", "rev-parse", "HEAD"]).strip() != args.current_sha:

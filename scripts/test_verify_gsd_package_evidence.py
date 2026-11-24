@@ -16,6 +16,15 @@ WORKFLOW = 'env:\n  GSD_CLOUD_SYSTEM_TEST: "1"\n  GSD_CLOUD_TEST_BASE: https://e
 
 
 class PackageEvidenceTests(unittest.TestCase):
+    def test_transport_diagnostic_is_an_allowlisted_category_only(self):
+        result = subprocess.CompletedProcess(["gh"], 1, "", "TLS handshake failed: unsupported endpoint https://private.example/?token=secret")
+        with patch("verify_gsd_package_evidence.subprocess.run", return_value=result):
+            with self.assertRaises(RuntimeError) as caught:
+                command(["gh", "api", "repos/example/repo/actions/jobs/1/logs"])
+        self.assertIn("categories=tls,unsupported", str(caught.exception))
+        for sensitive in ("secret", "private.example", "handshake failed"):
+            self.assertNotIn(sensitive, str(caught.exception))
+
     def test_failed_request_reports_only_safe_status_metadata(self):
         result = subprocess.CompletedProcess(["gh"], 1, "", "gh: unavailable (HTTP 503) https://private.example/?token=secret Authorization: secret")
         with patch("verify_gsd_package_evidence.subprocess.run", return_value=result):
