@@ -1,0 +1,13 @@
+{
+  "at_utc": "2026-11-24T03:14:21.147209+00:00",
+  "source_base": "c39527153389c82bfa0235350a55d094d6600179",
+  "python_syntax": "PASS",
+  "command": "python -B scripts/check_sync_connectivity.py --parse-only",
+  "frontend_entry": "-frontend -parse",
+  "swift_frontend_exit": 0,
+  "stdout": "{\"compiler\": \"C:\\\\Users\\\\DAVID\\\\AppData\\\\Local\\\\Programs\\\\Swift\\\\Toolchains\\\\6.3.3+Asserts\\\\usr\\\\bin\\\\swift-frontend.EXE\", \"expected_cases\": 8, \"scope\": \"actual coordinator scheduling; controlled monitor and recording engine boundary\", \"source_sha256\": {\"App\\\\Sync\\\\SyncCoordinator.swift\": \"5c818d3cde52259c2d0281581792ac2d46d3533ac8c75dcc0ca5f26633d5c4c0\"}}\nSYNC_CONNECTIVITY_PARSE_RESULT pass=1 behavior=not_run\n",
+  "stderr": "",
+  "behavior": "NOT_RUN",
+  "production_source_changes": false,
+  "previous_attempt": "windows-parse-timeout.json"
+}

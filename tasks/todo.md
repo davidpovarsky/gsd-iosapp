@@ -597,3 +597,18 @@ The existing token store remains authoritative; observed identity changes refres
 - No server changes, new localization strings, package changes, or CI dispatch from this lane.
 
 - Activation follow-up: GSDApp's existing .active path refreshes SessionStore before foreground sync; two external-store/resume assertions extend the mandatory probe to 13 checks. Runtime evidence remains pending Mac CI.
+
+
+## Automatic connectivity scheduling probe (2026-11-24)
+
+Standard test-only scope approved by root: actual SyncCoordinator callback scheduling; no production changes.
+
+### Resuming From Here
+
+- Added an eight-case host probe with a controlled monitor and recording engine boundary.
+- Coverage: loss/return, repeated statuses, lifecycle cancellation, session loss, pending sign-in decision and deletion holds.
+- Windows verification is Python syntax and generated Swift frontend parsing only; Mac behavior remains pending the native gate.
+- Native command: python3 scripts/check_sync_connectivity.py; require SYNC_CONNECTIVITY_RESULT passed=8 failed=0.
+- No server mutation, package suite rerun, credentials, new engine or CI dispatch from this lane.
+
+- Final Windows syntax receipt: Python and generated Swift parse PASS at 03:14:21 UTC; first parse timeout retained. Mac eight-case runtime remains pending.
