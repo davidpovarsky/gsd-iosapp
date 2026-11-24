@@ -2,9 +2,9 @@
 
 ## Outcome and scope
 
-The observed storage pressure comes primarily from new and changing external Hanlin worktrees, rather than GSD's small database. The latest retained read at **10:42:37 UTC** found **950,747,136 available bytes (906.703 MiB)** on the data filesystem and **2,720,358,400 bytes (2,594.336 MiB)** on root. Six original GSD/Lorvex service PID/start identities were unchanged, and both known GSD health endpoints returned HTTP 200 with body code 200.
+The observed storage pressure comes primarily from new and changing external Hanlin worktrees, rather than GSD's small database. The latest retained read at **11:07:40 UTC** found **950,530,048 available bytes (906.496 MiB)** on the data filesystem and **2,719,985,664 bytes (2,593.980 MiB)** on root. Six original GSD/Lorvex service PID/start identities were unchanged, and both known GSD health endpoints returned HTTP 200 with body code 200.
 
-Root accepted a proportional operational admission rule for the existing native acceptance. This does **not** complete Cloud acceptance, reserve disk space, prove a maximum write bound, or guarantee protection against arbitrary concurrent writers. A fresh check is required when Native is ready, and further reads must be coordinated with observed phase transitions. Neither the 10:26 nor the 10:42 sample is described as immediately before signup.
+Root accepted a proportional operational admission rule for the existing native acceptance. This does **not** complete Cloud acceptance, reserve disk space, prove a maximum write bound, or guarantee protection against arbitrary concurrent writers. A fresh check is required when Native is ready, and further reads must be coordinated with observed phase transitions. No sample in this record is described as immediately before signup.
 
 No files were deleted or moved. No service was restarted, no quota changed, no volume purchased, no archive copied, and no account or test fixture was created by this assessment. All external worktrees, source files, caches and incoming archives remain excluded from cleanup.
 
@@ -37,6 +37,11 @@ Deletion is expected to remove account rows and owned records. It is **not** ass
 | 10:16:53 | 963,538,944 | 2,674,552,832 |
 | 10:26:04 | 951,066,624 | 2,720,710,656 |
 | 10:42:37 | 950,747,136 | 2,720,358,400 |
+| 10:52:44 | 950,509,568 | 2,720,178,176 |
+| 10:55:30 | 950,484,992 | 2,720,133,120 |
+| 10:56:21 | 950,439,936 | 2,720,129,024 |
+| 11:03:38 | 950,456,320 | 2,720,067,584 |
+| 11:07:40 | 950,530,048 | 2,719,985,664 |
 
 A newly inspected external worktree had 265,015,296 allocated bytes and file-change metadata around 10:10:01. Its complete metadata walk found 8,347 regular files with no multi-link allocation, primarily source, resources and retained evidence. This corresponds to 99.4% of the 266,604,544-byte data-free decline in the preceding sampled interval. It is not shared-hard-link double counting and is not a disposable build cache.
 
@@ -77,6 +82,30 @@ The **128 MiB** and **three-account/four-task/one-trash** totals above describe 
 At **10:43:01 UTC**, Native confirmed the external package/cloud step 11 and deletion/recovery step 12 had completed successfully, with UI step 17 newly active. No UI profile or account-creation evidence was yet available. The 192 MiB figure covers its observed package phase and our two planned phases; it does not silently include an unproven external UI account scenario. Native/root retain coordination of the UI boundary and any later admission.
 
 The first requested read (job `job_2a8e48d0d590`, finished 10:39:53) returned SSH exit 255 without a server receipt; no health, capacity or authorization conclusion was inferred. One bounded retry (`job_4aaa4c273555`) succeeded at **10:42:37 UTC**, without changing SSH, permissions or host settings. It found the values in the table above, only **319,488 fewer data bytes** and **352,256 fewer root bytes** than 10:26. All six service PID/start identities and the six expected listener mappings were unchanged; both GSD health endpoints returned HTTP/body code 200. These observations satisfy the capacity thresholds at the recorded time. They are not a claim that signup had occurred or that the read immediately preceded it.
+
+## External-run reconciliation and canonical validation
+
+The direct, separately user-connected Oracle Sentinel route was verified as `torah-social` with the read operation supported. Two Windows SSH attempts had timed out before reaching the database, so their counts remained **unknown**, not zero. No authentication, permission or host setting was changed to obtain the direct read.
+
+Native verified the external UI fixture's exact lowercase UUID-shaped synthetic account pattern against the frozen fixture source. A short SQLite URI `mode=ro`, `query_only`, WAL-aware transaction selected **only owner ID and creation timestamp** for that exact pattern and length. UTC timestamps were parsed strictly against **24 November 10:42:00 UTC**; invalid schema or timestamp data would yield unknown. No email addresses, passwords or ordinary user data were returned.
+
+| Read | UTC transaction read | Recent matching accounts | Owner records |
+|---|---|---:|---|
+| Before ordinary cancellation | 10:52:44.766708 | 0 | Empty |
+| First after terminal job | 10:55:30.837022 | 0 | Empty |
+| Second after terminal job | 10:56:21.675443 | 0 | Empty |
+
+Native verified attempt 1 terminal at **10:54:56 UTC** after one ordinary cancellation, with artifacts preserved. The two post-terminal samples were **50.838 seconds apart**. Both retained six original service identities/listener mappings and both GSD health responses at HTTP/body 200. The second sample found data **950,439,936 bytes** and root **2,720,129,024 bytes** available. These zero snapshots prove absence of persisted matching UI-account residue at those instants only; they do not prove that signup was never in flight or reconstruct prior history. No account deletion was performed by this review.
+
+A second attempt of the same external run began at **10:56:10 UTC**. Native later verified its guarded cancellation and terminal time **10:59:25 UTC**, with **cloud step 11 and UI step 17 skipped**. The first attempt's post-terminal counts are not represented as covering a later fixture. Because attempt 2 did not execute either live phase, no additional account query or cleanup was indicated.
+
+The canonical [run 45380356237](https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45380356237), attempt 1, was dispatched once at **11:01:54.460 UTC**, after a zero-active inventory at **11:01:52.307 UTC**, on source [168b59aff816e39555acbf8535aaefaec19ee195](https://github.com/davidpovarsky/gsd-iosapp/commit/168b59aff816e39555acbf8535aaefaec19ee195). Its unchanged fixture scope remains the two sequential planned phases: three accounts, four task creations, one trash record, with the 128 MiB operational allowance.
+
+A stage-bound sample at **11:03:38.465761 UTC**, after Native's dependency-resolution notice, found data **950,456,320 bytes** and root **2,720,067,584 bytes** available. All six identities/listeners and both health responses remained valid, and 512/768 MiB admission thresholds were met. Native's subsequent 11:05:17 update still showed the live cloud step pending; this sample is not called immediately before signup.
+
+Native observed cloud/package step 11 start at **11:06:13 UTC**, still active at 11:07:16. The one authorized sample during that known stage, **11:07:40.317906 UTC**, found data **950,530,048 bytes** and root **2,719,985,664 bytes** available, with unchanged six-service/listener identities and both GSD HTTP/body 200 responses. It was 241.852 seconds after the preceding sample; no sub-minute polling or database/account access was used for canonical capacity monitoring.
+
+The meaningful completion boundary was then verified by Native: **cloud/account step 11 SUCCESS at 11:08:02 UTC**, and **deletion/recovery step 12 SUCCESS at 11:08:09 UTC**. These are the exact observed job-step results; detailed current test-log counts are not invented in this report. The app/embedded-target/UI-runner build started at 11:08:09 and remained active in Native's 11:09:40 observation. The package fixture phase is complete. The sole remaining live fixture is the later HE-iPad native lifecycle; no new post-package fixture or account query was performed by this lane, and no immediate post-package capacity sample is claimed.
 
 ## Remaining acceptance
 
