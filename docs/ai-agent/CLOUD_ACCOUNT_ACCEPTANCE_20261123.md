@@ -116,7 +116,7 @@ The immediate predeployment backup `gsd-cloud-20261123T233809Z.tar.gz` is 29,303
 
 `gsd-cloud-backup.timer` is installed, enabled and active. It schedules daily 03:15 UTC plus up to ten minutes random delay; the observed next firing was 2026-11-24 03:18:33 UTC. The service was manually invoked through systemd and exited 0. The initial service sandbox blocked SQLite WAL sidecar access; the corrected unit permits writes only to the GSD backup directory and GSD `pb_data`, while source database connections remain `mode=ro`. It keeps the other hardening settings.
 
-The verified scheduled-service archive is `gsd-cloud-20261124T001150Z.tar.gz`, 48,685 bytes, SHA-256 `cfe16957e14cb4d780b145a9eb2c76dca485c362b290caae47e0048bb6f7d95e`. A fresh restore proof succeeded. It contained one existing account and zero active/library task rows at that snapshot; no account was removed by backup work. The next timer firing has not yet occurred. Automatic off-server replication is not configured; the confirmed off-server copy above was made explicitly.
+The verified scheduled-service archive is `gsd-cloud-20261124T001150Z.tar.gz`, 48,685 bytes, SHA-256 `cfe16957e14cb4d780b145a9eb2c76dca485c362b290caae47e0048bb6f7d95e`. A fresh restore proof succeeded. It contained one existing account and zero active/library task rows at that snapshot; no account was removed by backup work. The next timer firing has not yet occurred. At this checkpoint the confirmed off-server copy above was made explicitly. Automatic off-server replication was subsequently enabled and verified; see the final section below.
 
 Root filesystem free space was approximately 167 MiB and the GSD data filesystem approximately 1.60 GiB at verification. No package builds, root-filesystem cleanup or other-project deletions were performed.
 
@@ -130,3 +130,18 @@ Updated native filter:
 `AuthServiceTests|CloudAccountAuthTests|CloudTimerWireTests|CloudLibrarySyncTests|CloudLibraryOrderingTests|CloudNativeSystemTests|SyncEngineGuardedWriteTests|SyncEngineSessionFenceTests|AccountSwitchTests`.
 
 The native-only ordering change does not alter the already accepted gateway/PocketBase code. The backup unit from that commit is active. Xcode, simulator screenshots, actual closed-app native roundtrip, physical-iPad availability, ChatGPT personal consent and signed TestFlight availability must be evidenced by their respective owners before the project is complete.
+
+
+## Automatic off-server backup verified — 2026-11-24 00:32 UTC
+
+The prior limitation about automatic off-server replication is resolved. Source commits `ffe6cafdd2186dd2436314c7540ffcef6dce2b78` and `c1519a9200e5ef07c591e91bb2b3d4b26f009855` add the Windows worker and installer under `cloud/windows`.
+
+The named task **GSD Cloud Offsite Backup** is registered and enabled for the existing DAVID Windows user, using InteractiveToken and least privilege. No password, new credential, Sentinel policy change or elevation was needed. Restricted ACLs on BackupTools and Backups allow only the same user, SYSTEM and Administrators.
+
+The schedule is daily **03:35 UTC**, after Oracle's backup window. StartWhenAvailable and a same-user logon trigger after two minutes cover missed opportunities; failures retry twice at ten-minute intervals. Windows must be running, network-connected and that user logged in. The first future calendar firing is distinct from the actual scheduler invocation verified below.
+
+Acceptance invoked the registered task through `schtasks /Run` at 2026-11-24T00:32:05Z. It completed at 00:32:14Z. Task Scheduler readback showed **Last Result 0**, Ready and Enabled. The source archive was `gsd-cloud-20261124T001150Z.tar.gz`, SHA-256 `cfe16957e14cb4d780b145a9eb2c76dca485c362b290caae47e0048bb6f7d95e`. Its 48,685 source bytes became a 48,902-byte CurrentUser-DPAPI file on Windows.
+
+The worker called the existing Oracle restore verifier, received the archive in memory, checked all 13 manifest files, encrypted before writing, flushed/atomically installed the encrypted artifact, then read it back and verified decryption/hash/manifest again. There were no plaintext archives left on Windows. Transfer is limited to 128 MiB and 180 seconds, archive expansion to 512 MiB, and only the seven newest exact GSD encrypted archive names are retained. A focused fixture also verified corruption rejection, seven-file retention and preservation of unrelated files.
+
+The installed status receipt is `C:\Users\DAVID\AppData\Local\GSD\BackupTools\offsite-last-run.json`. The sanitized scheduler/worker receipt is committed as `evidence/cloud-20261124/offserver-scheduled.json`. DPAPI recovery requires the same Windows account/profile context; no portable decryption key is placed in the repository.
