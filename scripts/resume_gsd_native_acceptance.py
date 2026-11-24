@@ -18,6 +18,7 @@ import shutil
 import stat
 import subprocess
 import sys
+import time
 import zipfile
 
 from gsd_native_acceptance import run
@@ -241,7 +242,9 @@ def compose_ui(inherited: dict, partial: dict, ui_directory: Path, run_id: str) 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--diagnostic-startup", action="store_true", help="Collect startup evidence only; never native acceptance")
     args = parser.parse_args()
+    diagnostic_started = time.monotonic() if args.diagnostic_startup else None
     output = args.output.resolve(); output.mkdir(parents=True, exist_ok=True)
     logs = output / "logs"; logs.mkdir(exist_ok=True)
     report = {"passed": False, "source_sha": SOURCE, "compiled_product_run_id": PARENT_RUN,
@@ -250,6 +253,8 @@ def main() -> None:
               "parent_runner": "Metadata identifies GitHub Actions runner1000025605 / xcode-27 / MacCloud; historical simctl cleanup and VM disposal unobserved",
               "runner_reference": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners",
               "harness_sha": os.environ.get("GITHUB_SHA"), "run_id": os.environ.get("GITHUB_RUN_ID")}
+    if args.diagnostic_startup:
+        report.update(diagnostic_only=True, full_acceptance=False)
     try:
         assert os.environ["GSD_SOURCE_SHA"] == SOURCE and os.environ["GSD_BUILD_NUMBER"] == BUILD
         run_id = os.environ["GITHUB_RUN_ID"]
@@ -300,6 +305,12 @@ def main() -> None:
         report["harness_runner_sha256"] = sha(Path("scripts/gsd_native_acceptance.py"))
         report["harness_verifier_sha256"] = sha(Path(__file__))
         (output / "resume-provenance.json").write_text(json.dumps(report, indent=2) + "\n")
+        if args.diagnostic_startup:
+            report["diagnostic_restore_seconds"] = time.monotonic() - diagnostic_started
+            assert report["diagnostic_restore_seconds"] <= 300, "Startup diagnostic restoration exceeded5minutes; no simulator created"
+            from diagnose_gsd_he_startup import diagnose
+            report["startup_diagnostic"] = diagnose(derived / "Build/Products", output / "startup", inventory, selected)
+            return
         environment = os.environ.copy()
         for secret in ("GH_TOKEN", "GITHUB_TOKEN"):
             environment.pop(secret, None)

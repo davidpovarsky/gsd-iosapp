@@ -12,7 +12,7 @@ on:
         required: true
         type: choice
         default: validate
-        options: [validate, resume-native, release]
+        options: [validate, resume-native, diagnose-startup, release]
       validation_run:
         description: Successful validation run ID for this exact source (release only)
         required: false
@@ -367,6 +367,40 @@ jobs:
             dist/gsd-native-release/ui/**/*.json
             dist/gsd-native-release/ui/**/*.log
             dist/gsd-native-release/ui/**/*.png
+          if-no-files-found: warn
+          retention-days: 21
+
+  native-startup-diagnostic:
+    if: inputs.mode == 'diagnose-startup'
+    runs-on: xcode-27
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Restore exact products and collect Hebrew startup diagnostics only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/resume_gsd_native_acceptance.py --diagnostic-startup --output "$OUTPUT"
+      - name: Sanitize retained native diagnostic text before upload
+        id: sanitize_native_diagnostics
+        if: always()
+        shell: bash
+        run: python3 scripts/sanitize_gsd_native_diagnostics.py --output "$OUTPUT"
+      - name: Preserve diagnostic-only startup evidence
+        if: always() && steps.sanitize_native_diagnostics.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Startup-Diagnostic-${{ github.run_id }}
+          path: |
+            dist/gsd-native-release/*.json
+            dist/gsd-native-release/logs/
+            dist/gsd-native-release/startup/
           if-no-files-found: warn
           retention-days: 21
 

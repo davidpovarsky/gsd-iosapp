@@ -1,0 +1,67 @@
+{
+  "passed": true,
+  "timestamp": "2026-11-24T09:30:43.237741+00:00",
+  "checks_passed": 13,
+  "scope": "Offline synthetic crash-ownership and cleanup controls only; no actual Simulator, app or native acceptance execution",
+  "checks": [
+    {
+      "name": "two-object IPS accepts exact owned phase, including pre-PID launch failure binding",
+      "passed": true
+    },
+    {
+      "name": "reject foreign PID/device/bundle/name/path, old/future report times, old/future file times, conflicting bundle and naive timestamp",
+      "passed": true
+    },
+    {
+      "name": "text crash format has same owned PID/path/bundle/time checks",
+      "passed": true
+    },
+    {
+      "name": "collector copies only owned newly created report; leaves other reports, sources and symlink untouched",
+      "passed": true
+    },
+    {
+      "name": "unrelated transient encoding error cannot block delayed owned report; final scan preserves captured stack after source rotation and frozen observation end",
+      "passed": true
+    },
+    {
+      "name": "candidate disappearance records only category and continues to readable owned report",
+      "passed": true
+    },
+    {
+      "name": "early launch error still collects report without PID before controlled termination and retains phase receipt",
+      "passed": true
+    },
+    {
+      "name": "stuck owned console launcher receives bounded TERM/KILL cleanup and retains phase evidence",
+      "passed": true
+    },
+    {
+      "name": "normal diagnostic remains nonacceptance and collects before deleting only owned simulator",
+      "passed": true
+    },
+    {
+      "name": "shutdown timeout still attempts delete and verifies membership",
+      "passed": true
+    },
+    {
+      "name": "delete failure remains a failure and membership does not claim cleanup",
+      "passed": true
+    },
+    {
+      "name": "phase exception still collects bounded logs and independently cleans owned simulator",
+      "passed": true
+    },
+    {
+      "name": "strict restoration functions and existing workflow jobs identical; diagnostic returns before cloud/UI/composer and cannot publish acceptance",
+      "passed": true
+    }
+  ],
+  "script_sha256": "9e5c8674b8b21917d5f79e5f41d7bd3da15b4fb88dad0542d2cc3ee553b5f72b",
+  "diagnostic_budget": {
+    "workflow_minutes": 30,
+    "restore_limit_before_simulator_seconds": 300,
+    "maximum_command_and_wait_allowances_after_restore_seconds": 1310,
+    "remaining_margin_for_checkout_artifact_and_scheduling_seconds": 190
+  }
+}
