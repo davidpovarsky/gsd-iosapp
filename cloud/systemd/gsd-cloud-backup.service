@@ -11,5 +11,6 @@ ExecStart=/usr/bin/python3 /mnt/development/projects/gsd-cloud/backup.py
 NoNewPrivileges=yes
 PrivateTmp=yes
 ProtectSystem=strict
-ReadWritePaths=/mnt/development/projects/gsd-cloud/backups
+# SQLite read-only online backups may create/open WAL shared-memory sidecars.
+ReadWritePaths=/mnt/development/projects/gsd-cloud/backups /mnt/development/projects/gsd-cloud/pb_data
 ReadOnlyPaths=/mnt/development/projects/gsd-cloud

@@ -476,7 +476,7 @@ public actor SyncEngine {
         let start = now()
         do {
             try await dropSignedOutDeletesIfOwed()                                  // resurrect on sight: before anything else
-            try await syncLibrary(token: token, owner: owner)
+            if library != nil { try await confirmIdentity(token: token, owner: owner) }
             if cursor.load() == nil { try await seedExistingTasks(owner: owner) }      // first-sync seed BEFORE pull/reconcile
             // Revive `.failed` items so the push loop drains them again. Done on any user-app-open
             // event (manual Sync Now, cold launch, return-to-foreground) and when the network
@@ -508,6 +508,9 @@ public actor SyncEngine {
             } catch where !Self.endsTheRun(error) {
                 Self.log.error("Resurrect on sight failed, ids kept for the next run: \(String(describing: type(of: error)), privacy: .public) \(String(describing: error))")
             }
+            // A signed-out Trash delete must first be restored by the existing account
+            // policy. Publishing it earlier would remove the server copy we need to restore.
+            try await syncLibrary(token: token, owner: owner)
             let (pushed, failed) = try await push(token: token, owner: owner)
             result.pushed = pushed; result.failed = failed
             result.deleted = try await reconcileDeletions(token: token, owner: owner)    // destructive — last
@@ -832,7 +835,6 @@ public actor SyncEngine {
 
     private func syncLibrary(token: String, owner: String) async throws {
         guard let library else { return }
-        try await confirmIdentity(token: token, owner: owner)
         try fence(owner)
         let changes = try await library.capture(owner: owner, now: now())
         let local = Dictionary(uniqueKeysWithValues: changes.map { ($0.item.key, $0) })
@@ -852,6 +854,9 @@ public actor SyncEngine {
         }
         for change in changes where change.pending {
             let item = change.item, existing = index[item.key]
+            // A transient resurrection failure deliberately keeps these IDs for another
+            // run. Do not turn that retry into a destructive cloud Trash publication.
+            if item.kind == "trash", cursor.rememberedDeletes().contains(item.entityId) { continue }
             guard let stamp = WireDate.parse(item.clientUpdatedAt) else { continue }
             if let existing, let remoteStamp = WireDate.parse(existing.clientUpdatedAt),
                LWW.isRemoteNewer(remoteStamp, than: stamp, now: now()) { continue }
