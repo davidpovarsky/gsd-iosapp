@@ -407,8 +407,8 @@ jobs:
           retention-days: 21
 
   signed-testflight:
-    if: inputs.mode == 'release'
-    runs-on: xcode-27
+    if: inputs.mode == 'release' && github.ref_name == 'codex/gsd-build48-scaleway'
+    runs-on: gsd48-scaleway-release-6c1a20261124
     timeout-minutes: 100
     env:
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
