@@ -352,7 +352,7 @@ final class GSDSystemSurfaceUITests: XCTestCase {
             throw SystemSurfaceFailure(message: "The observed Matrix CollectionView is not uniquely hittable.")
         }
         for step in 0...6 {
-            let today = list.staticTexts.matching(NSPredicate(format: "label == %@", "היום"))
+            let today = list.staticTexts.matching(NSPredicate(format: "label == %@", "היום, 0 מתוך 3"))
                 .allElementsBoundByAccessibilityElement.contains { $0.exists && $0.isHittable }
             let first = list.staticTexts.matching(NSPredicate(format: "label == %@", "לביצוע מיידי"))
                 .allElementsBoundByAccessibilityElement.contains { $0.exists && $0.isHittable }
