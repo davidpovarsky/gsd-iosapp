@@ -397,4 +397,3 @@ jobs:
             dist/gsd-native-release/logs/
           if-no-files-found: warn
           retention-days: 30
-
