@@ -177,19 +177,22 @@ final class GSDSystemSurfaceUITests: XCTestCase {
         app.activate()
         try captureRaw("05-after-add-before-query")
         try requireMatrix(app)
-        let addedID = try uniqueCard(app, containing: addedMarker).identifier
+        let afterAdd = try matrixCards(app, phase: "05-add-all-quadrants", waitingFor: addedMarker)
+        let addedID = try uniqueMatrixCardID(afterAdd, containing: addedMarker)
         try require(addedID != originalID,
                     "Share Add must create a distinct task instead of replacing the source task.")
         try shareAssertion("addCreatedExactlyOne")
         try capture(app, "05-added-in-gsd")
         try relaunch(app, captureName: "06-add-after-relaunch")
-        try require(try uniqueCard(app, containing: addedMarker).identifier == addedID,
+        let afterAddRelaunch = try matrixCards(app, phase: "06-relaunch-all-quadrants", waitingFor: addedMarker)
+        try require(try uniqueMatrixCardID(afterAddRelaunch, containing: addedMarker) == addedID,
                     "The added task identity changed across a normal relaunch.")
-        let preservedOriginal = app.descendants(matching: .any).matching(identifier: originalID)
-        try require(preservedOriginal.firstMatch.waitForExistence(timeout: 20)
-                    && preservedOriginal.count == 1
-                    && preservedOriginal.firstMatch.label.contains(sourceTitle)
-                    && !preservedOriginal.firstMatch.label.contains(addedMarker),
+        // The shared title intentionally includes the source title, so identify the original
+        // by its captured task ID, never by a title-contains query after another task exists.
+        guard let preservedOriginal = afterAddRelaunch[originalID] else {
+            throw SystemSurfaceFailure(message: "The original task is absent after Share Add and relaunch.")
+        }
+        try require(preservedOriginal.contains(sourceTitle) && !preservedOriginal.contains(addedMarker),
                     "Share Add must preserve the original task and its title after a normal relaunch.")
         try shareAssertion("addedTaskPersisted")
 
@@ -201,12 +204,13 @@ final class GSDSystemSurfaceUITests: XCTestCase {
         app.activate()
         try captureRaw("09-after-cancel-before-query")
         try requireMatrix(app)
-        try requireNoCard(app, containing: cancelMarker)
+        _ = try requireNoCard(app, containing: cancelMarker, phase: "09-cancel-all-quadrants")
         try shareAssertion("cancelCreatedNone")
         try capture(app, "09-after-cancel")
         try relaunch(app, captureName: "10-cancel-after-relaunch")
-        try requireNoCard(app, containing: cancelMarker)
-        try require(try uniqueCard(app, containing: addedMarker).identifier == addedID,
+        let afterCancelRelaunch = try requireNoCard(
+            app, containing: cancelMarker, phase: "10-cancel-relaunch-all-quadrants", waitingFor: addedMarker)
+        try require(try uniqueMatrixCardID(afterCancelRelaunch, containing: addedMarker) == addedID,
                     "Cancel must leave the previously added task intact.")
         try shareAssertion("cancelNoneAfterRelaunch")
     }
@@ -244,11 +248,118 @@ final class GSDSystemSurfaceUITests: XCTestCase {
         return query.firstMatch
     }
 
-    private func requireNoCard(_ app: XCUIApplication, containing marker: String) throws {
+    private func requireNoCard(_ app: XCUIApplication, containing marker: String,
+                               phase: String, waitingFor existingMarker: String? = nil) throws -> [String: String] {
         let query = cards(app, containing: marker)
         try require(!query.firstMatch.waitForExistence(timeout: 8),
                     "Cancel unexpectedly created a task containing synthetic marker \(marker).")
-        try require(query.count == 0, "Cancelled synthetic task is present.")
+        let allCards = try matrixCards(app, phase: phase, waitingFor: existingMarker)
+        try require(allCards.values.allSatisfy { !$0.contains(marker) },
+                    "Cancelled synthetic task is present in the fully traversed Matrix.")
+        return allCards
+    }
+
+    private func uniqueMatrixCardID(_ labels: [String: String], containing marker: String) throws -> String {
+        let matches = labels.filter { $0.value.contains(marker) }.map(\.key)
+        guard matches.count == 1, let id = matches.first else {
+            throw SystemSurfaceFailure(message: "Expected exactly one Matrix task ID for synthetic marker \(marker); found \(matches.count).")
+        }
+        return id
+    }
+
+    /// A SwiftUI List materializes only nearby rows. Share intentionally defaults to Q4, below
+    /// the initial Q1/Q2 viewport, so both positive and negative assertions must visit every
+    /// quadrant. These are ordinary native scroll gestures on the observed Matrix CollectionView.
+    private func matrixCards(_ app: XCUIApplication, phase: String,
+                             waitingFor marker: String? = nil) throws -> [String: String] {
+        let list = try scrollMatrixToTop(app)
+        let quadrantLabels = ["לביצוע מיידי", "לתכנן", "להעביר לאחרים", "לוותר"]
+        var seenQuadrants = Set<String>()
+        var labels: [String: String] = [:]
+        var previousViewport: [String]?
+        var checkpoints: [[String: Any]] = []
+        var reachedBottom = false
+
+        for step in 0...8 {
+            let headings = quadrantLabels.filter { title in
+                list.staticTexts.matching(NSPredicate(format: "label == %@", title))
+                    .allElementsBoundByAccessibilityElement.contains { $0.exists && $0.isHittable }
+            }
+            seenQuadrants.formUnion(headings)
+            let visibleCards = list.descendants(matching: .any)
+                .matching(NSPredicate(format: "identifier BEGINSWITH 'task-card-'"))
+                .allElementsBoundByAccessibilityElement.filter { $0.exists && $0.isHittable }
+            for card in visibleCards {
+                let id = card.identifier
+                let label = card.label
+                if let prior = labels[id] {
+                    try require(prior == label, "A task changed while the Matrix was being traversed.")
+                }
+                labels[id] = label
+            }
+            // Include visible cell positions, not only task IDs: consecutive rows may be empty.
+            var viewport = list.cells.allElementsBoundByAccessibilityElement
+                .filter { $0.exists && $0.isHittable }
+                .map { cell in
+                    let frame = cell.frame
+                    return "cell:\(Int(frame.minY.rounded())):\(Int(frame.height.rounded()))"
+                }
+            try require(!viewport.isEmpty, "The observed Matrix has no hittable native cells.")
+            viewport += visibleCards.map { "task:\($0.identifier):\(Int($0.frame.minY.rounded()))" }
+            for title in headings {
+                viewport += list.staticTexts.matching(NSPredicate(format: "label == %@", title))
+                    .allElementsBoundByAccessibilityElement.filter { $0.exists && $0.isHittable }
+                    .map { "heading:\(title):\(Int($0.frame.minY.rounded()))" }
+            }
+            viewport.sort()
+            checkpoints.append([
+                "step": step, "visibleQuadrants": headings,
+                "visibleTaskIDs": visibleCards.map(\.identifier).sorted(),
+                "visibleCellFrames": viewport
+            ])
+            // At least one upward gesture must leave the viewport unchanged, with Q4 visible
+            // and every preceding quadrant observed. An arbitrary swipe count is not coverage.
+            if step > 0, viewport == previousViewport,
+               headings.contains("לוותר"), seenQuadrants == Set(quadrantLabels) {
+                reachedBottom = true
+            }
+            try writeJSON([
+                "allQuadrantsObserved": seenQuadrants == Set(quadrantLabels),
+                "bottomObserved": reachedBottom, "checkpoints": checkpoints,
+                "uniqueTaskIDs": labels.keys.sorted()
+            ], name: phase + ".matrix-traversal.json")
+            if reachedBottom { break }
+            previousViewport = viewport
+            if step < 8 { list.swipeUp() }
+        }
+        try capture(app, phase)
+        try require(reachedBottom,
+                    "Bounded native scrolling did not establish every Matrix quadrant and its bottom.")
+        if let marker, !labels.values.contains(where: { $0.contains(marker) }) {
+            // Retain the original 20-second positive readiness wait, now at the observed Q4
+            // viewport where the default Share task belongs. Re-scan all quadrants if it lands.
+            try require(cards(app, containing: marker).firstMatch.waitForExistence(timeout: 20),
+                        "No task card contains synthetic marker \(marker) after traversing the Matrix.")
+            return try matrixCards(app, phase: phase + "-after-wait")
+        }
+        return labels
+    }
+
+    private func scrollMatrixToTop(_ app: XCUIApplication) throws -> XCUIElement {
+        let lists = app.collectionViews.allElementsBoundByAccessibilityElement
+            .filter { $0.exists && $0.isHittable }
+        guard lists.count == 1, let list = lists.first else {
+            throw SystemSurfaceFailure(message: "The observed Matrix CollectionView is not uniquely hittable.")
+        }
+        for step in 0...6 {
+            let today = list.staticTexts.matching(NSPredicate(format: "label == %@", "היום"))
+                .allElementsBoundByAccessibilityElement.contains { $0.exists && $0.isHittable }
+            let first = list.staticTexts.matching(NSPredicate(format: "label == %@", "לביצוע מיידי"))
+                .allElementsBoundByAccessibilityElement.contains { $0.exists && $0.isHittable }
+            if today && first { return list }
+            if step < 6 { list.swipeDown() }
+        }
+        throw SystemSurfaceFailure(message: "Bounded native scrolling did not reveal the Matrix Today and Q1 headings.")
     }
 
     private func relaunch(_ app: XCUIApplication, captureName: String) throws {
@@ -262,6 +373,7 @@ final class GSDSystemSurfaceUITests: XCTestCase {
 
     private func openShareCompose(_ app: XCUIApplication, originalID: String,
                                   phase: String) throws -> XCUIApplication {
+        _ = try scrollMatrixToTop(app)
         let original = app.descendants(matching: .any).matching(identifier: originalID).firstMatch
         try captureRaw(phase + "-before-task-query")
         try require(original.waitForExistence(timeout: 10) && original.isHittable,

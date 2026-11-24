@@ -449,8 +449,9 @@ def run_ui(kind: str,manager: OwnedDevices,receipt: dict,products: Path,xctestru
   "-destination-timeout","90","-parallel-testing-enabled","NO","-collect-test-diagnostics","never","-resultBundlePath",str(result),"-testLanguage",language,"-testRegion","IL" if language=="he" else "US"]
  command.extend("-only-testing:GSDScreenshotTests/"+name for name in TESTS[kind])
  # The real Add/Cancel workflow can incur 60s XCTest animation-idle waits per action.
- # Its 2026-11-24 first prefill phase alone took 459s; leave individual UI deadlines unchanged.
- code,log=manager.run(command,timeout=2400 if kind=="share" else 600,check=False,environment=environment)
+ # Its 2026-11-24 first Add flow took 906s. Cover both flows plus full Matrix traversals;
+ # this outer wall budget leaves every individual UI/readiness/assertion deadline unchanged.
+ code,log=manager.run(command,timeout=3600 if kind=="share" else 600,check=False,environment=environment)
  if code!=0:capture_failure_runtime_diagnostics(manager,device,kind)
  observation_path=ui/("system-surface-observations.json" if kind=="share" else "siwc-preconsent-observation.json")
  observation=json.loads(observation_path.read_text())
