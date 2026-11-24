@@ -13,6 +13,9 @@ import GSDWire
 /// write is refused (sign-in keeps working; the extension then just takes the outbox path).
 /// No mutable state → `Sendable`.
 struct KeychainTokenStore: TokenStore {
+    /// A payload-free invalidation signal; subscribers re-read their own token store.
+    static let didChangeNotification = Notification.Name("com.itorah.gsd.sessionTokenDidChange")
+
     /// Migration runs at most once per process: if the shared group is unavailable on this
     /// platform, every later `load` just answers from the private item instead of re-trying.
     private static let migrationAttempted = Mutex(false)
@@ -37,11 +40,13 @@ struct KeychainTokenStore: TokenStore {
     func save(_ token: String) {
         Legacy.clear()                                                   // first — see `load`
         if SharedTokenKeychain.save(token) != errSecSuccess { Legacy.save(token) }
+        NotificationCenter.default.post(name: Self.didChangeNotification, object: nil)
     }
 
     func clear() {
         SharedTokenKeychain.clear()
         Legacy.clear()
+        NotificationCenter.default.post(name: Self.didChangeNotification, object: nil)
     }
 
     /// The app-private item earlier builds wrote, kept only for migration and as the save fallback. Same
