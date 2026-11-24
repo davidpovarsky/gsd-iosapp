@@ -1,0 +1,178 @@
+{
+  "generated_at": "2026-11-24T08:28:09.511508+00:00",
+  "passed": true,
+  "scope": "Offline synthetic provenance controls only; API/download/ditto/archive verification mocked in retrieval controls; no actual Watch or native CI result",
+  "base_commit": "b9247791c154592117ef1737395e5a483b54cc73",
+  "candidate_script_sha256": "c0e6a692b8e456c404b5aec6d4e15269daa30e11add0e90c28d137dc476bced0",
+  "checks": [
+    {
+      "name": "ordinary successful full validation keeps its own product run",
+      "passed": true
+    },
+    {
+      "name": "composed successful full 4-profile/13-test validation selects exact cancelled product parent",
+      "passed": true
+    },
+    {
+      "name": "active validation rejected",
+      "passed": true
+    },
+    {
+      "name": "cancelled validation rejected",
+      "passed": true
+    },
+    {
+      "name": "failed validation rejected",
+      "passed": true
+    },
+    {
+      "name": "different workflow rejected",
+      "passed": true
+    },
+    {
+      "name": "different validation run rejected",
+      "passed": true
+    },
+    {
+      "name": "different harness head rejected",
+      "passed": true
+    },
+    {
+      "name": "different harness receipt rejected",
+      "passed": true
+    },
+    {
+      "name": "repeated composed attempt rejected",
+      "passed": true
+    },
+    {
+      "name": "partial full receipt rejected",
+      "passed": true
+    },
+    {
+      "name": "partial UI receipt rejected",
+      "passed": true
+    },
+    {
+      "name": "AI-only UI profile rejected",
+      "passed": true
+    },
+    {
+      "name": "different application source rejected",
+      "passed": true
+    },
+    {
+      "name": "different receipt run rejected",
+      "passed": true
+    },
+    {
+      "name": "different build rejected",
+      "passed": true
+    },
+    {
+      "name": "different product parent rejected",
+      "passed": true
+    },
+    {
+      "name": "different inner archive hash rejected",
+      "passed": true
+    },
+    {
+      "name": "invented successful original parent rejected",
+      "passed": true
+    },
+    {
+      "name": "failed profile rejected",
+      "passed": true
+    },
+    {
+      "name": "missing cloud roundtrip rejected",
+      "passed": true
+    },
+    {
+      "name": "missing selected test rejected",
+      "passed": true
+    },
+    {
+      "name": "missing verified test rejected",
+      "passed": true
+    },
+    {
+      "name": "profile source drift rejected",
+      "passed": true
+    },
+    {
+      "name": "phone evidence incorrectly assigned to recovery rejected",
+      "passed": true
+    },
+    {
+      "name": "tablet evidence incorrectly inherited rejected",
+      "passed": true
+    },
+    {
+      "name": "missing profile rejected",
+      "passed": true
+    },
+    {
+      "name": "duplicate profile rejected",
+      "passed": true
+    },
+    {
+      "name": "ordinary validation cannot borrow foreign products",
+      "passed": true
+    },
+    {
+      "name": "mocked retrieval keeps validation and product identities separate",
+      "passed": true
+    },
+    {
+      "name": "different original product head rejected before download",
+      "passed": true
+    },
+    {
+      "name": "active original product parent rejected before download",
+      "passed": true
+    },
+    {
+      "name": "changed original product attempt rejected before download",
+      "passed": true
+    },
+    {
+      "name": "changed original conclusion rejected before download",
+      "passed": true
+    },
+    {
+      "name": "wrong receipt artifact identity rejected before download",
+      "passed": true
+    },
+    {
+      "name": "wrong receipt artifact harness rejected before download",
+      "passed": true
+    },
+    {
+      "name": "changed product artifact ID rejected before download",
+      "passed": true
+    },
+    {
+      "name": "changed outer artifact digest rejected before download",
+      "passed": true
+    },
+    {
+      "name": "expired product artifact rejected before download",
+      "passed": true
+    },
+    {
+      "name": "wrong product artifact source rejected before download",
+      "passed": true
+    },
+    {
+      "name": "wrong product artifact run rejected before download",
+      "passed": true
+    },
+    {
+      "name": "all other functions including full receipt, archive, pairing, launch and cleanup stay identical",
+      "passed": true
+    }
+  ],
+  "passed_count": 42
+}

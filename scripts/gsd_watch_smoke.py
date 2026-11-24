@@ -26,6 +26,16 @@ PHONE = "com.itorah.gsd"
 WATCH = PHONE + ".watchkitapp"
 LANGUAGES = (("en", "en_US"), ("he", "he_IL"))
 
+# One reviewed recovery may validate the original compiled source on a distinct
+# harness commit. Preserve both identities; never treat its cancelled build
+# parent as a successful complete acceptance run.
+COMPOSED_SOURCE = "37764f1a56a0678e5c4cb4cbd683ab3f44eb2fdc"
+COMPOSED_HARNESS = "c9ee902768fcbf5828d9cfc436e0b739b9ae8a6d"
+COMPOSED_PRODUCT_RUN = "45343781703"
+COMPOSED_PRODUCT_ARTIFACT = 14897632059
+COMPOSED_OUTER_HASH = "0396371b6530b09d0d405df887291f248193813e58986f734a58b11bb87749c5"
+COMPOSED_INNER_HASH = "14cd82477fd8956d9d4f173ee98aa10d26244857f1b5fd8b73a23ad4c1c6be9b"
+
 
 def api(path: str) -> dict:
     result = subprocess.run(["gh", "api", "repos/" + REPOSITORY + "/" + path],
@@ -67,35 +77,78 @@ def verify_archive(directory: Path, source: str, run_id: str, build: str) -> dic
     return manifest
 
 
+def product_run_for_validation(parent: dict, receipt: dict, source: str, run_id: str, build: str) -> str:
+    assert parent["status"] == "completed" and parent["conclusion"] == "success", "Validation must succeed first"
+    assert parent["path"] == WORKFLOW and str(parent["id"]) == run_id
+    verify_parent(receipt, source, run_id, build)
+    if parent["head_sha"] == source:
+        assert receipt.get("compiled_product_run_id", run_id) == run_id, "Ordinary validation must own its products"
+        return run_id
+    assert source == COMPOSED_SOURCE and parent["head_sha"] == COMPOSED_HARNESS
+    assert receipt["harness_sha"] == parent["head_sha"] and parent["run_attempt"] == 1
+    assert receipt["compiled_product_run_id"] == COMPOSED_PRODUCT_RUN
+    assert receipt["compiled_product_sha256"] == COMPOSED_INNER_HASH
+    assert receipt["inherited_parent_conclusion"] == "cancelled"
+    total = 0
+    for profile in receipt["ui"]["runs"]:
+        tests = ["test01LocalizedNavigationEditorChartsAndRTL", "test03LocalizedWidgetView",
+                 "test04LocalizedHanlinProvidersAndChatGPTAccount"]
+        if (profile["family"], profile["language"]) == ("iPad", "he"):
+            tests.append("test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload")
+        assert profile["selectedTests"] == tests and profile["verifiedPassedTests"] == tests
+        assert profile["source_sha"] == source
+        assert profile["evidence_run_id"] == (COMPOSED_PRODUCT_RUN if profile["family"] == "iPhone" else run_id)
+        total += len(tests)
+    assert total == 13
+    return COMPOSED_PRODUCT_RUN
+
+
 def retrieve_products(args: argparse.Namespace, report: dict) -> Path:
     parent = api("actions/runs/" + args.run_id)
     assert parent["status"] == "completed" and parent["conclusion"] == "success", "Parent must succeed first"
-    assert parent["path"] == WORKFLOW and parent["head_sha"] == args.source_sha
-    entries = api("actions/runs/" + args.run_id + "/artifacts?per_page=100")["artifacts"]
-    name = "GSD-Simulator-BuildProducts-" + args.run_id
+    assert parent["path"] == WORKFLOW
+    validation_entries = api("actions/runs/" + args.run_id + "/artifacts?per_page=100")["artifacts"]
+    receipt_name = "GSD-Native-Acceptance-Receipt-" + args.run_id
+    receipts = [a for a in validation_entries if a["name"] == receipt_name and not a["expired"]]
+    assert len(receipts) == 1 and str(receipts[0]["workflow_run"]["id"]) == args.run_id
+    assert receipts[0]["workflow_run"]["head_sha"] == parent["head_sha"]
+    downloaded = args.output / "download"
+    run(["gh", "run", "download", args.run_id, "--repo", REPOSITORY, "--name", receipt_name,
+         "--dir", str(downloaded / "receipt")], args.output / "retrieval.log")
+    receipt = json.loads((downloaded / "receipt/native-acceptance.json").read_text())
+    product_run = product_run_for_validation(parent, receipt, args.source_sha, args.run_id, args.build)
+    composed = product_run != args.run_id
+    product_parent = api("actions/runs/" + product_run) if composed else parent
+    assert product_parent["status"] == "completed" and product_parent["head_sha"] == args.source_sha
+    assert product_parent["path"] == WORKFLOW
+    if composed:
+        assert product_parent["conclusion"] == "cancelled" and product_parent["run_attempt"] == 1
+    entries = api("actions/runs/" + product_run + "/artifacts?per_page=100")["artifacts"] if composed else validation_entries
+    name = "GSD-Simulator-BuildProducts-" + product_run
     artifacts = [a for a in entries if a["name"] == name and not a["expired"]]
     assert len(artifacts) == 1 and artifacts[0]["workflow_run"]["head_sha"] == args.source_sha
+    assert str(artifacts[0]["workflow_run"]["id"]) == product_run
+    if composed:
+        assert artifacts[0]["id"] == COMPOSED_PRODUCT_ARTIFACT
+        assert artifacts[0]["digest"] == "sha256:" + COMPOSED_OUTER_HASH
     helper = api("contents/scripts/gsd_simulator_smoke.py?ref=" + args.source_sha)
     expected = hashlib.sha256(base64.b64decode(helper["content"])).hexdigest()
     actual = hashlib.sha256(Path(__file__).with_name("gsd_simulator_smoke.py").read_bytes()).hexdigest()
     assert expected == actual, "Existing simulator helper differs from compiled source"
-    downloaded = args.output / "download"
-    run(["gh", "run", "download", args.run_id, "--repo", REPOSITORY, "--name", name,
+    run(["gh", "run", "download", product_run, "--repo", REPOSITORY, "--name", name,
          "--dir", str(downloaded / "products")], args.output / "retrieval.log")
-    run(["gh", "run", "download", args.run_id, "--repo", REPOSITORY, "--name",
-         "GSD-Native-Acceptance-Receipt-" + args.run_id, "--dir", str(downloaded / "receipt")],
-        args.output / "retrieval.log")
-    receipt = json.loads((downloaded / "receipt/native-acceptance.json").read_text())
-    verify_parent(receipt, args.source_sha, args.run_id, args.build)
-    manifest = verify_archive(downloaded / "products", args.source_sha, args.run_id, args.build)
+    manifest = verify_archive(downloaded / "products", args.source_sha, product_run, args.build)
+    if composed:
+        assert manifest["sha256"] == COMPOSED_INNER_HASH == receipt["compiled_product_sha256"]
     report["provenance"] = {"source_sha": args.source_sha, "native_run_id": args.run_id,
+        "validation_head_sha": parent["head_sha"], "compiled_product_run_id": product_run,
+        "compiled_product_run_conclusion": product_parent["conclusion"], "composed_acceptance": composed,
         "build": args.build, "artifact_id": artifacts[0]["id"],
         "github_artifact_digest": artifacts[0].get("digest"), "product_zip_sha256": manifest["sha256"],
         "simulator_helper_sha256": actual, "parent_native_receipt_verified": True}
-    destination = args.output / "products"
     run(["ditto", "-x", "-k", str(downloaded / "products" / manifest["archive"]),
-         str(destination)], args.output / "retrieval.log")
-    return destination / "Products"
+         str(args.output / "products")], args.output / "retrieval.log")
+    return args.output / "products/Products"
 
 
 def inspect_bundles(products: Path, build: str, log: Path) -> dict:
