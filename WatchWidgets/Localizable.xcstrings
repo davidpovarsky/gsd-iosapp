@@ -15,8 +15,7 @@
             "value": "%@ %@"
           }
         }
-      },
-      "extractionState": "manual"
+      }
     },
     "%@, first": {
       "localizations": {
