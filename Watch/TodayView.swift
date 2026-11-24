@@ -44,7 +44,10 @@ struct TodayView: View {
                     }
                 }
 
-                Section { WatchFooter(pending: model.lists().pendingCount) }
+                let pendingCount = model.lists().pendingCount
+                if pendingCount > 0 || model.hasSnapshot {
+                    Section { WatchFooter(pending: pendingCount) }
+                }
             }
             .navigationTitle("Today")
             .safeAreaInset(edge: .bottom) { WatchUndoBar() }
