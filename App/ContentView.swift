@@ -75,7 +75,7 @@ struct ContentView: View {
                     .environment(session)
             }
             .overlay(alignment: .bottomTrailing) {
-                if sizeClass != .compact || palette.compactTab != 1 {
+                if sizeClass != .compact || (palette.compactTab != 1 && palette.compactTab != 3) {
                     hanlinAssistantButton
                         .padding(.trailing, 18)
                         .padding(.bottom, sizeClass == .compact ? 100 : 24)
@@ -93,6 +93,14 @@ struct ContentView: View {
         .buttonStyle(.borderedProminent)
         .accessibilityLabel("Open Hanlin task AI assistant")
         .accessibilityIdentifier("hanlin.assistant.open")
+    }
+
+    private var compactAssistantInset: some View {
+        hanlinAssistantButton
+            .padding(.horizontal, 18)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .background(Surface.paper)
     }
 
     private var actionContent: some View {
@@ -284,11 +292,7 @@ struct ContentView: View {
             SmartViewListView()
                 // Reserve space in Browse so the assistant cannot cover a list row.
                 .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
-                    hanlinAssistantButton
-                        .padding(.horizontal, 18)
-                        .padding(.vertical, 8)
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .background(Surface.paper)
+                    compactAssistantInset
                 }
                 .tabItem { Label(String(localized: "Browse"), systemImage: "line.3.horizontal.decrease.circle") }
                 .tag(1)
@@ -296,6 +300,10 @@ struct ContentView: View {
                 .tabItem { Label(String(localized: "Dashboard"), systemImage: "chart.bar.xaxis") }
                 .tag(2)
             SettingsView()
+                // Keep account explanations and settings rows clear of the assistant.
+                .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
+                    compactAssistantInset
+                }
                 .tabItem { Label(String(localized: "Settings"), systemImage: "gearshape") }
                 .tag(3)
         }
