@@ -64,6 +64,11 @@ jobs:
           [[ "$xcode_version" == Xcode\ 27* ]]
           mkdir -p "$OUTPUT/logs"
           curl --fail --silent --show-error --max-time 30 "$GSD_CLOUD_TEST_BASE/api/health" > "$OUTPUT/logs/cloud-health.json"
+      - name: Verify native session identity observation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/check_session_observation.py 2>&1 | tee "$OUTPUT/logs/session-observation.log"
       - name: Materialize and audit the original pinned Hanlin SDK
         shell: bash
         run: |
