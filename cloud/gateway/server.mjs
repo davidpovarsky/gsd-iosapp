@@ -57,6 +57,66 @@ function validRedirect(value) {
 const htmlEscape=x=>String(x).replaceAll('&','&amp;').replaceAll('"','&quot;')
   .replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll("'",'&#39;');
 
+const oauthLabels={
+  en:{
+    email:'Email',password:'Password',confirm:'Confirm password',title:'Sign in to GSD',
+    intro:'Connect ChatGPT to your GSD account with your usual email and password. No pairing code or open iPad is required.',
+    login:'Sign in and allow',newAccount:'Create account and allow',existing:'Existing GSD account',create:'New GSD account',
+    requested:'Requested permissions',read:'Read your tasks and reports',write:'Create, edit and delete your tasks',
+    offline:'Keep access until you revoke this connection',footer:'Only this GSD account is shared with ChatGPT. You can revoke this connection in ChatGPT.',
+    language:'Page language',passwordHint:'Use 10–128 characters.',
+    errorTitle:'Sign-in could not be completed',
+    expired:'Authorization request expired. Return to ChatGPT and connect again.',
+    invalidOrigin:'Invalid request origin. Open the connection again from ChatGPT.',
+    invalidRequest:'Invalid authorization request. Open the connection again from ChatGPT.',
+    rateLimit:'Too many attempts. Please try again later.'
+  },
+  he:{
+    email:'דואר אלקטרוני',password:'סיסמה',confirm:'אימות סיסמה',title:'התחברות לחשבון GSD',
+    intro:'חבר את ChatGPT לחשבון המשימות שלך באמצעות כניסה רגילה. אין צורך בקוד צימוד או באייפד פתוח.',
+    login:'התחברות ואישור',newAccount:'יצירת חשבון ואישור',existing:'כניסה לחשבון קיים',create:'חשבון GSD חדש',
+    requested:'הרשאות מבוקשות',read:'קריאת המשימות והדוחות שלך',write:'יצירה, עריכה ומחיקה של משימות',
+    offline:'גישה מתמשכת עד לביטול החיבור',footer:'רק חשבון GSD זה משותף עם ChatGPT. אפשר לבטל את החיבור בהגדרות ChatGPT.',
+    language:'שפת הדף',passwordHint:'הסיסמה חייבת להכיל 10–128 תווים.',
+    errorTitle:'ההתחברות לא הושלמה',
+    expired:'החיבור פג תוקף. יש לחזור ל־ChatGPT ולהתחבר מחדש.',
+    invalidOrigin:'מקור הבקשה אינו תקין. יש לפתוח מחדש את ההתחברות מתוך ChatGPT.',
+    invalidRequest:'בקשת הרשאה לא תקינה. יש לפתוח מחדש את ההתחברות מתוך ChatGPT.',
+    rateLimit:'יותר מדי ניסיונות. יש לנסות שוב מאוחר יותר.'
+  }
+};
+const supportedLanguage=value=>/^(en|he)(?:-[a-z0-9]+)*$/i.test(value)?value.slice(0,2).toLowerCase():null;
+function oauthLanguage(uiLocales,acceptLanguage) {
+  for(const tag of String(uiLocales||'').trim().split(/\s+/)) {
+    const language=supportedLanguage(tag);
+    if(language)return language;
+  }
+  const preferences=String(acceptLanguage||'').split(',').flatMap((part,index)=>{
+    const [range,...parameters]=part.trim().split(/\s*;\s*/);
+    const language=range==='*'?'*':supportedLanguage(range);
+    const quality=parameters.length?parameters[0].match(/^q=(0(?:\.\d{0,3})?|1(?:\.0{0,3})?)$/i):null;
+    if(!language||parameters.length>1||(parameters.length&&!quality))return [];
+    return [{language,quality:quality?Number(quality[1]):1,index}];
+  });
+  // A specific exclusion wins over a wildcard; ties retain the user's listed order.
+  const candidates=['he','en'].flatMap(language=>{
+    const exact=preferences.filter(item=>item.language===language);
+    const matches=exact.length?exact:preferences.filter(item=>item.language==='*');
+    const best=matches.sort((a,b)=>b.quality-a.quality||a.index-b.index)[0];
+    return best?.quality>0?[{...best,language}]:[];
+  });
+  return candidates.sort((a,b)=>b.quality-a.quality||a.index-b.index)[0]?.language||'he';
+}
+const browserHTML=(language,title,body)=>
+  '<!doctype html><html dir="'+(language==='en'?'ltr':'rtl')+'" lang="'+(language==='en'?'en':'he')+'"><head><meta charset="utf-8">'+
+  '<meta name="viewport" content="width=device-width, initial-scale=1">'+
+  '<title>'+htmlEscape(title)+'</title><style>body{font-family:system-ui;max-width:460px;padding:24px;margin:5vh auto;line-height:1.55}'+
+  'input{direction:ltr;text-align:left;display:block;box-sizing:border-box;width:100%;padding:12px;margin:6px 0 15px;border:1px solid #aaa;border-radius:9px}'+
+  'button{background:#2357ae;border:0;border-radius:9px;color:white;padding:12px 22px;font-size:17px}'+
+  'section{padding:14px;border:1px solid #ddd;border-radius:14px;margin:15px 0}p{color:#555}'+
+  '.language{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.language button[aria-pressed="true"]{outline:2px solid #2357ae;outline-offset:2px}'+
+  '</style></head><body>'+body+'</body></html>';
+
 export function createGateway({
   publicOrigin=process.env.GSD_CLOUD_ORIGIN||'https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud',
   pbOrigin=process.env.GSD_POCKETBASE_ORIGIN||'http://127.0.0.1:8095',
@@ -146,23 +206,16 @@ export function createGateway({
     if(!prior||now>prior.start+window){rateBuckets.set(k,{count:1,start:now});return true;}
     prior.count+=1;return prior.count<=limit;
   };
+  const pendingRequest=id=>typeof id==='string'&&Object.hasOwn(store.pending,id)?store.pending[id]:undefined;
+  const renderOAuthError=(res,status,language,error)=>{
+    const label=oauthLabels[language==='en'?'en':'he'];
+    return document(res,status,browserHTML(language,label.errorTitle,
+      '<h1>GSD Tasks</h1><h2>'+label.errorTitle+'</h2><p role="alert">'+htmlEscape(label[error])+'</p>'));
+  };
   const renderLogin=(res,requestId,error='')=>{
-    const pending=store.pending[requestId];
-    if(!pending||pending.expires<=clock())return document(res,400,'<h2>Authorization request expired</h2>');
-    const en=pending.language==='en';
-    const label=en?{
-      email:'Email',password:'Password',confirm:'Confirm password',title:'Sign in to GSD',
-      intro:'Connect ChatGPT to your GSD account with your usual email and password. No pairing code or open iPad is required.',
-      login:'Sign in and allow',newAccount:'Create account and allow',existing:'Existing GSD account',create:'New GSD account',
-      requested:'Requested permissions',read:'Read your tasks and reports',write:'Create, edit and delete your tasks',
-      offline:'Keep access until you revoke this connection',footer:'Only this GSD account is shared with ChatGPT. You can revoke this connection in ChatGPT.'
-    }:{
-      email:'דואר אלקטרוני',password:'סיסמה',confirm:'אימות סיסמה',title:'התחברות לחשבון GSD',
-      intro:'חבר את ChatGPT לחשבון המשימות שלך באמצעות כניסה רגילה. אין צורך בקוד צימוד או באייפד פתוח.',
-      login:'התחברות ואישור',newAccount:'יצירת חשבון ואישור',existing:'כניסה לחשבון קיים',create:'חשבון GSD חדש',
-      requested:'הרשאות מבוקשות',read:'קריאת המשימות והדוחות שלך',write:'יצירה, עריכה ומחיקה של משימות',
-      offline:'גישה מתמשכת עד לביטול החיבור',footer:'רק חשבון GSD זה משותף עם ChatGPT. אפשר לבטל את החיבור בהגדרות ChatGPT.'
-    };
+    const pending=pendingRequest(requestId);
+    if(!pending||pending.expires<=clock())return renderOAuthError(res,400,pending?.language||'he','expired');
+    const en=pending.language==='en', label=oauthLabels[en?'en':'he'];
     const errorEnglish={
       'כתובת דוא"ל או סיסמה לא תקינה':'Enter a valid email address and password.',
       'שתי הסיסמאות אינן זהות':'The two passwords do not match.',
@@ -170,28 +223,26 @@ export function createGateway({
       'פרטי ההתחברות לא נכונים':'The email address or password is incorrect.'
     };
     const form=(action,text,registration)=>(
-      '<form method="post" action="'+frontPath+action+'">' +
+      '<form method="post" action="'+htmlEscape(frontPath+action)+'">' +
       '<input type="hidden" name="request" value="'+htmlEscape(requestId)+'">' +
       '<label>'+label.email+'<input name="email" type="email" autocomplete="email" required maxlength="254"></label>'+
-      '<label>'+label.password+'<input name="password" type="password" autocomplete="'+(registration?'new-password':'current-password')+'" required minlength="'+(registration?10:1)+'" maxlength="128"></label>'+
-      (registration?'<label>'+label.confirm+'<input name="confirm" type="password" autocomplete="new-password" required></label>':'')+
+      '<label>'+label.password+'<input name="password" type="password" autocomplete="'+(registration?'new-password':'current-password')+'" required minlength="'+(registration?10:1)+'" maxlength="128"'+(registration?' aria-describedby="password-hint"':'')+'></label>'+
+      (registration?'<p id="password-hint">'+label.passwordHint+'</p><label>'+label.confirm+'<input name="confirm" type="password" autocomplete="new-password" required></label>':'')+
       '<button type="submit">'+text+'</button></form>'
     );
     const permissions=pending.scopes.map(scope=>({
       'gsd.read':label.read,'gsd.write':label.write,'offline_access':label.offline
     })[scope]).filter(Boolean).map(value=>'<li>'+htmlEscape(value)+'</li>').join('');
-    document(res,200,
-      '<!doctype html><html dir="'+(en?'ltr':'rtl')+'" lang="'+(en?'en':'he')+'"><meta charset="utf-8">' +
-      '<meta name="viewport" content="width=device-width, initial-scale=1">'+
-      '<title>'+label.title+'</title><style>body{font-family:system-ui;max-width:460px;padding:24px;margin:5vh auto;line-height:1.55}'+
-      'input{direction:ltr;text-align:left;display:block;box-sizing:border-box;width:100%;padding:12px;margin:6px 0 15px;border:1px solid #aaa;border-radius:9px}'+
-      'button{background:#2357ae;border:0;border-radius:9px;color:white;padding:12px 22px;font-size:17px}'+
-      'section{padding:14px;border:1px solid #ddd;border-radius:14px;margin:15px 0}p{color:#555}</style>'+
-      '<h1>GSD Tasks</h1><p>'+label.intro+'</p><h2>'+label.requested+'</h2><ul>'+permissions+'</ul>'+
+    const languageForm='<form class="language" method="post" action="'+htmlEscape(frontPath+'/oauth/language')+'" aria-label="'+label.language+'">'+
+      '<input type="hidden" name="request" value="'+htmlEscape(requestId)+'"><span>'+label.language+'</span>'+
+      '<button type="submit" name="language" value="he" lang="he" dir="rtl" aria-pressed="'+(!en)+'">עברית</button>'+
+      '<button type="submit" name="language" value="en" lang="en" dir="ltr" aria-pressed="'+en+'">English</button></form>';
+    document(res,200,browserHTML(pending.language,label.title,
+      languageForm+'<h1>GSD Tasks</h1><p>'+label.intro+'</p><h2>'+label.requested+'</h2><ul>'+permissions+'</ul>'+
       (error?'<p role="alert" style="color:#ba1717">'+htmlEscape(en?(errorEnglish[error]||'Sign-in failed. Please try again.'):error)+'</p>':'')+
       '<section><h2>'+label.existing+'</h2>'+form('/oauth/login',label.login,false)+'</section>'+
       '<section><h2>'+label.create+'</h2>'+form('/oauth/create-account',label.newAccount,true)+'</section>'+
-      '<p>'+label.footer+'</p></html>');
+      '<p>'+label.footer+'</p>'));
   };
   const authBearer=req=>{
     const h=req.headers.authorization||'';
@@ -497,10 +548,14 @@ export function createGateway({
     return auth;
   };
   const server=http.createServer(async(req,res)=>{
+    let pageLanguage=oauthLanguage('',req.headers['accept-language']),browserRoute=false;
     try {
       const url=new URL(req.url,'http://localhost');
       const u=url.pathname;
       const method=req.method;
+      browserRoute=(u==='/oauth/authorize'&&method==='GET')||
+        (['/oauth/login','/oauth/create-account','/oauth/language'].includes(u)&&method==='POST');
+      if(browserRoute)pageLanguage=oauthLanguage(url.searchParams.get('ui_locales'),req.headers['accept-language']);
       if(u==='/ios-oauth-redirect/' && method==='GET') {
         const code=url.searchParams.get('code')||'';
         const state=url.searchParams.get('state')||'';
@@ -555,21 +610,32 @@ export function createGateway({
           url.searchParams.get('code_challenge_method')!=='S256'||
           scopes.some(s=>!allowedScopes.has(s))||
           (requestedResource && requestedResource!==base+'/mcp'))
-          return document(res,400,'<h2>בקשת הרשאה לא תקינה</h2>');
+          return renderOAuthError(res,400,pageLanguage,'invalidRequest');
         const requestId=rand(20);
         store.pending[requestId]={clientId,redirect,challenge,scopes,
-          state:url.searchParams.get('state')||'',language:((url.searchParams.get('ui_locales')||req.headers['accept-language']||'he').toString().toLowerCase().startsWith('en')?'en':'he'),created:clock(),expires:clock()+authTTL,failures:0};
+          state:url.searchParams.get('state')||'',language:pageLanguage,created:clock(),expires:clock()+authTTL,failures:0};
         save();
         return renderLogin(res,requestId);
       }
-      if((u==='/oauth/login'||u==='/oauth/create-account')&&method==='POST'){
-        if(!rate(req,'login',22,900000))return document(res,429,'<h2>יותר מדי ניסיונות. נסה שוב מאוחר יותר</h2>');
-        if(req.headers.origin && req.headers.origin!==new URL(base).origin)
-          return document(res,403,'<h2>Invalid request origin</h2>');
+      if(['/oauth/login','/oauth/create-account','/oauth/language'].includes(u)&&method==='POST'){
         const form=new URLSearchParams(await readBody(req,8000));
-        const id=form.get('request'),pending=store.pending[id];
-        if(!pending||pending.expires<clock())return document(res,400,'<h2>החיבור פג תוקף</h2>');
-        if(pending.failures>=7)return document(res,429,'<h2>יותר מדי ניסיונות</h2>');
+        const id=form.get('request'),pending=pendingRequest(id),languageOnly=u==='/oauth/language';
+        if(pending)pageLanguage=pending.language==='en'?'en':'he';
+        if(!rate(req,languageOnly?'language':'login',languageOnly?60:22,900000))
+          return renderOAuthError(res,429,pageLanguage,'rateLimit');
+        if((languageOnly||req.headers.origin)&&req.headers.origin!==new URL(base).origin)
+          return renderOAuthError(res,403,pageLanguage,'invalidOrigin');
+        if(!pending||pending.expires<clock())return renderOAuthError(res,400,pageLanguage,'expired');
+        if(languageOnly){
+          if(pending.expires<=clock())return renderOAuthError(res,400,pageLanguage,'expired');
+          const language=form.get('language');
+          if(!['he','en'].includes(language))return renderOAuthError(res,400,pageLanguage,'invalidRequest');
+          // This action must never refresh the request lifetime, reset failures, or alter consent.
+          pending.language=language;
+          save();
+          return renderLogin(res,id);
+        }
+        if(pending.failures>=7)return renderOAuthError(res,429,pageLanguage,'rateLimit');
         let result;
         try{result=await pageFor(id,u==='/oauth/login',form);}
         catch(e){
@@ -681,8 +747,10 @@ export function createGateway({
     }catch(error){
       // No credentials, passwords or task text in logs.
       console.error('GSD gateway error',String(error.name||'Error'));
-      if(!res.headersSent)json(res,400,{error:'invalid_request'});
-      else res.end();
+      if(!res.headersSent){
+        if(browserRoute)renderOAuthError(res,400,pageLanguage,'invalidRequest');
+        else json(res,400,{error:'invalid_request'});
+      }else res.end();
     }
   });
   return {server,store,catalog,save,close:()=>new Promise(r=>server.close(r))};
