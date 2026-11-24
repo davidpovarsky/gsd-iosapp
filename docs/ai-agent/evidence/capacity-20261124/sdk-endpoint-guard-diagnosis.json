@@ -1,0 +1,42 @@
+{
+  "cloud_writes": 0,
+  "corrected_assessment_source_sha256": "406e251cf2a20bdc04f0e0967e8b78fb3ec06516abf248eba2c0e348cc25900d",
+  "correction": "Use official get_endpoint() result; retain HTTPS, oraclecloud.com domain and exact .il-jerusalem-1. host restrictions.",
+  "diagnostic_environment_removed": true,
+  "diagnostic_job": "job_be64f4f17f28",
+  "diagnostic_source_sha256": "406e251cf2a20bdc04f0e0967e8b78fb3ec06516abf248eba2c0e348cc25900d",
+  "finding": "BlockstorageClient retains a dualStack option in the endpoint property; BaseClient.get_endpoint resolves it before extracting the service endpoint.",
+  "fixed_guard_codes": [
+    "DEFAULT_REGION_MISMATCH",
+    "ENDPOINT_REGION_OR_HTTPS_GUARD_IDENTITY",
+    "ENDPOINT_REGION_OR_HTTPS_GUARD_BLOCKSTORAGE",
+    "ENDPOINT_REGION_OR_HTTPS_GUARD_LIMITS",
+    "VERIFIED_TARGET_COMPARTMENT_ABSENT"
+  ],
+  "fixed_phase_names": [
+    "validate_sdk_version",
+    "load_existing_DEFAULT_profile",
+    "validate_exact_region",
+    "validate_sdk_config",
+    "construct_identity_client",
+    "construct_blockstorage_client",
+    "construct_limits_client",
+    "validate_exact_regional_endpoint_hosts"
+  ],
+  "guard_broadened": false,
+  "official_sdk_version": "2.192.0",
+  "original_guard_rejected_static_unresolved_template": true,
+  "resolved_hosts": [
+    "identity.il-jerusalem-1.oci.oraclecloud.com",
+    "iaas.il-jerusalem-1.oraclecloud.com",
+    "limits.il-jerusalem-1.oci.oraclecloud.com"
+  ],
+  "runtime_diagnostic_result": "Confirmed in completed job: unresolved blockstorage option rejects old guard; official resolved endpoint passes unchanged constraints; 10 scoped OCI HTTP 200 reads",
+  "scope": "Static inspection of official pinned public source; no authenticated API call",
+  "source_inspection_job": "job_a1e1a3877e99",
+  "sources": [
+    "https://github.com/oracle/oci-python-sdk/blob/v2.192.0/src/oci/core/blockstorage_client.py",
+    "https://github.com/oracle/oci-python-sdk/blob/v2.192.0/src/oci/base_client.py"
+  ],
+  "static_source_observed_utc": "2026-11-24T05:22:48.108718+00:00"
+}

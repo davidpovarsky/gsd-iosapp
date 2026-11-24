@@ -59,3 +59,7 @@ Oracle supports increasing an attached volume online, but not shrinking it; its 
 - [Original timeout, single retry and cleanup](evidence/capacity-20261124/sdk-setup-attempts.json)
 
 The prior cache cleanup is separately documented in commit `0d137fb3e7302e44b01d14ce0058ccd624597cba`. This follow-up establishes metadata access and stated observations only. Native UI acceptance, personal ChatGPT Connect and TestFlight retain their separate gates.
+
+## Completed regional follow-up
+
+The later [regional capacity assessment](OCI_CAPACITY_PROPOSAL_20261124.md) completed ten scoped HTTP 200 reads: home region confirmed, 194 GB used of 200 GB, and zero provider backups. It supersedes the earlier lack of aggregate evidence; the +50 GB option was rejected and all resize/backup writes remain on hold pending the bounded procedure review.
