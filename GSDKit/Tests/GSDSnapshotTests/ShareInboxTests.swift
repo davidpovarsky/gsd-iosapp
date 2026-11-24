@@ -143,4 +143,58 @@ struct ShareInboxTests {
         await inbox.drain(create: { _ in }, ingestPushed: { _ in throw Boom() })
         #expect(store.pending().count == 1)
     }
+
+    @Test func cancellationErrorKeepsCurrentAndLaterCapturesForRetry() async throws {
+        let directory = try tempDir()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = ShareOutboxStore(directoryURL: directory)
+        try store.write(capture("first", at: 1))
+        try store.write(capture("second", at: 2))
+        let inbox = ShareInbox(store: store)
+        var attempted: [String] = []
+        await inbox.drain(create: { task in
+            attempted.append(task.title)
+            throw CancellationError()
+        }, ingestPushed: { _ in })
+        #expect(attempted == ["first"])
+        #expect(store.pending().map { $0.capture.title } == ["first", "second"])
+        var retried: [String] = []
+        await inbox.drain(create: { retried.append($0.title) }, ingestPushed: { _ in })
+        #expect(retried == ["first", "second"])
+        #expect(store.pending().isEmpty)
+    }
+
+    @Test func cancellationAcknowledgesSuccessfulCreateButLeavesLaterCaptures() async throws {
+        let directory = try tempDir()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = ShareOutboxStore(directoryURL: directory)
+        try store.write(capture("first", at: 1))
+        try store.write(capture("second", at: 2))
+        let inbox = ShareInbox(store: store)
+        let entered = AsyncStream<Void>.makeStream()
+        defer { entered.continuation.finish() }
+        var release: CheckedContinuation<Void, Never>?
+        var created: [String] = []
+        let work = _Concurrency.Task { @MainActor in
+            await inbox.drain(create: { task in
+                created.append(task.title)
+                if created.count == 1 {
+                    entered.continuation.yield()
+                    await withCheckedContinuation { release = $0 }
+                }
+                // Return success as a committed create would, despite cancellation.
+            }, ingestPushed: { _ in })
+        }
+        var iterator = entered.stream.makeAsyncIterator()
+        _ = await iterator.next()
+        work.cancel()
+        release?.resume()
+        release = nil
+        await work.value
+        #expect(created == ["first"])
+        #expect(store.pending().map { $0.capture.title } == ["second"])
+        await inbox.drain(create: { created.append($0.title) }, ingestPushed: { _ in })
+        #expect(created == ["first", "second"])
+        #expect(store.pending().isEmpty)
+    }
 }

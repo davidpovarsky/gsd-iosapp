@@ -223,7 +223,7 @@ struct GSDApp: App {
                 .onChange(of: scenePhase) { _, phase in
                     switch phase {
                     case .active:
-                        AppDatabase.resume()   // restore writes before any foreground sync runs
+                        BackgroundDatabaseWindow.resumeAppDatabaseForForeground() // before foreground sync
                         session.enteredForeground()
                         coordinator.enteredForeground()
                         _Concurrency.Task { await store.refreshBadge() }
@@ -240,7 +240,7 @@ struct GSDApp: App {
                         // scenePhase is unreliable (see project memory) — a spurious `.background`
                         // here would suspend the DB under a still-live window and any Siri intent.
                         #if !targetEnvironment(macCatalyst)
-                        AppDatabase.suspend()  // release DB locks so iOS won't kill us (0xDEAD10CC)
+                        BackgroundDatabaseWindow.suspendAppDatabaseWhenIdle() // active owners release on exit/expiry
                         #endif
                     default:
                         break

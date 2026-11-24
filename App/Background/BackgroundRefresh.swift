@@ -1,5 +1,6 @@
 import Foundation
 import BackgroundTasks
+import UIKit
 import GSDStore
 
 /// Background app-refresh (product spec §9.4): drains the Share-Extension outbox, runs one sync,
@@ -57,30 +58,43 @@ enum BackgroundRefresh {
                                drainShareInbox: @escaping @MainActor @Sendable () async -> Void,
                                sync: @escaping @MainActor @Sendable () async -> Void) {
         schedule()   // always queue the next one
+        let window = BackgroundDatabaseWindow(isBackgrounded: {
+            UIApplication.shared.applicationState != .active
+        })
+        let lease = window.begin { success in
+            task.setTaskCompleted(success: success)
+        }
         let work = _Concurrency.Task { @MainActor in
-            // The database was suspended on backgrounding (0xDEAD10CC mitigation). Resume it for
-            // this background window, then re-suspend so we never hold a lock when the OS suspends
-            // us again after setTaskCompleted.
-            AppDatabase.resume()
-            // Shared captures first, so the sync that follows pushes them in the same window.
-            await drainShareInbox()
-            if signedIn() {
-                await sync()                                   // pull + push; afterCleanSync runs the archive sweep
-            } else {
-                try? await store.runAutoArchiveSweep()         // see the type comment
+            do {
+                try lease.checkCancellation()
+                // Share captures first, so the following sync pushes them in this window.
+                await drainShareInbox()
+                try lease.checkCancellation()
+                if signedIn() {
+                    await sync()                              // afterCleanSync runs the archive sweep
+                } else {
+                    try? await store.runAutoArchiveSweep()
+                }
+                try lease.checkCancellation()
+                _ = try? await store.runTrashRetentionSweep()
+                try lease.checkCancellation()
+                // Rebuild soonest reminders and badge after any pulled due-date changes.
+                await store.resyncReminders()
+                try lease.checkCancellation()
+                lease.finish(success: true)
+            } catch {
+                lease.finish(success: false)
             }
-            _ = try? await store.runTrashRetentionSweep()
-            // Rebuilds the soonest reminders from the store (and the badge). The sync above may
-            // have pulled new due dates, and the 60-reminder cap refills here, not only on open.
-            await store.resyncReminders()
-            AppDatabase.suspend()
-            task.setTaskCompleted(success: true)
         }
         task.expirationHandler = {
+            // Cancellation is immediate even if the main actor is awaiting an API that
+            // ignores it. Release only this lease on the main actor; no global forced close.
             work.cancel()
-            AppDatabase.suspend()
-            task.setTaskCompleted(success: false)
+            _Concurrency.Task { @MainActor in
+                lease.finish(success: false)
+            }
         }
+
     }
     #endif
 }

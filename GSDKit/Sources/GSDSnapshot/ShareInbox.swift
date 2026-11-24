@@ -31,10 +31,11 @@ public final class ShareInbox {
     ///   sync item — the server already has it.
     public func drain(create: (Task) async throws -> Void,
                       ingestPushed: (Task) async throws -> Void) async {
-        guard !isDraining else { return }
+        guard !_Concurrency.Task.isCancelled, !isDraining else { return }
         isDraining = true
         defer { isDraining = false }
         for item in store.pending() {
+            guard !_Concurrency.Task.isCancelled else { return }
             let capture = item.capture
             do {
                 if capture.remoteRecordID != nil, let pushed = capture.pushedTask() {
@@ -43,8 +44,13 @@ public final class ShareInbox {
                     let task = SharedCaptureBuilder.task(from: capture, id: capture.taskID ?? newID(), now: now())
                     try await create(task)
                 }
-                store.remove(id: item.id)        // only after success
+                // A successful create is already committed. Acknowledge that item even if
+                // cancellation arrived during it, then leave later captures pending.
+                store.remove(id: item.id)
+            } catch is CancellationError {
+                return                            // leave this and later files for a new drain
             } catch {
+                guard !_Concurrency.Task.isCancelled else { return }
                 continue                          // transient failure → keep file, retry next drain
             }
         }

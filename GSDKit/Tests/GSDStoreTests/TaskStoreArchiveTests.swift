@@ -104,4 +104,60 @@ struct TaskStoreArchiveTests {
         store.archiveSettings = ArchiveSettings(autoEnabled: true, afterDays: 60)
         #expect(store.archiveSettings == ArchiveSettings(autoEnabled: true, afterDays: 60))
     }
+
+    @MainActor
+    private final class GatedSweepRepository: TaskRepository {
+        enum Unexpected: Error { case archiveStartedAfterCancellation }
+        let rows: [Task]
+        let entered = AsyncStream<Void>.makeStream()
+        var release: CheckedContinuation<Void, Never>?
+        var archiveReads = 0
+        init(rows: [Task]) { self.rows = rows }
+        func fetchAll() async throws -> [Task] {
+            entered.continuation.yield()
+            await withCheckedContinuation { release = $0 }
+            return rows // The fetch intentionally ignores cancellation.
+        }
+        func fetch(id: String) async throws -> Task? {
+            archiveReads += 1
+            throw Unexpected.archiveStartedAfterCancellation
+        }
+        func upsert(_ task: Task) async throws {}
+        func setNotifyBeforeIfNull(id: String, value: Int) async throws {}
+        func restampIfUnchanged(id: String, from: Date, to: Date) async throws -> Bool { false }
+        func delete(id: String) async throws {}
+        func replaceAll(_ tasks: [Task]) async throws {}
+        func replaceAll(_ tasks: [Task], queueing items: [SyncQueueItem],
+                        deletingLeftOut makeDelete: @Sendable (String) -> SyncQueueItem) async throws {}
+        nonisolated func observeAll() -> AsyncThrowingStream<[Task], Error> {
+            AsyncThrowingStream { $0.finish() }
+        }
+    }
+
+    @Test func cancelledSweepDoesNotStartArchivingAfterALateFetchReturns() async throws {
+        let repository = GatedSweepRepository(rows: [completed("old", at: day(2026, 1, 1))])
+        let database = try AppDatabase.inMemory()
+        let suiteName = "archive-cancellation-\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer {
+            defaults.removePersistentDomain(forName: suiteName)
+            repository.entered.continuation.finish()
+            repository.release?.resume()
+        }
+        let fixed = now
+        let store = TaskStore(repository: repository,
+                             smartViewRepository: GRDBSmartViewRepository(database),
+                             archiveRepository: GRDBArchiveRepository(database),
+                             trashRepository: GRDBTrashRepository(database),
+                             defaults: defaults, clock: { fixed }, calendar: cal)
+        store.archiveSettings = ArchiveSettings(autoEnabled: true, afterDays: 30)
+        let work = _Concurrency.Task { @MainActor in try await store.runAutoArchiveSweep() }
+        var iterator = repository.entered.stream.makeAsyncIterator()
+        _ = await iterator.next()
+        work.cancel()
+        repository.release?.resume()
+        repository.release = nil
+        await #expect(throws: CancellationError.self) { try await work.value }
+        #expect(repository.archiveReads == 0)
+    }
 }

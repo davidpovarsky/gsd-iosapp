@@ -136,9 +136,9 @@ extension GSDTaskEntity {
 /// Siri/Shortcuts intents run in the background, where the database is suspended as the
 /// `0xDEAD10CC` mitigation (see `AppDatabase`). A `DatabaseQueue` rejects BOTH reads and writes
 /// while suspended ("Database is suspended" / `SQLITE_ABORT` on `BEGIN IMMEDIATE`), so any intent
-/// that touches the store must resume it for its work window — then restore the prior state,
-/// exactly as `BackgroundRefresh` does for BG refresh. Foreground runs (`applicationState ==
-/// .active`) are already resumed; re-suspending one would wrongly lock out the live UI, so gate on it.
+/// that touches the store must resume it for its work window. All default windows share
+/// ownership, and only the last owner may suspend again, after rechecking the current app state.
+/// Returning to the foreground during an await must leave the live UI's database resumed.
 ///
 /// Mac Catalyst never suspends: `0xDEAD10CC` is an iOS jetsam kill that doesn't exist on macOS,
 /// and a Mac app is routinely `.inactive` with its window open and live (it merely isn't key —
@@ -150,10 +150,9 @@ private func withDatabaseResumedForIntent<R>(_ body: () async throws -> R) async
     #if targetEnvironment(macCatalyst)
     return try await body()
     #else
-    let wasSuspended = UIApplication.shared.applicationState != .active
-    if wasSuspended { AppDatabase.resume() }
-    defer { if wasSuspended { AppDatabase.suspend() } }
-    return try await body()
+    return try await BackgroundDatabaseWindow(isBackgrounded: {
+        UIApplication.shared.applicationState != .active
+    }).run(body)
     #endif
 }
 

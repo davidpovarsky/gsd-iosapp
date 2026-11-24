@@ -100,4 +100,192 @@ struct IntentQueryDatabaseSuspensionTests {
         fixture.queue.resume()
         #expect(try await fixture.store.fetchAllTasks().map(\.id) == ["intent-fixture"])
     }
+
+    @MainActor
+    private final class Gate {
+        private var continuation: CheckedContinuation<Void, Never>?
+        private var opened = false
+
+        func wait() async {
+            if opened { return }
+            await withCheckedContinuation { continuation = $0 }
+        }
+
+        func open() {
+            opened = true
+            continuation?.resume()
+            continuation = nil
+        }
+    }
+
+    @Test func overlappingReadsWaitForTheLastOwnerBeforeSuspending() async throws {
+        let fixture = try await fixture()
+        defer { fixture.cleanup() }
+        fixture.queue.suspend()
+        let firstWindow = backgroundWindow(fixture)
+        let secondWindow = firstWindow // Two callers retain one database's access scope.
+        let firstEntered = Gate(), secondEntered = Gate()
+        let releaseFirst = Gate(), releaseSecond = Gate()
+        defer { releaseFirst.open(); releaseSecond.open() }
+
+        let first = _Concurrency.Task { @MainActor in
+            try await firstWindow.run {
+                firstEntered.open()
+                await releaseFirst.wait()
+                return try await fixture.store.fetchTask(id: "intent-fixture")
+            }
+        }
+        await firstEntered.wait()
+        let second = _Concurrency.Task { @MainActor in
+            try await secondWindow.run {
+                secondEntered.open()
+                await releaseSecond.wait()
+                return try await fixture.store.fetchAllTasks()
+            }
+        }
+        await secondEntered.wait()
+        releaseFirst.open()
+        let firstResult = await first.result
+        // The first call has exited while the second is still awaiting its release.
+        // This read failed with the former per-call defer/suspend implementation.
+        await #expect(throws: Never.self) {
+            #expect(try await fixture.store.fetchTask(id: "intent-fixture") != nil)
+        }
+        releaseSecond.open()
+        let secondResult = await second.result
+        #expect(try firstResult.get()?.id == "intent-fixture")
+        #expect(try secondResult.get().map(\.id) == ["intent-fixture"])
+        await #expect(throws: DatabaseError.self) {
+            _ = try await fixture.store.fetchAllTasks()
+        }
+    }
+
+    @Test func aForegroundReturnDuringARealReadWindowLeavesDatabaseLive() async throws {
+        let fixture = try await fixture()
+        defer { fixture.cleanup() }
+        fixture.queue.suspend()
+        var backgrounded = true
+        let window = BackgroundDatabaseWindow(
+            isBackgrounded: { backgrounded },
+            resume: { fixture.queue.resume() },
+            suspend: { fixture.queue.suspend() })
+        let value = try await window.run {
+            window.suspendWhenIdle() // A scene background callback cannot undercut this owner.
+            let task = try await fixture.store.fetchTask(id: "intent-fixture")
+            backgrounded = false // The app became active while an operation was in flight.
+            window.resumeForForeground()
+            return task
+        }
+        #expect(value?.id == "intent-fixture")
+        #expect(try await fixture.store.fetchAllTasks().map(\.id) == ["intent-fixture"])
+    }
+
+    @Test func aThrowingNestedWindowDoesNotSuspendItsOuterOwner() async throws {
+        enum ProbeFailure: Error { case afterRead }
+        let fixture = try await fixture()
+        defer { fixture.cleanup() }
+        fixture.queue.suspend()
+        let window = backgroundWindow(fixture)
+        try await window.run {
+            await #expect(throws: ProbeFailure.self) {
+                try await window.run {
+                    #expect(try await fixture.store.fetchTask(id: "intent-fixture") != nil)
+                    throw ProbeFailure.afterRead
+                }
+            }
+            #expect(try await fixture.store.fetchAllTasks().map(\.id) == ["intent-fixture"])
+        }
+        await #expect(throws: DatabaseError.self) {
+            _ = try await fixture.store.fetchTask(id: "intent-fixture")
+        }
+    }
+
+    @Test func sceneBackgroundingWaitsForAnOwnerThatStartedInForeground() async throws {
+        let fixture = try await fixture()
+        defer { fixture.cleanup() }
+        var backgrounded = false
+        let window = BackgroundDatabaseWindow(
+            isBackgrounded: { backgrounded },
+            resume: { fixture.queue.resume() },
+            suspend: { fixture.queue.suspend() })
+        let lease = window.begin()
+        defer { lease.finish() }
+        backgrounded = true
+        window.suspendWhenIdle()
+        #expect(try await fixture.store.fetchTask(id: "intent-fixture") != nil)
+        #expect(lease.finish())
+        await #expect(throws: DatabaseError.self) {
+            _ = try await fixture.store.fetchAllTasks()
+        }
+        // With no owned operation, backgrounding still suspends immediately.
+        window.resumeForForeground()
+        window.suspendWhenIdle()
+        await #expect(throws: DatabaseError.self) {
+            _ = try await fixture.store.fetchAllTasks()
+        }
+    }
+
+    @Test func expirationCompletesOnceWithoutClosingAnotherOwnersDatabase() async throws {
+        let fixture = try await fixture()
+        defer { fixture.cleanup() }
+        fixture.queue.suspend()
+        let window = backgroundWindow(fixture)
+        let otherOwner = window.begin()
+        defer { otherOwner.finish() }
+        var completions: [Bool] = []
+        let expiringOwner = window.begin { completions.append($0) }
+        defer { expiringOwner.finish(success: false) }
+        window.suspendWhenIdle()
+
+        #expect(expiringOwner.finish(success: false))
+        #expect(completions == [false]) // Completion is independent of the other owner's lifetime.
+        #expect(!expiringOwner.finish(success: true))
+        #expect(!expiringOwner.finish(success: false))
+        #expect(throws: CancellationError.self) { try expiringOwner.checkCancellation() }
+        #expect(try await fixture.store.fetchAllTasks().map(\.id) == ["intent-fixture"])
+        #expect(otherOwner.finish())
+        #expect(completions == [false])
+        await #expect(throws: DatabaseError.self) {
+            _ = try await fixture.store.fetchTask(id: "intent-fixture")
+        }
+    }
+
+    @Test func expiredWorkCannotStartAnotherPhaseAfterAnAwaitIgnoresCancellation() async throws {
+        let fixture = try await fixture()
+        defer { fixture.cleanup() }
+        fixture.queue.suspend()
+        let window = backgroundWindow(fixture)
+        var completions: [Bool] = []
+        let lease = window.begin { completions.append($0) }
+        defer { lease.finish(success: false) }
+        let entered = Gate(), release = Gate()
+        defer { release.open() }
+        var phases: [String] = []
+        let work = _Concurrency.Task { @MainActor in
+            do {
+                try lease.checkCancellation()
+                phases.append("drain")
+                entered.open()
+                await release.wait() // Deliberately ignores cancellation like some system APIs.
+                try lease.checkCancellation()
+                phases.append("sync")
+                _ = try await fixture.store.fetchAllTasks()
+                lease.finish(success: true)
+            } catch {
+                lease.finish(success: false)
+            }
+        }
+        await entered.wait()
+        work.cancel()
+        lease.finish(success: false)
+        #expect(completions == [false])
+        await #expect(throws: DatabaseError.self) {
+            _ = try await fixture.store.fetchTask(id: "intent-fixture")
+        }
+        release.open()
+        await work.value
+        #expect(phases == ["drain"])
+        #expect(completions == [false])
+        #expect(lease.isFinished)
+    }
 }

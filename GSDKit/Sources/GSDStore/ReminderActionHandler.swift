@@ -12,38 +12,32 @@ public struct ReminderActionHandler {
     public enum Outcome: Equatable, Sendable { case completed, snoozed, ignored }
 
     private let store: TaskStore
-    private let isBackgrounded: @MainActor () -> Bool
-    private let resumeDatabase: @MainActor () -> Void
-    private let suspendDatabase: @MainActor () -> Void
+    private let databaseWindow: BackgroundDatabaseWindow
 
     public init(store: TaskStore,
                 isBackgrounded: @escaping @MainActor () -> Bool = { false },
-                resumeDatabase: @escaping @MainActor () -> Void = AppDatabase.resume,
-                suspendDatabase: @escaping @MainActor () -> Void = AppDatabase.suspend) {
+                resumeDatabase: (@MainActor () -> Void)? = nil,
+                suspendDatabase: (@MainActor () -> Void)? = nil) {
         self.store = store
-        self.isBackgrounded = isBackgrounded
-        self.resumeDatabase = resumeDatabase
-        self.suspendDatabase = suspendDatabase
+        databaseWindow = BackgroundDatabaseWindow(isBackgrounded: isBackgrounded,
+                                                  resume: resumeDatabase, suspend: suspendDatabase)
     }
 
     public func handle(actionIdentifier: String, taskID: String) async throws -> Outcome {
         guard actionIdentifier == ReminderAction.completeID || actionIdentifier == ReminderAction.snoozeID else {
             return .ignored
         }
-        // A fired reminder usually reaches a suspended app, and a suspended database rejects every
-        // read and write. Close it again unless the app came forward, which needs it live.
-        let backgrounded = isBackgrounded()
-        if backgrounded { resumeDatabase() }
-        defer { if backgrounded && isBackgrounded() { suspendDatabase() } }
-
-        guard let task = try await store.fetchTask(id: taskID), !task.completed, !task.isSaved else {
-            return .ignored
+        // Use the same ownership as intents, watch commands and the app lifecycle.
+        return try await databaseWindow.run {
+            guard let task = try await store.fetchTask(id: taskID), !task.completed, !task.isSaved else {
+                return .ignored
+            }
+            if actionIdentifier == ReminderAction.completeID {
+                try await store.toggleComplete(task)
+                return .completed
+            }
+            try await store.snooze(task, by: .oneHour)
+            return .snoozed
         }
-        if actionIdentifier == ReminderAction.completeID {
-            try await store.toggleComplete(task)
-            return .completed
-        }
-        try await store.snooze(task, by: .oneHour)
-        return .snoozed
     }
 }

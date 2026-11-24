@@ -800,10 +800,16 @@ public final class TaskStore {
     public func runAutoArchiveSweep() async throws {
         let settings = archiveSettings
         guard settings.autoEnabled else { return }
+        try _Concurrency.Task<Never, Never>.checkCancellation()
         let allTasks = try await repository.fetchAll()
+        try _Concurrency.Task<Never, Never>.checkCancellation()
         let toArchive = AutoArchive.tasksToArchive(allTasks, afterDays: settings.afterDays,
                                                    now: clock(), calendar: calendar)
-        for task in toArchive { try await archive(task) }
+        for task in toArchive {
+            // Finish one domain archive consistently; cancellation prevents starting the next.
+            try _Concurrency.Task<Never, Never>.checkCancellation()
+            try await archive(task)
+        }
     }
 
     // MARK: Archive settings (App-Group UserDefaults; design-spec scope call)

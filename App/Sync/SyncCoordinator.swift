@@ -271,9 +271,16 @@ final class SyncCoordinator {
     }
 
     private func runSync(trigger: SyncTrigger) async {
-        guard signedIn(), !heldForAccountDeletion, !heldForSignIn else { return }
+        guard !_Concurrency.Task.isCancelled,
+              signedIn(), !heldForAccountDeletion, !heldForSignIn else { return }
         phase = .syncing
         let result = await engine.sync(trigger: trigger)
+        // An expired background refresh must not start an auto-archive phase after a
+        // network operation returns late. The engine's already-started work is not rolled back.
+        guard !_Concurrency.Task.isCancelled else {
+            if !result.skipped { phase = .idle }
+            return
+        }
         apply(result)
         if !result.skipped, !result.notSignedIn, result.error == nil { await afterCleanSync?() }
     }

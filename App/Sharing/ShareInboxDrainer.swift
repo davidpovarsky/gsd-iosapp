@@ -27,12 +27,14 @@ final class ShareInboxDrainer {
     func drain(enrichTitles: Bool = true) async {
         await inbox.drain(
             create: { task in
+                try _Concurrency.Task<Never, Never>.checkCancellation()
                 try await store.create(task)
-                if enrichTitles { titleEnricher.schedule(for: task) }   // upgrade a URL-derived title
+                if enrichTitles && !_Concurrency.Task.isCancelled { titleEnricher.schedule(for: task) }   // upgrade a URL-derived title
             },
             ingestPushed: { task in
+                try _Concurrency.Task<Never, Never>.checkCancellation()
                 try await store.ingestSynced(task)
-                if enrichTitles { titleEnricher.schedule(for: task) }   // a later edit syncs as an update
+                if enrichTitles && !_Concurrency.Task.isCancelled { titleEnricher.schedule(for: task) }   // a later edit syncs as an update
             })
     }
 }

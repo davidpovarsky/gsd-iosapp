@@ -55,3 +55,59 @@ classes already use `LorvexIntentFailure.rewording` and
 `DatabaseSuspension.withBackgroundAccess`. Its Focus query is excluded from the
 host framework and runs in the dedicated extension; widget queries map IDs or
 snapshots. No corresponding Lorvex change is needed for this specific defect.
+
+## Follow-up: shared lifecycle ownership and expiration
+
+The query fix was published as `50cec1039fdf95b45c85e2cbfef474a18c52b056`.
+Review of its existing helper exposed a separate race: its defer could suspend
+again after the app became active. The original BackgroundDatabaseWindow already
+rechecked foreground state, but each call independently suspended on exit, so
+one overlapping call could interrupt another.
+
+The follow-up makes the existing window own a shared reference count for the
+production AppDatabase. Intent queries/actions, reminder actions, watch commands,
+background refresh, and scene-phase transitions now use that same ownership.
+Injected callbacks retain an isolated scope for tests; copying such a window
+shares that fixture's scope. Scene backgrounding requests suspension until the
+last owner exits. With no owner, it still suspends immediately. Foregrounding
+resumes and clears the pending request. Catalyst's existing no-suspension guards
+remain in place.
+
+Background refresh holds an idempotent lease. Expiration cancels its task and
+finishes only that lease; its completion callback runs once even if another
+operation still needs the database. The worker checks cancellation and lease
+validity before and after awaited phases, so a late continuation cannot report
+success after expiration or begin the next phase. The post-sync auto-archive
+hook, share inbox loop, and auto-archive loop also stop at safe domain-operation
+boundaries. A successful share create is acknowledged even if cancellation
+arrives during it; unprocessed captures stay on disk for retry.
+
+This is cooperative cancellation and exactly-once completion, not interruption
+or rollback of an already-started network request or database transaction. The
+shared SyncEngine is not globally cancelled or redesigned.
+
+Regression additions in this follow-up:
+
+- Six additional real DatabaseQueue cases (eight total in
+  IntentQueryDatabaseSuspensionTests) cover concurrent owners, foreground return,
+  nested errors, scene-background deferral, expiration while another owner reads,
+  and a late continuation that ignores cancellation.
+- Two real-file ShareInbox cases cover cancellation retaining current/later
+  captures, and successful-create acknowledgement without starting the next item.
+- One controlled repository case proves an auto-archive fetch returning after
+  cancellation cannot start an archive operation.
+- Existing BackgroundDatabaseWindowTests and ReminderActionHandlerTests remain
+  the focused compatibility checks for foreground/background and reminder behavior.
+
+Swift 6 parse and whitespace checks pass before handoff. The existing window
+source also typechecks in Swift 6 with only its two notification endpoints stubbed
+on Oracle; this checks the helper's type/isolation shape, not native database or
+BGTaskScheduler behavior. Final native execution and app compilation remain the
+coordinator's next required gate. The focused package filter is:
+
+```sh
+swift test --package-path GSDKit --filter 'IntentQueryDatabaseSuspensionTests|BackgroundDatabaseWindowTests|ReminderActionHandlerTests|TaskStoreArchiveTests|ShareInboxTests'
+```
+
+These tests do not claim an actual OS-scheduled background refresh, Watch transport,
+Siri invocation, or personal-account acceptance.
