@@ -32,9 +32,19 @@ final class GSDCloudReleaseUITests: XCTestCase {
     private func navigation(_ app: XCUIApplication, _ title: String) -> XCUIElement {
         let bar = app.tabBars.firstMatch
         if bar.exists { return bar.buttons[title].firstMatch }
-        let button = app.buttons[title].firstMatch
-        if button.exists { return button }
-        return app.staticTexts[title].firstMatch
+        let sidebarIDs = [
+            label("Matrix", "מטריצה"): "gsd.sidebar.matrix",
+            label("Dashboard", "לוח בקרה"): "gsd.sidebar.dashboard",
+            label("Saved", "שמורים"): "gsd.sidebar.saved",
+            label("Archive", "ארכיון"): "gsd.sidebar.archive",
+            label("Settings", "הגדרות"): "gsd.sidebar.settings"
+        ]
+        guard let identifier = sidebarIDs[title] else {
+            XCTFail("Unknown sidebar destination: \(title)")
+            return app.descendants(matching: .any).matching(identifier: "gsd.sidebar.invalid").firstMatch
+        }
+        // Select the actual sidebar row, never the identically named detail title.
+        return app.descendants(matching: .any).matching(identifier: identifier).firstMatch
     }
 
     private func navigate(_ app: XCUIApplication, _ title: String) {
@@ -48,15 +58,55 @@ final class GSDCloudReleaseUITests: XCTestCase {
     }
 
     private func capture(_ app: XCUIApplication, _ name: String) throws {
-        let attachment = XCTAttachment(screenshot: app.screenshot())
+        // App-only captures were cropped on landscape iPad. Keep one unmodified
+        // full-screen capture for both the attachment and the exported evidence.
+        let screenshot = XCUIScreen.main.screenshot()
+        let attachment = XCTAttachment(screenshot: screenshot)
         attachment.name = "\(language)-\(name)"
         attachment.lifetime = .keepAlways
         add(attachment)
+        let image = screenshot.image
+        let pixels = try XCTUnwrap(image.cgImage, "Full-screen screenshot has no bitmap")
+        let swapsAxes: Bool
+        switch image.imageOrientation {
+        case .left, .leftMirrored, .right, .rightMirrored: swapsAxes = true
+        default: swapsAxes = false
+        }
+        let displayedWidth = swapsAxes ? pixels.height : pixels.width
+        let displayedHeight = swapsAxes ? pixels.width : pixels.height
+        let appFrame = app.frame
+        let orientationMatches = (displayedWidth > displayedHeight) == (appFrame.width > appFrame.height)
+        let geometry: [String: Any] = [
+            "schemaVersion": 1,
+            "captureSource": "XCUIScreen.main",
+            "name": name,
+            "language": language,
+            "appFrame": captureFrame(appFrame),
+            "windowFrames": app.windows.allElementsBoundByIndex.map { captureFrame($0.frame) },
+            "deviceOrientation": XCUIDevice.shared.orientation.rawValue,
+            "imageOrientation": image.imageOrientation.rawValue,
+            "pixelWidth": pixels.width,
+            "pixelHeight": pixels.height,
+            "displayedWidth": displayedWidth,
+            "displayedHeight": displayedHeight,
+            "orientationMatchesApp": orientationMatches
+        ]
         if let destination = ProcessInfo.processInfo.environment["GSD_SCREENSHOT_DIR"] {
             let directory = URL(fileURLWithPath: destination, isDirectory: true)
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-            try app.screenshot().pngRepresentation.write(to: directory.appendingPathComponent(name + ".png"))
+            try screenshot.pngRepresentation.write(to: directory.appendingPathComponent(name + ".png"))
+            try JSONSerialization.data(withJSONObject: geometry, options: [.prettyPrinted, .sortedKeys])
+                .write(to: directory.appendingPathComponent(name + ".geometry.json"))
         }
+        // Persist the raw failure evidence before checking its displayed orientation.
+        XCTAssertGreaterThan(appFrame.width, 0, "App frame is empty during capture")
+        XCTAssertGreaterThan(appFrame.height, 0, "App frame is empty during capture")
+        XCTAssertTrue(orientationMatches, "Full-screen screenshot orientation disagrees with app frame: \(name)")
+    }
+
+    private func captureFrame(_ frame: CGRect) -> [String: Double] {
+        ["x": Double(frame.minX), "y": Double(frame.minY),
+         "width": Double(frame.width), "height": Double(frame.height)]
     }
 
     func test01LocalizedNavigationEditorChartsAndRTL() throws {
@@ -71,6 +121,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
         let matrixItem = navigation(app, matrix)
         let settingsItem = navigation(app, settings)
         XCTAssertTrue(settingsItem.exists)
+        try capture(app, "01-matrix-diagnostic-before-assertion")
         if app.tabBars.firstMatch.exists {
             if hebrew {
                 XCTAssertGreaterThan(matrixItem.frame.midX, settingsItem.frame.midX, "Hebrew tab order must mirror")
@@ -135,13 +186,33 @@ final class GSDCloudReleaseUITests: XCTestCase {
             let savedLink = app.descendants(matching: .any).matching(identifier: "browse-saved").firstMatch
             XCTAssertTrue(savedLink.waitForExistence(timeout: 8), "Browse list did not open")
             XCTAssertTrue(savedLink.isHittable, "Browse content is obscured")
+            let recurring = app.descendants(matching: .any).matching(NSPredicate(
+                format: "label BEGINSWITH %@", label("Recurring Tasks,", "משימות חוזרות,"))).firstMatch
+            for _ in 0..<3 where !recurring.isHittable { app.swipeUp() }
+            let assistant = app.buttons["hanlin.assistant.open"].firstMatch
+            try capture(app, "05-browse-diagnostic-before-assertion")
+            XCTAssertTrue(recurring.waitForExistence(timeout: 5), "Recurring Tasks row is missing")
+            XCTAssertTrue(recurring.isHittable, "Recurring Tasks row cannot be reached")
+            XCTAssertTrue(assistant.waitForExistence(timeout: 5), "Browse assistant action is missing")
+            XCTAssertTrue(assistant.isHittable, "Browse assistant action is obscured")
+            XCTAssertFalse(recurring.frame.intersects(assistant.frame),
+                           "Browse assistant covers the Recurring Tasks row")
+            try capture(app, "05-browse")
+            recurring.tap()
+            XCTAssertTrue(app.navigationBars[label("Recurring Tasks", "משימות חוזרות")]
+                .waitForExistence(timeout: 8), "Recurring Tasks row did not open its destination")
+            try capture(app, "05-recurring-tasks-opened")
         } else {
             // Regular iPad has no Browse tab. Its sidebar browses the Library directly.
             navigate(app, label("Saved", "שמורים"))
             let savedLibrary = app.descendants(matching: .any).matching(identifier: "saved-library").firstMatch
             XCTAssertTrue(savedLibrary.waitForExistence(timeout: 8), "Sidebar did not open the Saved library")
+            try capture(app, "05-browse")
         }
-        try capture(app, "05-browse")
+        if app.tabBars.firstMatch.exists {
+            // Reveal the compact tab bar after scrolling to the lower Browse row.
+            app.swipeDown()
+        }
         navigate(app, settings)
         let account = app.buttons["gsd.cloud.open"]
         for _ in 0..<4 where !account.isHittable { app.swipeUp() }

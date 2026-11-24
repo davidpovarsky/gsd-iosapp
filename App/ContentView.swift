@@ -75,17 +75,24 @@ struct ContentView: View {
                     .environment(session)
             }
             .overlay(alignment: .bottomTrailing) {
-                Button {
-                    showHanlinAssistant = true
-                } label: {
-                    Label("AI", systemImage: "sparkles")
-                        .labelStyle(.titleAndIcon)
+                if sizeClass != .compact || palette.compactTab != 1 {
+                    hanlinAssistantButton
+                        .padding(.trailing, 18)
+                        .padding(.bottom, sizeClass == .compact ? 100 : 24)
                 }
-                .buttonStyle(.borderedProminent)
-                .padding(.trailing, 18)
-                .padding(.bottom, sizeClass == .compact ? 100 : 24)
-                .accessibilityLabel("Open Hanlin task AI assistant")
             }
+    }
+
+    private var hanlinAssistantButton: some View {
+        Button {
+            showHanlinAssistant = true
+        } label: {
+            Label("AI", systemImage: "sparkles")
+                .labelStyle(.titleAndIcon)
+        }
+        .buttonStyle(.borderedProminent)
+        .accessibilityLabel("Open Hanlin task AI assistant")
+        .accessibilityIdentifier("hanlin.assistant.open")
     }
 
     private var actionContent: some View {
@@ -275,6 +282,14 @@ struct ContentView: View {
                 .tabItem { Label(String(localized: "Matrix"), systemImage: "square.grid.2x2") }
                 .tag(0)
             SmartViewListView()
+                // Reserve space in Browse so the assistant cannot cover a list row.
+                .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
+                    hanlinAssistantButton
+                        .padding(.horizontal, 18)
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .background(Surface.paper)
+                }
                 .tabItem { Label(String(localized: "Browse"), systemImage: "line.3.horizontal.decrease.circle") }
                 .tag(1)
             DashboardView()
@@ -384,9 +399,11 @@ private struct RegularRootView: View {
                 sidebarNavLabel(String(localized: "Matrix"), .matrix) {
                     Image("LaunchMark").resizable().scaledToFit().frame(width: 22, height: 22)
                 }
+                .accessibilityIdentifier("gsd.sidebar.matrix")
                 sidebarNavLabel(String(localized: "Dashboard"), .dashboard) {
                     sidebarSymbol("chart.bar.xaxis", .dashboard)
                 }
+                .accessibilityIdentifier("gsd.sidebar.dashboard")
 
                 Section(String(localized: "Smart Views")) {
                     ForEach(store.pinnedViews) { view in sidebarRow(view) }
@@ -404,8 +421,11 @@ private struct RegularRootView: View {
 
                 Section(String(localized: "Library")) {
                     sidebarNavLabel(String(localized: "Saved"), .saved) { sidebarSymbol("bookmark", .saved) }
+                        .accessibilityIdentifier("gsd.sidebar.saved")
                     sidebarNavLabel(String(localized: "Archive"), .archive) { sidebarSymbol("archivebox", .archive) }
+                        .accessibilityIdentifier("gsd.sidebar.archive")
                     sidebarNavLabel(String(localized: "Settings"), .settings) { sidebarSymbol("gearshape", .settings) }
+                        .accessibilityIdentifier("gsd.sidebar.settings")
                 }
             }
             // No opaque fill: the sidebar is system chrome and takes the system's material
