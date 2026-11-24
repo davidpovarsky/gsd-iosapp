@@ -103,6 +103,48 @@ final class GSDSystemSurfaceUITests: XCTestCase {
         }
     }
 
+    func test02DiscoverOwnedSystemControls() throws {
+        try prepareSystemSurfaceTest()
+        let app = normalApplication()
+        app.launch()
+        try requireMatrix(app)
+        app.terminate()
+        XCUIDevice.shared.press(.home)
+
+        let springboard = XCUIApplication(bundleIdentifier: springboardBundle)
+        let icon = springboard.icons.matching(identifier: "GSD").firstMatch
+        for _ in 0..<2 where !icon.isHittable { springboard.swipeRight() }
+        let iconAvailable = icon.exists && icon.isHittable
+        if iconAvailable { icon.press(forDuration: 1.2) }
+        try capture(springboard, "20-observed-gsd-home-controls")
+        XCUIDevice.shared.press(.home)
+
+        try require(installedBundles.contains(shortcutsBundle), "Shortcuts is absent from this owned simulator.")
+        let shortcuts = XCUIApplication(bundleIdentifier: shortcutsBundle)
+        shortcuts.activate()
+        let continueButton = shortcuts.buttons["המשך"]
+        if continueButton.waitForExistence(timeout: 5) {
+            try require(continueButton.isHittable, "The observed Shortcuts introduction is obscured.")
+            continueButton.tap()
+            try require(continueButton.waitForNonExistence(timeout: 10), "The Shortcuts introduction did not dismiss.")
+        }
+        try capture(shortcuts, "21-shortcuts-after-introduction")
+        let create = shortcuts.buttons["main.button.newshortcut"]
+        try require(create.waitForExistence(timeout: 10) && create.isHittable,
+                    "The observed New Shortcut control is unavailable.")
+        create.tap()
+        try capture(shortcuts, "22-shortcuts-action-picker")
+        try writeJSON([
+            "schemaVersion": 1, "appSourceSHA": sourceSHA,
+            "scope": "observed_owned_system_controls_only",
+            "gsdHomeIconLongPressObserved": iconAvailable,
+            "shortcutEditorOpened": true,
+            "widgetTimelineVerified": false, "shortcutInvoked": false,
+            "personalAccountUsed": false
+        ], name: "system-control-discovery.json")
+        shortcuts.terminate()
+    }
+
     private func runTextShare(_ app: XCUIApplication) throws {
         let token = String(UUID().uuidString.prefix(8))
         let sourceTitle = "בדיקת שיתוף GSD " + token
@@ -232,7 +274,7 @@ final class GSDSystemSurfaceUITests: XCTestCase {
         share.tap()
         try capture(app, phase + "-activity-sheet")
         let roots = try activityRoots(app)
-        let activity = try uniqueSourceNamedButton("GSD", roots: roots)
+        let activity = try uniqueSourceNamedButton("GSD", roots: roots, phase: phase)
         try shareAssertion("activitySheetOpened")
         activity.tap()
         try captureRaw(phase + "-extension-before-query")
@@ -258,7 +300,7 @@ final class GSDSystemSurfaceUITests: XCTestCase {
         return roots
     }
 
-    private func uniqueSourceNamedButton(_ title: String, roots: [XCUIApplication]) throws -> XCUIElement {
+    private func uniqueSourceNamedButton(_ title: String, roots: [XCUIApplication], phase: String) throws -> XCUIElement {
         for root in roots {
             let matches = root.buttons.matching(NSPredicate(format: "label == %@", title))
             if matches.firstMatch.waitForExistence(timeout: 5) {
@@ -267,7 +309,11 @@ final class GSDSystemSurfaceUITests: XCTestCase {
                 return matches.firstMatch
             }
         }
-        throw SystemSurfaceFailure(message: "The real activity sheet exposes no hittable GSD button. Extension availability/selector remains incomplete; inspect its captured hierarchy before adding a system selector.")
+        // Retain settled hosts after both lookups, not only the immediate post-menu frame.
+        for (index, root) in roots.enumerated() where root.state != .notRunning {
+            try capture(root, phase + "-post-wait-root-" + String(index))
+        }
+        throw SystemSurfaceFailure(message: "The activity lookup exposes no hittable GSD button. Inspect its post-wait host hierarchy before adding a system selector.")
     }
 
     private func enterMarker(_ marker: String, in host: XCUIApplication) throws {

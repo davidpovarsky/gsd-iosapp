@@ -62,6 +62,7 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
             try openAccount(app)
             try requireDisconnected(app, expectedStatus: signedOut)
             try saveAppScreenshot("01-disconnected-before-start")
+            try saveChromeDiagnostics([app], name: "before-continue")
             app.buttons["chatgpt.continue"].tap()
             receipt["continueActivated"] = true
             try saveReceipt()
@@ -175,6 +176,7 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
             }
             Thread.sleep(forTimeInterval: 0.25)
         } while Date() < deadline
+        try saveChromeDiagnostics(owners, name: "unresolved-browser")
         throw Incomplete(reason: "Official browser chrome and an unambiguous Cancel were not observed.")
     }
 
@@ -260,6 +262,89 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
             }
         }
         return visibleHostOnly ? "visible_host_only" : nil
+    }
+
+    private func saveChromeDiagnostics(_ owners: [XCUIApplication], name: String) throws {
+        guard let output else { throw Incomplete(reason: "Private artifact output is unavailable.") }
+        var records: [[String: Any]] = []
+        for (ownerIndex, owner) in owners.enumerated() where owner.state != .notRunning {
+            var containers: [[String: Any]] = []
+            for (kind, query) in [("navigationBar", owner.navigationBars), ("toolbar", owner.toolbars)] {
+                for index in 0..<min(query.count, 8) {
+                    let container = query.element(boundBy: index)
+                    var record = chromeControl(container)
+                    record["kind"] = kind
+                    record["index"] = index
+                    let controls = Array(container.buttons.allElementsBoundByIndex.prefix(16)) +
+                        Array(container.staticTexts.allElementsBoundByIndex.prefix(12)) +
+                        Array(container.textFields.allElementsBoundByIndex.prefix(3)) +
+                        Array(container.otherElements.allElementsBoundByIndex.prefix(8))
+                    record["controls"] = controls.map(chromeControl)
+                    containers.append(record)
+                }
+            }
+            let actions = owner.buttons.matching(NSPredicate(
+                format: "label IN %@ OR identifier IN %@",
+                ["Close", "Cancel", "Done"] as NSArray,
+                ["Close", "Cancel", "Done", "chatgpt.continue"] as NSArray))
+            records.append([
+                "ownerIndex": ownerIndex, "ownerState": Int(owner.state.rawValue),
+                "webViewCount": owner.webViews.count, "nativeContainers": containers,
+                "unscopedDismissCandidates": actions.allElementsBoundByIndex.prefix(12).map(unscopedDismissCandidate)
+            ])
+        }
+        // Only native navigation/tool bars and exact dismissal candidates are inspected.
+        // Global dismissal candidates retain only an allowlisted label and geometry; no raw values.
+        // No browser screenshot or full debug hierarchy is requested.
+        let data = try JSONSerialization.data(withJSONObject: [
+            "schemaVersion": 1, "appSourceSHA": appSourceSHA, "owners": records,
+            "arbitraryPageValuesRecorded": false, "browserScreenshotRequested": false
+        ], options: [.prettyPrinted, .sortedKeys])
+        try data.write(to: output.appendingPathComponent(name + "-chrome.json"), options: .atomic)
+    }
+
+    private func chromeControl(_ element: XCUIElement) -> [String: Any] {
+        let frame = element.frame
+        return [
+            "type": Int(element.elementType.rawValue),
+            "identifier": safeChromeString(element.identifier),
+            "label": safeChromeString(element.label),
+            "value": safeChromeString(element.value as? String ?? ""),
+            "isHittable": element.isHittable,
+            "frame": ["x": frame.minX, "y": frame.minY, "width": frame.width, "height": frame.height]
+        ]
+    }
+
+    private func unscopedDismissCandidate(_ element: XCUIElement) -> [String: Any] {
+        let frame = element.frame
+        let label = element.label
+        let allowed = ["Close", "Cancel", "Done", "Continue with ChatGPT"]
+        return [
+            "scope": "unscoped_candidate",
+            "type": Int(element.elementType.rawValue),
+            "label": allowed.contains(label) ? label : "[redacted]",
+            "isHittable": element.isHittable,
+            "frame": ["x": frame.minX, "y": frame.minY, "width": frame.width, "height": frame.height]
+        ]
+    }
+
+    private func safeChromeString(_ raw: String) -> String {
+        let value = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        let officialHosts = ["auth.openai.com", "openai.com", "chatgpt.com"]
+        if let url = URLComponents(string: value),
+           ["http", "https"].contains(url.scheme?.lowercased() ?? ""),
+           let host = url.host?.lowercased(), officialHosts.contains(host),
+           url.user == nil, url.password == nil {
+            return (url.scheme?.lowercased() ?? "https") + "://" + host
+        }
+        let knownLabels = [
+            "", "Close", "Cancel", "Done", "Continue", "Continue with ChatGPT",
+            "GSD", "Matrix", "Task AI assistant", "Hanlin model settings", "ChatGPT account",
+            "Back", "Forward", "Reload", "Stop", "Address", "URL", "Website",
+            "Website Information", "Secure", "Search", "Show Completed", "Edit",
+            "MCP", "Model", "Toolbar", "auth.openai.com", "openai.com", "chatgpt.com"
+        ]
+        return knownLabels.contains(value) ? value : "[redacted]"
     }
 
     private func publicErrorMarker(in webView: XCUIElement) -> String? {

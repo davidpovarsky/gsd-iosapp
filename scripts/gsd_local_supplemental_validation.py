@@ -416,6 +416,19 @@ def png(path: Path)->dict:
  width,height=struct.unpack_from(">II",data,16);require(width>0 and height>0,"picture_dimensions")
  return {"sha256":sha(path),"bytes":len(data),"pixelWidth":width,"pixelHeight":height}
 
+def capture_failure_runtime_diagnostics(manager: OwnedDevices,device: str,kind: str)->None:
+ predicate='(process == "GSD" OR process == "GSDShareExtension") AND (eventMessage CONTAINS[c] "UIActivityViewController" OR eventMessage CONTAINS[c] "Attempt to present" OR eventMessage CONTAINS[c] "not in the window hierarchy" OR eventMessage CONTAINS[c] "ASWebAuthenticationSessionErrorDomain")'
+ diagnostic={"scope":"owned_simulator_presentation_errors","device":device,"kind":kind}
+ try:
+  result=subprocess.run(["xcrun","simctl","spawn",device,"log","show","--style","compact","--last","5m","--predicate",predicate],
+   env=manager.environment,capture_output=True,text=True,timeout=20)
+  text=result.stdout+"\n"+result.stderr
+  text=re.sub(r"https?://[^\s\"'<>]+","[redacted-url]",text)
+  text=re.sub(r"(?i)(access_token|refresh_token|id_token|code_verifier|authorization|cookie|state)\s*[:=]\s*[^\s,;]+",r"\1=[redacted]",text)
+  diagnostic.update(returncode=result.returncode,lines=[line[:1200] for line in text.splitlines()[-80:]])
+ except Exception as error:diagnostic["captureFailure"]=type(error).__name__
+ (manager.private/(kind+"-runtime-diagnostics.json")).write_text(json.dumps(diagnostic,indent=2))
+
 def run_ui(kind: str,manager: OwnedDevices,receipt: dict,products: Path,xctestrun: Path,public: Path)->dict:
  language="he" if kind=="share" else "en"
  runtime=required_runtime(manager.inventory(),IOS_RUNTIME,"27.2","24B8117")
@@ -433,6 +446,7 @@ def run_ui(kind: str,manager: OwnedDevices,receipt: dict,products: Path,xctestru
   "-destination-timeout","90","-parallel-testing-enabled","NO","-collect-test-diagnostics","never","-resultBundlePath",str(result),"-testLanguage",language,"-testRegion","IL" if language=="he" else "US"]
  command.extend("-only-testing:GSDScreenshotTests/"+name for name in TESTS[kind])
  code,log=manager.run(command,timeout=1200 if kind=="share" else 600,check=False,environment=environment)
+ if code!=0:capture_failure_runtime_diagnostics(manager,device,kind)
  observation_path=ui/("system-surface-observations.json" if kind=="share" else "siwc-preconsent-observation.json")
  observation=json.loads(observation_path.read_text())
  if kind=="preconsent":
