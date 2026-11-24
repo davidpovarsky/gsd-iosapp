@@ -1,0 +1,14 @@
+{
+  "language": "en",
+  "locale": "en_US",
+  "passed": true,
+  "processID": 48849,
+  "aliveAfterSeconds": 5,
+  "screenshot": "watch-en.png",
+  "pixelWidth": 416,
+  "pixelHeight": 496,
+  "screenshot_sha256": "b2edf02fc898d08edfb3c20d606501f9bc58400381ae7f4d2ea780b86dcf0cc5",
+  "captureSource": "simctl io screenshot",
+  "visualReview": "pending",
+  "launchMode": "normal; standard language arguments only"
+}

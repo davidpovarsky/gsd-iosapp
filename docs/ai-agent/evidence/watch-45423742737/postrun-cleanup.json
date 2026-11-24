@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-11-24T15:23:07.963975+00:00",
+  "sourceRun": 45423742737,
+  "host": {
+    "checkedAt": "2026-11-24T15:23:07.963975+00:00",
+    "ownedSimulatorIDs": [
+      "F8E8D2F5-2F4C-432E-B491-8CF7FAE7E802",
+      "0CF1DA4F-E201-40DF-B783-FB3D5F260730"
+    ],
+    "remainingOwnedSimulators": [],
+    "ownedPairRemaining": false,
+    "ownedRunnerProcesses": [],
+    "listenerOriginalPIDExists": false,
+    "configFilesPresent": {
+      ".runner": false,
+      ".credentials": false,
+      ".credentials_rsaparams": false
+    },
+    "priorWorkDirectoriesUnchanged": true,
+    "selectedDeveloper": "/Applications/Xcode.app/Contents/Developer"
+  },
+  "gitHub": {
+    "total_count": 0,
+    "ownedRunnerPresent": false
+  },
+  "scope": "Independent read-only postrun check of only the owned simulator IDs, pair and ephemeral runner; unrelated projects and prior work directories preserved."
+}

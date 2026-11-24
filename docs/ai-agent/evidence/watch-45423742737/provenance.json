@@ -1,0 +1,39 @@
+{
+  "appSourceSHA": "71b1b7ce4adf7bea2ddacfc683a69906d6acd6ae",
+  "harnessSHA": "a4fdad3a1d6fe78b282c0c87b73a4cafd124be9c",
+  "harnessRunID": 45423742737,
+  "nativeValidationRunID": 45397928701,
+  "build": "48",
+  "artifactID": 14935288231,
+  "artifactBytes": 92710,
+  "artifactSHA256": "0cbed170c219db56c69275c9976968bb45b0408c403ca4b558bebb8b8a5003eb",
+  "originalFiles": {
+    "watch-smoke.json": {
+      "sha256": "89f6fd70768decfb15e1c18dbbd48f38faf17d90e35362b45711f4db41b3d83b",
+      "bytes": 4425
+    },
+    "watch-en.png": {
+      "sha256": "b2edf02fc898d08edfb3c20d606501f9bc58400381ae7f4d2ea780b86dcf0cc5",
+      "bytes": 28612
+    },
+    "watch-he.png": {
+      "sha256": "36383c875033cb1359c3df37546d28b9b92c41c2678fe8cc0a199d13a47fe3a8",
+      "bytes": 22340
+    },
+    "watch-en.geometry.json": {
+      "sha256": "bc1f443fffbdaf852c69f7d794f5d9e30e65d3c367002d991ab65de04396e717",
+      "bytes": 408
+    },
+    "watch-he.geometry.json": {
+      "sha256": "4679de0d1d5a91cc77bf5d22bb28d2fdb85f3635cb479e5b91414c1f0e5d763a",
+      "bytes": 408
+    }
+  },
+  "visualReview": {
+    "completed": true,
+    "scope": "Actual EN and HE initial Watch screenshots; both readable with no clipping. Different data states, not a same-state locale comparison.",
+    "knownCosmeticFinding": "EN initial empty rounded footer card remains visible in this source; tracked for a separate reviewed source correction."
+  },
+  "fullNativeOrSystemSurfaceAcceptance": false,
+  "limitations": "No WatchConnectivity, complication/widget timeline, task-write, Siri, VoiceOver or physical-device proof."
+}

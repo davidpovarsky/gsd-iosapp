@@ -1,0 +1,114 @@
+{
+  "passed": true,
+  "harness_sha": "a4fdad3a1d6fe78b282c0c87b73a4cafd124be9c",
+  "harness_run_id": "45423742737",
+  "devices": {
+    "phone": {
+      "id": "F8E8D2F5-2F4C-432E-B491-8CF7FAE7E802",
+      "type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+      "runtimeVersion": "27.0",
+      "bootAttempts": [
+        {
+          "attempt": 1,
+          "status": "passed"
+        }
+      ],
+      "stage": "bootstatus"
+    },
+    "watch": {
+      "id": "0CF1DA4F-E201-40DF-B783-FB3D5F260730",
+      "type": "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-12-46mm",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.watchOS-27-0",
+      "runtimeVersion": "27.0",
+      "bootAttempts": [
+        {
+          "attempt": 1,
+          "status": "passed"
+        }
+      ],
+      "stage": "bootstatus"
+    }
+  },
+  "languages": [
+    {
+      "language": "en",
+      "locale": "en_US",
+      "passed": true,
+      "processID": 48849,
+      "aliveAfterSeconds": 5,
+      "screenshot": "watch-en.png",
+      "pixelWidth": 416,
+      "pixelHeight": 496,
+      "screenshot_sha256": "b2edf02fc898d08edfb3c20d606501f9bc58400381ae7f4d2ea780b86dcf0cc5",
+      "captureSource": "simctl io screenshot",
+      "visualReview": "pending",
+      "launchMode": "normal; standard language arguments only"
+    },
+    {
+      "language": "he",
+      "locale": "he_IL",
+      "passed": true,
+      "processID": 49149,
+      "aliveAfterSeconds": 5,
+      "screenshot": "watch-he.png",
+      "pixelWidth": 416,
+      "pixelHeight": 496,
+      "screenshot_sha256": "36383c875033cb1359c3df37546d28b9b92c41c2678fe8cc0a199d13a47fe3a8",
+      "captureSource": "simctl io screenshot",
+      "visualReview": "pending",
+      "launchMode": "normal; standard language arguments only"
+    }
+  ],
+  "scope": "Watch process launch/liveness and raw localized screenshots only",
+  "limitations": "No WatchConnectivity, complication/widget timeline, task-write, Siri, VoiceOver or physical-device proof.",
+  "xcode_version": "Xcode 27.0\nBuild version 27A266a",
+  "provenance": {
+    "source_sha": "71b1b7ce4adf7bea2ddacfc683a69906d6acd6ae",
+    "native_run_id": "45397928701",
+    "validation_head_sha": "d0c5b9649a95e34aef0d4a641a28e2b7382bec0f",
+    "compiled_product_run_id": "45397928701",
+    "compiled_product_run_conclusion": "success",
+    "composed_acceptance": false,
+    "dedicated_workflow_validation": true,
+    "build": "48",
+    "artifact_id": 14921503382,
+    "github_artifact_digest": "sha256:881712bd03e5e6fd3ef0649805fc2bf661ba5fa60d6982215eb8c2018b05c209",
+    "product_zip_sha256": "cfc50d90f996967ec968d967f56f656d128f1fe9d0d4be7d531fc72f0449428d",
+    "simulator_helper_sha256": "5d8080cab503daeb012e1494215d9f702b480deb04f94929f1005d520d4ab367",
+    "parent_native_receipt_verified": true
+  },
+  "bundles": {
+    "phone": {
+      "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_watch_work_20261124/gsd-iosapp/gsd-iosapp/dist/gsd-native-release/watch-smoke/products/Products/Debug-iphonesimulator/GSD.app",
+      "bundleID": "com.itorah.gsd",
+      "executable": "GSD",
+      "minimumOS": "27.0",
+      "executable_sha256": "d60067e7adf29c5d4f80a01d15d1fc968be83f807c4bfdb1c5010014eacb52ab"
+    },
+    "watch": {
+      "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_watch_work_20261124/gsd-iosapp/gsd-iosapp/dist/gsd-native-release/watch-smoke/products/Products/Debug-watchsimulator/GSDWatch.app",
+      "bundleID": "com.itorah.gsd.watchkitapp",
+      "executable": "GSDWatch",
+      "minimumOS": "26.0",
+      "executable_sha256": "08f1e9477bf30174b0df194d05713d706a11674b8dc6885e1676bc4b501f2235"
+    }
+  },
+  "creation_requests": {
+    "phone": {
+      "name": "GSD-WatchSmoke-phone-45423742737-400a3882",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+      "preexisting_device_count": 26,
+      "ownership_source": "Successful own create response; inventory confirmation follows"
+    },
+    "watch": {
+      "name": "GSD-WatchSmoke-watch-45423742737-3b204a62",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.watchOS-27-0",
+      "preexisting_device_count": 27,
+      "ownership_source": "Successful own create response; inventory confirmation follows"
+    }
+  },
+  "pair_id": "AE3FEE51-2C30-4424-9098-E835C8B71D63",
+  "created_simulators_removed": true,
+  "timestamp": "2026-11-24T15:19:35.904336+00:00"
+}
