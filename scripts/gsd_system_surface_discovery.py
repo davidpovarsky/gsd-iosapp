@@ -319,6 +319,8 @@ def cleanup(device: str, output: Path, report: dict) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--driver-developer-dir", type=Path,
+                        help="Optional existing Xcode 27.0/27A266a driver; compiler stays verified 27.1")
     args = parser.parse_args()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
@@ -347,7 +349,7 @@ def main() -> int:
             "resolved_xcodebuild": run(["xcrun", "--find", "xcodebuild"],
                                       output / "logs/resolved-xcodebuild.log", timeout=30).strip(),
             "developer_dir": os.environ.get("DEVELOPER_DIR"),
-            "scope": "managed xcode-27; this new test runner build and XCTest driver only"}
+            "scope": "this new test runner compiler; XCTest driver is recorded separately"}
         assert re.fullmatch(r"[0-9a-f]{40}", report["harness_sha"]) and report["harness_run_id"].isdigit()
         subprocess.run(["git", "merge-base", "--is-ancestor", SOURCE, report["harness_sha"]],
                        check=True, capture_output=True, timeout=20)
@@ -402,6 +404,25 @@ def main() -> int:
         report["new_test_runner_tree"] = tree_digest(products)
         test_configuration = plistlib.loads(xctestruns[0].read_bytes())
         assert not re.search(r"/GSD\.app(?:/|\")", json.dumps(test_configuration)), "Projected runner points at an app product"
+        # Override only this helper process and its children, never xcode-select.
+        if args.driver_developer_dir is not None:
+            driver = args.driver_developer_dir
+            assert driver.is_absolute() and driver.is_dir(), "Driver Developer directory is unavailable"
+            driver = driver.resolve()
+            os.environ["DEVELOPER_DIR"] = str(driver)
+            environment["DEVELOPER_DIR"] = str(driver)
+        driver_version = run(["xcodebuild", "-version"], output / "logs/xctest-driver-version.log").strip()
+        expected_driver = "Xcode 27.0\nBuild version 27A266a" if args.driver_developer_dir is not None else XCODE
+        assert driver_version == expected_driver, "Unexpected XCTest driver toolchain"
+        driver_executable = run(["xcrun", "--find", "xcodebuild"],
+                                output / "logs/xctest-driver-path.log", timeout=30).strip()
+        if args.driver_developer_dir is not None:
+            assert Path(driver_executable).resolve() == (driver / "usr/bin/xcodebuild").resolve()
+        report["supplemental_xctest_driver"] = {
+            "version": driver_version, "resolved_xcodebuild": driver_executable,
+            "developer_dir": os.environ.get("DEVELOPER_DIR"),
+            "explicit_override": args.driver_developer_dir is not None,
+            "scope": "simctl/runtime, test-without-building, xcresulttool and owned cleanup"}
         inventory = json.loads(run(["xcrun", "simctl", "list", "--json"], output / "logs/runtime-inventory.json"))
         runtime = next(r for r in inventory["runtimes"] if r["identifier"] == RUNTIME and r.get("isAvailable"))
         assert runtime["buildversion"] == RUNTIME_BUILD and runtime["version"] == "27.2"

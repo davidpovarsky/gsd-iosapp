@@ -71,15 +71,26 @@ existing compiled-resource auditor and the same simulator entitlement parser
 verify all five bundle IDs, version, App Group, runtime identities and strict
 code signatures. The entire app/embedded-target file tree must match before
 and after test compilation and at installed-app readback; it must remain
-unchanged at final cleanup. The managed xcode-27 supplement requires and records
-its own default Xcode 27.1 (27A9275) for both the new test-runner build and XCTest,
-plus iOS 27.2 runtime build 24B8117. It records the resolved xcodebuild path and
-DEVELOPER_DIR without changing host selection or installing an SDK.
+unchanged at final cleanup. By default, the managed xcode-27 supplement still
+requires Xcode 27.1 (27A9275) for both the new test-runner build and XCTest,
+plus iOS 27.2 runtime build 24B8117.
 
-The parent's retained logs independently show app compilation with staged
-Xcode 27.1 (27A9275) and XCTest execution with that host's Xcode 27.0 (27A266a).
-That parent-specific split is recorded as a provenance reference, not assumed
-to describe this different managed runner. The original app is never rebuilt.
+For the separately verified existing Mac route, pass
+`--driver-developer-dir /Applications/Xcode.app/Contents/Developer` while the
+build environment already selects the existing staged Xcode 27.1. The compiler
+gate remains unchanged. Only after the test-only build, the helper selects that
+explicit directory in its own process environment and the XCTest child
+environment. The explicit driver must report exactly Xcode 27.0 (27A266a);
+its resolved executable must belong to the supplied Developer directory.
+The driver handles simctl, runtime checks, XCTest, result inspection and owned
+cleanup. Compiler and driver versions, resolved paths and DEVELOPER_DIR are
+recorded separately. No xcode-select change or SDK installation is performed.
+
+The parent's retained logs independently show the same 27.1 compiler / 27.0
+driver split, but the new run must establish its own identities and outcomes.
+The original app is never rebuilt. The pre-consent helper's dependency remains
+pinned to immutable commit 93a46c and its original full file hash; this optional
+surface-driver change cannot silently substitute for that frozen dependency.
 
 The receipt separately records app source, compiled-product run and hashes,
 new harness SHA, test Swift SHA-256, projected project hash, and newly compiled

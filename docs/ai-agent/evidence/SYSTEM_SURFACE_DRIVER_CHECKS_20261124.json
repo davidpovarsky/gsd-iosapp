@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "sourceSha256": "299ccdd282b240f8231890bad5e65ba8995abcb0645cb0af3ca0617911aa65be",
+  "parent": "e70f77e884ed7650829528919ad66ef437e99599",
+  "scope": "new optional-driver environment/version/path controls only",
+  "runtimeExecution": false,
+  "passed": 7,
+  "failed": 0,
+  "cases": [
+    {
+      "case": "default_keeps_27_1_process_and_test_env",
+      "result": "passed",
+      "scope": "actual source environment block with stubbed tool output; no Mac command"
+    },
+    {
+      "case": "explicit_27_0_updates_only_process_and_test_env",
+      "result": "passed",
+      "scope": "actual source environment block with stubbed tool output; no Mac command"
+    },
+    {
+      "case": "default_rejects_27_0_driver",
+      "result": "passed",
+      "scope": "actual source environment block with stubbed tool output; no Mac command"
+    },
+    {
+      "case": "explicit_rejects_27_1_driver",
+      "result": "passed",
+      "scope": "actual source environment block with stubbed tool output; no Mac command"
+    },
+    {
+      "case": "explicit_rejects_wrong_resolved_executable",
+      "result": "passed",
+      "scope": "actual source environment block with stubbed tool output; no Mac command"
+    },
+    {
+      "case": "explicit_rejects_relative_directory",
+      "result": "passed",
+      "scope": "actual source environment block with stubbed tool output; no Mac command"
+    },
+    {
+      "case": "explicit_rejects_missing_directory",
+      "result": "passed",
+      "scope": "actual source environment block with stubbed tool output; no Mac command"
+    }
+  ]
+}
