@@ -2,6 +2,32 @@ import Foundation
 import UIKit
 import XCTest
 
+private struct UIAcceptanceFailure: LocalizedError {
+    let message: String
+    let file: String
+    let line: UInt
+
+    var errorDescription: String? { "\(file):\(line): \(message)" }
+}
+
+// Recording an XCTest assertion with continueAfterFailure=false can interrupt
+// an async test before its invocation unwinds. Throw without recording first,
+// so the existing strict account teardown can run on the normal error path.
+private func requireAcceptance(_ condition: Bool, _ message: String,
+                               file: StaticString = #fileID, line: UInt = #line) throws {
+    guard condition else {
+        throw UIAcceptanceFailure(message: message, file: String(describing: file), line: line)
+    }
+}
+
+private func requireAcceptanceValue<T>(_ value: T?, _ message: String,
+                                       file: StaticString = #fileID, line: UInt = #line) throws -> T {
+    guard let value else {
+        throw UIAcceptanceFailure(message: message, file: String(describing: file), line: line)
+    }
+    return value
+}
+
 /// Release acceptance on disposable simulators. Uses the real UI, TaskStore,
 /// Keychain session and cloud endpoint; no app-only test authentication backdoor.
 /// Scope: selected simulator screens, tab/sidebar RTL geometry, one chart range change,
@@ -30,7 +56,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
         return app
     }
 
-    private func navigation(_ app: XCUIApplication, _ title: String) -> XCUIElement {
+    private func navigation(_ app: XCUIApplication, _ title: String) throws -> XCUIElement {
         let bar = app.tabBars.firstMatch
         if bar.exists { return bar.buttons[title].firstMatch }
         let sidebarIDs = [
@@ -40,10 +66,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
             label("Archive", "ארכיון"): "gsd.sidebar.archive",
             label("Settings", "הגדרות"): "gsd.sidebar.settings"
         ]
-        guard let identifier = sidebarIDs[title] else {
-            XCTFail("Unknown sidebar destination: \(title)")
-            return app.descendants(matching: .any).matching(identifier: "gsd.sidebar.invalid").firstMatch
-        }
+        let identifier = try requireAcceptanceValue(sidebarIDs[title], "Unknown sidebar destination: \(title)")
         // Select the actual sidebar row, never the identically named detail title.
         return app.descendants(matching: .any).matching(identifier: identifier).firstMatch
     }
@@ -52,19 +75,19 @@ final class GSDCloudReleaseUITests: XCTestCase {
         navigationAttempt += 1
         let checkpointName = "00-navigation-\(test.prefix(6))-\(navigationAttempt)"
         var checkpoint = try beginNavigationCheckpoint(checkpointName, destination: title)
-        let item = navigation(app, title)
+        let item = try navigation(app, title)
         let exists = item.waitForExistence(timeout: 15)
         checkpoint?["stage"] = "existence-wait-returned"
         checkpoint?["exists"] = exists
         try saveNavigationCheckpoint(checkpoint, name: checkpointName)
-        XCTAssertTrue(exists, "Missing navigation item: \(title)")
+        try requireAcceptance(exists, "Missing navigation item: \(title)")
         let hittable = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "hittable == true"), object: item)
         let result = XCTWaiter.wait(for: [hittable], timeout: 10)
         checkpoint?["stage"] = "hittability-wait-returned"
         checkpoint?["hittabilityWaitResult"] = result.rawValue
         try saveNavigationCheckpoint(checkpoint, name: checkpointName)
-        XCTAssertEqual(result, .completed, "Navigation item is obscured: \(title)")
+        try requireAcceptance(result == .completed, "Navigation item is obscured: \(title)")
         item.tap()
     }
 
@@ -83,7 +106,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
             try screenshot.pngRepresentation.write(to: directory.appendingPathComponent(name + ".png"))
         }
         let image = screenshot.image
-        let pixels = try XCTUnwrap(image.cgImage, "Navigation screenshot has no bitmap")
+        let pixels = try requireAcceptanceValue(image.cgImage, "Navigation screenshot has no bitmap")
         let swapsAxes: Bool
         switch image.imageOrientation {
         case .left, .leftMirrored, .right, .rightMirrored: swapsAxes = true
@@ -130,7 +153,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
             try screenshot.pngRepresentation.write(to: directory.appendingPathComponent(name + ".png"))
         }
         let image = screenshot.image
-        let pixels = try XCTUnwrap(image.cgImage, "Full-screen screenshot has no bitmap")
+        let pixels = try requireAcceptanceValue(image.cgImage, "Full-screen screenshot has no bitmap")
         let swapsAxes: Bool
         switch image.imageOrientation {
         case .left, .leftMirrored, .right, .rightMirrored: swapsAxes = true
@@ -161,9 +184,9 @@ final class GSDCloudReleaseUITests: XCTestCase {
                 .write(to: directory.appendingPathComponent(name + ".geometry.json"))
         }
         // Persist the raw failure evidence before checking its displayed orientation.
-        XCTAssertGreaterThan(appFrame.width, 0, "App frame is empty during capture")
-        XCTAssertGreaterThan(appFrame.height, 0, "App frame is empty during capture")
-        XCTAssertTrue(orientationMatches, "Full-screen screenshot orientation disagrees with app frame: \(name)")
+        try requireAcceptance(appFrame.width > 0, "App frame width is empty during capture")
+        try requireAcceptance(appFrame.height > 0, "App frame height is empty during capture")
+        try requireAcceptance(orientationMatches, "Full-screen screenshot orientation disagrees with app frame: \(name)")
     }
 
     private func captureFrame(_ frame: CGRect) -> [String: Double] {
@@ -213,8 +236,8 @@ final class GSDCloudReleaseUITests: XCTestCase {
         let card = app.descendants(matching: .any).matching(identifier: "task-card-demo-deck").firstMatch
         XCTAssertTrue(card.waitForExistence(timeout: 20), "Seeded Matrix content missing")
         XCTAssertTrue(app.textFields["capture-field"].exists)
-        let matrixItem = navigation(app, matrix)
-        let settingsItem = navigation(app, settings)
+        let matrixItem = try navigation(app, matrix)
+        let settingsItem = try navigation(app, settings)
         XCTAssertTrue(settingsItem.exists)
         try capture(app, "01-matrix-diagnostic-before-assertion")
         if app.tabBars.firstMatch.exists {
@@ -439,7 +462,8 @@ final class GSDCloudReleaseUITests: XCTestCase {
         }
         let base = ProcessInfo.processInfo.environment["GSD_CLOUD_TEST_BASE"] ??
             "https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud"
-        let fixture = CloudFixture(base: URL(string: base)!)
+        let baseURL = try requireAcceptanceValue(URL(string: base), "Invalid cloud acceptance base URL")
+        let fixture = CloudFixture(base: baseURL)
         // Register cleanup before any native signup work; the fixture never creates an account by API.
         addTeardownBlock { try await fixture.removeAccount() }
         let app = application(demo: false)
@@ -449,82 +473,82 @@ final class GSDCloudReleaseUITests: XCTestCase {
         try navigate(app, label("Settings", "הגדרות"))
         let open = app.buttons["gsd.cloud.open"]
         for _ in 0..<4 where !open.isHittable { app.swipeUp() }
-        XCTAssertTrue(open.waitForExistence(timeout: 10))
+        try requireAcceptance(open.waitForExistence(timeout: 10), "Native cloud account entry is missing")
         open.tap()
         let mode = app.segmentedControls["gsd.cloud.mode"]
-        XCTAssertTrue(mode.waitForExistence(timeout: 5), "Native account mode picker is missing")
+        try requireAcceptance(mode.waitForExistence(timeout: 5), "Native account mode picker is missing")
         mode.buttons[label("Create account", "יצירת חשבון")].tap()
         let email = app.textFields["gsd.cloud.email"]
-        XCTAssertTrue(email.waitForExistence(timeout: 5))
+        try requireAcceptance(email.waitForExistence(timeout: 5), "Native cloud email field is missing")
         email.tap()
         email.typeText(fixture.email)
         let password = app.secureTextFields["gsd.cloud.password"]
         password.tap()
         password.typeText(fixture.password)
         let confirmation = app.secureTextFields["gsd.cloud.confirmation"]
-        XCTAssertTrue(confirmation.waitForExistence(timeout: 5), "Native signup confirmation is missing")
+        try requireAcceptance(confirmation.waitForExistence(timeout: 5), "Native signup confirmation is missing")
         confirmation.tap()
         confirmation.typeText(fixture.password)
         let submit = app.buttons["gsd.cloud.submit"]
-        XCTAssertEqual(submit.label, label("Create GSD account", "יצירת חשבון GSD"))
-        XCTAssertTrue(submit.isEnabled, "Valid native signup must enable submission")
+        try requireAcceptance(submit.label == label("Create GSD account", "יצירת חשבון GSD"), "Native signup action label is not localized")
+        try requireAcceptance(submit.isEnabled, "Valid native signup must enable submission")
         for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
-        XCTAssertTrue(submit.isHittable, "Native signup action is obscured")
+        try requireAcceptance(submit.isHittable, "Native signup action is obscured")
         submit.tap()
-        XCTAssertTrue(email.waitForNonExistence(timeout: 30), "Native cloud signup did not finish")
+        try requireAcceptance(email.waitForNonExistence(timeout: 30), "Native cloud signup did not finish")
         let signedIn = app.descendants(matching: .any).matching(identifier: "gsd.cloud.signed-in").firstMatch
-        XCTAssertTrue(signedIn.waitForExistence(timeout: 10), "Native signup did not establish a session")
+        try requireAcceptance(signedIn.waitForExistence(timeout: 10), "Native signup did not establish a session")
         try capture(app, "08-account-created")
         // Authenticate only the account just created by the app, for server assertions and cleanup.
         try await fixture.authenticateExistingAccount()
         let signOut = app.buttons["gsd.cloud.sign-out"]
-        XCTAssertTrue(signOut.waitForExistence(timeout: 5), "Native sign-out action is missing")
+        try requireAcceptance(signOut.waitForExistence(timeout: 5), "Native sign-out action is missing")
         for _ in 0..<3 where !signOut.isHittable { app.swipeUp() }
-        XCTAssertTrue(signOut.isHittable, "Native sign-out action is obscured")
+        try requireAcceptance(signOut.isHittable, "Native sign-out action is obscured")
         signOut.tap()
-        XCTAssertTrue(signedIn.waitForNonExistence(timeout: 10), "Native sign-out did not clear the account UI")
-        XCTAssertTrue(open.waitForExistence(timeout: 10), "Native sign-in action did not return after sign-out")
+        try requireAcceptance(signedIn.waitForNonExistence(timeout: 10), "Native sign-out did not clear the account UI")
+        try requireAcceptance(open.waitForExistence(timeout: 10), "Native sign-in action did not return after sign-out")
         try capture(app, "08-account-signed-out")
         open.tap()
-        XCTAssertTrue(mode.waitForExistence(timeout: 5))
+        try requireAcceptance(mode.waitForExistence(timeout: 5), "Native account mode picker is missing after sign-out")
         mode.buttons[label("Sign in", "התחברות")].tap()
-        XCTAssertTrue(email.waitForExistence(timeout: 5))
-        XCTAssertFalse(confirmation.exists, "Ordinary sign-in must not require signup confirmation")
+        try requireAcceptance(email.waitForExistence(timeout: 5), "Native cloud email field is missing")
+        try requireAcceptance(!confirmation.exists, "Ordinary sign-in must not require signup confirmation")
         email.tap()
         email.typeText(fixture.email)
         password.tap()
         password.typeText(fixture.password)
-        XCTAssertEqual(submit.label, label("Sign in to GSD Cloud", "התחברות ל־GSD Cloud"))
-        XCTAssertTrue(submit.isEnabled, "Valid native sign-in must enable submission")
+        try requireAcceptance(submit.label == label("Sign in to GSD Cloud", "התחברות ל־GSD Cloud"), "Native sign-in action label is not localized")
+        try requireAcceptance(submit.isEnabled, "Valid native sign-in must enable submission")
         for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
-        XCTAssertTrue(submit.isHittable, "Native sign-in action is obscured")
+        try requireAcceptance(submit.isHittable, "Native sign-in action is obscured")
         submit.tap()
-        XCTAssertTrue(email.waitForNonExistence(timeout: 30), "Cloud sign-in did not finish")
-        XCTAssertTrue(signedIn.waitForExistence(timeout: 10), "Native sign-in did not restore the same account session")
+        try requireAcceptance(email.waitForNonExistence(timeout: 30), "Cloud sign-in did not finish")
+        try requireAcceptance(signedIn.waitForExistence(timeout: 10), "Native sign-in did not restore the same account session")
         try capture(app, "08-account-connected")
         app.terminate()
-        XCTAssertEqual(app.state, .notRunning, "Server mutation must occur while native app is closed")
+        try requireAcceptance(app.state == .notRunning, "Server mutation must occur while native app is closed")
         let serverTitle = "Cloud closed app " + UUID().uuidString.prefix(8)
         let serverID = try await fixture.createTask(title: serverTitle)
         app.launch()
         try navigate(app, label("Matrix", "מטריצה"))
         let serverCard = app.descendants(matching: .any).matching(identifier: "task-card-" + serverID).firstMatch
-        XCTAssertTrue(serverCard.waitForExistence(timeout: 45), "Cloud task missing after closed-app mutation/relaunch")
-        XCTAssertTrue(serverCard.label.contains(serverTitle))
+        try requireAcceptance(serverCard.waitForExistence(timeout: 45), "Cloud task missing after closed-app mutation/relaunch")
+        try requireAcceptance(serverCard.label.contains(serverTitle), "Closed-app task title differs from the fixture task")
         try capture(app, "09-closed-app-cloud-task")
         let localTitle = "Native upload " + UUID().uuidString.prefix(8)
         let field = app.textFields["capture-field"]
-        XCTAssertTrue(field.exists)
+        try requireAcceptance(field.exists, "Native Matrix capture field is missing")
         field.tap()
         field.typeText(localTitle + " !!\n")
         let uploaded = try await fixture.waitForTask(title: localTitle)
-        XCTAssertTrue(uploaded, "Native TaskStore mutation did not reach Oracle")
+        try requireAcceptance(uploaded, "Native TaskStore mutation did not reach Oracle")
         app.terminate()
         app.launch()
         try navigate(app, label("Matrix", "מטריצה"))
         let localCard = app.descendants(matching: .any).matching(NSPredicate(
             format: "identifier BEGINSWITH 'task-card-' AND label CONTAINS %@", localTitle)).firstMatch
-        XCTAssertTrue(localCard.waitForExistence(timeout: 30), "Local/cloud task did not persist across relaunch")
+        try requireAcceptance(localCard.waitForExistence(timeout: 30), "Local/cloud task did not persist across relaunch")
         try capture(app, "10-cloud-round-trip")
 
         // Delete only this same disposable account through the real native confirmation.
@@ -532,28 +556,28 @@ final class GSDCloudReleaseUITests: XCTestCase {
         try navigate(app, label("Settings", "הגדרות"))
         let deleteAccount = app.buttons[label("Delete Account…", "מחיקת חשבון…")].firstMatch
         for _ in 0..<4 where !deleteAccount.isHittable { app.swipeUp() }
-        XCTAssertTrue(signedIn.waitForExistence(timeout: 5), "Account must be signed in before deletion")
-        XCTAssertTrue(deleteAccount.waitForExistence(timeout: 5), "Native account deletion is missing")
-        XCTAssertTrue(deleteAccount.isEnabled)
-        XCTAssertTrue(deleteAccount.isHittable, "Native account deletion is obscured")
+        try requireAcceptance(signedIn.waitForExistence(timeout: 5), "Account must be signed in before deletion")
+        try requireAcceptance(deleteAccount.waitForExistence(timeout: 5), "Native account deletion is missing")
+        try requireAcceptance(deleteAccount.isEnabled, "Native account deletion is disabled")
+        try requireAcceptance(deleteAccount.isHittable, "Native account deletion is obscured")
         deleteAccount.tap()
-        XCTAssertTrue(app.staticTexts[label("Delete your account?", "למחוק את החשבון שלך?")]
+        try requireAcceptance(app.staticTexts[label("Delete your account?", "למחוק את החשבון שלך?")]
             .waitForExistence(timeout: 5), "Account deletion confirmation is missing")
         let keepTasks = app.buttons[label("Delete & keep tasks on this device", "מחיקת החשבון ושמירת המשימות במכשיר")].firstMatch
         let eraseEverything = app.buttons[label("Delete & erase everything", "מחיקת החשבון וכל הנתונים")].firstMatch
-        XCTAssertTrue(keepTasks.waitForExistence(timeout: 5), "Keep-local-tasks choice is missing")
-        XCTAssertTrue(eraseEverything.waitForExistence(timeout: 5), "Erase-local-tasks choice is missing")
-        XCTAssertTrue(eraseEverything.isEnabled)
-        XCTAssertTrue(eraseEverything.isHittable)
+        try requireAcceptance(keepTasks.waitForExistence(timeout: 5), "Keep-local-tasks choice is missing")
+        try requireAcceptance(eraseEverything.waitForExistence(timeout: 5), "Erase-local-tasks choice is missing")
+        try requireAcceptance(eraseEverything.isEnabled, "Erase-local-tasks choice is disabled")
+        try requireAcceptance(eraseEverything.isHittable, "Erase-local-tasks choice is obscured")
         try capture(app, "17-delete-account-confirmation")
         eraseEverything.tap()
-        XCTAssertTrue(signedIn.waitForNonExistence(timeout: 30), "Native account deletion did not sign out")
-        XCTAssertTrue(open.waitForExistence(timeout: 10), "Sign-in must return after account deletion")
+        try requireAcceptance(signedIn.waitForNonExistence(timeout: 30), "Native account deletion did not sign out")
+        try requireAcceptance(open.waitForExistence(timeout: 10), "Sign-in must return after account deletion")
         try capture(app, "18-account-deleted-signed-out")
         try navigate(app, label("Matrix", "מטריצה"))
-        XCTAssertTrue(field.waitForExistence(timeout: 10), "Matrix did not open after account deletion")
-        XCTAssertTrue(serverCard.waitForNonExistence(timeout: 10), "Server-created task remains after erase")
-        XCTAssertTrue(localCard.waitForNonExistence(timeout: 10), "Native-created task remains after erase")
+        try requireAcceptance(field.waitForExistence(timeout: 10), "Matrix did not open after account deletion")
+        try requireAcceptance(serverCard.waitForNonExistence(timeout: 10), "Server-created task remains after erase")
+        try requireAcceptance(localCard.waitForNonExistence(timeout: 10), "Native-created task remains after erase")
         try capture(app, "19-account-deleted-empty-matrix")
         // Public rejections prove credentials stopped working. Exact database/cascade absence
         // is independently checked on Oracle using only the sanitized owner marker below.
@@ -624,8 +648,8 @@ private final class CloudFixture {
     }
 
     func verifyCurrentOwner() async throws {
-        let expectedOwner = try XCTUnwrap(owner)
-        _ = try XCTUnwrap(token)
+        let expectedOwner = try requireAcceptanceValue(owner, "Missing fixture owner before deletion")
+        _ = try requireAcceptanceValue(token, "Missing fixture token before deletion")
         let data = try await request("api/collections/users/records/" + expectedOwner)
         let current = try JSONDecoder().decode(User.self, from: data)
         guard current.id == expectedOwner else {
@@ -635,8 +659,8 @@ private final class CloudFixture {
     }
 
     func verifyDeletionByApp() async throws {
-        let deletedOwner = try XCTUnwrap(owner)
-        _ = try XCTUnwrap(token)
+        let deletedOwner = try requireAcceptanceValue(owner, "Missing fixture owner for deletion verification")
+        _ = try requireAcceptanceValue(token, "Missing former token for deletion verification")
         guard deletedOwner.range(of: "^[A-Za-z0-9_-]{10,80}$", options: .regularExpression) != nil else {
             throw NSError(domain: "GSDCloudAcceptance", code: 0,
                           userInfo: [NSLocalizedDescriptionKey: "Invalid disposable owner identifier"])
@@ -648,7 +672,7 @@ private final class CloudFixture {
         _ = try await request("api/collections/users/auth-with-password", method: "POST",
                               body: ["identity": email, "password": password], includeAuthorization: false,
                               expectedRejection: (400, "Failed to authenticate."))
-        // This flag is reachable only after the native UI assertions and all three explicit checks.
+        // This flag is reachable only after the native UI validations and all three explicit checks.
         // No failed authentication or generic HTTP error can silently skip teardown.
         deletionVerified = true
         token = nil
@@ -659,7 +683,7 @@ private final class CloudFixture {
     func removeAccount() async throws {
         defer { session.invalidateAndCancel() }
         if deletionVerified { return }
-        // A native assertion may fail after registration but before fixture authentication.
+        // Native validation may fail after registration but before fixture authentication.
         // Recover only this fixture's credentials and propagate every failure, including 400.
         // An authentication failure is not evidence that no account exists.
         if token == nil { try await authenticateExistingAccount() }
@@ -672,7 +696,7 @@ private final class CloudFixture {
         let id = UUID().uuidString
         let now = ISO8601DateFormatter().string(from: Date())
         let body: [String: Any] = [
-            "owner": try XCTUnwrap(owner), "task_id": id, "title": title,
+            "owner": try requireAcceptanceValue(owner, "Missing fixture owner for task creation"), "task_id": id, "title": title,
             "urgent": true, "important": true, "completed": false, "recurrence": "none",
             "tags": [], "subtasks": [], "dependencies": [], "time_entries": [],
             "client_created_at": now, "client_updated_at": now, "device_id": "gsd-xcui-server"
