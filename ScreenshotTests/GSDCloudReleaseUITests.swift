@@ -459,6 +459,19 @@ final class GSDCloudReleaseUITests: XCTestCase {
         app.terminate()
     }
 
+    private func pasteCloudPassword(_ value: String, into field: XCUIElement) {
+        // Use the standard iPad paste gesture for the generated fixture password.
+        // Synthesized per-character input into the new-password fields can lose characters.
+        let pasteboard = UIPasteboard.general
+        pasteboard.setItems([["public.utf8-plain-text": value]], options: [
+            .localOnly: true, .expirationDate: Date().addingTimeInterval(30)
+        ])
+        defer { pasteboard.items = [] }
+        field.tap()
+        field.typeKey("a", modifierFlags: .command)
+        field.typeKey("v", modifierFlags: .command)
+    }
+
     func test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload() async throws {
         guard ProcessInfo.processInfo.environment["GSD_CLOUD_SYSTEM_TEST"] == "1" else {
             throw XCTSkip("Live cloud acceptance requires explicit CI opt-in")
@@ -486,12 +499,10 @@ final class GSDCloudReleaseUITests: XCTestCase {
         email.tap()
         email.typeText(fixture.email)
         let password = app.secureTextFields["gsd.cloud.password"]
-        password.tap()
-        password.typeText(fixture.password)
+        pasteCloudPassword(fixture.password, into: password)
         let confirmation = app.secureTextFields["gsd.cloud.confirmation"]
         try requireAcceptance(confirmation.waitForExistence(timeout: 5), "Native signup confirmation is missing")
-        confirmation.tap()
-        confirmation.typeText(fixture.password)
+        pasteCloudPassword(fixture.password, into: confirmation)
         let submit = app.buttons["gsd.cloud.submit"]
         try requireAcceptance(submit.label == label("Create GSD account", "יצירת חשבון GSD"), "Native signup action label is not localized")
         if !submit.wait(for: \.isEnabled, toEqual: true, timeout: 8) {
@@ -525,8 +536,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
         try requireAcceptance(!confirmation.exists, "Ordinary sign-in must not require signup confirmation")
         email.tap()
         email.typeText(fixture.email)
-        password.tap()
-        password.typeText(fixture.password)
+        pasteCloudPassword(fixture.password, into: password)
         try requireAcceptance(submit.label == label("Sign in to GSD Cloud", "התחברות ל־GSD Cloud"), "Native sign-in action label is not localized")
         try requireAcceptance(submit.isEnabled, "Valid native sign-in must enable submission")
         for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
