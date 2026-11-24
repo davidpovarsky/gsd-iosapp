@@ -40,6 +40,10 @@ final class GSDCloudReleaseUITests: XCTestCase {
     private func navigate(_ app: XCUIApplication, _ title: String) {
         let item = navigation(app, title)
         XCTAssertTrue(item.waitForExistence(timeout: 15), "Missing navigation item: \(title)")
+        let hittable = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "hittable == true"), object: item)
+        XCTAssertEqual(XCTWaiter.wait(for: [hittable], timeout: 10), .completed,
+                       "Navigation item is obscured: \(title)")
         item.tap()
     }
 
@@ -98,11 +102,16 @@ final class GSDCloudReleaseUITests: XCTestCase {
         try capture(app, "02-editor")
         cancel.tap()
         card.press(forDuration: 1)
-        XCTAssertTrue(app.buttons[label("Complete", "סימון כהושלמה")].waitForExistence(timeout: 5))
+        let completeAction = app.buttons[label("Complete", "סימון כהושלמה")]
+        XCTAssertTrue(completeAction.waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons[label("Delete", "מחיקה")].exists)
         try capture(app, "03-context-menu")
-        app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.05)).tap()
+        // Tap the observed in-app backdrop, outside the menu and the status bar.
+        // A status-bar tap left the menu open and Dashboard had no hittable point.
+        app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.50)).tap()
+        XCTAssertTrue(completeAction.waitForNonExistence(timeout: 5), "Context menu did not dismiss")
         navigate(app, label("Dashboard", "לוח בקרה"))
+        try capture(app, "04-dashboard-diagnostic-before-assertion")
         XCTAssertTrue(app.staticTexts[label("Completion Trend", "מגמת השלמה")]
             .waitForExistence(timeout: 10), "Dashboard chart section did not open")
         let dashboardScroll = app.scrollViews.firstMatch
@@ -189,6 +198,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars[label("ChatGPT account", "חשבון ChatGPT")].waitForExistence(timeout: 5))
         let status = app.descendants(matching: .any).matching(identifier: "chatgpt.account.status").firstMatch
         XCTAssertTrue(status.waitForExistence(timeout: 5))
+        try capture(app, "14-chatgpt-account-diagnostic-before-assertion")
         XCTAssertEqual(status.label, label(
             "Continue with ChatGPT to use your plan for eligible AI requests.",
             "יש לבחור ״המשך עם ChatGPT״ כדי להשתמש במכסה שלך עבור בקשות AI הזכאיות לכך."))
