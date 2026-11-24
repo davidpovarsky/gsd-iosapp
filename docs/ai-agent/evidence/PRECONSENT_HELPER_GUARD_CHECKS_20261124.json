@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-24T15:08:47.594875+00:00",
+  "helperSha256": "b207d2fa6c5a78e765fe6ec7c458b7e05e640270953559ccd97fade9f1b8dcba",
+  "scope": "actual-source schema/privacy/one-test-terminal/toolchain-environment controls only",
+  "runtimeExecution": false,
+  "nativeCommandsExecuted": 0,
+  "authorizationRequests": 0,
+  "oldSurfaceControlsRerun": false,
+  "passed": 19,
+  "failed": 0,
+  "cases": [
+    {
+      "case": "valid_source_bound_browser_cancel_observation",
+      "result": "passed"
+    },
+    {
+      "case": "partial_outcome_preserved_and_arbitrary_failure_prose_dropped",
+      "result": "passed"
+    },
+    {
+      "case": "unknown_oauth_field_rejected",
+      "result": "passed"
+    },
+    {
+      "case": "queried_origin_url_rejected",
+      "result": "passed"
+    },
+    {
+      "case": "all_seven_unproven_authorization_or_capture_flags_rejected",
+      "result": "passed"
+    },
+    {
+      "case": "wrong_source_rejected",
+      "result": "passed"
+    },
+    {
+      "case": "wrong_owned_simulator_rejected",
+      "result": "passed"
+    },
+    {
+      "case": "nested_browser_freeform_field_rejected",
+      "result": "passed"
+    },
+    {
+      "case": "exact_single_terminal_and_summary_agree",
+      "result": "passed"
+    },
+    {
+      "case": "missing_terminal_rejected",
+      "result": "passed"
+    },
+    {
+      "case": "duplicated_terminal_rejected",
+      "result": "passed"
+    },
+    {
+      "case": "wrong_terminal_method_rejected",
+      "result": "passed"
+    },
+    {
+      "case": "summary_terminal_disagreement_rejected",
+      "result": "passed"
+    },
+    {
+      "case": "raw_summary_prose_and_urls_not_exported",
+      "result": "passed"
+    },
+    {
+      "case": "public_file_allowlist_never_exports_raw_browser_or_logs",
+      "result": "passed"
+    },
+    {
+      "case": "unproven_disconnected_states_withhold_existing_pngs",
+      "result": "passed"
+    },
+    {
+      "case": "explicit_compiler_driver_envs_separate_and_all_test_tokens_removed",
+      "result": "passed"
+    },
+    {
+      "case": "explicit_driver_version_mismatch_rejected",
+      "result": "passed"
+    },
+    {
+      "case": "explicit_driver_resolved_executable_mismatch_rejected",
+      "result": "passed"
+    }
+  ],
+  "originalFiveAndFrozenSurfaceUnchanged": true
+}
