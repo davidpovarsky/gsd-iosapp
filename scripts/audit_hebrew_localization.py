@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGETS = ("App", "Widgets", "ShareExtension", "Watch", "WatchWidgets")
 # Direct presentation API calls. Computed Strings, backend replies and reflection need review.
 UI = re.compile(
-    r'\b(?:Text|Button|Label|Menu|Section|Picker|Toggle|TextField|SecureField|'
+    r'\b(?:Text|Button|Label|Link|LabeledContent|Menu|Section|Picker|Toggle|TextField|SecureField|'
     r'ContentUnavailableView|DatePicker|ProgressView|navigationTitle|'
     r'accessibilityLabel|accessibilityHint|accessibilityValue|alert|confirmationDialog|'
     r'help|displayName|configurationDisplayName|IntentDescription|'
@@ -140,7 +140,7 @@ def audit():
                     if not re.search("[a-zA-Z]", key):
                         continue  # Purely numeric, punctuation or interpolated content.
                     count += 1
-                    if key not in keys:
+                    if FORMAT.sub("{}", key) not in keys:
                         issues.append(f"{target}: {path.relative_to(ROOT)}:{num}: {key}")
         print(f"{target}: {len(entries)} keys, {count} literal references checked")
     app = catalogs["App"]

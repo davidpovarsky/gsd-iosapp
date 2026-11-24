@@ -15,7 +15,6 @@ import GSDHanlinAgent
 /// surfaces own (tab/sidebar selection, the Browse push path).
 struct ContentView: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
-    @Environment(\.scenePhase) private var scenePhase
     @Environment(TaskStore.self) private var store
     @Environment(SessionStore.self) private var session
     @AppStorage("showCompleted", store: .shared) private var showCompleted = false
@@ -34,7 +33,6 @@ struct ContentView: View {
     @State private var showWhatsNew = false
     /// Mac "About GSD" panel (app menu), posted by GSDMenuCommands on Catalyst.
     @State private var showHanlinAssistant = false
-    @State private var remoteBridge: GSDRemoteBridgeState?
     @State private var showAbout = false
     /// "Field Guide" help sheet, posted by Settings ▸ About (all platforms) and the Mac Help menu.
     @State private var showHelp = false
@@ -73,7 +71,8 @@ struct ContentView: View {
     private var assistantContent: some View {
         rootContent
             .sheet(isPresented: $showHanlinAssistant) {
-                GSDHanlinAssistantView(store: store, remoteBridge: remoteBridge)
+                GSDHanlinAssistantView(store: store, remoteBridge: nil)
+                    .environment(session)
             }
             .overlay(alignment: .bottomTrailing) {
                 Button {
@@ -87,20 +86,6 @@ struct ContentView: View {
                 .padding(.bottom, sizeClass == .compact ? 100 : 24)
                 .accessibilityLabel("Open Hanlin task AI assistant")
             }
-            .task {
-                if remoteBridge == nil {
-                    remoteBridge = GSDRemoteBridgeState(store: store)
-                }
-                remoteBridge?.startPolling()
-            }
-            .onChange(of: scenePhase) { _, phase in
-                if phase == .active { remoteBridge?.startPolling() }
-                else { remoteBridge?.stopPolling() }
-            }
-            .gsdRemoteWriteApproval(bridge: remoteBridge, isActive: {
-                !showHanlinAssistant && !palette.showPalette && palette.editor == nil &&
-                !showAbout && !showHelp && !showWhatsNew && session.pendingAccountSwitch == nil
-            })
     }
 
     private var actionContent: some View {

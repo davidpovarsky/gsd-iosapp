@@ -26,7 +26,7 @@ struct GSDCloudConnectionView: View {
             }
             .navigationTitle("ChatGPT and GSD Cloud")
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
-            .sheet(isPresented: $showSignIn) { CloudAccountSignInView() }
+            .sheet(isPresented: $showSignIn) { CloudAccountSignInView().environment(session) }
         }
     }
 }

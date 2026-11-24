@@ -13,8 +13,11 @@ struct GSDChatGPTSettingsView: View {
                 Section {
                     Text(account.status).accessibilityIdentifier("chatgpt.account.status")
                     if let email = account.email {
-                        LabeledContent("ChatGPT account", value: email)
-                            .environment(\.layoutDirection, .leftToRight)
+                        LabeledContent {
+                            Text(email).environment(\.layoutDirection, .leftToRight)
+                        } label: {
+                            Text("ChatGPT account")
+                        }
                     }
                 } header: {
                     Text("Use your ChatGPT plan")
@@ -34,6 +37,7 @@ struct GSDChatGPTSettingsView: View {
                             } label: {
                                 HStack {
                                     Text(entry.label).lineLimit(2)
+                                        .environment(\.layoutDirection, .leftToRight)
                                     Spacer()
                                     if account.activeID == entry.id {
                                         Image(systemName: "checkmark").accessibilityLabel("Selected")

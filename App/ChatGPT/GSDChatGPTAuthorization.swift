@@ -28,26 +28,34 @@ final class GSDChatGPTAuthorization: NSObject, ASWebAuthenticationPresentationCo
     private var completion: CheckedContinuation<(URL, HanlinChatGPTAuthorizationAttempt), Error>?
     private var timeout: _Concurrency.Task<Void, Never>?
     private var connections: [UUID: NWConnection] = [:]
+    private var generation: UUID?
 
     func authenticate(
         attempt: @escaping @MainActor (UInt16) throws -> HanlinChatGPTAuthorizationAttempt
     ) async throws -> (URL, HanlinChatGPTAuthorizationAttempt) {
         guard completion == nil else { throw GSDChatGPTAuthorizationError.unavailable }
+        try _Concurrency.Task.checkCancellation()
+        let generation = UUID()
+        self.generation = generation
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 completion = continuation
-                do { try start(attempt: attempt) }
+                do { try start(attempt: attempt, generation: generation) }
                 catch { finish(.failure(error)) }
             }
         } onCancel: {
-            _Concurrency.Task { @MainActor [weak self] in self?.cancel() }
+            _Concurrency.Task { @MainActor [weak self] in
+                guard self?.generation == generation else { return }
+                self?.cancel()
+            }
         }
     }
 
     func cancel() { finish(.failure(GSDChatGPTAuthorizationError.cancelled)) }
 
     private func start(
-        attempt: @escaping @MainActor (UInt16) throws -> HanlinChatGPTAuthorizationAttempt
+        attempt: @escaping @MainActor (UInt16) throws -> HanlinChatGPTAuthorizationAttempt,
+        generation: UUID
     ) throws {
         let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
         guard let window = scenes.first(where: { $0.activationState == .foregroundActive })?.keyWindow
@@ -59,7 +67,8 @@ final class GSDChatGPTAuthorization: NSObject, ASWebAuthenticationPresentationCo
         listener = server
         server.stateUpdateHandler = { @Sendable [weak self, weak server] state in
             _Concurrency.Task { @MainActor [weak self, weak server] in
-                guard let self, let server, self.listener === server else { return }
+                guard let self, let server, self.listener === server,
+                      self.generation == generation else { return }
                 switch state {
                 case .ready:
                     guard let port = server.port else {
@@ -74,12 +83,16 @@ final class GSDChatGPTAuthorization: NSObject, ASWebAuthenticationPresentationCo
             }
         }
         server.newConnectionHandler = { @Sendable [weak self] connection in
-            _Concurrency.Task { @MainActor [weak self] in self?.accept(connection) }
+            _Concurrency.Task { @MainActor [weak self] in
+                guard let self, self.generation == generation else { connection.cancel(); return }
+                self.accept(connection)
+            }
         }
         server.start(queue: .main)
         timeout = _Concurrency.Task { @MainActor [weak self] in
             do { try await _Concurrency.Task.sleep(for: .seconds(300)) }
             catch { return }
+            guard self?.generation == generation else { return }
             self?.finish(.failure(GSDChatGPTAuthorizationError.timedOut))
         }
     }
@@ -90,7 +103,8 @@ final class GSDChatGPTAuthorization: NSObject, ASWebAuthenticationPresentationCo
         let session = ASWebAuthenticationSession(url: attempt.url, callbackURLScheme: nil) {
             @Sendable [weak self] _, error in
             _Concurrency.Task { @MainActor [weak self] in
-                guard let self, self.completion != nil else { return }
+                guard let self, self.completion != nil,
+                      self.pending?.state == attempt.state else { return }
                 if let error, case ASWebAuthenticationSessionError.canceledLogin = error {
                     self.cancel()
                 } else {
@@ -156,13 +170,18 @@ final class GSDChatGPTAuthorization: NSObject, ASWebAuthenticationPresentationCo
             close(connection, id: id)
             return
         }
-        let body = "<!doctype html><html><meta charset=utf-8><title>GSD Tasks</title><body>Sign-in response received. Return to GSD Tasks.</body></html>"
+        let message = String(localized: "Sign-in response received. Return to GSD Tasks.")
+            .replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
+        let body = "<!doctype html><html><meta charset=utf-8><title>GSD Tasks</title><body dir=auto>\(message)</body></html>"
         let response = "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nCache-Control: no-store\r\nReferrer-Policy: no-referrer\r\nContent-Security-Policy: default-src 'none'\r\nConnection: close\r\nContent-Length: \(body.utf8.count)\r\n\r\n" + body
         connection.send(content: Data(response.utf8), completion: .contentProcessed {
             @Sendable [weak self] _ in
             _Concurrency.Task { @MainActor [weak self] in
-                self?.close(connection, id: id)
-                self?.finish(.success((callback, attempt)))
+                guard let self, self.pending?.state == attempt.state else { return }
+                self.close(connection, id: id)
+                self.finish(.success((callback, attempt)))
             }
         })
     }
@@ -175,6 +194,7 @@ final class GSDChatGPTAuthorization: NSObject, ASWebAuthenticationPresentationCo
     private func finish(_ result: Result<(URL, HanlinChatGPTAuthorizationAttempt), Error>) {
         guard let continuation = completion else { return }
         completion = nil
+        generation = nil
         timeout?.cancel(); timeout = nil
         listener?.cancel(); listener = nil
         connections.values.forEach { $0.cancel() }; connections.removeAll()

@@ -10,12 +10,13 @@ import GSDHanlinAgent
 struct GSDHanlinAssistantView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(SessionStore.self) private var cloudSession
-    @State private var chatGPT = GSDChatGPTAccountState()
+    @State private var chatGPT = GSDChatGPTAccountState.shared
     @State private var showChatGPTSettings = false
     @State private var isPreparingRequest = false
     @State private var sendTask: _Concurrency.Task<Void, Never>?
     @State private var requestID: UUID?
     @State private var assistant: GSDHanlinAssistantState
+    private let taskStore: TaskStore
     let remoteBridge: GSDRemoteBridgeState?
     @State private var showRemoteBridgeSettings = false
     @State private var prompt = ""
@@ -29,6 +30,7 @@ struct GSDHanlinAssistantView: View {
     @AppStorage("gsd.hanlin.endpoint") private var endpoint = "https://openrouter.ai/api/v1"
 
     init(store: TaskStore, remoteBridge: GSDRemoteBridgeState?) {
+        taskStore = store
         self.remoteBridge = remoteBridge
         _assistant = State(initialValue: GSDHanlinAssistantState(store: store))
     }
@@ -140,9 +142,17 @@ struct GSDHanlinAssistantView: View {
                 sendTask?.cancel()
                 Task { await assistant.cancel(); dismiss() }
             }
+            .onChange(of: chatGPT.activeID) { _, _ in
+                Task { await resetAssistantConversation() }
+            }
+            .onChange(of: chatGPT.canUsePlan) { _, available in
+                if !available, provider == "ChatGPT" {
+                    Task { await resetAssistantConversation() }
+                }
+            }
             .sheet(isPresented: $showModelSettings) { settings }
             .sheet(isPresented: $showRemoteBridgeSettings) {
-                GSDCloudConnectionView()
+                GSDCloudConnectionView().environment(cloudSession)
             }
             .confirmationDialog(
                 "Allow the AI to modify your tasks?",
@@ -189,9 +199,9 @@ struct GSDHanlinAssistantView: View {
             }
             .pickerStyle(.segmented)
             Chart(summary.buckets(mode: chartBreakdown)) { bucket in
-                BarMark(x: .value("Group", AssistantCopy.bucket(bucket.name)),
-                        y: .value("Tasks", bucket.value))
-                    .foregroundStyle(by: .value("Group", AssistantCopy.bucket(bucket.name)))
+                BarMark(x: .value(String(localized: "Group"), AssistantCopy.bucket(bucket.name)),
+                        y: .value(String(localized: "Tasks"), bucket.value))
+                    .foregroundStyle(by: .value(String(localized: "Group"), AssistantCopy.bucket(bucket.name)))
             }
             .chartLegend(.hidden)
             .frame(height: 180)
@@ -245,8 +255,7 @@ struct GSDHanlinAssistantView: View {
             .navigationTitle("Hanlin model settings")
             .sheet(isPresented: $showChatGPTSettings) {
                 GSDChatGPTSettingsView(account: chatGPT) {
-                    sendTask?.cancel()
-                    await assistant.cancel()
+                    await resetAssistantConversation()
                 }
             }
             .gsdRemoteWriteApproval(bridge: remoteBridge)
@@ -289,6 +298,14 @@ struct GSDHanlinAssistantView: View {
         }
     }
 
+    @MainActor
+    private func resetAssistantConversation() async {
+        sendTask?.cancel()
+        let previous = assistant
+        await previous.cancel()
+        assistant = GSDHanlinAssistantState(store: taskStore)
+    }
+
     private func send() {
         let text = prompt.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty, !assistant.isRunning, !isPreparingRequest else { return }
@@ -316,7 +333,7 @@ struct GSDHanlinAssistantView: View {
             } catch is CancellationError {
                 if prompt.isEmpty { prompt = text }
             } catch {
-                configurationError = String(format: String(localized: "ChatGPT access failed: %@"), error.localizedDescription)
+                configurationError = String(format: String(localized: "ChatGPT access failed: %@"), GSDChatGPTCopy.error(error))
                 if prompt.isEmpty { prompt = text }
             }
         }

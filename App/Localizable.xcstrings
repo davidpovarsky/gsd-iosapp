@@ -2491,6 +2491,23 @@
       },
       "extractionState": "manual"
     },
+    "Available ChatGPT models": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Available ChatGPT models"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מודלים זמינים ב־ChatGPT"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Back to the matrix": {
       "localizations": {
         "en": {
@@ -3069,6 +3086,176 @@
       },
       "extractionState": "manual"
     },
+    "ChatGPT access failed: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT access failed: %@"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הגישה ל־ChatGPT נכשלה: %@"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT account": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT account"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "חשבון ChatGPT"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT account access is unavailable. Check your sign-in and plan permissions.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT account access is unavailable. Check your sign-in and plan permissions."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הגישה לחשבון ChatGPT אינה זמינה. יש לבדוק את ההתחברות ואת הרשאות השימוש במכסה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT account selected.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT account selected."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "חשבון ChatGPT נבחר."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT and GSD Cloud": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT and GSD Cloud"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT ו־GSD Cloud"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT credentials stay in this device's Keychain. GSD uses the official OpenAI authorization and Responses API.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT credentials stay in this device's Keychain. GSD uses the official OpenAI authorization and Responses API."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "פרטי ההרשאה ל־ChatGPT נשמרים בצרור המפתחות של מכשיר זה. GSD משתמשת בתהליך ההרשאה הרשמי של OpenAI וב־Responses API."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT model access failed: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT model access failed: %@"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הגישה למודלים של ChatGPT נכשלה: %@"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT models are ready.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT models are ready."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "המודלים של ChatGPT מוכנים."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT plan": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT plan"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מכסת ChatGPT"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT plan permission granted.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT plan permission granted."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "אושרה הרשאה לשימוש במכסת ChatGPT."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "ChatGPT requests permission to modify GSD tasks.": {
       "localizations": {
         "en": {
@@ -3081,6 +3268,91 @@
           "stringUnit": {
             "state": "translated",
             "value": "התקבלה בקשה מ־ChatGPT לשנות משימות ב־GSD."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT session refresh is not yet permitted. Try again shortly.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT session refresh is not yet permitted. Try again shortly."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "עדיין לא ניתן לחדש את ההתחברות ל־ChatGPT. יש לנסות שוב בעוד זמן קצר."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT sign-in failed: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT sign-in failed: %@"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ההתחברות ל־ChatGPT נכשלה: %@"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT sign-in timed out. Please try again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT sign-in timed out. Please try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "תם הזמן שהוקצב להתחברות ל־ChatGPT. יש לנסות שוב."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT sign-in was cancelled.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT sign-in was cancelled."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ההתחברות ל־ChatGPT בוטלה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "ChatGPT sign-in was declined.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT sign-in was declined."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ההתחברות ל־ChatGPT לא אושרה."
           }
         }
       },
@@ -3115,6 +3387,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "אפשר לבחור „הוספה להיום” מתפריט המשימה או לבקש הצעות דרך „אפשר לבחור עד שלוש משימות להיום”. הבחירה תמיד בידיך."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Choose Connect in the GSD Tasks plugin, then sign in with your GSD email and password on the GSD account page.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Connect in the GSD Tasks plugin, then sign in with your GSD email and password on the GSD account page."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "יש לבחור Connect בתוסף GSD Tasks, ואז להתחבר בדף החשבון של GSD באמצעות כתובת הדוא״ל והסיסמה שלך."
           }
         }
       },
@@ -3596,6 +3885,57 @@
       },
       "extractionState": "manual"
     },
+    "Connect ChatGPT and enable plan usage first.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect ChatGPT and enable plan usage first."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "תחילה יש להתחבר ל־ChatGPT ולאשר שימוש במכסה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Connect ChatGPT to your tasks": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect ChatGPT to your tasks"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "חיבור ChatGPT למשימות שלך"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Connecting to ChatGPT…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connecting to ChatGPT…"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מתבצעת התחברות ל־ChatGPT…"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Connecting…": {
       "localizations": {
         "en": {
@@ -3659,6 +3999,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "מכיל…"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Continue with ChatGPT": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue with ChatGPT"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "המשך עם ChatGPT"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Continue with ChatGPT to use your plan for eligible AI requests.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue with ChatGPT to use your plan for eligible AI requests."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "יש לבחור ״המשך עם ChatGPT״ כדי להשתמש במכסה שלך עבור בקשות AI הזכאיות לכך."
           }
         }
       },
@@ -5569,6 +5943,40 @@
       },
       "extractionState": "manual"
     },
+    "Eligible AI requests in GSD use your ChatGPT plan. You can review and manage usage in ChatGPT settings.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eligible AI requests in GSD use your ChatGPT plan. You can review and manage usage in ChatGPT settings."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בקשות AI הזכאיות לכך ב־GSD משתמשות במכסת ChatGPT שלך. אפשר לבדוק ולנהל את השימוש בהגדרות ChatGPT."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Eligible AI requests use your ChatGPT plan or credits. Your GSD Cloud account is a separate connection.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eligible AI requests use your ChatGPT plan or credits. Your GSD Cloud account is a separate connection."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בקשות AI הזכאיות לכך משתמשות במכסת ChatGPT או בקרדיטים שלך. חשבון GSD Cloud מחובר בנפרד."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Eliminate": {
       "localizations": {
         "en": {
@@ -5632,6 +6040,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "לרוקן את סל המיחזור?"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Enable ChatGPT plan use": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable ChatGPT plan use"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "אישור שימוש במכסת ChatGPT"
           }
         }
       },
@@ -6623,6 +7048,23 @@
       },
       "extractionState": "manual"
     },
+    "Got it": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Got it"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הבנתי"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Gripe": {
       "localizations": {
         "en": {
@@ -7473,6 +7915,23 @@
       },
       "extractionState": "manual"
     },
+    "Load ChatGPT models": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Load ChatGPT models"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "טעינת מודלים של ChatGPT"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Loading": {
       "localizations": {
         "en": {
@@ -7570,6 +8029,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "עוד מקומות שכדאי להכיר"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Manage ChatGPT usage": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manage ChatGPT usage"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ניהול השימוש ב־ChatGPT"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Manage usage": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manage usage"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ניהול השימוש"
           }
         }
       },
@@ -7825,6 +8318,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "מזהה המודל"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Models and usage depend on the selected ChatGPT account and workspace.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Models and usage depend on the selected ChatGPT account and workspace."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "המודלים והשימוש תלויים בחשבון ChatGPT ובסביבת העבודה שנבחרו."
           }
         }
       },
@@ -9258,6 +9768,23 @@
       },
       "extractionState": "manual"
     },
+    "Open GSD Tasks in ChatGPT": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open GSD Tasks in ChatGPT"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "פתיחת GSD Tasks ב־ChatGPT"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Open GSD to a useful task destination.": {
       "localizations": {
         "en": {
@@ -9360,6 +9887,91 @@
       },
       "extractionState": "manual"
     },
+    "OpenAI authentication returned HTTP %lld.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenAI authentication returned HTTP %lld."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "האימות של OpenAI החזיר שגיאת HTTP %lld."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "OpenAI authorization is incomplete or expired.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenAI authorization is incomplete or expired."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ההרשאה ל־OpenAI אינה מלאה או שפג תוקפה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "OpenAI identity could not be verified.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenAI identity could not be verified."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לאמת את הזהות ב־OpenAI."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "OpenAI request failed (HTTP %lld, code: %@, request: %@).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenAI request failed (HTTP %lld, code: %@, request: %@)."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הבקשה ל־OpenAI נכשלה (HTTP %lld, קוד: %@, בקשה: %@)."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "OpenAI returned a token that could not be verified.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenAI returned a token that could not be verified."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenAI החזירה אסימון הרשאה שלא ניתן לאמת."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "OpenRouter": {
       "localizations": {
         "en": {
@@ -9389,6 +10001,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "GSD נפתח."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Opening secure ChatGPT sign-in…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opening secure ChatGPT sign-in…"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "חלון ההתחברות המאובטח ל־ChatGPT נפתח…"
           }
         }
       },
@@ -10839,6 +11468,23 @@
       },
       "extractionState": "manual"
     },
+    "Saved ChatGPT accounts": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved ChatGPT accounts"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "חשבונות ChatGPT שמורים"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Saved arrives, with a fresh look for iOS 27 and macOS 27.": {
       "localizations": {
         "en": {
@@ -11225,6 +11871,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "בחירה מרובה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Selected": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selected"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "נבחר"
           }
         }
       },
@@ -11774,6 +12437,23 @@
       },
       "extractionState": "manual"
     },
+    "Sign in again to use this ChatGPT account.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in again to use this ChatGPT account."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "יש להתחבר שוב כדי להשתמש בחשבון ChatGPT זה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Sign in or create GSD Cloud account": {
       "localizations": {
         "en": {
@@ -11786,6 +12466,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "התחברות או יצירת חשבון GSD Cloud"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Sign in or create an account": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in or create an account"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "כניסה או יצירת חשבון"
           }
         }
       },
@@ -11859,6 +12556,23 @@
       },
       "extractionState": "manual"
     },
+    "Sign out of ChatGPT": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign out of ChatGPT"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "יציאה מ־ChatGPT"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Sign-in failed. Please try again.": {
       "localizations": {
         "en": {
@@ -11876,6 +12590,23 @@
       },
       "extractionState": "manual"
     },
+    "Sign-in response received. Return to GSD Tasks.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign-in response received. Return to GSD Tasks."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "התקבלה תשובת ההתחברות. אפשר לחזור ל־GSD Tasks."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Signed in": {
       "localizations": {
         "en": {
@@ -11887,7 +12618,24 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "החשבון מחובר"
+            "value": "מחובר"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Signed in to ChatGPT. Plan usage permission has not been granted.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signed in to ChatGPT. Plan usage permission has not been granted."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ההתחברות ל־ChatGPT הושלמה. טרם אושרה הרשאה לשימוש במכסה."
           }
         }
       },
@@ -11922,6 +12670,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "ההתחברות נעשתה עם כתובת דוא״ל מוסתרת. זהו חשבון נפרד מזה שבו שמורות המשימות ביישום הרשת."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Signed out of ChatGPT in GSD.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signed out of ChatGPT in GSD."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בוצעה יציאה מ־ChatGPT ב־GSD."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Signed out on this device. Remote revocation was not confirmed; disconnect GSD in ChatGPT settings.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signed out on this device. Remote revocation was not confirmed; disconnect GSD in ChatGPT settings."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בוצעה יציאה במכשיר זה. ביטול ההרשאה בשרת לא אושר; יש לנתק את GSD בהגדרות ChatGPT."
           }
         }
       },
@@ -12635,7 +13417,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "סנכרון כעת"
+            "value": "סנכרון עכשיו"
           }
         }
       },
@@ -13015,6 +13797,23 @@
       },
       "extractionState": "manual"
     },
+    "The ChatGPT session could not be refreshed before sign-out.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The ChatGPT session could not be refreshed before sign-out."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לחדש את ההתחברות ל־ChatGPT לפני היציאה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "The Columns button dims when the window is too narrow for a second column.": {
       "localizations": {
         "en": {
@@ -13044,6 +13843,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "מדריך השימוש הורחב וכולל תאריכי יעד, תזכורות, דחיפות עולה, פעולות החלקה, דחייה, ביטול פעולה, סל המיחזור ופריטים שמורים."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "The OpenAI sign-in callback is invalid.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The OpenAI sign-in callback is invalid."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "תשובת ההתחברות של OpenAI אינה תקינה."
           }
         }
       },
@@ -13100,6 +13916,91 @@
       },
       "extractionState": "manual"
     },
+    "The device Keychain could not clear the ChatGPT credentials. Unlock the device and try signing out again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The device Keychain could not clear the ChatGPT credentials. Unlock the device and try signing out again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן להסיר את פרטי ההרשאה ל־ChatGPT מצרור המפתחות. יש לבטל את נעילת המכשיר ולנסות לצאת שוב."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "The device Keychain could not save the selected account.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The device Keychain could not save the selected account."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לשמור את החשבון שנבחר בצרור המפתחות של המכשיר."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "The device Keychain could not save the selected model.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The device Keychain could not save the selected model."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לשמור את המודל שנבחר בצרור המפתחות של המכשיר."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "The device Keychain could not save this preference.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The device Keychain could not save this preference."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לשמור העדפה זו בצרור המפתחות של המכשיר."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "The device Keychain is unavailable. Unlock the device and reopen this screen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The device Keychain is unavailable. Unlock the device and reopen this screen."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "צרור המפתחות של המכשיר אינו זמין. יש לבטל את נעילת המכשיר ולפתוח שוב מסך זה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "The matrix": {
       "localizations": {
         "en": {
@@ -13134,6 +14035,23 @@
       },
       "extractionState": "manual"
     },
+    "The plugin works with your cloud tasks. Continue with ChatGPT in Hanlin model settings controls which account pays for AI requests.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The plugin works with your cloud tasks. Continue with ChatGPT in Hanlin model settings controls which account pays for AI requests."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "התוסף פועל על המשימות שלך בענן. האפשרות ״המשך עם ChatGPT״ בהגדרות המודל של Hanlin קובעת באיזה חשבון ישתמשו בקשות ה־AI."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "The requested change needs approval.": {
       "localizations": {
         "en": {
@@ -13146,6 +14064,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "השינוי המבוקש דורש אישור."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "The secure ChatGPT sign-in window could not open.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The secure ChatGPT sign-in window could not open."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לפתוח את חלון ההתחברות המאובטח ל־ChatGPT."
           }
         }
       },
@@ -13299,6 +14234,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "ערכת נושא"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "This ChatGPT account has no available models for this app.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This ChatGPT account has no available models for this app."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בחשבון ChatGPT זה אין מודלים זמינים לאפליקציה זו."
           }
         }
       },
@@ -14290,6 +15242,23 @@
       },
       "extractionState": "manual"
     },
+    "Unavailable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unavailable"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא זמין"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Uncomplete": {
       "localizations": {
         "en": {
@@ -14336,6 +15305,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "ביטול מחיקה וסל המיחזור"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Unknown": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ידוע"
           }
         }
       },
@@ -14528,6 +15514,23 @@
       },
       "extractionState": "manual"
     },
+    "Use another ChatGPT account": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use another ChatGPT account"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "שימוש בחשבון ChatGPT אחר"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Use the same account in ChatGPT and on every device. ChatGPT can manage your cloud tasks while this app is closed.": {
       "localizations": {
         "en": {
@@ -14539,7 +15542,7 @@
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "אפשר להשתמש באותו חשבון ב־ChatGPT ובכל המכשירים. ChatGPT יכול לנהל את המשימות בענן גם כשהאפליקציה סגורה."
+            "value": "יש להשתמש באותו חשבון GSD ב־ChatGPT ובכל המכשירים. ChatGPT יכול לנהל את המשימות בענן גם כשהאפליקציה סגורה."
           }
         }
       },
@@ -14557,6 +15560,57 @@
           "stringUnit": {
             "state": "translated",
             "value": "אפשר להשתמש באותו חשבון ב־ChatGPT ובכל המכשירים. המשימות מסתנכרנות גם כשהאייפד סגור."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Use your ChatGPT plan": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use your ChatGPT plan"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "שימוש במכסת ChatGPT שלך"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Using ChatGPT plan": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Using ChatGPT plan"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "שימוש במכסת ChatGPT"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Verifying ChatGPT identity and permissions…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verifying ChatGPT identity and permissions…"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מתבצע אימות של הזהות וההרשאות ב־ChatGPT…"
           }
         }
       },
@@ -15033,6 +16087,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "אין חיבור לרשת. השינויים יסונכרנו כשהחיבור יתחדש."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "You're using your ChatGPT plan": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're using your ChatGPT plan"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "השימוש נעשה במכסת ChatGPT שלך"
           }
         }
       },
