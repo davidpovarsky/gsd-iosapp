@@ -100,12 +100,15 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
 
     private func openAccount(_ app: XCUIApplication) throws {
         app.launch()
-        let field = app.textFields["capture-field"]
-        if !field.exists {
-            let skip = app.buttons["Skip"]
-            if skip.waitForExistence(timeout: 10) { try tap(skip, "Normal onboarding Skip is unavailable.") }
+        // Matrix remains in the accessibility tree underneath normal onboarding.
+        let skip = app.buttons["Skip"]
+        if skip.waitForExistence(timeout: 5) {
+            try tap(skip, "Normal onboarding Skip is unavailable.")
+            try require(skip.waitForNonExistence(timeout: 10), "Normal onboarding did not dismiss.")
         }
+        let field = app.textFields["capture-field"]
         try require(field.waitForExistence(timeout: 30), "Normal GSD did not reach Matrix.")
+        try require(field.wait(for: \.isHittable, toEqual: true, timeout: 10), "Normal Matrix is obscured.")
         try tap(app.buttons["Open Hanlin task AI assistant"].firstMatch, "Hanlin assistant is unavailable.")
         let modelSettings = app.navigationBars["Hanlin model settings"]
         if !modelSettings.waitForExistence(timeout: 5) {

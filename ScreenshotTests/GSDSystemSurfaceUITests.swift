@@ -176,16 +176,18 @@ final class GSDSystemSurfaceUITests: XCTestCase {
     }
 
     private func requireMatrix(_ app: XCUIApplication) throws {
-        let field = app.textFields["capture-field"]
-        if !field.exists {
-            let skip = app.buttons["דילוג"]
-            if skip.waitForExistence(timeout: 10) {
-                try require(skip.isHittable, "The normal onboarding Skip action is obscured.")
-                skip.tap()
-            }
+        // Matrix remains in the accessibility tree underneath normal onboarding.
+        let skip = app.buttons["דילוג"]
+        if skip.waitForExistence(timeout: 5) {
+            try require(skip.isHittable, "The normal onboarding Skip action is obscured.")
+            skip.tap()
+            try require(skip.waitForNonExistence(timeout: 10), "Normal onboarding did not dismiss.")
         }
+        let field = app.textFields["capture-field"]
         try require(field.waitForExistence(timeout: 30), "Normal GSD did not reach the Matrix capture field.")
         try require(field.isEnabled, "The Matrix capture field is disabled.")
+        try require(field.wait(for: \.isHittable, toEqual: true, timeout: 10),
+                    "The Matrix capture field is obscured.")
     }
 
     private func cards(_ app: XCUIApplication, containing marker: String) -> XCUIElementQuery {
