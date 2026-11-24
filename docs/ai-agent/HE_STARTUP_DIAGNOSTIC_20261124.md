@@ -47,13 +47,30 @@ inventory must prove the owned UUID is absent. Other simulators and reports are
 never deleted. Known fixture-mask sanitization is mandatory before diagnostic
 artifact upload; sanitization failure blocks that upload.
 
+## Observed installation boundary
+
+Run [45366992566](https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45366992566)
+restored the exact products in12.04seconds, then the first simulator boot-status
+command completed after about97.7seconds. Installation exceeded its original
+60-second limit before either app launch. The artifact is14908375102,16725bytes,
+SHA256 `773979899f27abffd04dde68d73db2212438cce37b7d01814d07a7b29b4e01d9`.
+The report has no phases and no account fixture. Shutdown was attempted without
+a timeout (its exit code was not recorded); checked deletion succeeded and the
+final inventory proves the owned simulator absent. This is infrastructure
+boundary evidence, not a startup cause or native acceptance result.
+
+Only installation now allows up to300seconds. All app observation, crash capture,
+ownership, redaction and cleanup behavior is unchanged. The original13-control
+receipt is retained unchanged; a separate delta receipt verifies only this
+installation allowance, the diagnostic-job budget and unchanged remaining paths.
+
 ## Budget and interpretation
 
-The workflow ceiling is30minutes. If strict restoration takes more than300seconds,
+The workflow ceiling is35minutes. If strict restoration takes more than300seconds,
 the diagnostic stops before creating a simulator. Subsequent command and wait
-allowances total at most1310seconds, including the existing command runner's
+allowances total at most1550seconds, including the existing command runner's
 TERM15/KILL10 timeout cleanup, both final5-second scans, and checked simulator
-cleanup. This leaves190seconds for checkout, redaction, artifact upload and
+cleanup. This leaves250seconds for checkout, redaction, artifact upload and
 scheduling. The healthy path is much shorter; this changes no full-UI timeout.
 
 Every diagnostic receipt has `diagnostic_only:true`, `full_acceptance:false` and

@@ -244,7 +244,7 @@ def diagnose(products: Path, output: Path, inventory: dict, runtime: dict) -> di
         run(["xcrun", "simctl", "boot", device], output / "boot.log", timeout=30, env=environment)
         run(["xcrun", "simctl", "bootstatus", device, "-b"], output / "bootstatus.log", timeout=300, env=environment)
         app = products / "Debug-iphonesimulator/GSD.app"
-        run(["xcrun", "simctl", "install", device, str(app)], output / "install.log", timeout=60, env=environment)
+        run(["xcrun", "simctl", "install", device, str(app)], output / "install.log", timeout=300, env=environment)
         locale = ["-AppleLanguages", "(he)", "-AppleLocale", "he_IL"]
         for name, arguments, seconds in (("demo", ["--demo-seed", *locale], 15), ("normal", locale, 60)):
             print("GSD_STARTUP_DIAGNOSTIC_PHASE", name, flush=True)

@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "timestamp": "2026-11-24T09:47:23.265428+00:00",
+  "scope": "Focused installation-timeout and diagnostic-job budget delta only; no runtime or repeated original13 controls",
+  "parent_harness_sha": "83063d793ebca77769f61215442274afea067ea2",
+  "application_source_sha": "37764f1a56a0678e5c4cb4cbd683ab3f44eb2fdc",
+  "failed_run_id": 45366992566,
+  "failed_artifact_id": 14908375102,
+  "failed_artifact_sha256": "773979899f27abffd04dde68d73db2212438cce37b7d01814d07a7b29b4e01d9",
+  "checks": {
+    "python_syntax": true,
+    "only_install_timeout_ast_change": true,
+    "only_diagnostic_job_timeout_workflow_change": true,
+    "all_other_script_bytes_unchanged": true,
+    "bounded_budget_arithmetic": true
+  },
+  "original_controls": {
+    "count": 13,
+    "rerun": false,
+    "source_sha256": "9e5c8674b8b21917d5f79e5f41d7bd3da15b4fb88dad0542d2cc3ee553b5f72b",
+    "receipt_path": "docs/ai-agent/evidence/HE_STARTUP_DIAGNOSTIC_CHECKS_20261124.json"
+  },
+  "install_timeout_seconds": 300,
+  "outer_job_minutes": 35,
+  "maximum_command_and_wait_allowances_after_restore_seconds": 1550,
+  "restore_limit_before_simulator_seconds": 300,
+  "remaining_margin_for_checkout_artifact_and_scheduling_seconds": 250,
+  "script_sha256": "960bedcce6d2a128f8d1ce9e66e485a1443b549782ef8698bf950bacacccfcdf",
+  "workflow_sha256": "097ef4adef57094ec9884397df32ebdd51350724c45dd3a7e2907520e9f2fe5a"
+}

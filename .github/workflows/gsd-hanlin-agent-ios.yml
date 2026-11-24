@@ -373,7 +373,7 @@ jobs:
   native-startup-diagnostic:
     if: inputs.mode == 'diagnose-startup'
     runs-on: xcode-27
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
