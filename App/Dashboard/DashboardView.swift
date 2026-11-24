@@ -212,6 +212,7 @@ struct DashboardView: View {
                         Spacer()
                         Text("\(stat.active)").font(.subheadline.weight(.semibold)).monospacedDigit()
                             .foregroundStyle(Surface.ink)
+                            .accessibilityIdentifier("dashboard.quadrant.value.\(stat.quadrant.rawValue)")
                     }
                 }
             }
