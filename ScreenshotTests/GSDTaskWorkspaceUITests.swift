@@ -75,6 +75,21 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
     private func tapMode(_ mode: String, in app: XCUIApplication) {
         let button = app.buttons["task-workspace.tab.\(mode)"].firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 10))
+        if !button.isHittable {
+            // The native mode strip scrolls horizontally. XCTest does not auto-scroll
+            // its offscreen buttons; use their current frames to work in both LTR and RTL.
+            let strip = app.scrollViews.containing(.button, identifier: "task-workspace.tab.\(mode)").firstMatch
+            XCTAssertTrue(strip.exists)
+            for _ in 0..<4 {
+                if button.isHittable { break }
+                if button.frame.midX > strip.frame.midX {
+                    strip.swipeLeft()
+                } else {
+                    strip.swipeRight()
+                }
+            }
+        }
+        XCTAssertTrue(button.isHittable, "Mode must be visible before tapping: \(mode)")
         button.tap()
     }
 
