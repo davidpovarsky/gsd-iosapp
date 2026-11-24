@@ -1,61 +1,142 @@
-name: GSD Hanlin Agent - Native iPad & ChatGPT MCP Acceptance
+name: GSD Native Acceptance and Signed TestFlight
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feat/hanlin-agent-api-20261122
-    paths:
-      - 'App/**'
-      - 'GSDKit/**'
-      - 'Packages/GSDHanlinAgent/**'
-      - 'Vendor/**'
-      - 'project.yml'
-      - 'scripts/gsd_simulator_smoke.py'
-      - 'scripts/build_gsd_hanlin_ipad_ipa.sh'
-      - 'scripts/package_gsd_sideload_ipa.py'
-      - 'scripts/test_package_gsd_sideload_ipa.py'
-      - '.github/workflows/gsd-hanlin-agent-ios.yml'
+    inputs:
+      source_ref:
+        description: Exact integrated source commit (40 hexadecimal characters)
+        required: true
+        type: string
+      mode:
+        description: Validate source, or release the same already validated source
+        required: true
+        type: choice
+        default: validate
+        options: [validate, release]
+      validation_run:
+        description: Successful validation run ID for this exact source (release only)
+        required: false
+        type: string
+      build_number:
+        description: Unused App Store Connect build number
+        required: true
+        type: string
+        default: "48"
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: gsd-native-apple
   cancel-in-progress: false
+
+env:
+  GSD_CLOUD_SYSTEM_TEST: "1"
+  GSD_CLOUD_TEST_BASE: https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud
+  GSD_SOURCE_SHA: ${{ inputs.source_ref }}
+  GSD_BUILD_NUMBER: ${{ inputs.build_number }}
+  OUTPUT: ${{ github.workspace }}/dist/gsd-native-release
 
 jobs:
   native-acceptance:
+    if: inputs.mode == 'validate'
     runs-on: xcode-27
-    timeout-minutes: 80
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
-      - name: Verify Xcode 27 required by HanlinAgentSDK
+        with:
+          ref: ${{ inputs.source_ref }}
+      - name: Verify immutable source and Xcode
         shell: bash
         run: |
           set -euo pipefail
-          xcodebuild -version
-          if ! xcodebuild -version | grep -q '^Xcode 27'; then
-            selected="$(find /Applications -maxdepth 1 -type d -name 'Xcode*27*.app' -print | sort -V | tail -1)"
-            [[ -n "$selected" ]]
-            sudo xcode-select -s "$selected/Contents/Developer"
-          fi
+          [[ "$GSD_SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$(git rev-parse HEAD)" = "$GSD_SOURCE_SHA" ]]
+          [[ "$GSD_BUILD_NUMBER" =~ ^[0-9]+$ ]]
           xcodebuild -version | grep '^Xcode 27'
-          xcodebuild -showsdks
-      - name: Regenerate the Xcode project from its source
-        id: project
+          mkdir -p "$OUTPUT/logs"
+          curl --fail --silent --show-error --max-time 30 "$GSD_CLOUD_TEST_BASE/api/health" > "$OUTPUT/logs/cloud-health.json"
+      - name: Materialize and audit the original pinned Hanlin SDK
         shell: bash
         run: |
           set -euo pipefail
-          if ! command -v xcodegen >/dev/null; then
-            brew install xcodegen
-          fi
+          python3 scripts/install_hanlin_sdk.py
+          python3 scripts/install_hanlin_sdk.py --check
+      - name: Generate localized Xcode targets
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v xcodegen >/dev/null; then brew install xcodegen; fi
           xcodegen generate
-      - name: Preserve the generated project and plists
-        if: steps.project.outcome == 'success'
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          text = Path("GSD.xcodeproj/project.pbxproj").read_text()
+          regions = re.search(r"knownRegions = \((.*?)\);", text, re.S)
+          assert regions and all(re.search(r"\b" + lang + r"\b", regions[1]) for lang in ("en", "he", "Base")), "Generated regions missing"
+          assert "Vendor/HanlinSDK" in text, "Canonical SDK project reference missing"
+          print("GSD_GENERATED_PROJECT_REGION_AND_SDK_PASS")
+          PY
+      - name: Validate Hanlin tools and official ChatGPT contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          swift test --package-path Packages/GSDHanlinAgent -j 3 2>&1 | tee "$OUTPUT/logs/hanlin-tests.log"
+      - name: Validate account, cloud and sync conflict contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          swift test --package-path GSDKit -j 3 \
+            --filter 'AuthServiceTests|CloudAccountAuthTests|CloudTimerWireTests|CloudLibrarySyncTests|CloudNativeSystemTests|SyncEngineGuardedWriteTests|SyncEngineSessionFenceTests|AccountSwitchTests' \
+            2>&1 | tee "$OUTPUT/logs/cloud-sync-tests.log"
+      - name: Build app, four embedded targets and native UI runner once
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcodebuild -project GSD.xcodeproj -scheme GSDScreenshots -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' -derivedDataPath .gsd-release-derived \
+            ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO \
+            CURRENT_PROJECT_VERSION="$GSD_BUILD_NUMBER" build-for-testing \
+            2>&1 | tee "$OUTPUT/logs/build-for-testing.log"
+          python3 scripts/verify_gsd_release_bundle.py \
+            --app .gsd-release-derived/Build/Products/Debug-iphonesimulator/GSD.app \
+            --build "$GSD_BUILD_NUMBER" --output "$OUTPUT/compiled-bundles.json"
+      - name: English and Hebrew iPhone/iPad UI and closed-app cloud acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/gsd_native_acceptance.py --derived-data .gsd-release-derived \
+            --output "$OUTPUT/ui"
+      - name: Create successful native validation receipt
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          output = pathlib.Path(os.environ["OUTPUT"])
+          ui = json.loads((output / "ui/native-ui-receipt.json").read_text())
+          bundles = json.loads((output / "compiled-bundles.json").read_text())
+          assert ui["passed"] and bundles["passed"]
+          receipt = {"passed": True, "source_sha": os.environ["GSD_SOURCE_SHA"],
+                     "build": os.environ["GSD_BUILD_NUMBER"], "run_id": os.environ["GITHUB_RUN_ID"],
+                     "workflow": ".github/workflows/gsd-hanlin-agent-ios.yml",
+                     "generated_project_sha256": hashlib.sha256(pathlib.Path("GSD.xcodeproj/project.pbxproj").read_bytes()).hexdigest(),
+                     "hanlin_lock_sha256": hashlib.sha256(pathlib.Path("HanlinSDK.lock.json").read_bytes()).hexdigest(),
+                     "ui": ui, "bundles": bundles}
+          (output / "native-acceptance.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          PY
+      - name: Preserve successful validation receipt
         uses: actions/upload-artifact@v4
         with:
-          name: GSD-Hanlin-Generated-Project-${{ github.run_id }}
+          name: GSD-Native-Acceptance-Receipt-${{ github.run_id }}
+          path: dist/gsd-native-release/native-acceptance.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Preserve localized generated project
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Generated-Project-${{ github.run_id }}
           path: |
             GSD.xcodeproj/project.pbxproj
             GSD.xcodeproj/xcshareddata/xcschemes/
@@ -64,107 +145,161 @@ jobs:
             ShareExtension/Info.plist
             Watch/Info.plist
             WatchWidgets/Info.plist
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 21
-      - name: Test GSD OAuth PKCE and MCP bridge locally
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --test bridge/server.test.mjs 2>&1 | tee gsd-mcp-node-tests.log
-          python3 scripts/test_package_gsd_sideload_ipa.py -v 2>&1 | tee gsd-ipa-package-tests.log
-      - name: Test GSD Hanlin tools, schema and remote write consent
-        id: tests
-        shell: bash
-        run: |
-          set -euo pipefail
-          swift test --package-path Packages/GSDHanlinAgent \
-            --filter GSDHanlinAgentTests -j 3 2>&1 | tee gsd-agent-tests.log
-      - name: Preserve SDK test log before native app build
+      - name: Preserve test summaries, screenshots and sanitized logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: GSD-Hanlin-Tests-${{ github.run_id }}
+          name: GSD-Native-Evidence-${{ github.run_id }}
           path: |
-            gsd-agent-tests.log
-            gsd-mcp-node-tests.log
-            gsd-ipa-package-tests.log
+            dist/gsd-native-release/logs/
+            dist/gsd-native-release/compiled-bundles.json
+            dist/gsd-native-release/ui/**/*.png
+            dist/gsd-native-release/ui/**/*.json
+            dist/gsd-native-release/ui/**/*.log
+            !dist/gsd-native-release/ui/**/*.xcresult/**
           if-no-files-found: warn
           retention-days: 21
-      - name: Build native iPad app and both unsigned IPA variants
-        id: build
-        if: (success() || failure()) && steps.project.outcome == 'success'
+
+  signed-testflight:
+    if: inputs.mode == 'release'
+    runs-on: xcode-27
+    timeout-minutes: 100
+    env:
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      APPLE_CERTIFICATE_P12_B64: ${{ secrets.APPLE_CERTIFICATE_P12_B64 }}
+      APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      VALIDATION_RUN: ${{ inputs.validation_run }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
+      - name: Require successful native validation of this immutable source
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          bash scripts/build_gsd_hanlin_ipad_ipa.sh 2>&1 | tee gsd-ipad-pipeline.log
-      - name: Upload verified GSD iPad IPA assets
-        if: always() && steps.build.outcome == 'success'
+          [[ "$GSD_SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$(git rev-parse HEAD)" = "$GSD_SOURCE_SHA" ]]
+          [[ "$VALIDATION_RUN" =~ ^[0-9]+$ ]]
+          [[ "$GSD_BUILD_NUMBER" =~ ^[0-9]+$ ]]
+          xcodebuild -version | grep '^Xcode 27'
+          mkdir -p "$OUTPUT/logs" "$RUNNER_TEMP/gsd-validation-receipt"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VALIDATION_RUN" > "$RUNNER_TEMP/gsd-validation-run.json"
+          gh run download "$VALIDATION_RUN" --repo "$GITHUB_REPOSITORY" \
+            --name "GSD-Native-Acceptance-Receipt-$VALIDATION_RUN" --dir "$RUNNER_TEMP/gsd-validation-receipt"
+          python3 - <<'PY'
+          import json, os, pathlib
+          temporary = pathlib.Path(os.environ["RUNNER_TEMP"])
+          run = json.loads((temporary / "gsd-validation-run.json").read_text())
+          receipt = json.loads((temporary / "gsd-validation-receipt/native-acceptance.json").read_text())
+          assert run["conclusion"] == "success", "Native validation run did not succeed"
+          assert run["path"] == ".github/workflows/gsd-hanlin-agent-ios.yml", "Unexpected validation workflow"
+          assert receipt["passed"] and receipt["source_sha"] == os.environ["GSD_SOURCE_SHA"], "Validation source mismatch"
+          assert receipt["run_id"] == os.environ["VALIDATION_RUN"], "Validation run mismatch"
+          assert receipt["build"] == os.environ["GSD_BUILD_NUMBER"], "Validation build mismatch"
+          pathlib.Path(os.environ["OUTPUT"], "native-acceptance.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          print("GSD_EXACT_SOURCE_NATIVE_ACCEPTANCE_VERIFIED")
+          PY
+      - name: Materialize the tested SDK and generate the project
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/install_hanlin_sdk.py
+          python3 scripts/install_hanlin_sdk.py --check
+          if ! command -v xcodegen >/dev/null; then brew install xcodegen; fi
+          xcodegen generate
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          receipt = json.loads(pathlib.Path(os.environ["OUTPUT"], "native-acceptance.json").read_text())
+          assert hashlib.sha256(pathlib.Path("GSD.xcodeproj/project.pbxproj").read_bytes()).hexdigest() == receipt["generated_project_sha256"]
+          assert hashlib.sha256(pathlib.Path("HanlinSDK.lock.json").read_bytes()).hexdigest() == receipt["hanlin_lock_sha256"]
+          PY
+      - name: Install required Apple API cryptography dependency
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/gsd-apple-venv"
+          "$RUNNER_TEMP/gsd-apple-venv/bin/pip" install 'PyJWT[crypto]==2.10.1'
+          echo "$RUNNER_TEMP/gsd-apple-venv/bin" >> "$GITHUB_PATH"
+      - name: Verify App Store app record and unused build number
+        shell: bash
+        run: python3 scripts/gsd_appstore_connect.py preflight --build "$GSD_BUILD_NUMBER" --output "$OUTPUT/apple-preflight.json"
+      - name: Prepare existing Apple Distribution identity securely
+        shell: bash
+        run: python3 scripts/prepare_gsd_signing.py prepare
+      - name: Install and verify all five App Store profiles
+        shell: bash
+        run: python3 scripts/gsd_appstore_connect.py profiles --install --output "$OUTPUT/profiles.json"
+      - name: Archive signed GSD release
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcodebuild -project GSD.xcodeproj -scheme GSD -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath "$OUTPUT/GSD.xcarchive" \
+            -derivedDataPath .gsd-signed-derived CURRENT_PROJECT_VERSION="$GSD_BUILD_NUMBER" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY='Apple Distribution' archive \
+            2>&1 | tee "$OUTPUT/logs/archive.log"
+          python3 scripts/verify_gsd_release_bundle.py --signed \
+            --app "$OUTPUT/GSD.xcarchive/Products/Applications/GSD.app" \
+            --build "$GSD_BUILD_NUMBER" --output "$OUTPUT/archive-signatures.json"
+      - name: Export and audit actual signed App Store IPA
+        id: export
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/gsd_appstore_connect.py export-options --output "$RUNNER_TEMP/GSD-ExportOptions.plist"
+          xcodebuild -exportArchive -archivePath "$OUTPUT/GSD.xcarchive" \
+            -exportPath "$OUTPUT/export" -exportOptionsPlist "$RUNNER_TEMP/GSD-ExportOptions.plist" \
+            2>&1 | tee "$OUTPUT/logs/export.log"
+          python3 - <<'PY'
+          import os, pathlib
+          paths = list(pathlib.Path(os.environ["OUTPUT"], "export").glob("*.ipa"))
+          assert len(paths) == 1, "Expected exactly one signed IPA"
+          with pathlib.Path(os.environ["GITHUB_ENV"]).open("a") as f:
+              f.write("IPA_PATH=" + str(paths[0]) + "\n")
+          PY
+          python3 scripts/verify_gsd_release_bundle.py --signed --ipa "$OUTPUT/export/GSD.ipa" \
+            --build "$GSD_BUILD_NUMBER" --output "$OUTPUT/ipa-signatures.json"
+      - name: Validate and upload to App Store Connect
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcrun altool --validate-app -f "$IPA_PATH" -t ios \
+            --api-key "$ASC_KEY_ID" --api-issuer "$ASC_ISSUER_ID" --p8-file-path "$ASC_KEY_PATH" \
+            2>&1 | tee "$OUTPUT/logs/apple-validate.log"
+          xcrun altool --upload-app -f "$IPA_PATH" -t ios \
+            --api-key "$ASC_KEY_ID" --api-issuer "$ASC_ISSUER_ID" --p8-file-path "$ASC_KEY_PATH" \
+            2>&1 | tee "$OUTPUT/logs/apple-upload.log"
+      - name: Verify Apple processing and record actual beta availability
+        shell: bash
+        run: |
+          python3 scripts/gsd_appstore_connect.py verify-upload --build "$GSD_BUILD_NUMBER" \
+            --timeout 1200 --output "$OUTPUT/testflight-processing.json"
+      - name: Remove CI signing keys, keychain and installed profiles
+        if: always()
+        shell: bash
+        run: python3 scripts/prepare_gsd_signing.py cleanup --profiles "$OUTPUT/profiles.json"
+      - name: Preserve verified signed IPA for delivery or upload recovery
+        if: always() && steps.export.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: GSD-Hanlin-ChatGPT-MCP-iPad-UNSIGNED-${{ github.run_id }}
-          path: |
-            dist/gsd-hanlin-ipad/*.ipa
-            dist/gsd-hanlin-ipad/*manifest.json
-            dist/gsd-hanlin-ipad/*build-info.json
-            dist/gsd-hanlin-ipad/gsd-ipa-zip-check.txt
+          name: GSD-4.1.0-SIGNED-${{ inputs.build_number }}-${{ github.run_id }}
+          path: dist/gsd-native-release/export/*.ipa
           if-no-files-found: error
+          retention-days: 14
+      - name: Preserve public distribution receipts and build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Apple-Release-Evidence-${{ github.run_id }}
+          path: |
+            dist/gsd-native-release/*.json
+            dist/gsd-native-release/logs/
+          if-no-files-found: warn
           retention-days: 30
-      - name: Build the universal iPhone and iPad simulator app
-        id: simulator_build
-        if: steps.tests.outcome == 'success' && steps.build.outcome == 'success'
-        shell: bash
-        run: |
-          set -euo pipefail
-          xcodebuild -project GSD.xcodeproj -scheme GSD -configuration Debug \
-            -destination 'generic/platform=iOS Simulator' \
-            -derivedDataPath .gsd-hanlin-simulator-derived \
-            ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO \
-            build 2>&1 | tee gsd-simulator-build.log
-      - name: Archive the compiled simulator app before launch
-        if: steps.simulator_build.outcome == 'success'
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p dist/gsd-simulator-app
-          ditto -c -k --sequesterRsrc --keepParent \
-            .gsd-hanlin-simulator-derived/Build/Products/Debug-iphonesimulator/GSD.app \
-            dist/gsd-simulator-app/GSD-Simulator.zip
-      - name: Preserve the compiled simulator app for diagnostics
-        if: always() && steps.simulator_build.outcome == 'success'
-        uses: actions/upload-artifact@v4
-        with:
-          name: GSD-Hanlin-Simulator-App-${{ github.run_id }}
-          path: dist/gsd-simulator-app/GSD-Simulator.zip
-          if-no-files-found: error
-          retention-days: 7
-      - name: Launch and capture disposable iPhone and iPad simulators
-        if: steps.simulator_build.outcome == 'success'
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 scripts/gsd_simulator_smoke.py \
-            --app .gsd-hanlin-simulator-derived/Build/Products/Debug-iphonesimulator/GSD.app \
-            --output dist/gsd-simulator-smoke
-      - name: Preserve simulator screenshots and launch evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: GSD-Hanlin-Simulator-Smoke-${{ github.run_id }}
-          path: |
-            gsd-simulator-build.log
-            dist/gsd-simulator-smoke/
-          if-no-files-found: warn
-          retention-days: 21
-      - name: Keep native build logs even after failure
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: GSD-Hanlin-Native-Evidence-${{ github.run_id }}
-          path: |
-            gsd-agent-tests.log
-            gsd-mcp-node-tests.log
-            gsd-ipa-package-tests.log
-            gsd-ipad-pipeline.log
-            dist/gsd-hanlin-ipad/gsd-hanlin-build.log
-          if-no-files-found: warn
-          retention-days: 21

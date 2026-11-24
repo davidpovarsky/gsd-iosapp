@@ -5,13 +5,15 @@ options:
     iOS: "27.0"
     watchOS: "26.0"
   createIntermediateGroups: true
+  developmentLanguage: en
+  useBaseInternationalization: true
 settings:
   base:
     # Language mode, not compiler version: Xcode accepts only 4, 4.2, 5, and 6 here. The
     # Swift 6.4 compiler comes from Xcode 27 itself (iOS 27 refresh, 2026-09-15).
     SWIFT_VERSION: "6.0"
     CODE_SIGN_IDENTITY: "Apple Development"
-    DEVELOPMENT_TEAM: "52HVJ3VDSM"   # owner's Apple Developer team — applies to all targets (incl. Phase 6 extensions)
+    DEVELOPMENT_TEAM: "NA6HPWARQ2"   # owner's Apple Developer team — applies to all targets (incl. Phase 6 extensions)
     # Version is project-wide: the app and ALL embedded extensions must share one
     # CFBundleShortVersionString/CFBundleVersion (App Store rule). Bump these two lines
     # per release — never per-target (that's how the app/extension versions drifted apart).
@@ -23,8 +25,12 @@ settings:
     # so Xcode stops prompting. No run-script build phases exist for sandboxing to gate.
     ENABLE_USER_SCRIPT_SANDBOXING: "YES"
     STRING_CATALOG_GENERATE_SYMBOLS: "YES"
+    SWIFT_EMIT_LOC_STRINGS: "YES"
+    LOCALIZATION_PREFERS_STRING_CATALOGS: "YES"
     ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOL_FRAMEWORK_EXTENSIONS: "NO"
 packages:
+  HanlinSDK:
+    path: Vendor/HanlinSDK
   GSDKit:
     path: GSDKit
   GSDHanlinAgent:
@@ -44,6 +50,8 @@ targets:
       properties:
         # Home-screen label — anything longer than ~12 chars truncates under the icon.
         # The full "GSD Task Manager" name belongs in App Store Connect, not here.
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, he]
         CFBundleDisplayName: GSD
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
@@ -85,6 +93,12 @@ targets:
             UIApplicationShortcutItemSubtitle: Open priority tasks
             UIApplicationShortcutItemIconType: UIApplicationShortcutIconTypeFavorite
     dependencies:
+      - package: HanlinSDK
+        product: HanlinChatCore
+      - package: HanlinSDK
+        product: HanlinAgentCore
+      - package: HanlinSDK
+        product: HanlinHostContracts
       - package: GSDHanlinAgent
         product: GSDHanlinAgent
       - package: GSDKit
@@ -122,6 +136,14 @@ targets:
         DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER: "NO"
         # macOS-SDK (Catalyst) build uses sandbox entitlements; iOS keeps GSD.entitlements.
         "CODE_SIGN_ENTITLEMENTS[sdk=macosx*]": App/GSD-Catalyst.entitlements
+      configs:
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PROVISIONING_PROFILE_SPECIFIER: GSD_Tasks_MAIN_AppStore_20261123
+
   GSDWidgets:
     type: app-extension
     platform: iOS
@@ -130,6 +152,8 @@ targets:
     info:
       path: Widgets/Info.plist
       properties:
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, he]
         CFBundleDisplayName: GSD Widgets
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
@@ -142,6 +166,13 @@ targets:
         GENERATE_INFOPLIST_FILE: "NO"
         CODE_SIGN_ENTITLEMENTS: Widgets/GSDWidgets.entitlements
         CODE_SIGN_STYLE: Automatic
+      configs:
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PROVISIONING_PROFILE_SPECIFIER: GSD_Tasks_WIDGETS_AppStore_20261123
     dependencies:
       - package: GSDKit
         product: GSDModel
@@ -156,6 +187,8 @@ targets:
     info:
       path: Watch/Info.plist
       properties:
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, he]
         CFBundleDisplayName: GSD
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
@@ -171,6 +204,13 @@ targets:
         CODE_SIGN_STYLE: Automatic
         SKIP_INSTALL: "YES"
     # Only the model and the GRDB-free contract. GSDStore, GSDSync and GSDWire stay off the watch.
+      configs:
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PROVISIONING_PROFILE_SPECIFIER: GSD_Tasks_WATCH_AppStore_20261123
     dependencies:
       - package: GSDKit
         product: GSDModel
@@ -187,6 +227,8 @@ targets:
     info:
       path: WatchWidgets/Info.plist
       properties:
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, he]
         CFBundleDisplayName: GSD Widgets
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
@@ -200,6 +242,13 @@ targets:
         CODE_SIGN_ENTITLEMENTS: WatchWidgets/GSDWatchWidgets.entitlements
         CODE_SIGN_STYLE: Automatic
         SKIP_INSTALL: "YES"
+      configs:
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PROVISIONING_PROFILE_SPECIFIER: GSD_Tasks_WATCHWIDGETS_AppStore_20261123
     dependencies:
       - package: GSDKit
         product: GSDModel
@@ -213,6 +262,8 @@ targets:
     info:
       path: ShareExtension/Info.plist
       properties:
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, he]
         CFBundleDisplayName: GSD
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
@@ -236,6 +287,13 @@ targets:
         DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER: "NO"
         # macOS-SDK (Catalyst) build needs sandbox entitlements; iOS keeps its own file.
         "CODE_SIGN_ENTITLEMENTS[sdk=macosx*]": ShareExtension/GSDShareExtension-Catalyst.entitlements
+      configs:
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PROVISIONING_PROFILE_SPECIFIER: GSD_Tasks_SHARE_AppStore_20261123
     dependencies:
       - package: GSDKit
         product: GSDModel
@@ -243,7 +301,7 @@ targets:
         product: GSDSnapshot
       - package: GSDKit
         product: GSDWire   # direct push from the compose sheet; GRDB-free
-  # App Store screenshot runner (not a correctness test target — the app's logic gate
+  # App Store screenshots and native release acceptance (the correctness test target — the app's logic gate
   # remains `swift test` + a clean build). Drives the live app through its main screens
   # and writes full-res PNGs; see ScreenshotTests/ScreenshotTests.swift for the env vars.
   GSDScreenshotTests:
