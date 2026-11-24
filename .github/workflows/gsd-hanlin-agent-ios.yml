@@ -91,6 +91,7 @@ jobs:
             --filter 'AuthServiceTests|CloudAccountAuthTests|CloudTimerWireTests|CloudLibrarySyncTests|CloudLibraryOrderingTests|CloudNativeSystemTests|SyncEngineGuardedWriteTests|SyncEngineSessionFenceTests|AccountSwitchTests' \
             2>&1 | tee "$OUTPUT/logs/cloud-sync-tests.log"
       - name: Build app, four embedded targets and native UI runner once
+        id: simulator_build
         shell: bash
         run: |
           set -euo pipefail
@@ -99,6 +100,40 @@ jobs:
             ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO \
             CURRENT_PROJECT_VERSION="$GSD_BUILD_NUMBER" build-for-testing \
             2>&1 | tee "$OUTPUT/logs/build-for-testing.log"
+      - name: Preserve the compiled simulator products before runtime checks
+        if: always() && steps.simulator_build.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUTPUT/simulator-build"
+          ditto -c -k --sequesterRsrc --keepParent .gsd-release-derived/Build/Products \
+            "$OUTPUT/simulator-build/GSD-Simulator-BuildProducts.zip"
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          directory = pathlib.Path(os.environ["OUTPUT"], "simulator-build")
+          archive = directory / "GSD-Simulator-BuildProducts.zip"
+          digest = hashlib.sha256()
+          with archive.open("rb") as stream:
+              for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                  digest.update(chunk)
+          receipt = {"source_sha": os.environ["GSD_SOURCE_SHA"], "build": os.environ["GSD_BUILD_NUMBER"],
+                     "run_id": os.environ["GITHUB_RUN_ID"], "simulator_only": True,
+                     "build_for_testing_completed": True, "runtime_acceptance": "pending",
+                     "archive": archive.name, "sha256": digest.hexdigest()}
+          (directory / "simulator-build.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          PY
+      - name: Retain simulator build for diagnostics and focused recovery
+        if: always() && steps.simulator_build.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Simulator-BuildProducts-${{ github.run_id }}
+          path: dist/gsd-native-release/simulator-build/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Audit compiled target versions and localization resources
+        shell: bash
+        run: |
+          set -euo pipefail
           python3 scripts/verify_gsd_release_bundle.py \
             --app .gsd-release-derived/Build/Products/Debug-iphonesimulator/GSD.app \
             --build "$GSD_BUILD_NUMBER" --output "$OUTPUT/compiled-bundles.json"
