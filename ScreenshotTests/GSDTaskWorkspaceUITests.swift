@@ -45,8 +45,17 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         XCTAssertEqual(boardCompletion.label, reopenedLabel)
         capture("02-board-after-completion")
 
-        tapMode("table", in: app)
-        let open = app.buttons["task-workspace.open.demo-finance"].firstMatch
+        tapMode("timeline", in: app)
+        let chart = app.descendants(matching: .any).matching(identifier: "task-workspace.timeline.chart").firstMatch
+        XCTAssertTrue(chart.waitForExistence(timeout: 10))
+        capture("03-timeline")
+
+        tapMode("network", in: app)
+        let network = app.descendants(matching: .any).matching(identifier: "task-workspace.network.canvas").firstMatch
+        XCTAssertTrue(network.waitForExistence(timeout: 10))
+        capture("04-network")
+        let taskTitle = hebrew ? "לקבל אישור ממחלקת הכספים" : "Get finance sign-off"
+        let open = app.buttons[taskTitle].firstMatch
         XCTAssertTrue(open.waitForExistence(timeout: 10))
         open.tap()
         let editor = app.descendants(matching: .any).matching(identifier: "task-editor").firstMatch
@@ -55,10 +64,12 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         XCTAssertTrue(title.waitForExistence(timeout: 10))
         XCTAssertEqual(title.value as? String,
                        hebrew ? "לקבל אישור ממחלקת הכספים" : "Get finance sign-off")
-        capture("03-canonical-editor")
+        capture("05-canonical-editor")
         app.buttons["editor-cancel"].tap()
         XCTAssertTrue(workspace.waitForExistence(timeout: 10))
+        tapMode("table", in: app)
         XCTAssertEqual(app.buttons[completionID].firstMatch.label, reopenedLabel)
+        capture("06-table-persisted-state")
     }
 
     private func tapMode(_ mode: String, in app: XCUIApplication) {

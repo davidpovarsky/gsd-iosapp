@@ -1,6 +1,22 @@
 {
-  "originHash" : "462687164722bd8765f51c7af5bb75ab3f5ad02b8789aadbe2fa6550eedfaaec",
+  "originHash" : "89fadeb47c602692cc62833bc97d059394016fb3f179863db577065451114296",
   "pins" : [
+    {
+      "identity" : "advancedkanban",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/NerdSnipe-Inc/AdvancedKanban.git",
+      "state" : {
+        "revision" : "17c093670ca6198c9b86ed22cf9c7b0d5f527df9"
+      }
+    },
+    {
+      "identity" : "forcegraph",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ianleon/ForceGraph.git",
+      "state" : {
+        "revision" : "55354c76d179a3ebbe58199544442d5f5f10765c"
+      }
+    },
     {
       "identity" : "grdb.swift",
       "kind" : "remoteSourceControl",
@@ -25,6 +41,22 @@
       "state" : {
         "revision" : "6a52f3251125d74daf04fcbd5e6f08a75d074382",
         "version" : "1.8.2"
+      }
+    },
+    {
+      "identity" : "swiftflow",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/aaurelions/SwiftFlow.git",
+      "state" : {
+        "revision" : "98ff46633257d188f1819255df8c8453a9b72d8f"
+      }
+    },
+    {
+      "identity" : "task-visualization-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/davidpovarsky/task-visualization-kit.git",
+      "state" : {
+        "revision" : "a78c84e1df369ea7c93cf4b23d4f5d8d60e25293"
       }
     }
   ],
