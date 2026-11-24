@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "scope": "Read-only capacity assessment for existing GSD native acceptance; no new fixture, deletion, deployment, restart, quota change or archive copy",
   "product_source": "37764f1a56a0678e5c4cb4cbd683ab3f44eb2fdc",
   "jobs": {
@@ -9,7 +9,9 @@
     "worktree_baseline": "job_8b451ea824c7",
     "exclusive_allocation": "job_4116b4a80d79",
     "repeated_allocation": "job_99583df2ff86",
-    "gsd_database_and_backup_geometry": "job_ba906a097040"
+    "gsd_database_and_backup_geometry": "job_ba906a097040",
+    "external_phase_initial_read": "job_2a8e48d0d590",
+    "external_phase_retry_read": "job_4aaa4c273555"
   },
   "observations": [
     {
@@ -41,6 +43,11 @@
       "at": "2026-11-24T10:26:04.173203+00:00",
       "root_available_bytes": 2720710656,
       "data_available_bytes": 951066624
+    },
+    {
+      "at": "2026-11-24T10:42:37.334918+00:00",
+      "root_available_bytes": 2720358400,
+      "data_available_bytes": 950747136
     }
   ],
   "external_growth": {
@@ -297,5 +304,178 @@
     "immediately_before_signup_measurement_performed": false,
     "acceptance_pass_claimed": false,
     "root_owner_zero_count_query_performed": false
+  },
+  "observed_competing_ci": {
+    "run_id": 45375597972,
+    "url": "https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45375597972",
+    "branch": "codex/gsd-build48-onboarding",
+    "reported_head_prefix": "55fbae13",
+    "created_at": "2026-11-24T10:31:31Z",
+    "observed_phase": "package/cloud step 11 around 10:37 UTC",
+    "source": "Native owner and root phase observation, not a new CI query by the capacity lane",
+    "actor_or_cause_attributed": false,
+    "possible_existing_package_account_count": 2,
+    "actual_account_creation_count_verified": false,
+    "own_candidate_dispatched_at_observation": false,
+    "extra_operational_allowance_bytes": 67108864,
+    "cumulative_external_plus_planned_own_allowance_bytes": 201326592,
+    "external_account_cleanup_or_server_mutation_performed": false,
+    "boundary_policy": "Native waits for a verified cleanup-complete step boundary before ordinary cancellation; capacity lane does not touch its accounts",
+    "followup": {
+      "observed_at": "2026-11-24T10:43:01Z",
+      "package_cloud_step11": "SUCCESS",
+      "deletion_recovery_step12": "SUCCESS",
+      "ui_step17": "active",
+      "ui_profile_or_account_creation_proven": false,
+      "cancellation_performed_by_native_owner": false,
+      "own_candidate_still_undispatched": true
+    },
+    "cumulative_allowance_scope": "Observed external package phase plus own two planned phases only; external UI account phase not proven entered and no overlap admission conferred"
+  },
+  "external_phase_read_attempts": [
+    {
+      "job_id": "job_2a8e48d0d590",
+      "started_at": "2026-11-24T10:39:34.171776+00:00",
+      "finished_at": "2026-11-24T10:39:53.607126+00:00",
+      "ssh_exit": 255,
+      "server_receipt": null,
+      "error_type": "remote_failed",
+      "raw_error_not_exposed": true,
+      "health_or_auth_failure_inferred": false
+    },
+    {
+      "job_id": "job_4aaa4c273555",
+      "ssh_exit": 0,
+      "receipt": {
+        "checked_at": "2026-11-24T10:42:37.334918+00:00",
+        "data": {
+          "available_bytes": 950747136,
+          "free_bytes": 967524352
+        },
+        "finished_at": "2026-11-24T10:42:37.420635+00:00",
+        "health": {
+          "cloud_public": {
+            "code": 200,
+            "http": 200
+          },
+          "pocketbase": {
+            "code": 200,
+            "http": 200
+          }
+        },
+        "listeners": [
+          {
+            "pids": [
+              3365518
+            ],
+            "port": 8095,
+            "state": "LISTEN"
+          },
+          {
+            "pids": [
+              1807512
+            ],
+            "port": 20241,
+            "state": "LISTEN"
+          },
+          {
+            "pids": [
+              3287789
+            ],
+            "port": 8767,
+            "state": "LISTEN"
+          },
+          {
+            "pids": [
+              3422173
+            ],
+            "port": 8770,
+            "state": "LISTEN"
+          },
+          {
+            "pids": [
+              3336621
+            ],
+            "port": 8769,
+            "state": "LISTEN"
+          },
+          {
+            "pids": [
+              2118307
+            ],
+            "port": 8768,
+            "state": "LISTEN"
+          }
+        ],
+        "listeners_exit": 0,
+        "read_only": true,
+        "root": {
+          "available_bytes": 2720358400,
+          "free_bytes": 2737135616
+        },
+        "scope": "one-shot statvfs, selected service identities, known listeners and two health endpoints; no DB/account access",
+        "services": [
+          {
+            "ActiveState": "active",
+            "ExecMainStartTimestampMonotonic": "7011118358127",
+            "Id": "gsd-cloud-gateway.service",
+            "MainPID": "3422173",
+            "SubState": "running"
+          },
+          {
+            "ActiveState": "active",
+            "ExecMainStartTimestampMonotonic": "6934668490142",
+            "Id": "gsd-mcp-bridge.service",
+            "MainPID": "2118307",
+            "SubState": "running"
+          },
+          {
+            "ActiveState": "active",
+            "ExecMainStartTimestampMonotonic": "7004392915116",
+            "Id": "gsd-pocketbase.service",
+            "MainPID": "3365518",
+            "SubState": "running"
+          },
+          {
+            "ActiveState": "active",
+            "ExecMainStartTimestampMonotonic": "6921133171227",
+            "Id": "lorvex-cf-quick.service",
+            "MainPID": "1807512",
+            "SubState": "running"
+          },
+          {
+            "ActiveState": "active",
+            "ExecMainStartTimestampMonotonic": "7001739566839",
+            "Id": "lorvex-cloud.service",
+            "MainPID": "3336621",
+            "SubState": "running"
+          },
+          {
+            "ActiveState": "active",
+            "ExecMainStartTimestampMonotonic": "6999133148522",
+            "Id": "lorvex-mcp-bridge.service",
+            "MainPID": "3287789",
+            "SubState": "running"
+          }
+        ],
+        "services_exit": 0
+      }
+    }
+  ],
+  "latest_capacity_assessment": {
+    "checked_at": "2026-11-24T10:42:37.334918+00:00",
+    "data_available_bytes": 950747136,
+    "root_available_bytes": 2720358400,
+    "data_minimum_met": true,
+    "root_minimum_met": true,
+    "all_six_service_identities_unchanged": true,
+    "all_six_expected_listeners": true,
+    "both_gsd_health_http_and_body_200": true,
+    "known_lorvex_functional_e2e_proven": false,
+    "delta_from_1026": {
+      "data_bytes": -319488,
+      "root_bytes": -352256
+    },
+    "immediately_before_signup": false
   }
 }
