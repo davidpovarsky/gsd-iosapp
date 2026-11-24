@@ -1,0 +1,64 @@
+{
+  "job": "job_dbdb7ae97c49",
+  "observed_at_utc": "2026-11-24T04:30:17.806733+00:00",
+  "read_only": true,
+  "instance_display_name": "torah-social",
+  "boot_disk": {
+    "device_bytes": 50010783744,
+    "partition_query_exit": 0,
+    "partitions": [
+      {
+        "node": "/dev/sda15",
+        "size": 202753,
+        "start": 2048,
+        "type": "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"
+      },
+      {
+        "node": "/dev/sda16",
+        "size": 1890305,
+        "start": 206848,
+        "type": "BC13C2FF-59E6-4262-A352-B275FD6F7172"
+      },
+      {
+        "node": "/dev/sda1",
+        "size": 95578079,
+        "start": 2099200,
+        "type": "0FC63DAF-8483-4772-8E79-3D69D8477DE4"
+      }
+    ],
+    "table": {
+      "device": "/dev/sda",
+      "firstlba": 34,
+      "label": "gpt",
+      "lastlba": 97677278,
+      "sectorsize": 512,
+      "unit": "sectors"
+    },
+    "total_unallocated_usable_bytes": 3127296,
+    "unallocated_usable_ranges": [
+      {
+        "bytes": 1031168,
+        "end_sector_exclusive": 2048,
+        "start_sector": 34
+      },
+      {
+        "bytes": 1048064,
+        "end_sector_exclusive": 206848,
+        "start_sector": 204801
+      },
+      {
+        "bytes": 1048064,
+        "end_sector_exclusive": 2099200,
+        "start_sector": 2097153
+      }
+    ]
+  },
+  "interpretation": {
+    "root_partition": "/dev/sda1",
+    "root_end_equals_last_usable_sector": true,
+    "trailing_root_growth_space_bytes": 0,
+    "small_alignment_gaps_only": true,
+    "partition_or_filesystem_changes": false
+  },
+  "private_identifiers_omitted": true
+}

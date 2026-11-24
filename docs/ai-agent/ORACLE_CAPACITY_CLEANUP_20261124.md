@@ -65,3 +65,5 @@ Only profile/region names and file presence were reported. No credential value, 
 - [Management tooling availability](evidence/capacity-20261124/oci-management-availability.json)
 
 These receipts establish the bounded cleanup and the stated metadata only. Native acceptance, personal ChatGPT Connect, TestFlight availability, and the pending native account-deletion database proof remain owned by the corresponding release gates.
+
+A later [read-only OCI target and whole-boot-disk assessment](OCI_TARGET_MAPPING_20261124.md) resolves the root partition-table limitation and records successful inspection access; it performs no expansion.
