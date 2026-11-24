@@ -261,6 +261,8 @@ struct GSDApp: App {
                             _Concurrency.Task { await session.signIn(provider: "apple") }
                         }
                     )
+                    // The cover needs the app-owned session outside ContentView's modifiers.
+                    .environment(session)
                 }
                 .transformEnvironment(\.layoutDirection) { inherited in
                     switch direction {
