@@ -42,3 +42,9 @@ Native builds are serialized on Scaleway. SDK, Lorvex and Cloud have separate ow
 - `git diff --check`: passed.
 - Hebrew catalog audit: passed (App 1000 keys; widgets/share/watch catalogs and Siri phrases checked).
 - Cloud MCP rollout verified by cloud lane: GSD source `98d298bb4ea3ebc2266e80b7e883c00573365a71`, 15/15 tests; live code matches source and unauthenticated write refusal carries reconnect metadata.
+
+## Mac preparation and source freeze
+
+The canonical installer and `--check`, both package dependency resolutions, and XcodeGen regeneration succeeded on the new Mac. Xcode 27.1 also resolved the actual generated app graph successfully with `-onlyUsePackageVersionsFromResolvedFile -disableAutomaticPackageResolution`. Both host and Xcode resolver files now pin the same three dependencies: GRDB 7.12.0, swift-ai-sdk 07431abccbfb151ca2dab67bca6cf86fcb2bd3b8, and swift-argument-parser 1.8.2.
+
+The generated Xcode project, all five generated Info.plists and schemes are refreshed from `project.yml`. This incorporates the existing source-defined English/Hebrew localization settings and the new supplemental tests; no generated project was hand-edited. The native and signed CI commands now retain the verified resolver versions. Xcode 27.1 is used for compilation and Xcode 27.0 for simulator execution because the installed CoreSimulator service is compatible with the latter; system `xcode-select` remains unchanged.
