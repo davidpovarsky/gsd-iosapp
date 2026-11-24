@@ -124,14 +124,14 @@ extension View {
 }
 
 /// Tells its content whether the system presents the enclosing navigation context's bars
-/// vertically. Reads `toolbarVerticalEdge` on iOS 27.1; false on the iOS 26 floor and on every
-/// other device, where bars are always horizontal. Mac Catalyst never draws vertical bars, and
-/// its SDK does not expose the value, so it reports false without reading anything.
+/// vertically. Reads `toolbarVerticalEdge` when both the SDK and runtime support iOS 27.1.
+/// Xcode 27.0 cannot type-check that newer API, even inside a runtime availability guard.
+/// Older SDKs and Mac Catalyst retain the horizontal-bar fallback.
 struct VerticalBarsReader<Content: View>: View {
     @ViewBuilder let content: (Bool) -> Content
 
     var body: some View {
-        #if targetEnvironment(macCatalyst)
+        #if targetEnvironment(macCatalyst) || GSD_SDK_WITHOUT_VERTICAL_TOOLBARS
         content(false)
         #else
         if #available(iOS 27.1, *) {
@@ -142,7 +142,7 @@ struct VerticalBarsReader<Content: View>: View {
         #endif
     }
 
-    #if !targetEnvironment(macCatalyst)
+    #if !targetEnvironment(macCatalyst) && !GSD_SDK_WITHOUT_VERTICAL_TOOLBARS
     @available(iOS 27.1, *)
     private struct Reader: View {
         @Environment(\.toolbarVerticalEdge) private var edge

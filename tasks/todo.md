@@ -625,3 +625,9 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 - Added package and native UI acceptance tests; compilation/test execution are pending the coordinator-owned Mac runner.
 - Resuming from here: pin final TaskVisualizationKit implementation revision; merge latest accepted integration branch; regenerate Xcode project; run declared checks; proceed through authorized release gates.
 - No TestFlight or runtime success is claimed by this source handoff. See docs/ai-agent/TASK_WORKSPACE_20261125.md.
+
+### GSD native validation checkpoint — 2026-11-25
+
+- Canonical source064b050: all17 GSDHanlinAgent XCTest cases and13 Swift Testing contract cases passed on the owned Mac runner, including7 workspace mutation/selection/tool cases.
+- The app build exposed an inherited iOS27.1-only toolbar environment reference in the installed iOS27.0 SDK. Added an SDK-specific compilation condition; newer SDK behavior remains intact.
+- Resuming from here: regenerate the project on Mac, commit the exact generated output, restage the new source SHA, then run the focused EN/HE iPhone/iPad workspace UI matrix. Archive/upload remains owned by the release coordinator.

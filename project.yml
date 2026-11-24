@@ -135,6 +135,10 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.itorah.gsd
+        # Runtime availability cannot guard a symbol missing from the build SDK.
+        # Keep the iOS 27.1 vertical-toolbar reader when using a newer SDK.
+        "SWIFT_ACTIVE_COMPILATION_CONDITIONS[sdk=iphone*26.*]": "$(inherited) GSD_SDK_WITHOUT_VERTICAL_TOOLBARS"
+        "SWIFT_ACTIVE_COMPILATION_CONDITIONS[sdk=iphone*27.0*]": "$(inherited) GSD_SDK_WITHOUT_VERTICAL_TOOLBARS"
         SWIFT_VERSION: "6.0"
         GENERATE_INFOPLIST_FILE: "NO"
         CODE_SIGN_ENTITLEMENTS: App/GSD.entitlements
