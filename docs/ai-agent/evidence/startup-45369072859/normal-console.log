@@ -1,0 +1,2 @@
+SwiftUICore/Environment+Objects.swift:34: Fatal error: No Observable object of type SessionStore found. A View.environmentObject(_:) for SessionStore may be missing as an ancestor of this view.
+com.itorah.gsd: 13949

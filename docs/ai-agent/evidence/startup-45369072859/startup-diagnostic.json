@@ -1,0 +1,85 @@
+{
+  "diagnostic_only": true,
+  "full_acceptance": false,
+  "passed": false,
+  "scope": "Same-binary Hebrew demo then normal startup; no XCTest/account/API fixture execution",
+  "landscape_xctest_failure_cleared": false,
+  "phases": [
+    {
+      "name": "demo",
+      "arguments": [
+        "--demo-seed",
+        "-AppleLanguages",
+        "(he)",
+        "-AppleLocale",
+        "he_IL"
+      ],
+      "started_epoch": 1795514038.6554601,
+      "pid": null,
+      "alive_samples": [],
+      "observation_seconds_requested": 15,
+      "alive_at_observation_end": false,
+      "launcher_exit_before_cleanup": null,
+      "ended_epoch": 1795514099.4563441,
+      "observation_ended_epoch": 1795514099.4563441,
+      "screen": {
+        "file": "demo-screen.png",
+        "width": 2064,
+        "height": 2752,
+        "observed_orientation": "portrait",
+        "full_screen": true,
+        "app_frame_or_orientation_asserted": false
+      },
+      "crash_collection_started": true,
+      "crash_scan_error_counts": {},
+      "crashes": [],
+      "collection_finished_epoch": 1795514203.7051399,
+      "cleanup_finished_epoch": 1795514209.025734
+    },
+    {
+      "name": "normal",
+      "arguments": [
+        "-AppleLanguages",
+        "(he)",
+        "-AppleLocale",
+        "he_IL"
+      ],
+      "started_epoch": 1795514209.1441228,
+      "pid": 13949,
+      "alive_samples": [
+        {
+          "epoch": 1795514219.986614,
+          "alive": false
+        }
+      ],
+      "observation_seconds_requested": 60,
+      "alive_at_observation_end": false,
+      "launcher_exit_before_cleanup": 0,
+      "ended_epoch": 1795514219.9867818,
+      "observation_ended_epoch": 1795514219.9867818,
+      "screen": {
+        "file": "normal-screen.png",
+        "width": 2064,
+        "height": 2752,
+        "observed_orientation": "portrait",
+        "full_screen": true,
+        "app_frame_or_orientation_asserted": false
+      },
+      "crash_collection_started": true,
+      "crash_scan_error_counts": {},
+      "crashes": [],
+      "collection_finished_epoch": 1795514316.960864,
+      "termination_error": "Command '['xcrun', 'simctl', 'terminate', 'C1CB6C5E-925F-416E-B6EA-A4359C19FBD2', 'com.itorah.gsd']' timed out after 20 seconds",
+      "cleanup_finished_epoch": 1795514339.8938408
+    }
+  ],
+  "cleanup_errors": [
+    "Command '['xcrun', 'simctl', 'shutdown', 'C1CB6C5E-925F-416E-B6EA-A4359C19FBD2']' timed out after 30 seconds"
+  ],
+  "simulator_id": "C1CB6C5E-925F-416E-B6EA-A4359C19FBD2",
+  "device_type": "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-13-inch-M5-12GB",
+  "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-2",
+  "log_collection_error": "Command '['xcrun', 'simctl', 'spawn', 'C1CB6C5E-925F-416E-B6EA-A4359C19FBD2', 'log', 'show', '--style', 'json', '--last', '10m', '--predicate', 'process == \"GSD\"']' timed out after 30 seconds",
+  "owned_simulator_absent": true,
+  "finished_at": "2026-11-24T10:01:03.175429+00:00"
+}

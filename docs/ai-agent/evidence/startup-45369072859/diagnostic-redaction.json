@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "scope": "Exact explicit fixture masks in retained .log/.json only",
+  "text_files_scanned": 93,
+  "files_changed": [],
+  "known_fixture_mask_count": 0,
+  "binary_images_unchanged": true
+}

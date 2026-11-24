@@ -1,0 +1,20 @@
+{
+  "run_id": 45369072859,
+  "job_id": 138358319837,
+  "harness_sha": "f341d359d8cbc9a7759370b4dd26975ddf2c8ebe",
+  "source_sha": "37764f1a56a0678e5c4cb4cbd683ab3f44eb2fdc",
+  "artifact_id": 14908093497,
+  "artifact_sha256": "decccace4374d951bb0c64603057752c5209d9621ae492ff2e2a972e00b4845d",
+  "artifact_bytes": 7658592,
+  "verified_at": "2026-11-24T10:06:54.619130+00:00",
+  "full_acceptance": false,
+  "diagnostic_workflow_conclusion": "failure",
+  "normal_fatal_message_confirmed": true,
+  "owned_simulator_absent_confirmed": true,
+  "files": {
+    "startup/normal-console.log": "804480944379be7258a45c7ab82bb206c06d24239f461a99e6062cb574f874ef",
+    "startup/startup-diagnostic.json": "bb676e60bf86f9f0ed7fd9c221b28c1cd2426a2f246db26531d48b6e1a32cfb4",
+    "diagnostic-redaction.json": "16bc811b63839734134f12d316b6f5ce94c6231b70166cb8351c5bb5064cc150"
+  },
+  "cleanup_inventory_sha256": "0f496c027c2652668ff11347bc145ec51b399c139a11018d04b92b2dac612de4"
+}
