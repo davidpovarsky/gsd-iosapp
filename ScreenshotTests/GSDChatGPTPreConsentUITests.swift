@@ -252,6 +252,8 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
                     receipt["originEvidence"] = surface.originEvidence
                     if surface.originEvidence == "visible_https_url" {
                         receipt["observedOrigin"] = "https://auth.openai.com"
+                    } else {
+                        receipt.removeValue(forKey: "observedOrigin")
                     }
                     receipt["publicState"] = "official_browser_visible"
                     receipt["pageContentClassification"] = "unclassified"
