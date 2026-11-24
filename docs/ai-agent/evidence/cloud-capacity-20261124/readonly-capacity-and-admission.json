@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "scope": "Read-only capacity assessment for existing GSD native acceptance; no new fixture, deletion, deployment, restart, quota change or archive copy",
   "product_source": "37764f1a56a0678e5c4cb4cbd683ab3f44eb2fdc",
   "jobs": {
@@ -48,6 +48,31 @@
       "at": "2026-11-24T10:42:37.334918+00:00",
       "root_available_bytes": 2720358400,
       "data_available_bytes": 950747136
+    },
+    {
+      "at": "2026-11-24T10:52:44.762489+00:00",
+      "root_available_bytes": 2720178176,
+      "data_available_bytes": 950509568
+    },
+    {
+      "at": "2026-11-24T10:55:30.833189+00:00",
+      "root_available_bytes": 2720133120,
+      "data_available_bytes": 950484992
+    },
+    {
+      "at": "2026-11-24T10:56:21.671772+00:00",
+      "root_available_bytes": 2720129024,
+      "data_available_bytes": 950439936
+    },
+    {
+      "at": "2026-11-24T11:03:38.465761+00:00",
+      "root_available_bytes": 2720067584,
+      "data_available_bytes": 950456320
+    },
+    {
+      "at": "2026-11-24T11:07:40.317906+00:00",
+      "root_available_bytes": 2719985664,
+      "data_available_bytes": 950530048
     }
   ],
   "external_growth": {
@@ -463,19 +488,807 @@
     }
   ],
   "latest_capacity_assessment": {
-    "checked_at": "2026-11-24T10:42:37.334918+00:00",
-    "data_available_bytes": 950747136,
-    "root_available_bytes": 2720358400,
-    "data_minimum_met": true,
-    "root_minimum_met": true,
-    "all_six_service_identities_unchanged": true,
-    "all_six_expected_listeners": true,
-    "both_gsd_health_http_and_body_200": true,
-    "known_lorvex_functional_e2e_proven": false,
-    "delta_from_1026": {
-      "data_bytes": -319488,
-      "root_bytes": -352256
-    },
+    "checked_at": "2026-11-24T11:07:40.317906+00:00",
+    "data_available_bytes": 950530048,
+    "root_available_bytes": 2719985664,
+    "data_minimum": true,
+    "root_minimum": true,
+    "services_unchanged": true,
+    "listeners_unchanged": true,
+    "health": true,
+    "scope": "known live package stage; no precise signup boundary",
     "immediately_before_signup": false
+  },
+  "external_ci_reconciliation": {
+    "run_id": 45375597972,
+    "exact_ui_fixture_pattern_verified_by": "Native source review of external55fbae versus37764; unchanged lowercase UUID-shaped gsd-native-ci account fixture",
+    "creation_window_start_utc": "2026-11-24T10:42:00Z",
+    "query_scope": "only id/created from users whose email matches exact lowercase hex UUID 8-4-4-4-12 pattern and exact length; strict UTC parsing; no emails or passwords returned",
+    "connection": {
+      "route": "separately user-connected Oracle Sentinel",
+      "hostname": "torah-social",
+      "agent_version": "0.23.60",
+      "script_run_supported": true,
+      "capabilities_and_state_verified_at": "2026-11-24T10:52:30.524416+00:00",
+      "authentication_or_security_changes": false
+    },
+    "prior_windows_ssh_attempts": [
+      {
+        "job_id": "job_e73787343c70",
+        "result": {
+          "started_at": "2026-11-24T10:50:33.103225+00:00",
+          "read_only": true,
+          "ssh_exit": 255,
+          "failure_classes": [
+            "connection_timed_out"
+          ],
+          "finished_at": "2026-11-24T10:50:48.430457+00:00"
+        }
+      },
+      {
+        "job_id": "job_5464407bcf2f",
+        "result": {
+          "started_at": "2026-11-24T10:51:18.584764+00:00",
+          "read_only": true,
+          "ssh_exit": 255,
+          "failure_classes": [
+            "connection_timed_out"
+          ],
+          "finished_at": "2026-11-24T10:51:34.017135+00:00"
+        }
+      }
+    ],
+    "pre_cancel": {
+      "job_id": "job_76a6bc6196fc",
+      "receipt": {
+        "checked_at": "2026-11-24T10:52:44.762489+00:00",
+        "data": {
+          "available_bytes": 950509568,
+          "free_bytes": 967286784
+        },
+        "finished_at": "2026-11-24T10:52:44.844375+00:00",
+        "health": {
+          "cloud_public": {
+            "code": 200,
+            "http": 200
+          },
+          "pocketbase": {
+            "code": 200,
+            "http": 200
+          }
+        },
+        "listeners": [
+          {
+            "pids": [
+              3365518
+            ],
+            "port": 8095,
+            "state": "LISTEN"
+          },
+          {
+            "pids": [
+              1807512
+            ],
+            "port": 20241,
+            "state": "LISTEN"
+          },
+          {
+            "pids": [
+              3287789
+            ],
+            "port": 8767,
+            "state": "LISTEN"
+          },
+          {
+            "pids": [
+              3422173
+            ],
+            "port": 8770,
+            "state": "LISTEN"
+          },
+          {
+            "pids": [
+              3336621
+            ],
+            "port": 8769,
+            "state": "LISTEN"
+          },
+          {
+            "pids": [
+              2118307
+            ],
+            "port": 8768,
+            "state": "LISTEN"
+          }
+        ],
+        "listeners_exit": 0,
+        "read_only": true,
+        "root": {
+          "available_bytes": 2720178176,
+          "free_bytes": 2736955392
+        },
+        "scope": "exact synthetic UUID-pattern users and UTC window only; read-only short SQLite transaction, statvfs, selected identities/listeners and GSD health; no account writes",
+        "services": [
+          {
+            "ActiveState": "active",
+            "ExecMainStartTimestampMonotonic": "7011118358127",
+            "Id": "gsd-cloud-gateway.service",
+            "MainPID": "3422173",
+            "SubState": "running"
+          },
+          {
+            "ActiveState": "active",
+            "ExecMainStartTimestampMonotonic": "6934668490142",
+            "Id": "gsd-mcp-bridge.service",
+            "MainPID": "2118307",
+            "SubState": "running"
+          },
+          {
+            "ActiveState": "active",
+            "ExecMainStartTimestampMonotonic": "7004392915116",
+            "Id": "gsd-pocketbase.service",
+            "MainPID": "3365518",
+            "SubState": "running"
+          },
+          {
+            "ActiveState": "active",
+            "ExecMainStartTimestampMonotonic": "6921133171227",
+            "Id": "lorvex-cf-quick.service",
+            "MainPID": "1807512",
+            "SubState": "running"
+          },
+          {
+            "ActiveState": "active",
+            "ExecMainStartTimestampMonotonic": "7001739566839",
+            "Id": "lorvex-cloud.service",
+            "MainPID": "3336621",
+            "SubState": "running"
+          },
+          {
+            "ActiveState": "active",
+            "ExecMainStartTimestampMonotonic": "6999133148522",
+            "Id": "lorvex-mcp-bridge.service",
+            "MainPID": "3287789",
+            "SubState": "running"
+          }
+        ],
+        "services_exit": 0,
+        "synthetic_uuid_signup_window": {
+          "all_matching_dates_validated": true,
+          "matched_synthetic_pattern_count": 0,
+          "mode": "SQLite URI mode=ro; query_only; WAL-aware transaction; no immutable",
+          "no_inflight_signup_guarantee": false,
+          "recent_count": 0,
+          "rows": [],
+          "schema_validated": true,
+          "status": "ok",
+          "transaction_read_at": "2026-11-24T10:52:44.766708+00:00",
+          "transaction_started_at": "2026-11-24T10:52:44.766006+00:00",
+          "window_start_utc": "2026-11-24T10:42:00Z"
+        }
+      }
+    },
+    "attempt1_terminal": {
+      "run_id": 45375597972,
+      "job_id": 138380923437,
+      "completed_at": "2026-11-24T10:54:56Z",
+      "conclusion": "cancelled",
+      "source": "Native verified GitHub metadata; one ordinary cancellation; evidence preservation succeeded"
+    },
+    "post_terminal": [
+      {
+        "job_id": "job_06b8bd45bd94",
+        "receipt": {
+          "checked_at": "2026-11-24T10:55:30.833189+00:00",
+          "data": {
+            "available_bytes": 950484992,
+            "free_bytes": 967262208
+          },
+          "finished_at": "2026-11-24T10:55:30.914626+00:00",
+          "health": {
+            "cloud_public": {
+              "code": 200,
+              "http": 200
+            },
+            "pocketbase": {
+              "code": 200,
+              "http": 200
+            }
+          },
+          "listeners": [
+            {
+              "pids": [
+                3365518
+              ],
+              "port": 8095,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                1807512
+              ],
+              "port": 20241,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                3287789
+              ],
+              "port": 8767,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                3422173
+              ],
+              "port": 8770,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                3336621
+              ],
+              "port": 8769,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                2118307
+              ],
+              "port": 8768,
+              "state": "LISTEN"
+            }
+          ],
+          "listeners_exit": 0,
+          "read_only": true,
+          "root": {
+            "available_bytes": 2720133120,
+            "free_bytes": 2736910336
+          },
+          "scope": "exact synthetic UUID-pattern users and UTC window only; read-only short SQLite transaction, statvfs, selected identities/listeners and GSD health; no account writes",
+          "services": [
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "7011118358127",
+              "Id": "gsd-cloud-gateway.service",
+              "MainPID": "3422173",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "6934668490142",
+              "Id": "gsd-mcp-bridge.service",
+              "MainPID": "2118307",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "7004392915116",
+              "Id": "gsd-pocketbase.service",
+              "MainPID": "3365518",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "6921133171227",
+              "Id": "lorvex-cf-quick.service",
+              "MainPID": "1807512",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "7001739566839",
+              "Id": "lorvex-cloud.service",
+              "MainPID": "3336621",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "6999133148522",
+              "Id": "lorvex-mcp-bridge.service",
+              "MainPID": "3287789",
+              "SubState": "running"
+            }
+          ],
+          "services_exit": 0,
+          "synthetic_uuid_signup_window": {
+            "all_matching_dates_validated": true,
+            "matched_synthetic_pattern_count": 0,
+            "mode": "SQLite URI mode=ro; query_only; WAL-aware transaction; no immutable",
+            "no_inflight_signup_guarantee": false,
+            "recent_count": 0,
+            "rows": [],
+            "schema_validated": true,
+            "status": "ok",
+            "transaction_read_at": "2026-11-24T10:55:30.837022+00:00",
+            "transaction_started_at": "2026-11-24T10:55:30.836337+00:00",
+            "window_start_utc": "2026-11-24T10:42:00Z"
+          }
+        }
+      },
+      {
+        "job_id": "job_b4ccac958195",
+        "receipt": {
+          "checked_at": "2026-11-24T10:56:21.671772+00:00",
+          "data": {
+            "available_bytes": 950439936,
+            "free_bytes": 967217152
+          },
+          "finished_at": "2026-11-24T10:56:21.755007+00:00",
+          "health": {
+            "cloud_public": {
+              "code": 200,
+              "http": 200
+            },
+            "pocketbase": {
+              "code": 200,
+              "http": 200
+            }
+          },
+          "listeners": [
+            {
+              "pids": [
+                3365518
+              ],
+              "port": 8095,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                1807512
+              ],
+              "port": 20241,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                3287789
+              ],
+              "port": 8767,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                3422173
+              ],
+              "port": 8770,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                3336621
+              ],
+              "port": 8769,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                2118307
+              ],
+              "port": 8768,
+              "state": "LISTEN"
+            }
+          ],
+          "listeners_exit": 0,
+          "read_only": true,
+          "root": {
+            "available_bytes": 2720129024,
+            "free_bytes": 2736906240
+          },
+          "scope": "exact synthetic UUID-pattern users and UTC window only; read-only short SQLite transaction, statvfs, selected identities/listeners and GSD health; no account writes",
+          "services": [
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "7011118358127",
+              "Id": "gsd-cloud-gateway.service",
+              "MainPID": "3422173",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "6934668490142",
+              "Id": "gsd-mcp-bridge.service",
+              "MainPID": "2118307",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "7004392915116",
+              "Id": "gsd-pocketbase.service",
+              "MainPID": "3365518",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "6921133171227",
+              "Id": "lorvex-cf-quick.service",
+              "MainPID": "1807512",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "7001739566839",
+              "Id": "lorvex-cloud.service",
+              "MainPID": "3336621",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "6999133148522",
+              "Id": "lorvex-mcp-bridge.service",
+              "MainPID": "3287789",
+              "SubState": "running"
+            }
+          ],
+          "services_exit": 0,
+          "synthetic_uuid_signup_window": {
+            "all_matching_dates_validated": true,
+            "matched_synthetic_pattern_count": 0,
+            "mode": "SQLite URI mode=ro; query_only; WAL-aware transaction; no immutable",
+            "no_inflight_signup_guarantee": false,
+            "recent_count": 0,
+            "rows": [],
+            "schema_validated": true,
+            "status": "ok",
+            "transaction_read_at": "2026-11-24T10:56:21.675443+00:00",
+            "transaction_started_at": "2026-11-24T10:56:21.674814+00:00",
+            "window_start_utc": "2026-11-24T10:42:00Z"
+          }
+        }
+      }
+    ],
+    "summary": {
+      "terminal": {
+        "run_id": 45375597972,
+        "job_id": 138380923437,
+        "completed_at": "2026-11-24T10:54:56Z",
+        "conclusion": "cancelled",
+        "source": "Native verified GitHub metadata; one ordinary cancellation; evidence preservation succeeded"
+      },
+      "first_at": "2026-11-24T10:55:30.837022+00:00",
+      "second_at": "2026-11-24T10:56:21.675443+00:00",
+      "gap_seconds": 50.838,
+      "counts": [
+        0,
+        0
+      ],
+      "service_identity_unchanged": true,
+      "listeners_unchanged": true,
+      "health200": true,
+      "data_available_bytes": 950439936,
+      "root_available_bytes": 2720129024,
+      "only_persisted_residue_absence": true,
+      "signup_history_proven": false
+    },
+    "limitation": "Zero counts establish no matching persisted synthetic UI account residue at sampled instants only. They do not prove signup was never in flight, reconstruct prior signup history, or claim all unrelated/package accounts were queried.",
+    "mutation_performed": false,
+    "attempt2": {
+      "run_id": 45375597972,
+      "attempt": 2,
+      "started_at": "2026-11-24T10:56:10Z",
+      "terminal_at": "2026-11-24T10:59:25Z",
+      "cloud_and_ui_steps": "SKIPPED",
+      "source": "Native observed exact job metadata",
+      "additional_account_read_indicated": false
+    }
+  },
+  "canonical_validation_monitoring": {
+    "plan": {
+      "run_id": 45380356237,
+      "attempt": 1,
+      "source": "168b59aff816e39555acbf8535aaefaec19ee195",
+      "branch": "feat/gsd-native-candidate-20261124",
+      "dispatched_at": "2026-11-24T11:01:54.460Z",
+      "zero_active_inventory_at": "2026-11-24T11:01:52.307Z",
+      "owner": "native_apple",
+      "operation": "direct Oracle Sentinel one-shot metadata/known-health only",
+      "account_or_db_query_allowed": false,
+      "data_admission_bytes": 536870912,
+      "root_admission_bytes": 805306368,
+      "stop_new_scenario_below_bytes": 268435456,
+      "conservative_cumulative_own_allowance_bytes": 134217728,
+      "planned_own_counts": {
+        "accounts": 3,
+        "task_creations": 4,
+        "trash_records": 1
+      },
+      "minimum_sample_interval_seconds": 60,
+      "known_phase_required": true,
+      "no_daemon": true,
+      "external_attempt2": {
+        "run_id": 45375597972,
+        "attempt": 2,
+        "started_at": "2026-11-24T10:56:10Z",
+        "terminal_at": "2026-11-24T10:59:25Z",
+        "cloud_and_ui_steps": "SKIPPED",
+        "source": "Native observed exact job metadata",
+        "additional_account_read_indicated": false
+      },
+      "first_sample_job": "job_4665d8968bcd"
+    },
+    "samples": [
+      {
+        "boundary": "after dependency-resolution phase notice; live package step still pending in later Native update",
+        "job_id": "job_4665d8968bcd",
+        "receipt": {
+          "checked_at": "2026-11-24T11:03:38.465761+00:00",
+          "data": {
+            "available_bytes": 950456320,
+            "free_bytes": 967233536
+          },
+          "finished_at": "2026-11-24T11:03:38.542083+00:00",
+          "health": {
+            "cloud_public": {
+              "code": 200,
+              "http": 200
+            },
+            "pocketbase": {
+              "code": 200,
+              "http": 200
+            }
+          },
+          "listeners": [
+            {
+              "pids": [
+                3365518
+              ],
+              "port": 8095,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                1807512
+              ],
+              "port": 20241,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                3287789
+              ],
+              "port": 8767,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                3422173
+              ],
+              "port": 8770,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                3336621
+              ],
+              "port": 8769,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                2118307
+              ],
+              "port": 8768,
+              "state": "LISTEN"
+            }
+          ],
+          "listeners_exit": 0,
+          "read_only": true,
+          "root": {
+            "available_bytes": 2720067584,
+            "free_bytes": 2736844800
+          },
+          "scope": "one-shot statvfs, selected service identities, known listeners and two health endpoints; no DB/account access",
+          "services": [
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "7011118358127",
+              "Id": "gsd-cloud-gateway.service",
+              "MainPID": "3422173",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "6934668490142",
+              "Id": "gsd-mcp-bridge.service",
+              "MainPID": "2118307",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "7004392915116",
+              "Id": "gsd-pocketbase.service",
+              "MainPID": "3365518",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "6921133171227",
+              "Id": "lorvex-cf-quick.service",
+              "MainPID": "1807512",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "7001739566839",
+              "Id": "lorvex-cloud.service",
+              "MainPID": "3336621",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "6999133148522",
+              "Id": "lorvex-mcp-bridge.service",
+              "MainPID": "3287789",
+              "SubState": "running"
+            }
+          ],
+          "services_exit": 0
+        },
+        "admission_checks": {
+          "data_minimum": true,
+          "root_minimum": true,
+          "services_unchanged": true,
+          "listeners_unchanged": true,
+          "health": true
+        }
+      },
+      {
+        "boundary": "known package/cloud stage active, no precise signup timestamp",
+        "job_id": "job_7ae53f21cb0a",
+        "receipt": {
+          "checked_at": "2026-11-24T11:07:40.317906+00:00",
+          "data": {
+            "available_bytes": 950530048,
+            "free_bytes": 967307264
+          },
+          "finished_at": "2026-11-24T11:07:40.396270+00:00",
+          "health": {
+            "cloud_public": {
+              "code": 200,
+              "http": 200
+            },
+            "pocketbase": {
+              "code": 200,
+              "http": 200
+            }
+          },
+          "listeners": [
+            {
+              "pids": [
+                3365518
+              ],
+              "port": 8095,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                1807512
+              ],
+              "port": 20241,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                3287789
+              ],
+              "port": 8767,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                3422173
+              ],
+              "port": 8770,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                3336621
+              ],
+              "port": 8769,
+              "state": "LISTEN"
+            },
+            {
+              "pids": [
+                2118307
+              ],
+              "port": 8768,
+              "state": "LISTEN"
+            }
+          ],
+          "listeners_exit": 0,
+          "read_only": true,
+          "root": {
+            "available_bytes": 2719985664,
+            "free_bytes": 2736762880
+          },
+          "scope": "one-shot statvfs, selected service identities, known listeners and two health endpoints; no DB/account access",
+          "services": [
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "7011118358127",
+              "Id": "gsd-cloud-gateway.service",
+              "MainPID": "3422173",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "6934668490142",
+              "Id": "gsd-mcp-bridge.service",
+              "MainPID": "2118307",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "7004392915116",
+              "Id": "gsd-pocketbase.service",
+              "MainPID": "3365518",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "6921133171227",
+              "Id": "lorvex-cf-quick.service",
+              "MainPID": "1807512",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "7001739566839",
+              "Id": "lorvex-cloud.service",
+              "MainPID": "3336621",
+              "SubState": "running"
+            },
+            {
+              "ActiveState": "active",
+              "ExecMainStartTimestampMonotonic": "6999133148522",
+              "Id": "lorvex-mcp-bridge.service",
+              "MainPID": "3287789",
+              "SubState": "running"
+            }
+          ],
+          "services_exit": 0
+        },
+        "admission_checks": {
+          "data_minimum": true,
+          "root_minimum": true,
+          "services_unchanged": true,
+          "listeners_unchanged": true,
+          "health": true
+        }
+      }
+    ],
+    "live_package_result": {
+      "step": 11,
+      "status": "SUCCESS",
+      "completed_at": "2026-11-24T11:08:02Z",
+      "source": "Native owner verified GitHub job138397478627 metadata",
+      "detailed_current_test_log_claimed": false
+    },
+    "live_ui_result": "pending",
+    "exact_native_deletion_owner_marker": null,
+    "root_owner_zero_count_query_performed": false,
+    "precise_signup_time_claimed": false,
+    "package_stage": {
+      "started_at": "2026-11-24T11:06:13Z",
+      "observed_active_at": "2026-11-24T11:07:16Z",
+      "source": "Native owner",
+      "includes": "compilation and one existing two-account CloudNativeSystem fixture",
+      "precise_signup_time_known": false
+    },
+    "deletion_recovery_gate": {
+      "step": 12,
+      "status": "SUCCESS",
+      "completed_at": "2026-11-24T11:08:09Z",
+      "source": "Native owner verified GitHub job metadata"
+    },
+    "next_phase": {
+      "step": 13,
+      "name": "app plus embedded targets and UI runner build",
+      "started_at": "2026-11-24T11:08:09Z",
+      "observed_active_at": "2026-11-24T11:09:40Z",
+      "next_live_fixture": "single HE-iPad native account lifecycle later in UI",
+      "no_immediate_post_package_server_sample_requested": true
+    }
   }
 }
