@@ -1,0 +1,11 @@
+{
+  "revision": "caa4faa509ebf5ba4164408734bb6e0dd3662203",
+  "products": [
+    "HanlinAgentCore",
+    "HanlinHostContracts",
+    "HanlinPersistenceAdapters",
+    "HanlinPlatformContracts",
+    "HanlinChatCore"
+  ],
+  "installerSHA256": "12c414e91f33df22f7cdb1660108a0a11684551219fee1c71724bb2057e62dd3"
+}

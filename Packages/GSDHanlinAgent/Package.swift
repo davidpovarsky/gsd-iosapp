@@ -9,25 +9,25 @@ let package = Package(
     products: [.library(name: "GSDHanlinAgent", targets: ["GSDHanlinAgent"])],
     dependencies: [
         .package(path: "../../GSDKit"),
-        .package(path: "../../Vendor/HanlinPlatform"),
-        .package(path: "../../Vendor/HanlinAgentSDK")
+        .package(path: "../../Vendor/HanlinSDK")
     ],
     targets: [
         .target(name: "GSDHanlinAgent", dependencies: [
             .product(name: "GSDModel", package: "GSDKit"),
             .product(name: "GSDStore", package: "GSDKit"),
-            .product(name: "HanlinHostContracts", package: "HanlinAgentSDK"),
-            .product(name: "HanlinAgentCore", package: "HanlinAgentSDK"),
-            .product(name: "HanlinPersistenceAdapters", package: "HanlinAgentSDK"),
-            .product(name: "HanlinPlatformContracts", package: "HanlinPlatform"),
-            .product(name: "HanlinChatCore", package: "HanlinPlatform")
+            .product(name: "HanlinHostContracts", package: "HanlinSDK"),
+            .product(name: "HanlinAgentCore", package: "HanlinSDK"),
+            .product(name: "HanlinPersistenceAdapters", package: "HanlinSDK"),
+            .product(name: "HanlinPlatformContracts", package: "HanlinSDK"),
+            .product(name: "HanlinChatCore", package: "HanlinSDK")
         ]),
         .testTarget(name: "GSDHanlinAgentTests", dependencies: [
             "GSDHanlinAgent",
             .product(name: "GSDModel", package: "GSDKit"),
             .product(name: "GSDStore", package: "GSDKit"),
-            .product(name: "HanlinAgentCore", package: "HanlinAgentSDK"),
-            .product(name: "HanlinHostContracts", package: "HanlinAgentSDK")
+            .product(name: "HanlinAgentCore", package: "HanlinSDK"),
+            .product(name: "HanlinHostContracts", package: "HanlinSDK"),
+            .product(name: "HanlinChatCore", package: "HanlinSDK")
         ])
     ],
     swiftLanguageModes: [.v6]
