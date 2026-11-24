@@ -1,0 +1,43 @@
+{
+  "archive": {
+    "bytes": 9947,
+    "filename": "gsd-nonempty-recovery-source-6ecccbbad344.tar.gz",
+    "members_verified": 6,
+    "sha256": "09791d6fcc7fd584814e05116513b6822db4d0ab2a1b35000e5855191831b558"
+  },
+  "files": {
+    "cloud/backup.py": {
+      "bytes": 5190,
+      "git_blob": "5428a60ab005ea092fa60b56bf626248371f0a55",
+      "sha256": "61370295d45e7480a9b08d363d92f22c9516a9312b9a1260929c233daf0ab213"
+    },
+    "cloud/pocketbase/pb_hooks/gsd_guarded.pb.js": {
+      "bytes": 5788,
+      "git_blob": "562e25f3e0146ea079c2e2da1f9daa00138c0034",
+      "sha256": "7991bd867c31ba4291d74d72228161b3164e30e0d5056163b22126f74444aa63"
+    },
+    "cloud/pocketbase/pb_hooks/gsd_library_helpers.js": {
+      "bytes": 2399,
+      "git_blob": "cb9268fea31139e3f77b63a5a35de8dfe32a2ef5",
+      "sha256": "c59324b5dbfb3223f7f14fbf56a6d1549fdea132685091aebe288f0dc736b267"
+    },
+    "cloud/pocketbase/pb_migrations/1795456800_initial_gsd.js": {
+      "bytes": 2436,
+      "git_blob": "6af4ec81721561cf032694276ac9f0e28a8a18ac",
+      "sha256": "34623df64de2f826c6bd03574300a8ae682d94363b249e7b62f34cc99f57bb03"
+    },
+    "cloud/pocketbase/pb_migrations/1795467600_cloud_library.js": {
+      "bytes": 1178,
+      "git_blob": "0791334433c80c1beac745fd3ab548f07f72a21e",
+      "sha256": "8fa85d8c3929d71823640e0ec1bd4b512ba45e8e5f416b13f9777859c90888db"
+    },
+    "cloud/test_nonempty_backup_recovery.py": {
+      "bytes": 14373,
+      "git_blob": "4e9ffc6d8c7b8c9215f7afc043c2f5a5046c094b",
+      "sha256": "d35f7158574f0c3ca2b1784ede3954338470c5318a3f4e23c9f00df31cc91af1"
+    }
+  },
+  "schema": 1,
+  "source_commit": "6ecccbbad34404a412e7eeca2f396ff6dc25292d",
+  "source_repository": "davidpovarsky/gsd-iosapp"
+}

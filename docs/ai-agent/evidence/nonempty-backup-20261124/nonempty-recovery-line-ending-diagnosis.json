@@ -1,0 +1,12 @@
+{
+  "diagnosis": "Only LF-to-CRLF normalization of unchanged approved backup.py",
+  "approved_git_lf_sha256": "61370295d45e7480a9b08d363d92f22c9516a9312b9a1260929c233daf0ab213",
+  "exact_production_crlf_sha256": "efea842528ce51a2f8a358c47216419b97bab5c8f46520720e690352f09e4e4a",
+  "lf_to_crlf_conversions": 96,
+  "git_bytes": 5190,
+  "production_bytes": 5286,
+  "old_wrapper_sha256": "04ea1d2baf3012f5e065201398602c2da4c581e379e929cef54cab8077c33654",
+  "new_wrapper_sha256": "a05cb155fe34829b7b4cfad96e04897a8fdb47ff00e42b5b2b1dc5e83d20f8ae",
+  "only_wrapper_change": "one expected production-file SHA256 constant; approved six-file fixture archive unchanged",
+  "fixture_attempts_started": 0
+}
