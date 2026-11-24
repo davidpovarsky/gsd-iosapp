@@ -1,0 +1,86 @@
+{
+  "at": "2026-11-24T12:23:16.795924+00:00",
+  "source_sha": "168b59aff816e39555acbf8535aaefaec19ee195",
+  "harness_base": "168b59aff816e39555acbf8535aaefaec19ee195",
+  "script_sha256": "29e9c4fd2ef85cc1b982bda96d399026e2b17c4c9580c5a6fa95551223c88ad8",
+  "checks": [
+    {
+      "name": "exact_full13_parent_accepted",
+      "passed": true
+    },
+    {
+      "name": "parent_conclusion_rejected",
+      "passed": true
+    },
+    {
+      "name": "parent_head_sha_rejected",
+      "passed": true
+    },
+    {
+      "name": "parent_run_attempt_rejected",
+      "passed": true
+    },
+    {
+      "name": "missing_cloud_test_rejected",
+      "passed": true
+    },
+    {
+      "name": "incomplete_cleanup_rejected",
+      "passed": true
+    },
+    {
+      "name": "single_self_contained_projection_accepted",
+      "passed": true
+    },
+    {
+      "name": "project_packages_rejected",
+      "passed": true
+    },
+    {
+      "name": "project_targets_rejected",
+      "passed": true
+    },
+    {
+      "name": "app_dependency_rejected",
+      "passed": true
+    },
+    {
+      "name": "implicit_application_handle_rejected",
+      "passed": true
+    },
+    {
+      "name": "test_only_actual_build_plan_accepted",
+      "passed": true
+    },
+    {
+      "name": "app_in_actual_build_plan_rejected",
+      "passed": true
+    },
+    {
+      "name": "zip_traversal_rejected",
+      "passed": true
+    },
+    {
+      "name": "zip_symlink_rejected",
+      "passed": true
+    },
+    {
+      "name": "wrong_artifact_source_rejected_before_download",
+      "passed": true
+    },
+    {
+      "name": "corrupt_outer_zip_rejected_before_extraction",
+      "passed": true
+    },
+    {
+      "name": "shutdown_timeout_still_deletes_and_checks_inventory",
+      "passed": true
+    },
+    {
+      "name": "workflow_yaml_and_shared_readonly_scope",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "scope": "pure fixture-based guard checks only; no Mac, app, system host, GitHub API or account execution"
+}

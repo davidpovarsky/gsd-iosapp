@@ -1,0 +1,50 @@
+name: GSD System Surface Discovery
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: gsd-native-apple
+  cancel-in-progress: false
+
+jobs:
+  system-surface-discovery:
+    runs-on: xcode-27
+    timeout-minutes: 75
+    env:
+      GH_TOKEN: ${{ github.token }}
+      OUTPUT: dist/gsd-system-surfaces
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Build only the supplemental UI runner and inspect actual system hosts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/gsd_system_surface_discovery.py --output "$OUTPUT"
+      - name: Sanitize supplemental diagnostics
+        id: sanitize
+        if: always()
+        run: python3 scripts/sanitize_gsd_native_diagnostics.py --output "$OUTPUT"
+      - name: Preserve supplemental observations without a release acceptance marker
+        if: always() && steps.sanitize.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-System-Surface-Discovery-${{ github.run_id }}
+          path: |
+            dist/gsd-system-surfaces/system-surface-discovery.json
+            dist/gsd-system-surfaces/test-summary.json
+            dist/gsd-system-surfaces/logs/
+            dist/gsd-system-surfaces/ui/**/*.png
+            dist/gsd-system-surfaces/ui/**/*.json
+            dist/gsd-system-surfaces/ui/**/*.log
+            dist/gsd-system-surfaces/ui/**/*.txt
+          if-no-files-found: error
+          retention-days: 21
