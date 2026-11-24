@@ -323,10 +323,9 @@ final class GSDSystemSurfaceUITests: XCTestCase {
 
     private func enterMarker(_ marker: String, expectedSourceTitle: String, phase: String,
                              in host: XCUIApplication) throws {
-        // The observed native title exposes placeholderValue, not an accessibility label.
-        let predicate = NSPredicate(format: "placeholderValue == %@", "כותרת")
-        let fields = host.textFields.matching(predicate)
-        let textViews = host.textViews.matching(predicate)
+        // The actual title keeps this identity whether empty or prefilled.
+        let fields = host.textFields.matching(identifier: "share.title")
+        let textViews = host.textViews.matching(identifier: "share.title")
         var readyTitle: XCUIElement?
         let deadline = Date().addingTimeInterval(10)
         repeat {

@@ -33,6 +33,7 @@ struct ShareComposeView: View {
             Form {
                 Section(String(localized: "Task")) {
                     TextField(String(localized: "Title"), text: $title, axis: .vertical)
+                        .accessibilityIdentifier("share.title")
                 }
                 Section(String(localized: "Quadrant")) {
                     Picker(String(localized: "Quadrant"), selection: $quadrant) {
