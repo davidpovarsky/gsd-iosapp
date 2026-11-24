@@ -149,7 +149,8 @@ struct IntentQueryDatabaseSuspensionTests {
         // The first call has exited while the second is still awaiting its release.
         // This read failed with the former per-call defer/suspend implementation.
         await #expect(throws: Never.self) {
-            #expect(try await fixture.store.fetchTask(id: "intent-fixture") != nil)
+            let task = try await fixture.store.fetchTask(id: "intent-fixture")
+            #expect(task != nil)
         }
         releaseSecond.open()
         let secondResult = await second.result
@@ -193,7 +194,8 @@ struct IntentQueryDatabaseSuspensionTests {
                     throw ProbeFailure.afterRead
                 }
             }
-            #expect(try await fixture.store.fetchAllTasks().map(\.id) == ["intent-fixture"])
+            let tasks = try await fixture.store.fetchAllTasks()
+            #expect(tasks.map(\.id) == ["intent-fixture"])
         }
         await #expect(throws: DatabaseError.self) {
             _ = try await fixture.store.fetchTask(id: "intent-fixture")
