@@ -20,20 +20,27 @@ struct CloudAccountSignInView: View {
                         Text(String(localized: "Create account")).tag(true)
                     }
                     .pickerStyle(.segmented)
+                    .accessibilityIdentifier("gsd.cloud.mode")
                     TextField(String(localized: "Email address"), text: $email)
+                        .accessibilityIdentifier("gsd.cloud.email")
                         .textContentType(.emailAddress)
                         .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                        .keyboardType(.emailAddress)
+                        .environment(\.layoutDirection, .leftToRight)
                     SecureField(String(localized: "Password"), text: $password)
+                        .accessibilityIdentifier("gsd.cloud.password")
                         .textContentType(createAccount ? .newPassword : .password)
                     if createAccount {
                         SecureField(String(localized: "Confirm password"), text: $confirmation)
+                            .accessibilityIdentifier("gsd.cloud.confirmation")
                             .textContentType(.newPassword)
                     }
                 } header: {
                     Text(String(localized: "GSD Cloud account"))
                 } footer: {
                     Text(String(localized:
-                        "Use the same account in ChatGPT and on every device. Tasks sync even when this iPad is closed."))
+                        "Use the same account in ChatGPT and on every device. ChatGPT can manage your cloud tasks while this app is closed."))
                 }
                 Section {
                     if let message = localError ?? session.lastError {
@@ -55,9 +62,10 @@ struct CloudAccountSignInView: View {
                                 .frame(maxWidth: .infinity, minHeight: 44)
                         }
                     }
+                    .accessibilityIdentifier("gsd.cloud.submit")
                     .buttonStyle(.borderedProminent)
                     .disabled(session.inProgress || email.trimmingCharacters(in: .whitespaces).isEmpty
-                              || password.count < 10)
+                              || (createAccount ? password.count < 10 : password.isEmpty))
                 }
             }
             .navigationTitle(String(localized: "Cloud account"))
@@ -82,7 +90,7 @@ struct CloudAccountSignInView: View {
             localError = String(localized: "Passwords do not match.")
             return
         }
-        Task {
+        _Concurrency.Task {
             await session.signInWithEmail(email, password: password,
                                           createAccount: createAccount)
         }

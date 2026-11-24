@@ -7,8 +7,12 @@ package struct WireTimeEntry: Codable, Equatable {
     package var id: String
     package var startedAt: String
     package var minutes: Int
-    package init(id: String, startedAt: String, minutes: Int) {
+    /// nil means a legacy minute-only entry; empty means an explicitly running timer.
+    package var endedAt: String?
+    package var notes: String?
+    package init(id: String, startedAt: String, minutes: Int, endedAt: String? = nil, notes: String? = nil) {
         self.id = id; self.startedAt = startedAt; self.minutes = minutes
+        self.endedAt = endedAt; self.notes = notes
     }
 }
 

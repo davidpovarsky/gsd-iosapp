@@ -32,6 +32,7 @@ final class SessionStore {
         let newEmail: String?
     }
     private(set) var pendingAccountSwitch: PendingAccountSwitch?
+    @ObservationIgnored private var pendingAccountToken: String?
 
     enum AccountSwitchResolution { case merge, fresh, cancel }
 
@@ -41,11 +42,11 @@ final class SessionStore {
     private let emailKey = "gsd.accountEmail"
     private let providerKey = "gsd.accountProvider"
     private let lastOwnerKey = "gsd.lastOwnerId"
-    private let hasLocalActiveTasks: @MainActor () -> Bool
+    private let hasLocalActiveTasks: @MainActor () async -> Bool
     private let eraseLocal: @MainActor () async throws -> Void
 
     init(auth: AuthService, tokenStore: TokenStore, coordinator: SyncCoordinator? = nil,
-         hasLocalActiveTasks: @escaping @MainActor () -> Bool = { false },
+         hasLocalActiveTasks: @escaping @MainActor () async -> Bool = { false },
          eraseLocal: @escaping @MainActor () async throws -> Void = {}) {
         self.auth = auth
         self.tokenStore = tokenStore
@@ -71,6 +72,7 @@ final class SessionStore {
     /// (401 → Keychain cleared mid-session), Settings must offer sign-in again instead of
     /// showing a signed-in account whose syncs silently no-op.
     var isSignedIn: Bool { tokenStore.load() != nil }
+    var currentUserID: String? { auth.currentUserId() }
 
     /// Web-redirect OAuth for every provider (`"google"`, `"apple"`, `"github"`). Apple rides the same
     /// path as the rest — its native sheet was retired (Option A: one PocketBase provider, a Services-ID
@@ -87,10 +89,12 @@ final class SessionStore {
             accountNote = AppleIdentity.accountNote(provider: provider, email: result.record.email)
             UserDefaults.standard.set(result.record.email, forKey: emailKey)
             UserDefaults.standard.set(provider, forKey: providerKey)
-            routeAfterSignIn(result)   // same/first account → seed+pull; different → dialog (Fix C)
+            await routeAfterSignIn(result)   // same/first account → seed+pull; different → dialog (Fix C)
         } catch AuthError.cancelled {
+            coordinator?.cancelSignIn()
             // user dismissed — silent, stay signed out, no banner
         } catch {
+            coordinator?.cancelSignIn()
             lastError = String(localized: "Sign-in failed. Please try again.")
         }
     }
@@ -114,8 +118,9 @@ final class SessionStore {
             accountNote = nil
             UserDefaults.standard.set(result.record.email, forKey: emailKey)
             UserDefaults.standard.set("email", forKey: providerKey)
-            routeAfterSignIn(result)
+            await routeAfterSignIn(result)
         } catch {
+            coordinator?.cancelSignIn()
             // Hide low-level networking diagnostics and never echo credentials.
             lastError = String(localized:
                 "Could not sign in. Check your email, password, or internet connection.")
@@ -127,6 +132,7 @@ final class SessionStore {
         email = nil
         accountNote = nil
         pendingAccountSwitch = nil
+        pendingAccountToken = nil
         UserDefaults.standard.removeObject(forKey: emailKey)
         UserDefaults.standard.removeObject(forKey: providerKey)
         // lastOwnerKey is deliberately KEPT — remembering the previous owner is what lets the
@@ -180,14 +186,17 @@ final class SessionStore {
 
     /// Same/first account → record owner + start sync (today's behavior). Different account
     /// with local tasks → park sync and let the dialog decide.
-    private func routeAfterSignIn(_ result: AuthResult) {
+    private func routeAfterSignIn(_ result: AuthResult) async {
         let last = UserDefaults.standard.string(forKey: lastOwnerKey)
         switch AccountSwitch.evaluate(lastOwnerId: last, newOwnerId: result.record.id,
-                                      hasLocalActiveTasks: hasLocalActiveTasks()) {
+                                      hasLocalActiveTasks: await hasLocalActiveTasks()) {
         case .proceed:
             UserDefaults.standard.set(result.record.id, forKey: lastOwnerKey)
             coordinator?.start(trigger: .signIn)
         case .prompt:
+            // A pending account must not survive relaunch as an active session.
+            pendingAccountToken = result.token
+            tokenStore.clear()
             pendingAccountSwitch = PendingAccountSwitch(newOwnerId: result.record.id,
                                                         newEmail: result.record.email)
         }
@@ -212,6 +221,9 @@ final class SessionStore {
                        pending: PendingAccountSwitch) async {
         switch resolution {
         case .merge:
+            guard let token = pendingAccountToken else { signOut(); return }
+            pendingAccountToken = nil
+            tokenStore.save(token)
             UserDefaults.standard.set(pending.newOwnerId, forKey: lastOwnerKey)
             coordinator?.start(trigger: .signIn)
         case .fresh:
@@ -222,6 +234,9 @@ final class SessionStore {
                 signOut()
                 return
             }
+            guard let token = pendingAccountToken else { signOut(); return }
+            pendingAccountToken = nil
+            tokenStore.save(token)
             UserDefaults.standard.set(pending.newOwnerId, forKey: lastOwnerKey)
             coordinator?.start(trigger: .signIn)
         case .cancel:

@@ -47,6 +47,7 @@ public actor SyncEngine {
     private let tasks: any TaskRepository
     private let queue: any SyncQueueRepository
     private let tombstones: any TombstoneRepository
+    private let library: (any CloudLibraryRepository)?
     private let cursor: SyncCursor
     private let deviceId: String
     private let tokenProvider: @Sendable () async throws -> String?
@@ -76,11 +77,12 @@ public actor SyncEngine {
                 throttleMs: Int = 100,
                 history: any SyncHistoryRepository = NoopSyncHistoryRepository(),
                 reminders: any ReminderScheduling = NoopReminderScheduler(),
-                defaultReminder: @escaping @Sendable () -> Int = SyncEngine.deviceDefaultReminder) {
+                defaultReminder: @escaping @Sendable () -> Int = SyncEngine.deviceDefaultReminder,
+                library: (any CloudLibraryRepository)? = nil) {
         self.init(client: client, tasks: tasks, queue: queue, tombstones: tombstones, cursor: cursor,
                   deviceId: deviceId, tokenProvider: tokenProvider, rawToken: rawToken, fenced: true,
                   now: now, throttleMs: throttleMs, history: history, reminders: reminders,
-                  defaultReminder: defaultReminder)
+                  defaultReminder: defaultReminder, library: library)
     }
 
     /// Test seam for the many engine tests that never archive or trash a task or end a session.
@@ -105,8 +107,9 @@ public actor SyncEngine {
                  rawToken: @escaping @Sendable () -> String?, fenced: Bool,
                  now: @escaping @Sendable () -> Date, throttleMs: Int,
                  history: any SyncHistoryRepository, reminders: any ReminderScheduling,
-                 defaultReminder: @escaping @Sendable () -> Int) {
+                 defaultReminder: @escaping @Sendable () -> Int, library: (any CloudLibraryRepository)? = nil) {
         self.client = client; self.tasks = tasks; self.queue = queue; self.tombstones = tombstones
+        self.library = library
         self.cursor = cursor
         self.deviceId = deviceId; self.tokenProvider = tokenProvider; self.rawToken = rawToken
         self.fenced = fenced
@@ -283,7 +286,9 @@ public actor SyncEngine {
                     // R15: the raw listed string, or "" when the field is absent, because the hook reads
                     // an absent version as "". A value over 64 characters gets a 400 and is charged below.
                     if let remote {
-                        try await client.deleteTaskGuarded(recordId: remote.recordId, expectedVersion: remote.version ?? "", token: token)
+                        try await client.deleteTaskGuarded(recordId: remote.recordId, expectedVersion: remote.version ?? "", token: token,
+                                                           disposition: library == nil ? nil : (item.payload == nil ? "trash" : "archive"),
+                                                           deletedAt: library == nil ? nil : WireDate.format(Date(timeIntervalSince1970: Double(item.timestamp) / 1000)))
                     }
                     // The record is gone, so a later same-drain create for this task must POST, not
                     // PATCH the deleted record. A delete that threw never reaches this line.
@@ -471,6 +476,7 @@ public actor SyncEngine {
         let start = now()
         do {
             try await dropSignedOutDeletesIfOwed()                                  // resurrect on sight: before anything else
+            try await syncLibrary(token: token, owner: owner)
             if cursor.load() == nil { try await seedExistingTasks(owner: owner) }      // first-sync seed BEFORE pull/reconcile
             // Revive `.failed` items so the push loop drains them again. Done on any user-app-open
             // event (manual Sync Now, cold launch, return-to-foreground) and when the network
@@ -523,7 +529,7 @@ public actor SyncEngine {
     /// While a backfill is due it runs the full `sync()` instead: a push before that pull would send
     /// rows it hasn't repaired yet (C4-2).
     public func pushNow(trigger: SyncTrigger = .mutation) async -> SyncResult {
-        if cursor.needsBackfill() { return await sync(trigger: trigger) }
+        if library != nil || cursor.needsBackfill() { return await sync(trigger: trigger) }
         return await drain(suppressPull: false, trigger: trigger)
     }
 
@@ -593,6 +599,17 @@ public actor SyncEngine {
                 try await client.deleteTask(recordId: ref.recordId, token: token)
                 result.pushed += 1
                 if throttleMs > 0 { try? await _Concurrency.Task.sleep(for: .milliseconds(throttleMs)) }
+            }
+            if library != nil {
+                for item in try await client.listLibrary(token: token) where !item.deleted {
+                    var removed = item
+                    removed.deleted = true
+                    removed.payload = ""
+                    let previous = WireDate.parse(item.clientUpdatedAt) ?? now()
+                    removed.clientUpdatedAt = WireDate.format(max(now(), previous.addingTimeInterval(0.001)))
+                    try await client.putLibrary(removed, expectedVersion: item.clientUpdatedAt, token: token)
+                    result.pushed += 1
+                }
             }
             // Full wipe → no pending op should survive (they'd recreate/clobber). Clear the queue only
             // after every remote delete succeeded; a partial failure throws first → queue intact → retry.
@@ -809,6 +826,47 @@ public actor SyncEngine {
             try await tasks.upsert(incoming)
         }
         return true
+    }
+
+    // MARK: Shared archive, trash and custom-view account sync
+
+    private func syncLibrary(token: String, owner: String) async throws {
+        guard let library else { return }
+        try await confirmIdentity(token: token, owner: owner)
+        try fence(owner)
+        let changes = try await library.capture(owner: owner, now: now())
+        let local = Dictionary(uniqueKeysWithValues: changes.map { ($0.item.key, $0) })
+        let remote = try await client.listLibrary(token: token)
+        let index = Dictionary(uniqueKeysWithValues: remote.map { ($0.key, $0) })
+        for item in remote {
+            guard item.owner == owner, let stamp = WireDate.parse(item.clientUpdatedAt) else {
+                throw SyncIdentityMismatch()
+            }
+            let previous = local[item.key]
+            let localStamp = previous.flatMap { WireDate.parse($0.item.clientUpdatedAt) }
+            if previous?.pending == true, LWW.isPastCeiling(stamp, now: now()) { continue }
+            let ingested = LWW.capped(stamp, now: now())
+            if let localStamp, localStamp >= ingested { continue }
+            try fence(owner)
+            try await library.apply(item, owner: owner, stampedAt: ingested)
+        }
+        for change in changes where change.pending {
+            let item = change.item, existing = index[item.key]
+            guard let stamp = WireDate.parse(item.clientUpdatedAt) else { continue }
+            if let existing, let remoteStamp = WireDate.parse(existing.clientUpdatedAt),
+               LWW.isRemoteNewer(remoteStamp, than: stamp, now: now()) { continue }
+            try fence(owner)
+            do {
+                try await client.putLibrary(item, expectedVersion: existing?.clientUpdatedAt ?? "", token: token)
+                try fence(owner)
+                try await library.acknowledge(item, owner: owner)
+            } catch let error as PocketBaseError {
+                switch error {
+                case .http(412, _), .pocketBase(412, _): continue
+                default: throw error
+                }
+            }
+        }
     }
 
     // MARK: History (§7.7)

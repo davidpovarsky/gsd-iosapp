@@ -91,8 +91,12 @@ extension PocketBaseClient {
         try await sendNoContent(authedRequest(path: Self.guardedTaskPath(recordId), method: "PATCH", token: token, body: body))
     }
     /// Version-checked delete through the server's task route (web ADR 0021). 204 with no body.
-    package func deleteTaskGuarded(recordId: String, expectedVersion: String, token: String) async throws {
-        let body = try JSONEncoder().encode(["expected_version": expectedVersion])
+    package func deleteTaskGuarded(recordId: String, expectedVersion: String, token: String,
+                                   disposition: String? = nil, deletedAt: String? = nil) async throws {
+        var values = ["expected_version": expectedVersion]
+        if let disposition { values["disposition"] = disposition }
+        if let deletedAt { values["deleted_at"] = deletedAt }
+        let body = try JSONEncoder().encode(values)
         try await sendNoContent(authedRequest(path: Self.guardedTaskPath(recordId), method: "DELETE", token: token, body: body))
     }
     private static func guardedTaskPath(_ recordId: String) -> String {
