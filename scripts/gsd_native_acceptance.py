@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Build-independent UI acceptance on four disposable iPhone/iPad simulators."""
+"""Build-independent UI acceptance on four disposable iPhone/iPad simulators.
+
+The chatgpt-settings profile only checks provider/account settings UI. Its terminal
+markers deliberately differ from native-release, which also selects navigation,
+chart, editor, widget-harness, and the Hebrew iPad cloud round-trip tests.
+"""
 from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
@@ -142,8 +147,10 @@ def main() -> None:
                 receipt_path.write_text(json.dumps({"passed": all(r["passed"] for r in receipts) and len(receipts) == 4,
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                     "profile": "chatgpt-settings" if args.ai_settings_only else "native-release", "runs": receipts}, indent=2) + "\n")
-            print("GSD_NATIVE_UI_PASS", name, flush=True)
-    print("GSD_NATIVE_UI_ALL_FOUR_PASS", flush=True)
+            marker = "GSD_AI_SETTINGS_UI_PASS" if args.ai_settings_only else "GSD_NATIVE_UI_PASS"
+            print(marker, name, flush=True)
+    marker = "GSD_AI_SETTINGS_UI_ALL_FOUR_PASS" if args.ai_settings_only else "GSD_NATIVE_UI_ALL_FOUR_PASS"
+    print(marker, flush=True)
 
 if __name__ == "__main__":
     main()

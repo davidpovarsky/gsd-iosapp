@@ -4,6 +4,13 @@ import XCTest
 
 /// Release acceptance on disposable simulators. Uses the real UI, TaskStore,
 /// Keychain session and cloud endpoint; no app-only test authentication backdoor.
+/// Scope: selected simulator screens, tab/sidebar RTL geometry, one chart range change,
+/// and the Matrix element-description audit. This is not a VoiceOver focus/speech audit
+/// or complete gesture, text-clipping, orientation, or manual-layout-direction coverage.
+/// The widget test is an in-app view harness, not a WidgetKit timeline/deep-link test.
+/// Share, Watch, Watch widgets, real Siri, system notifications, and physical devices
+/// require separate runtime evidence. Cloud signup uses the HTTP fixture; personal
+/// ChatGPT authorization and plan inference are not exercised by these UI tests.
 @MainActor
 final class GSDCloudReleaseUITests: XCTestCase {
     private var language: String { ProcessInfo.processInfo.environment["GSD_TEST_LANGUAGE"] ?? "en" }
@@ -80,8 +87,14 @@ final class GSDCloudReleaseUITests: XCTestCase {
         XCTAssertTrue(cancel.waitForExistence(timeout: 8), "Task editor did not open")
         XCTAssertEqual(cancel.label, label("Cancel", "ביטול"))
         let form = app.descendants(matching: .any).matching(identifier: "task-editor").firstMatch
-        if form.exists { form.swipeUp() }
-        XCTAssertTrue(app.buttons["editor-save"].exists, "Editor save action disappeared after scroll")
+        XCTAssertTrue(form.waitForExistence(timeout: 5), "Task editor form is missing")
+        XCTAssertTrue(form.isHittable, "Task editor form cannot receive gestures")
+        form.swipeUp()
+        let save = app.buttons["editor-save"]
+        XCTAssertTrue(save.waitForExistence(timeout: 5), "Editor save action disappeared after scroll")
+        XCTAssertEqual(save.label, label("Save", "שמירה"))
+        XCTAssertTrue(save.isEnabled, "Seeded task must remain saveable after scrolling")
+        XCTAssertTrue(save.isHittable, "Editor save action is obscured after scrolling")
         try capture(app, "02-editor")
         cancel.tap()
         card.press(forDuration: 1)
@@ -90,8 +103,35 @@ final class GSDCloudReleaseUITests: XCTestCase {
         try capture(app, "03-context-menu")
         app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.05)).tap()
         navigate(app, label("Dashboard", "לוח בקרה"))
+        XCTAssertTrue(app.staticTexts[label("Completion Trend", "מגמת השלמה")]
+            .waitForExistence(timeout: 10), "Dashboard chart section did not open")
+        let dashboardScroll = app.scrollViews.firstMatch
+        XCTAssertTrue(dashboardScroll.waitForExistence(timeout: 5), "Dashboard content is missing")
+        let thirtyDays = app.segmentedControls.buttons[label("30d", "30 יום")].firstMatch
+        for _ in 0..<3 where !thirtyDays.isHittable { dashboardScroll.swipeUp() }
+        XCTAssertTrue(thirtyDays.waitForExistence(timeout: 5), "Dashboard range picker is missing")
+        XCTAssertTrue(thirtyDays.isHittable, "Dashboard range picker is obscured")
+        let sevenDayChart = app.descendants(matching: .any).matching(NSPredicate(
+            format: "label == %@", label("Completion trend over 7 days", "מגמת השלמה לאורך 7 ימים"))).firstMatch
+        XCTAssertTrue(sevenDayChart.waitForExistence(timeout: 5), "Seven-day chart is missing")
+        thirtyDays.tap()
+        let thirtyDayChart = app.descendants(matching: .any).matching(NSPredicate(
+            format: "label == %@", label("Completion trend over 30 days", "מגמת השלמה לאורך 30 ימים"))).firstMatch
+        XCTAssertTrue(thirtyDayChart.waitForExistence(timeout: 5), "Chart did not respond to its range control")
         try capture(app, "04-dashboard")
-        navigate(app, label("Browse", "עיון"))
+        if app.tabBars.firstMatch.exists {
+            // Scrolling collapses the compact tab bar; scrolling back reveals its destinations.
+            dashboardScroll.swipeDown()
+            navigate(app, label("Browse", "עיון"))
+            let savedLink = app.descendants(matching: .any).matching(identifier: "browse-saved").firstMatch
+            XCTAssertTrue(savedLink.waitForExistence(timeout: 8), "Browse list did not open")
+            XCTAssertTrue(savedLink.isHittable, "Browse content is obscured")
+        } else {
+            // Regular iPad has no Browse tab. Its sidebar browses the Library directly.
+            navigate(app, label("Saved", "שמורים"))
+            let savedLibrary = app.descendants(matching: .any).matching(identifier: "saved-library").firstMatch
+            XCTAssertTrue(savedLibrary.waitForExistence(timeout: 8), "Sidebar did not open the Saved library")
+        }
         try capture(app, "05-browse")
         navigate(app, settings)
         let account = app.buttons["gsd.cloud.open"]
