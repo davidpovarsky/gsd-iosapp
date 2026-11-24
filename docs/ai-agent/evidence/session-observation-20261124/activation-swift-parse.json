@@ -1,0 +1,19 @@
+{
+  "time_utc": "2026-11-24T02:15:06.665499+00:00",
+  "command": [
+    "C:\\Users\\DAVID\\AppData\\Local\\Programs\\Swift\\Toolchains\\6.3.3+Asserts\\usr\\bin\\swift-frontend.EXE",
+    "-frontend",
+    "-parse",
+    "C:\\Users\\DAVID\\Code\\GSD-Session-Identity-20261124\\App\\Auth\\SessionStore.swift",
+    "C:\\Users\\DAVID\\Code\\GSD-Session-Identity-20261124\\App\\GSDApp.swift"
+  ],
+  "exit": 0,
+  "stdout": "",
+  "stderr": "",
+  "source_sha256": {
+    "App/Auth/SessionStore.swift": "945221dc608fc3d1ff6314b6e32f7550e9866a474d1f1206f71da32325466e57",
+    "App/GSDApp.swift": "f489a5e4c441da908e795674645d690a8ee263a4063a2e82a689b5179b1b18c9"
+  },
+  "behavioral_result": "pending_mandatory_native_gate",
+  "windows_behavioral_compile_retried": false
+}

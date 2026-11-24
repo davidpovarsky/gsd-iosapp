@@ -10,6 +10,8 @@ import GSDSync
 @Observable
 final class SessionStore {
     private(set) var email: String?
+    private(set) var isSignedIn = false
+    private(set) var currentUserID: String?
     private(set) var inProgress = false
     private(set) var enabledOAuthProviders: [String] = []
 
@@ -38,6 +40,7 @@ final class SessionStore {
 
     private let auth: AuthService
     private let tokenStore: TokenStore
+    @ObservationIgnored private var tokenChangeObserver: NSObjectProtocol?
     private let coordinator: SyncCoordinator?
     private let emailKey = "gsd.accountEmail"
     private let providerKey = "gsd.accountProvider"
@@ -53,7 +56,15 @@ final class SessionStore {
         self.coordinator = coordinator
         self.hasLocalActiveTasks = hasLocalActiveTasks
         self.eraseLocal = eraseLocal
-        if tokenStore.load() != nil {
+        tokenChangeObserver = NotificationCenter.default.addObserver(
+            forName: KeychainTokenStore.didChangeNotification, object: nil, queue: nil
+        ) { [weak self] _ in
+            _Concurrency.Task { @MainActor [weak self] in
+                self?.refreshIdentity()
+            }
+        }
+        refreshIdentity()
+        if isSignedIn {
             let cached = UserDefaults.standard.string(forKey: emailKey)
             email = cached
             accountNote = AppleIdentity.accountNote(
@@ -68,11 +79,21 @@ final class SessionStore {
         }
     }
 
-    /// Token-presence is the truth, not the cached email: when the server rejects the session
-    /// (401 → Keychain cleared mid-session), Settings must offer sign-in again instead of
-    /// showing a signed-in account whose syncs silently no-op.
-    var isSignedIn: Bool { tokenStore.load() != nil }
-    var currentUserID: String? { auth.currentUserId() }
+    isolated deinit {
+        if let tokenChangeObserver {
+            NotificationCenter.default.removeObserver(tokenChangeObserver)
+        }
+    }
+
+    /// UI snapshots only: the token store remains authoritative. Re-read it on MainActor
+    /// rather than passing credentials or a possibly stale owner through notifications.
+    /// An unchanged owner after token renewal must not look like an account switch.
+    private func refreshIdentity() {
+        let signedIn = tokenStore.load() != nil
+        let owner = signedIn ? auth.currentUserId() : nil
+        if isSignedIn != signedIn { isSignedIn = signedIn }
+        if currentUserID != owner { currentUserID = owner }
+    }
 
     /// Web-redirect OAuth for every provider (`"google"`, `"apple"`, `"github"`). Apple rides the same
     /// path as the rest — its native sheet was retired (Option A: one PocketBase provider, a Services-ID
@@ -80,7 +101,7 @@ final class SessionStore {
     /// sign-in surfaces the §8.4 "separate account" hint, not only a "Hide My Email" one.
     func signIn(provider: String) async {
         inProgress = true; lastError = nil
-        defer { inProgress = false }
+        defer { refreshIdentity(); inProgress = false }
         // Before the token exists, so no sync or push can run ahead of the sign-in drop.
         await coordinator?.beginSignIn()
         do {
@@ -105,7 +126,7 @@ final class SessionStore {
         guard !inProgress else { return }
         inProgress = true
         lastError = nil
-        defer { inProgress = false }
+        defer { refreshIdentity(); inProgress = false }
         await coordinator?.beginSignIn()
         do {
             let result: AuthResult
@@ -129,6 +150,7 @@ final class SessionStore {
 
     func signOut() {
         auth.signOut()
+        refreshIdentity()
         email = nil
         accountNote = nil
         pendingAccountSwitch = nil
@@ -148,7 +170,7 @@ final class SessionStore {
     /// those tasks as deleted and remove the local copies.
     func deleteAccount(eraseLocalData: Bool) async {
         inProgress = true; lastError = nil
-        defer { inProgress = false }
+        defer { refreshIdentity(); inProgress = false }
 
         let auth = self.auth
         let coordinator = self.coordinator
@@ -197,6 +219,7 @@ final class SessionStore {
             // A pending account must not survive relaunch as an active session.
             pendingAccountToken = result.token
             tokenStore.clear()
+            refreshIdentity()
             pendingAccountSwitch = PendingAccountSwitch(newOwnerId: result.record.id,
                                                         newEmail: result.record.email)
         }
@@ -224,6 +247,7 @@ final class SessionStore {
             guard let token = pendingAccountToken else { signOut(); return }
             pendingAccountToken = nil
             tokenStore.save(token)
+            refreshIdentity()
             UserDefaults.standard.set(pending.newOwnerId, forKey: lastOwnerKey)
             coordinator?.start(trigger: .signIn)
         case .fresh:
@@ -237,12 +261,17 @@ final class SessionStore {
             guard let token = pendingAccountToken else { signOut(); return }
             pendingAccountToken = nil
             tokenStore.save(token)
+            refreshIdentity()
             UserDefaults.standard.set(pending.newOwnerId, forKey: lastOwnerKey)
             coordinator?.start(trigger: .signIn)
         case .cancel:
             signOut()   // no half-signed-in limbo (signed-in UI, parked sync)
         }
     }
+
+    /// Another process can change the shared Keychain while this app is inactive.
+    /// Re-read it on the existing activation path; process-local notices cannot cover that.
+    func enteredForeground() { refreshIdentity() }
 
     /// Manual "Sync Now" (Settings). The launch/after-sign-in triggers fire from the coordinator.
     func syncNow() async { await coordinator?.syncNow() }

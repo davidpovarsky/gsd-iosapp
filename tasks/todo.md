@@ -581,3 +581,19 @@ iOS and Mac with the Saved sync fix; the web deploy is the owner's.
 - Blockers: none locally.
 - Assumptions: patch bump because 3.6.0 is live; the recorded times are the upload
   completion times in UTC, taken from the log timestamps.
+
+
+## Session identity observation (2026-11-24)
+
+Standard scope: SessionStore and KeychainTokenStore only, plus a focused host probe and receipts.
+The existing token store remains authoritative; observed identity changes refresh SwiftUI.
+
+### Resuming From Here
+
+- Completed: payload-free token invalidation, MainActor UI snapshots, weak observer cleanup, direct auth-path refreshes.
+- Syntax verification: both Swift files parse; git diff --check and Python probe syntax pass.
+- Windows behavioral attempts hit toolchain errors/timeouts; no behavioral pass or negative-control result is claimed.
+- Next: mandatory portable probe plus actual app build and account UI acceptance in the single Xcode 27 native gate.
+- No server changes, new localization strings, package changes, or CI dispatch from this lane.
+
+- Activation follow-up: GSDApp's existing .active path refreshes SessionStore before foreground sync; two external-store/resume assertions extend the mandatory probe to 13 checks. Runtime evidence remains pending Mac CI.
