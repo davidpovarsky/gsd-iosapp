@@ -510,6 +510,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 scripts/gsd_appstore_connect.py export-options --output "$RUNNER_TEMP/GSD-ExportOptions.plist"
+          /usr/libexec/PlistBuddy -c 'Add :testFlightInternalTestingOnly bool true' "$RUNNER_TEMP/GSD-ExportOptions.plist"
           xcodebuild -exportArchive -archivePath "$OUTPUT/GSD.xcarchive" \
             -exportPath "$OUTPUT/export" -exportOptionsPlist "$RUNNER_TEMP/GSD-ExportOptions.plist" \
             2>&1 | tee "$OUTPUT/logs/export.log"
