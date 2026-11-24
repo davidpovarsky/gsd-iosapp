@@ -44,8 +44,8 @@ env:
 
 jobs:
   native-acceptance:
-    if: inputs.mode == 'validate'
-    runs-on: xcode-27
+    if: inputs.mode == 'validate' && github.ref_name == 'codex/gsd-build48-scaleway'
+    runs-on: gsd48-scaleway-validate-6c1a20261124
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
@@ -248,11 +248,17 @@ jobs:
           print("GSD_SIMULATOR_ENTITLEMENTS_PASS", len(signatures))
           PY
       - name: English and Hebrew iPhone/iPad UI and closed-app cloud acceptance
+        env:
+          # The shared CoreSimulator is compatible with the installed Xcode 27.0
+          # test driver. The suite and app were compiled above by Xcode 27.1.
+          DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
         shell: bash
         run: |
           set -euo pipefail
+          xcodebuild -version | tee "$OUTPUT/logs/ui-test-driver.log"
+          grep -Fxq 'Build version 27A266a' "$OUTPUT/logs/ui-test-driver.log"
           python3 scripts/gsd_native_acceptance.py --derived-data .gsd-release-derived \
-            --output "$OUTPUT/ui"
+            --runtime-build 24B8117 --output "$OUTPUT/ui"
       - name: Sanitize retained native diagnostic text before upload
         id: sanitize_native_diagnostics
         if: always()
