@@ -1,0 +1,76 @@
+{
+  "passed": true,
+  "signed": true,
+  "targets": [
+    {
+      "bundleId": "com.itorah.gsd",
+      "version": "4.1.0",
+      "build": "48",
+      "relativePath": ".",
+      "hebrewStringCount": 966,
+      "localizations": [
+        "en",
+        "he"
+      ],
+      "signatureVerified": true,
+      "profileUUID": "07967a1f-d03d-480a-a385-971692fc9d7a",
+      "teamId": "NA6HPWARQ2"
+    },
+    {
+      "bundleId": "com.itorah.gsd.share",
+      "version": "4.1.0",
+      "build": "48",
+      "relativePath": "PlugIns/GSDShareExtension.appex",
+      "hebrewStringCount": 17,
+      "localizations": [
+        "en",
+        "he"
+      ],
+      "signatureVerified": true,
+      "profileUUID": "7181b8c1-5b75-4806-8c9d-6f1a08e2c8c6",
+      "teamId": "NA6HPWARQ2"
+    },
+    {
+      "bundleId": "com.itorah.gsd.widgets",
+      "version": "4.1.0",
+      "build": "48",
+      "relativePath": "PlugIns/GSDWidgets.appex",
+      "hebrewStringCount": 10,
+      "localizations": [
+        "en",
+        "he"
+      ],
+      "signatureVerified": true,
+      "profileUUID": "8e6331b2-89e5-4196-9d63-05dae4cd013c",
+      "teamId": "NA6HPWARQ2"
+    },
+    {
+      "bundleId": "com.itorah.gsd.watchkitapp.widgets",
+      "version": "4.1.0",
+      "build": "48",
+      "relativePath": "Watch/GSDWatch.app/PlugIns/GSDWatchWidgets.appex",
+      "hebrewStringCount": 20,
+      "localizations": [
+        "en",
+        "he"
+      ],
+      "signatureVerified": true,
+      "profileUUID": "87487730-eae7-410d-93df-7d9db785e651",
+      "teamId": "NA6HPWARQ2"
+    },
+    {
+      "bundleId": "com.itorah.gsd.watchkitapp",
+      "version": "4.1.0",
+      "build": "48",
+      "relativePath": "Watch/GSDWatch.app",
+      "hebrewStringCount": 44,
+      "localizations": [
+        "en",
+        "he"
+      ],
+      "signatureVerified": true,
+      "profileUUID": "08eba580-912d-45a6-ae87-1a919681e002",
+      "teamId": "NA6HPWARQ2"
+    }
+  ]
+}
