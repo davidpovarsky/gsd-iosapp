@@ -171,7 +171,7 @@ final class GSDSystemSurfaceUITests: XCTestCase {
             "scope": "sufficientElementDescription on the actual visible Share compose host",
             "voiceOverFocusOrSpeechVerified": false
         ])
-        try enterMarker(addedMarker, in: addHost)
+        try enterMarker(addedMarker, expectedSourceTitle: sourceTitle, phase: "04-add", in: addHost)
         try capture(addHost, "04-share-compose-add")
         try tapComposeAction("הוספה", in: addHost)
         app.activate()
@@ -195,7 +195,7 @@ final class GSDSystemSurfaceUITests: XCTestCase {
 
         let cancelHost = try openShareCompose(app, originalID: originalID, phase: "07-cancel")
         try shareAssertion("extensionOpenedForCancel")
-        try enterMarker(cancelMarker, in: cancelHost)
+        try enterMarker(cancelMarker, expectedSourceTitle: sourceTitle, phase: "08-cancel", in: cancelHost)
         try capture(cancelHost, "08-share-compose-cancel")
         try tapComposeAction("ביטול", in: cancelHost)
         app.activate()
@@ -321,12 +321,32 @@ final class GSDSystemSurfaceUITests: XCTestCase {
         throw SystemSurfaceFailure(message: "The observed activity sheet exposes no hittable GSD shareCell. Inspect its post-wait host hierarchy before adding a system selector.")
     }
 
-    private func enterMarker(_ marker: String, in host: XCUIApplication) throws {
-        let fields = host.textFields.matching(NSPredicate(format: "label == %@", "כותרת"))
-        let textViews = host.textViews.matching(NSPredicate(format: "label == %@", "כותרת"))
-        try require(fields.count + textViews.count == 1, "The source-defined Share title field is missing or ambiguous.")
-        let title = fields.count == 1 ? fields.firstMatch : textViews.firstMatch
-        try require(title.isHittable, "The Share title field is obscured.")
+    private func enterMarker(_ marker: String, expectedSourceTitle: String, phase: String,
+                             in host: XCUIApplication) throws {
+        // The observed native title exposes placeholderValue, not an accessibility label.
+        let predicate = NSPredicate(format: "placeholderValue == %@", "כותרת")
+        let fields = host.textFields.matching(predicate)
+        let textViews = host.textViews.matching(predicate)
+        var readyTitle: XCUIElement?
+        let deadline = Date().addingTimeInterval(10)
+        repeat {
+            let candidates = fields.allElementsBoundByAccessibilityElement +
+                textViews.allElementsBoundByAccessibilityElement
+            if candidates.count == 1, let candidate = candidates.first,
+               candidate.exists, candidate.isEnabled, candidate.isHittable {
+                readyTitle = candidate
+                break
+            }
+            Thread.sleep(forTimeInterval: 0.2)
+        } while Date() < deadline
+        // Preserve the settled compose state before checking or changing the synthetic payload.
+        try capture(host, phase + "-settled-before-prefill")
+        guard let title = readyTitle else {
+            throw SystemSurfaceFailure(message: "The unique observed Share title field did not become enabled and hittable.")
+        }
+        guard let prefilled = title.value as? String, prefilled.contains(expectedSourceTitle) else {
+            throw SystemSurfaceFailure(message: "The real Share extension did not prefill the original source-task title.")
+        }
         title.tap()
         // Insert a distinct short marker without guessing Select All/system keyboard labels.
         title.typeText(" " + marker)

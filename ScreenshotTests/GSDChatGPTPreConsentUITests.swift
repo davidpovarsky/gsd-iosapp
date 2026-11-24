@@ -140,7 +140,7 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
         let field = app.textFields["capture-field"]
         try require(field.waitForExistence(timeout: 30), "Normal GSD did not reach Matrix.")
         try require(field.wait(for: \.isHittable, toEqual: true, timeout: 10), "Normal Matrix is obscured.")
-        try tap(app.buttons["Open Hanlin task AI assistant"].firstMatch, "Hanlin assistant is unavailable.")
+        try openAssistantWhenReady(app)
         let modelSettings = app.navigationBars["Hanlin model settings"]
         if !modelSettings.waitForExistence(timeout: 5) {
             try tap(app.buttons["Model"].firstMatch, "Hanlin model settings are unavailable.")
@@ -153,6 +153,48 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
         try tap(app.buttons["hanlin.chatgpt.settings"], "The native ChatGPT account entry is unavailable.")
         try require(app.navigationBars["ChatGPT account"].waitForExistence(timeout: 10),
                     "The native ChatGPT account screen did not open.")
+    }
+
+    private func openAssistantWhenReady(_ app: XCUIApplication) throws {
+        let query = app.buttons.matching(identifier: "hanlin.assistant.open")
+        var readyAssistant: XCUIElement?
+        let ready = wait(15) {
+            let readyCandidates = query.allElementsBoundByAccessibilityElement.filter {
+                $0.exists && $0.isEnabled && $0.isHittable
+            }
+            guard readyCandidates.count == 1, let candidate = readyCandidates.first else { return false }
+            readyAssistant = candidate
+            return true
+        }
+        guard ready, let readyAssistant else {
+            try saveAssistantStartupDiagnostics(app, candidates: query.allElementsBoundByAccessibilityElement)
+            throw Incomplete(reason: "The unique Hanlin assistant control did not become enabled and hittable.")
+        }
+        try tap(readyAssistant, "Hanlin assistant became unavailable before activation.")
+    }
+
+    private func saveAssistantStartupDiagnostics(_ app: XCUIApplication, candidates: [XCUIElement]) throws {
+        guard let output else { throw Incomplete(reason: "Private artifact output is unavailable.") }
+        // This path runs before Continue. Record only known native control state, never a full tree.
+        let nativeOnly = app.state == .runningForeground && app.webViews.count == 0
+        if nativeOnly { try saveAppScreenshot("00-native-assistant-unavailable") }
+        let controls: [[String: Any]] = candidates.prefix(8).map { element in
+            guard element.exists else { return ["exists": false] }
+            let frame = element.frame
+            return [
+                "exists": true, "type": Int(element.elementType.rawValue),
+                "isEnabled": element.isEnabled, "isHittable": element.isHittable,
+                "frame": [frame.minX, frame.minY, frame.width, frame.height]
+            ]
+        }
+        let data = try JSONSerialization.data(withJSONObject: [
+            "schemaVersion": 1, "appSourceSHA": appSourceSHA,
+            "stage": "native_matrix_before_current_attempt",
+            "queryIdentifier": "hanlin.assistant.open", "candidateCount": candidates.count,
+            "controls": controls, "nativeScreenshotRecorded": nativeOnly,
+            "browserScreenshotRequested": false, "fullHierarchyRequested": false
+        ], options: [.prettyPrinted, .sortedKeys])
+        try data.write(to: output.appendingPathComponent("assistant-startup-diagnostics.json"), options: .atomic)
     }
 
     private func requireDisconnected(_ app: XCUIApplication, expectedStatus: String) throws {
@@ -449,7 +491,8 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
     }
 
     private func tap(_ element: XCUIElement, _ reason: String) throws {
-        try require(element.waitForExistence(timeout: 10) && element.isEnabled && element.isHittable, reason)
+        try require(element.waitForExistence(timeout: 10), reason)
+        try require(wait(10) { element.exists && element.isEnabled && element.isHittable }, reason)
         element.tap()
     }
 
