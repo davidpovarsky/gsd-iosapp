@@ -105,6 +105,8 @@ jobs:
         run: |
           python3 scripts/resolve_gsd_dependencies.py --package Packages/GSDHanlinAgent --package GSDKit \
             --output "$OUTPUT/logs/dependency-resolution"
+          cp GSDKit/Package.resolved "$OUTPUT/logs/resolved-GSDKit.json"
+          cp Packages/GSDHanlinAgent/Package.resolved "$OUTPUT/logs/resolved-GSDHanlinAgent.json"
       - name: Check whether prior package tests can be reused
         id: package_evidence
         if: inputs.package_tests_run != ''
