@@ -1,0 +1,24 @@
+{
+  "source": "Official Oracle Python SDK 2.192.0; isolated Windows environments only.",
+  "first": {
+    "job": "job_e7820952216d",
+    "finished_at_utc": "2026-11-24T04:40:47.354510+00:00",
+    "failed_phase": "SDK wheel installation",
+    "setup_error_type": "TimeoutExpired",
+    "installer_timeout_seconds": 300,
+    "isolated_sdk_removed": true,
+    "authenticated_api_requests": 0,
+    "explanation": "Installer timeout before the SDK assessment command; not an authentication failure. The precise installer substep was not established."
+  },
+  "second": {
+    "job": "job_172e4211c9fe",
+    "finished_at_utc": "2026-11-24T04:48:26.583460+00:00",
+    "installer_exit": 0,
+    "installer_no_compile": true,
+    "isolated_sdk_removed": true,
+    "authenticated_read_calls": 5,
+    "cloud_writes": 0
+  },
+  "configuration_boundary": "Only the existing Windows DEFAULT profile was loaded in memory by the official SDK. No config value, credential, key, instance user-data or alternate profile was printed or copied.",
+  "environment_boundary": "No Oracle or project-environment installation. Each attempt's own temporary Windows SDK directory was removed."
+}

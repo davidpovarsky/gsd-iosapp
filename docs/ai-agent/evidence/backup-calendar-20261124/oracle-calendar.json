@@ -1,0 +1,85 @@
+{
+  "disk": {
+    "/": {
+      "available_bytes": 158322688,
+      "free_bytes": 175099904,
+      "total_bytes": 47321268224
+    },
+    "/mnt/development": {
+      "available_bytes": 966623232,
+      "free_bytes": 983400448,
+      "total_bytes": 105089261568
+    }
+  },
+  "earlier_manual_archive": "gsd-cloud-20261124T001150Z.tar.gz",
+  "host": "torah-social",
+  "inspection": "read_only; no manual backup or restore",
+  "newest_archive": {
+    "bytes": 72533,
+    "mode": "0o600",
+    "mtime_utc": "2026-11-24T03:18:35.476381+00:00",
+    "path": "/mnt/development/projects/gsd-cloud/backups/gsd-cloud-20261124T031835Z.tar.gz"
+  },
+  "observed_at_utc": "2026-11-24T03:22:42.411454+00:00",
+  "scheduled_verification_receipts": [
+    {
+      "backup": "/mnt/development/projects/gsd-cloud/backups/gsd-cloud-20261124T031835Z.tar.gz",
+      "bytes": 72533,
+      "counts": {
+        "gsd_library": 0,
+        "tasks": 0,
+        "users": 1
+      },
+      "integrity": "ok",
+      "invocation_id": "1c1d938067b240a5b2890ac11209f864",
+      "restore": "ok",
+      "sha256": "f2d96aa3ae61d1a316f47de7fa27bbfabf743a8e5a2c1afefb3bcb9acb2b125b",
+      "timestamp_usec": "1795490315491350"
+    }
+  ],
+  "service": {
+    "ActiveState": "inactive",
+    "ExecMainCode": "1",
+    "ExecMainExitTimestamp": "Tue 2026-11-24 03:18:35 UTC",
+    "ExecMainExitTimestampMonotonic": "7017387334473",
+    "ExecMainStartTimestamp": "Tue 2026-11-24 03:18:35 UTC",
+    "ExecMainStartTimestampMonotonic": "7017387198110",
+    "ExecMainStatus": "0",
+    "InvocationID": "1c1d938067b240a5b2890ac11209f864",
+    "Result": "success",
+    "SubState": "dead"
+  },
+  "service_events": [
+    {
+      "invocation_id": "1c1d938067b240a5b2890ac11209f864",
+      "message": "Starting gsd-cloud-backup.service - Consistent GSD PocketBase and OAuth backup...",
+      "timestamp_usec": "1795490315368009"
+    },
+    {
+      "invocation_id": "1c1d938067b240a5b2890ac11209f864",
+      "message": "gsd-cloud-backup.service: Deactivated successfully.",
+      "timestamp_usec": "1795490315504526"
+    },
+    {
+      "invocation_id": "1c1d938067b240a5b2890ac11209f864",
+      "message": "Finished gsd-cloud-backup.service - Consistent GSD PocketBase and OAuth backup.",
+      "timestamp_usec": "1795490315504761"
+    }
+  ],
+  "timer": {
+    "AccuracyUSec": "1min",
+    "ActiveState": "active",
+    "LastTriggerUSec": "Tue 2026-11-24 03:18:35 UTC",
+    "LastTriggerUSecMonotonic": "2month 2w 6d 8h 16min 27.192290s",
+    "NextElapseUSecRealtime": "Wed 2026-11-25 03:23:05 UTC",
+    "Persistent": "yes",
+    "RandomizedDelayUSec": "10min",
+    "SubState": "waiting",
+    "TimersCalendar": "{ OnCalendar=*-*-* 03:15:00 UTC ; next_elapse=Wed 2026-11-25 03:15:00 UTC }",
+    "Unit": "gsd-cloud-backup.service",
+    "UnitFileState": "enabled"
+  },
+  "source_job_id": "job_445967465fd8",
+  "scheduled_run_confirmed": true,
+  "evidence_scope": "Timer LastTriggerUSec, service timestamps and matching invocation receipt establish the calendar run. Integrity/restore values are the scheduled service's own verification result. This inspection did not open, extract, verify or execute a backup; Windows offsite task was not inspected."
+}

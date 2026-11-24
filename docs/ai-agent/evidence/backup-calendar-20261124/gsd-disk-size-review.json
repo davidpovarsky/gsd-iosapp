@@ -1,0 +1,254 @@
+{
+  "complete_within_bound": true,
+  "directories": 13,
+  "errors": [],
+  "files": 47,
+  "groups": {
+    "(root files)": {
+      "allocated_bytes": 31920128,
+      "files": 22,
+      "latest_mtime_utc": "2026-11-24T01:34:07.003145+00:00",
+      "logical_bytes": 31852154
+    },
+    "backups": {
+      "allocated_bytes": 192512,
+      "files": 5,
+      "latest_mtime_utc": "2026-11-24T03:18:35.476381+00:00",
+      "logical_bytes": 181829
+    },
+    "gateway": {
+      "allocated_bytes": 65536,
+      "files": 3,
+      "latest_mtime_utc": "2026-11-24T01:30:03.894031+00:00",
+      "logical_bytes": 58983
+    },
+    "gateway-state": {
+      "allocated_bytes": 8192,
+      "files": 2,
+      "latest_mtime_utc": "2026-11-24T01:34:06.509458+00:00",
+      "logical_bytes": 1037
+    },
+    "pb_data": {
+      "allocated_bytes": 1372160,
+      "files": 7,
+      "latest_mtime_utc": "2026-11-24T03:25:51.797979+00:00",
+      "logical_bytes": 1364065
+    },
+    "pb_hooks": {
+      "allocated_bytes": 12288,
+      "files": 2,
+      "latest_mtime_utc": "2026-11-23T23:42:00.968812+00:00",
+      "logical_bytes": 8327
+    },
+    "pb_migrations": {
+      "allocated_bytes": 8192,
+      "files": 2,
+      "latest_mtime_utc": "2026-11-23T23:42:00.970326+00:00",
+      "logical_bytes": 3681
+    },
+    "releases": {
+      "allocated_bytes": 86016,
+      "files": 2,
+      "latest_mtime_utc": "2026-11-24T01:30:03.892834+00:00",
+      "logical_bytes": 82892
+    },
+    "systemd": {
+      "allocated_bytes": 8192,
+      "files": 2,
+      "latest_mtime_utc": "2026-11-24T00:11:49.385339+00:00",
+      "logical_bytes": 703
+    }
+  },
+  "inspection": "read-only lstat metadata only; no file contents, symlinks or foreign mounts followed",
+  "largest_files": [
+    {
+      "allocated_bytes": 31789056,
+      "logical_bytes": 31785120,
+      "mtime_utc": "2026-10-23T11:19:49+00:00",
+      "relative_path": "pocketbase"
+    },
+    {
+      "allocated_bytes": 802816,
+      "logical_bytes": 802641,
+      "mtime_utc": "2026-11-23T16:10:48.086836+00:00",
+      "relative_path": "pb_data/types.d.ts"
+    },
+    {
+      "allocated_bytes": 258048,
+      "logical_bytes": 253952,
+      "mtime_utc": "2026-11-24T03:23:04.625981+00:00",
+      "relative_path": "pb_data/auxiliary.db"
+    },
+    {
+      "allocated_bytes": 200704,
+      "logical_bytes": 200704,
+      "mtime_utc": "2026-11-24T02:36:04.265561+00:00",
+      "relative_path": "pb_data/data.db"
+    },
+    {
+      "allocated_bytes": 73728,
+      "logical_bytes": 72533,
+      "mtime_utc": "2026-11-24T03:18:35.476381+00:00",
+      "relative_path": "backups/gsd-cloud-20261124T031835Z.tar.gz"
+    },
+    {
+      "allocated_bytes": 49152,
+      "logical_bytes": 48685,
+      "mtime_utc": "2026-11-24T00:11:50.091992+00:00",
+      "relative_path": "backups/gsd-cloud-20261124T001150Z.tar.gz"
+    },
+    {
+      "allocated_bytes": 45056,
+      "logical_bytes": 43825,
+      "mtime_utc": "2026-11-24T01:30:03.892834+00:00",
+      "relative_path": "releases/b2dafb4fa130a8deed44caa65475b33c393c7eac/previous-server.mjs"
+    },
+    {
+      "allocated_bytes": 45056,
+      "logical_bytes": 43825,
+      "mtime_utc": "2026-11-24T01:30:03.894031+00:00",
+      "relative_path": "gateway/server.mjs"
+    },
+    {
+      "allocated_bytes": 45056,
+      "logical_bytes": 41232,
+      "mtime_utc": "2026-11-24T03:25:51.797979+00:00",
+      "relative_path": "pb_data/auxiliary.db-wal"
+    },
+    {
+      "allocated_bytes": 40960,
+      "logical_bytes": 39067,
+      "mtime_utc": "2026-11-24T01:10:45.686635+00:00",
+      "relative_path": "releases/b46cc29656a56acb4dd2a359c64bc8a61dc62a12/previous-server.mjs"
+    },
+    {
+      "allocated_bytes": 32768,
+      "logical_bytes": 29130,
+      "mtime_utc": "2026-11-23T22:27:39.317715+00:00",
+      "relative_path": "backups/gsd-cloud-20261123T222739Z.tar.gz"
+    },
+    {
+      "allocated_bytes": 32768,
+      "logical_bytes": 29303,
+      "mtime_utc": "2026-11-23T23:38:09.569472+00:00",
+      "relative_path": "backups/gsd-cloud-20261123T233809Z.tar.gz"
+    },
+    {
+      "allocated_bytes": 32768,
+      "logical_bytes": 32768,
+      "mtime_utc": "2026-11-24T03:25:51.797979+00:00",
+      "relative_path": "pb_data/auxiliary.db-shm"
+    },
+    {
+      "allocated_bytes": 32768,
+      "logical_bytes": 32768,
+      "mtime_utc": "2026-11-24T03:18:35.426741+00:00",
+      "relative_path": "pb_data/data.db-shm"
+    },
+    {
+      "allocated_bytes": 28672,
+      "logical_bytes": 27956,
+      "mtime_utc": "2026-11-23T23:41:58.843422+00:00",
+      "relative_path": "backend-candidate.tar.gz"
+    }
+  ],
+  "largest_recent_files": [
+    {
+      "allocated_bytes": 258048,
+      "logical_bytes": 253952,
+      "mtime_utc": "2026-11-24T03:23:04.625981+00:00",
+      "relative_path": "pb_data/auxiliary.db"
+    },
+    {
+      "allocated_bytes": 200704,
+      "logical_bytes": 200704,
+      "mtime_utc": "2026-11-24T02:36:04.265561+00:00",
+      "relative_path": "pb_data/data.db"
+    },
+    {
+      "allocated_bytes": 73728,
+      "logical_bytes": 72533,
+      "mtime_utc": "2026-11-24T03:18:35.476381+00:00",
+      "relative_path": "backups/gsd-cloud-20261124T031835Z.tar.gz"
+    },
+    {
+      "allocated_bytes": 45056,
+      "logical_bytes": 43825,
+      "mtime_utc": "2026-11-24T01:30:03.892834+00:00",
+      "relative_path": "releases/b2dafb4fa130a8deed44caa65475b33c393c7eac/previous-server.mjs"
+    },
+    {
+      "allocated_bytes": 45056,
+      "logical_bytes": 43825,
+      "mtime_utc": "2026-11-24T01:30:03.894031+00:00",
+      "relative_path": "gateway/server.mjs"
+    },
+    {
+      "allocated_bytes": 45056,
+      "logical_bytes": 41232,
+      "mtime_utc": "2026-11-24T03:25:51.797979+00:00",
+      "relative_path": "pb_data/auxiliary.db-wal"
+    },
+    {
+      "allocated_bytes": 32768,
+      "logical_bytes": 32768,
+      "mtime_utc": "2026-11-24T03:25:51.797979+00:00",
+      "relative_path": "pb_data/auxiliary.db-shm"
+    },
+    {
+      "allocated_bytes": 32768,
+      "logical_bytes": 32768,
+      "mtime_utc": "2026-11-24T03:18:35.426741+00:00",
+      "relative_path": "pb_data/data.db-shm"
+    },
+    {
+      "allocated_bytes": 4096,
+      "logical_bytes": 1396,
+      "mtime_utc": "2026-11-24T01:34:07.003145+00:00",
+      "relative_path": "oauth-visual-fixture.json"
+    },
+    {
+      "allocated_bytes": 4096,
+      "logical_bytes": 196,
+      "mtime_utc": "2026-11-24T01:34:06.509167+00:00",
+      "relative_path": "oauth-visual-cleanup-plan.json"
+    },
+    {
+      "allocated_bytes": 4096,
+      "logical_bytes": 901,
+      "mtime_utc": "2026-11-24T01:34:07.003004+00:00",
+      "relative_path": "oauth-visual-cleanup.json"
+    },
+    {
+      "allocated_bytes": 4096,
+      "logical_bytes": 2119,
+      "mtime_utc": "2026-11-24T01:30:04.473405+00:00",
+      "relative_path": "oauth-referrer-deployment.json"
+    },
+    {
+      "allocated_bytes": 4096,
+      "logical_bytes": 1005,
+      "mtime_utc": "2026-11-24T01:34:06.509458+00:00",
+      "relative_path": "gateway-state/gateway-state.json"
+    },
+    {
+      "allocated_bytes": 0,
+      "logical_bytes": 0,
+      "mtime_utc": "2026-11-24T03:18:35.426537+00:00",
+      "relative_path": "pb_data/data.db-wal"
+    }
+  ],
+  "observed_at_utc": "2026-11-24T03:27:05.544762+00:00",
+  "recent_files_count": 14,
+  "recent_since_utc": "2026-11-24T01:30:00Z",
+  "recent_total_allocated_bytes": 753664,
+  "recent_total_logical_bytes": 727224,
+  "root": "/mnt/development/projects/gsd-cloud",
+  "skipped_foreign_mounts": 0,
+  "skipped_symlinks": 0,
+  "total_allocated_bytes": 33673216,
+  "total_logical_bytes": 33553671,
+  "source_job_id": "job_79b355e9a07f",
+  "finding": "Current retained files inside the GSD project allocate 33,673,216 bytes total, so they do not account for the observed approximately 800 MB volume-space decline.",
+  "limitations": "This is a bounded metadata snapshot, not a before/after growth measurement. Recent totals are current sizes of files with recent mtimes. No other project, file content, archive contents, open-unlinked inode or filesystem-level attribution was inspected."
+}

@@ -1,0 +1,88 @@
+{
+  "job": "job_172e4211c9fe",
+  "access_scope": "Existing DEFAULT profile authenticated to exactly the IMDS-bound instance and its attached boot/data volumes.",
+  "assessment_pass": true,
+  "attachment_counts": {
+    "boot_attached": 1,
+    "boot_total": 1,
+    "data_attached": 1,
+    "data_total": 1
+  },
+  "billing_context_verified": false,
+  "calls": [
+    {
+      "operation": "GetInstance",
+      "status": 200
+    },
+    {
+      "operation": "ListBootVolumeAttachments[exact instance filter]",
+      "status": 200
+    },
+    {
+      "operation": "ListVolumeAttachments[exact instance filter]",
+      "status": 200
+    },
+    {
+      "operation": "GetBootVolume[attached ID]",
+      "status": 200
+    },
+    {
+      "operation": "GetVolume[attached ID]",
+      "status": 200
+    }
+  ],
+  "cloud_writes": 0,
+  "cost_limit": "No subscription, tenancy-wide usage, free-tier eligibility or pricing context was queried; no cost exemption is inferred.",
+  "finished_at_utc": "2026-11-24T04:47:29.330962+00:00",
+  "instance": {
+    "display_name": "torah-social",
+    "id_sha256": "26d0f00c604741a30e687ccc2b0b1dc2c0ba4f0f7fa622b389d8956bdf978570",
+    "lifecycle_state": "RUNNING"
+  },
+  "observed_at_utc": "2026-11-24T04:47:02.793084+00:00",
+  "permission_limit": "Successful reads do not prove UpdateVolume or UpdateBootVolume permission; no policy-wide exploration or write/dry-run mutation was issued.",
+  "private_receipt_sha256": "ec71e521ae5d5b130dbe6f5b825f1977f484c7e7521a45fa48e2c74c4d09dfd1",
+  "read_only": true,
+  "region": "il-jerusalem-1",
+  "resize_permission_verified": false,
+  "sdk_version": "2.192.0",
+  "volumes": [
+    {
+      "attachment": {
+        "attachment_type": null,
+        "device": null,
+        "is_read_only": null,
+        "is_shareable": null,
+        "lifecycle_state": "ATTACHED"
+      },
+      "auto_tuned_vpus_per_gb": null,
+      "display_name": "torah-social (Boot Volume)",
+      "id_sha256": "16f63e72133ed38ec16e4431d617c0605d1a54ef309adbaf4b706d6b5313b004",
+      "is_auto_tune_enabled": false,
+      "kind": "boot",
+      "lifecycle_state": "AVAILABLE",
+      "size_in_gbs": 47,
+      "size_in_mbs": 47694,
+      "vpus_per_gb": 10
+    },
+    {
+      "attachment": {
+        "attachment_type": "paravirtualized",
+        "device": null,
+        "is_read_only": false,
+        "is_shareable": false,
+        "lifecycle_state": "ATTACHED"
+      },
+      "auto_tuned_vpus_per_gb": null,
+      "display_name": "development-projects-20261122",
+      "id_sha256": "37610e120e864c0110cd1657aaacc3decd96cbda0341ef209eb57090b8440ba9",
+      "is_auto_tune_enabled": false,
+      "kind": "data",
+      "lifecycle_state": "AVAILABLE",
+      "size_in_gbs": 100,
+      "size_in_mbs": 102400,
+      "vpus_per_gb": 10
+    }
+  ],
+  "private_exact_identifiers_retained_on_authorized_windows_host": true
+}

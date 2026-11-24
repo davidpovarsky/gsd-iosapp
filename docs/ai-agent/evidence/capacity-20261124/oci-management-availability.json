@@ -1,0 +1,52 @@
+{
+  "job": "job_f82e1cefbada",
+  "oracle": {
+    "capacity_or_billing_changes": false,
+    "cloud_management_requests": 0,
+    "iam_permissions_tested": false,
+    "imds_v2": {
+      "canonicalRegionName": {
+        "shape_valid": true,
+        "status": 200,
+        "value": "il-jerusalem-1"
+      },
+      "region": {
+        "shape_valid": true,
+        "status": 200,
+        "value": "il-jerusalem-1"
+      }
+    },
+    "instance_principal_credentials_requested": false,
+    "observed_at_utc": "2026-11-24T04:24:15.234029+00:00",
+    "oci_cli": null,
+    "oci_python_sdk": false,
+    "profiles": [
+      {
+        "exists": false,
+        "path": "/home/ubuntu/.oci/config"
+      },
+      {
+        "exists": false,
+        "path": "/root/.oci/config"
+      }
+    ],
+    "read_only": true
+  },
+  "windows": {
+    "oci_cli": null,
+    "oci_python_sdk": false,
+    "own_oci_config_exists": true,
+    "profile_names": [
+      "DEFAULT"
+    ],
+    "region_names": [
+      "il-jerusalem-1"
+    ]
+  },
+  "limitations": [
+    "Only CLI/SDK presence, selected own config profile/region names, and selected instance-region metadata were inspected.",
+    "No credentials, private key, user-data, credential endpoints, IAM authorization or volume-management API were read or exercised.",
+    "An existing Windows DEFAULT config does not prove current credential validity or permission to manage either volume.",
+    "No software installation, resource creation or paid capacity change was made."
+  ]
+}

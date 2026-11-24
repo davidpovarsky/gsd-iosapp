@@ -1,0 +1,115 @@
+{
+  "observed_at_utc": "2026-11-24T03:41:21.600148+00:00",
+  "local_observed_time": "2026-11-24T05:41:21.600148+02:00",
+  "inspection": "read-only registered task, existing JSON receipts and encrypted-file metadata; no execution or decryption",
+  "scheduler_rows": [
+    {
+      "TaskName": "\\GSD Cloud Offsite Backup",
+      "Status": "Ready",
+      "Last Run Time": "24/11/2026 05:35:00",
+      "Last Result": "0",
+      "Next Run Time": "25/11/2026 05:35:00",
+      "Scheduled Task State": "Enabled",
+      "Logon Mode": "Interactive only",
+      "Schedule Type": "Daily ",
+      "Start Time": "05:35:00",
+      "Start Date": "24/11/2026",
+      "last_run_time_utc": "2026-11-24T03:35:00+00:00"
+    },
+    {
+      "TaskName": "\\GSD Cloud Offsite Backup",
+      "Status": "Ready",
+      "Last Run Time": "24/11/2026 05:35:00",
+      "Last Result": "0",
+      "Next Run Time": "25/11/2026 05:35:00",
+      "Scheduled Task State": "Enabled",
+      "Logon Mode": "Interactive only",
+      "Schedule Type": "At logon time",
+      "Start Time": "N/A",
+      "Start Date": "N/A",
+      "last_run_time_utc": "2026-11-24T03:35:00+00:00"
+    }
+  ],
+  "registered_triggers": [
+    {
+      "kind": "CalendarTrigger",
+      "start_boundary": "2026-11-24T05:35:00+02:00",
+      "enabled": null,
+      "delay": null,
+      "days_interval": "1"
+    },
+    {
+      "kind": "LogonTrigger",
+      "start_boundary": null,
+      "enabled": null,
+      "delay": "PT2M",
+      "days_interval": null
+    }
+  ],
+  "registered_settings": {
+    "Enabled": null,
+    "StartWhenAvailable": "true",
+    "ExecutionTimeLimit": "PT10M",
+    "LogonType": "InteractiveToken",
+    "RunLevel": null
+  },
+  "worker": {
+    "result": "PASS",
+    "completed_at": "2026-11-24T03:35:13.670209+00:00",
+    "source_archive": "gsd-cloud-20261124T031835Z.tar.gz",
+    "source_bytes": 72533,
+    "encrypted_bytes": 72758,
+    "sha256": "f2d96aa3ae61d1a316f47de7fa27bbfabf743a8e5a2c1afefb3bcb9acb2b125b",
+    "source_restore": "ok",
+    "restored_counts": {
+      "gsd_library": 0,
+      "tasks": 0,
+      "users": 1
+    },
+    "manifest_files_verified": 13,
+    "dpapi_scope": "CurrentUser",
+    "stored_decrypt_hash": "PASS",
+    "plaintext_written_to_disk": false,
+    "retention_keep": 7,
+    "removed_own_archives": [],
+    "source_revision": "c1519a9200e5ef07c591e91bb2b3d4b26f009855",
+    "transfer_limit_bytes": 134217728,
+    "transfer_timeout_seconds": 180
+  },
+  "encrypted_artifact_metadata": {
+    "filename": "gsd-cloud-20261124T031835Z.tar.gz.dpapi",
+    "bytes": 72758,
+    "mtime_utc": "2026-11-24T03:35:13.619664+00:00",
+    "per_archive_receipt_result": "PASS",
+    "per_archive_receipt_hash_matches": true,
+    "per_archive_receipt_completed_at": "2026-11-24T03:35:13.670209+00:00"
+  },
+  "task_event_query": {
+    "query_exit": 0,
+    "matching_events": 0
+  },
+  "task_events": [],
+  "expected_source_archive": "gsd-cloud-20261124T031835Z.tar.gz",
+  "expected_source_sha256": "f2d96aa3ae61d1a316f47de7fa27bbfabf743a8e5a2c1afefb3bcb9acb2b125b",
+  "prior_manual_run_utc": "2026-11-24T00:32:05Z",
+  "task_history_channel": {
+    "observed_at_utc": "2026-11-24T03:43:22.344695+00:00",
+    "query_exit": 0,
+    "inspection": "read-only channel configuration; no event history enabled or changed",
+    "attributes": {
+      "name": "Microsoft-Windows-TaskScheduler/Operational",
+      "enabled": "false",
+      "type": "Operational",
+      "isolation": "Application"
+    },
+    "enabled_fields": []
+  },
+  "new_execution_at_calendar_time_confirmed": true,
+  "direct_calendar_trigger_reason_observed": false,
+  "trigger_attribution_limit": "The configured daily trigger and actual last-run time both equal 03:35 UTC. Operational history is disabled, so no direct event identifies calendar versus another trigger. This is a new successful execution, distinct from the earlier 00:32 manual invocation.",
+  "inspection_jobs": [
+    "job_48e463c9967e",
+    "job_ed25872d542b"
+  ],
+  "initial_inspection_shape_note": "The initial reader expected one schtasks CSV row; the task emits one row per configured trigger. Corrected read-only parsing retained both rows. No task execution was requested."
+}
