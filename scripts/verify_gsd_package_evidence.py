@@ -18,9 +18,15 @@ INPUTS = ("GSDKit", "Packages/GSDHanlinAgent", "HanlinSDK.lock.json", "scripts/i
 
 
 def command(arguments: list[str], timeout: int = 90) -> str:
-    result = subprocess.run(arguments, capture_output=True, text=True, timeout=timeout)
+    try:
+        result = subprocess.run(arguments, capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        raise RuntimeError(f"Package evidence command {arguments[0]} timed out after {timeout} seconds") from None
     if result.returncode:
-        raise RuntimeError("Package evidence command failed: " + arguments[0])
+        # Response bodies and redirect URLs can contain credentials. Keep only status metadata.
+        http = re.search(r"\bHTTP(?:/[0-9.]+)?[ :]+([45][0-9]{2})\b", result.stderr)
+        status = http[1] if http else "unreported"
+        raise RuntimeError(f"Package evidence command failed: {arguments[0]} (exit={result.returncode}; http={status})")
     return result.stdout
 
 

@@ -128,6 +128,13 @@ jobs:
           swift test --package-path GSDKit -j 3 \
             --filter 'AuthServiceTests|CloudAccountAuthTests|CloudTimerWireTests|CloudLibrarySyncTests|CloudLibraryOrderingTests|CloudNativeSystemTests|SyncEngineGuardedWriteTests|SyncEngineSessionFenceTests|AccountSwitchTests' \
             2>&1 | tee "$OUTPUT/logs/cloud-sync-tests.log"
+      - name: Validate account deletion and recovery contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          swift test --package-path GSDKit -j 3 \
+            --filter 'AccountDeleterTests|AccountDeletionRecoveryTests' \
+            2>&1 | tee "$OUTPUT/logs/account-deletion-tests.log"
       - name: Build app, four embedded targets and native UI runner once
         id: simulator_build
         shell: bash
@@ -135,7 +142,8 @@ jobs:
           set -euo pipefail
           xcodebuild -project GSD.xcodeproj -scheme GSDScreenshots -configuration Debug \
             -destination 'generic/platform=iOS Simulator' -derivedDataPath .gsd-release-derived \
-            ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO \
+            ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- \
+            CODE_SIGN_INJECT_BASE_ENTITLEMENTS=YES \
             CURRENT_PROJECT_VERSION="$GSD_BUILD_NUMBER" build-for-testing \
             2>&1 | tee "$OUTPUT/logs/build-for-testing.log"
       - name: Preserve the compiled simulator products before runtime checks
@@ -175,6 +183,30 @@ jobs:
           python3 scripts/verify_gsd_release_bundle.py \
             --app .gsd-release-derived/Build/Products/Debug-iphonesimulator/GSD.app \
             --build "$GSD_BUILD_NUMBER" --output "$OUTPUT/compiled-bundles.json"
+          python3 - <<'PY'
+          import json, os, pathlib, plistlib, subprocess, sys
+          sys.path.insert(0, "scripts")
+          from gsd_appstore_connect import TEAM, APP_GROUP
+          from verify_gsd_release_bundle import BUNDLES
+          app = pathlib.Path(".gsd-release-derived/Build/Products/Debug-iphonesimulator/GSD.app")
+          signatures = []
+          for identifier, relative in BUNDLES.items():
+              bundle = app / relative
+              subprocess.run(["codesign", "--verify", "--strict", str(bundle)], check=True)
+              raw = subprocess.run(["codesign", "-d", "--entitlements", ":-", str(bundle)],
+                                   check=True, capture_output=True).stdout
+              entitlements = plistlib.loads(raw)
+              details = subprocess.run(["codesign", "-dv", str(bundle)], check=True, capture_output=True, text=True)
+              assert "Signature=adhoc" in details.stderr, identifier + " is not simulator ad-hoc signed"
+              assert entitlements.get("application-identifier") == TEAM + "." + identifier, identifier + " lacks signed app identity"
+              assert entitlements.get("com.apple.security.application-groups") == [APP_GROUP], identifier + " lacks signed App Group"
+              signatures.append({"bundleId": identifier, "entitlements": entitlements})
+          subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)], check=True)
+          receipt = {"passed": True, "simulator_only": True, "signing": "xcode-ad-hoc",
+                     "source_sha": os.environ["GSD_SOURCE_SHA"], "targets": signatures}
+          pathlib.Path(os.environ["OUTPUT"], "logs/simulator-entitlements.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          print("GSD_SIMULATOR_ENTITLEMENTS_PASS", len(signatures))
+          PY
       - name: English and Hebrew iPhone/iPad UI and closed-app cloud acceptance
         shell: bash
         run: |

@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Failure cases for reusing package evidence after a native-only change."""
 import unittest
-from verify_gsd_package_evidence import STEPS, verify_log_bindings, verify_workflow
+import subprocess
+from unittest.mock import patch
+from verify_gsd_package_evidence import STEPS, command, verify_log_bindings, verify_workflow
 
 SHA = "b86d1dbdbf8fb70f170814e966c41ab31fab88e5"
 XCODE = "Xcode 27.1\nBuild version 27A9275"
@@ -14,6 +16,21 @@ WORKFLOW = 'env:\n  GSD_CLOUD_SYSTEM_TEST: "1"\n  GSD_CLOUD_TEST_BASE: https://e
 
 
 class PackageEvidenceTests(unittest.TestCase):
+    def test_failed_request_reports_only_safe_status_metadata(self):
+        result = subprocess.CompletedProcess(["gh"], 1, "", "gh: unavailable (HTTP 503) https://private.example/?token=secret Authorization: secret")
+        with patch("verify_gsd_package_evidence.subprocess.run", return_value=result):
+            with self.assertRaises(RuntimeError) as caught:
+                command(["gh", "api", "repos/example/repo/actions/jobs/1/logs"])
+        self.assertIn("exit=1; http=503", str(caught.exception))
+        for sensitive in ("secret", "private.example", "Authorization"):
+            self.assertNotIn(sensitive, str(caught.exception))
+
+    def test_timed_out_request_remains_failed_with_safe_diagnostic(self):
+        failure = subprocess.TimeoutExpired(["gh"], 90, stderr="private response")
+        with patch("verify_gsd_package_evidence.subprocess.run", side_effect=failure):
+            with self.assertRaisesRegex(RuntimeError, "gh timed out after 90 seconds"):
+                command(["gh", "api", "repos/example/repo/actions/jobs/1/logs"])
+
     def test_only_execution_condition_may_differ(self):
         changed = WORKFLOW.replace("        shell: bash", "        if: inputs.package_tests_run == ''\n        shell: bash")
         verify_workflow(WORKFLOW, changed)
