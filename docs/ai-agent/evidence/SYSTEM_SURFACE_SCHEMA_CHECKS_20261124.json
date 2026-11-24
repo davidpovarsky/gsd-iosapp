@@ -1,0 +1,43 @@
+{
+  "at": "2026-11-24T12:30:07.757223+00:00",
+  "script_sha256": "705ba3e6743a8670a5f611624fc074381b3542f30ee76c9c96fcbc424b64d0e7",
+  "prior_guard_receipt": "SYSTEM_SURFACE_GUARD_CHECKS_20261124.json",
+  "prior_scope": "19 previously passed guards unchanged; not rerun",
+  "checks": [
+    {
+      "name": "real_share_with_all8_assertions_accepted",
+      "passed": true
+    },
+    {
+      "name": "foreign_simulator_rejected",
+      "passed": true
+    },
+    {
+      "name": "wrong_app_source_rejected",
+      "passed": true
+    },
+    {
+      "name": "missing_share_assertion_rejected",
+      "passed": true
+    },
+    {
+      "name": "skipped_test_cannot_claim_share_pass",
+      "passed": true
+    },
+    {
+      "name": "passing_share_test_requires_receipt",
+      "passed": true
+    },
+    {
+      "name": "full_coverage_cannot_be_claimed",
+      "passed": true
+    },
+    {
+      "name": "honest_unavailable_share_remains_incomplete",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "hierarchy_txt_upload_present": true,
+  "scope": "only observation-schema delta; no app, CI, network or account execution"
+}

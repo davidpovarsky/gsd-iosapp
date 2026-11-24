@@ -1,0 +1,126 @@
+{
+  "passed": true,
+  "scope": "Controlled Python source guards only; no simulator, subprocess execution, network, account or product build",
+  "source_path": "scripts/gsd_system_surface_discovery.py",
+  "source_sha256": "dcb677bb6dea2070dac1611070f3372914ff3581626ea4a23c7e0a35f4d1e783",
+  "reviewed_baseline_sha256": "705ba3e6743a8670a5f611624fc074381b3542f30ee76c9c96fcbc424b64d0e7",
+  "source_base": "71b1b7ce4adf7bea2ddacfc683a69906d6acd6ae",
+  "swift_sha256": "79bc4cc03c5047ea4d8843e21a6a86f32e4fc2a5fa3cda3643b460e39f87ba6c",
+  "python_syntax": "PASS",
+  "passed_count": 27,
+  "failed_count": 0,
+  "controls": [
+    {
+      "name": "actual_parent_receipt_accepts_distinct_app_and_workflow_sources",
+      "passed": true
+    },
+    {
+      "name": "same_app_hash_cannot_replace_exact_workflow_head",
+      "passed": true
+    },
+    {
+      "name": "failed_parent_cannot_supply_successful_validation",
+      "passed": true
+    },
+    {
+      "name": "old_app_source_in_receipt_rejected",
+      "passed": true
+    },
+    {
+      "name": "parent_runtime_build_mismatch_rejected",
+      "passed": true
+    },
+    {
+      "name": "both_exact_fixed_artifact_id_and_hash_pairs_accept",
+      "passed": true
+    },
+    {
+      "name": "same_name_replacement_artifact_id_rejected",
+      "passed": true
+    },
+    {
+      "name": "different_well_formed_artifact_hash_rejected",
+      "passed": true
+    },
+    {
+      "name": "artifact_wrong_workflow_head_rejected",
+      "passed": true
+    },
+    {
+      "name": "honest_discovery_with_unavailable_share_accepts_incomplete_scope",
+      "passed": true
+    },
+    {
+      "name": "actual_share_assertions_and_scoped_compose_audit_accept",
+      "passed": true
+    },
+    {
+      "name": "completed_compose_audit_retained_when_later_share_action_skips",
+      "passed": true
+    },
+    {
+      "name": "discovery_only_shareWebURL_cannot_pass",
+      "passed": true
+    },
+    {
+      "name": "discovery_only_widgetKit_cannot_pass",
+      "passed": true
+    },
+    {
+      "name": "discovery_only_shortcuts_cannot_pass",
+      "passed": true
+    },
+    {
+      "name": "discovery_only_voiceOver_cannot_pass",
+      "passed": true
+    },
+    {
+      "name": "different_accessibility_audit_scope_rejected",
+      "passed": true
+    },
+    {
+      "name": "voiceover_claim_cannot_hide_in_compose_audit",
+      "passed": true
+    },
+    {
+      "name": "compose_audit_requires_actual_extension_open_assertion",
+      "passed": true
+    },
+    {
+      "name": "successful_share_requires_completed_compose_audit",
+      "passed": true
+    },
+    {
+      "name": "uncertain_create_reconciles_once_and_cleans_only_owned_uuid",
+      "passed": true
+    },
+    {
+      "name": "ambiguous_uncertain_create_adopts_and_deletes_nothing",
+      "passed": true
+    },
+    {
+      "name": "successful_create_retains_owned_uuid_when_inventory_fails",
+      "passed": true
+    },
+    {
+      "name": "normal_create_has_one_create_one_owned_delete_and_absence",
+      "passed": true
+    },
+    {
+      "name": "preexisting_uuid_cannot_be_adopted",
+      "passed": true
+    },
+    {
+      "name": "wrong_runtime_uuid_cannot_be_adopted",
+      "passed": true
+    },
+    {
+      "name": "wrong_name_uuid_cannot_be_adopted",
+      "passed": true
+    }
+  ],
+  "controller_sha256": "cedad1382fe5a081682f04810754f53955d2a46666aab607523c3cea8a1db510",
+  "timestamp": "2026-11-24T14:05:38.499829+00:00",
+  "historical_19_and_8_checks_repeated": false,
+  "runtime_acceptance": "not executed"
+}
