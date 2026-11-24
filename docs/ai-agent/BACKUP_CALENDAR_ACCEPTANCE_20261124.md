@@ -27,7 +27,7 @@ Archive SHA-256:
 
 The timer remains enabled, active/waiting and persistent. Its daily definition is
 03:15 UTC with up to ten minutes of randomized delay and one-minute accuracy.
-The next observed execution was 25 November at 03:23:05 UTC. The service is
+The next scheduled execution shown by the timer was 25 November at 03:23:05 UTC. The service is
 inactive after its successful one-shot invocation.
 
 This archive and invocation are distinct from the earlier manually invoked
