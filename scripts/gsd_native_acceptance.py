@@ -22,6 +22,11 @@ from gsd_simulator_smoke import devices_for_runtime, version
 
 _redactions: set[str] = set()
 
+class CommandFailure(RuntimeError):
+    def __init__(self, arguments: list[str], code: int, log: Path):
+        self.arguments, self.code = arguments, code
+        super().__init__(f"{arguments[0]} {arguments[1]} exited {code}; see {log}")
+
 def redact(text: str) -> str:
     """Retain fixture masks in memory so later xcresult summaries are sanitized too."""
     _redactions.update(re.findall(r"::add-mask::([^\s]+)", text))
@@ -60,8 +65,40 @@ def run(args: list[str], log: Path, timeout: int = 120, env: dict | None = None,
             output = redact(raw.decode("utf-8", errors="replace"))
             log.write_text(output, encoding="utf-8")
     if check and code:
-        raise RuntimeError(f"{args[0]} {args[1]} exited {code}; see {log}")
+        raise CommandFailure(args, code, log)
     return output
+
+def completed_assertion_failure(error: CommandFailure, tests: list[str],
+                                log: str, summary: dict) -> dict:
+    """Continue only after every selected test finished and failures are assertions."""
+    if error.arguments[:2] != ["xcodebuild", "test-without-building"] or error.code != 65:
+        raise error
+    outcomes = {}
+    for test in tests:
+        matches = re.findall(r"(?im)^.*Test [Cc]ase.*\b" + re.escape(test) +
+                             r"\b.*\b(passed|failed)\b", log)
+        if len(matches) != 1:
+            raise RuntimeError("Incomplete or ambiguous XCTest outcome: " + test)
+        outcomes[test] = matches[0].lower()
+    passed = [test for test in tests if outcomes[test] == "passed"]
+    failed = [test for test in tests if outcomes[test] == "failed"]
+    if (not failed or summary.get("result") != "Failed" or summary.get("totalTestCount") != len(tests)
+            or summary.get("passedTests") != len(passed) or summary.get("failedTests") != len(failed)
+            or summary.get("skippedTests") != 0 or summary.get("expectedFailures") != 0):
+        raise RuntimeError("XCTest summary does not prove completed selected tests")
+    failures = summary.get("testFailures", [])
+    names = set()
+    for failure in failures:
+        identifier = failure.get("testIdentifierString", "")
+        names.add(identifier)
+        if (failure.get("targetName") != "GSDScreenshotTests"
+                or identifier not in {"GSDCloudReleaseUITests/" + test + "()" for test in failed}
+                or not re.match(r"^XCTAssert\w* failed\b", failure.get("failureText", ""))):
+            raise RuntimeError("Non-assertion failure requires an immediate stop")
+    if names != {"GSDCloudReleaseUITests/" + test + "()" for test in failed}:
+        raise RuntimeError("Failed test assertion details are incomplete")
+    return {"verifiedPassedTests": passed, "failedTests": failed, "xcodebuildExitCode": error.code,
+            "failureKind": "completed-xctest-assertions"}
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -136,19 +173,43 @@ def main() -> None:
                     verified.append(test)
                 receipt["verifiedPassedTests"] = verified
                 receipt["passed"] = True
+            except CommandFailure as error:
+                if error.arguments[:2] != ["xcodebuild", "test-without-building"] or error.code != 65:
+                    raise
+                result = folder / "Results.xcresult"
+                summary = json.loads(run(["xcrun", "xcresulttool", "get", "test-results", "summary",
+                                          "--path", str(result)], folder / "test-summary.json"))
+                receipt.update(completed_assertion_failure(error, selected_tests,
+                               (folder / "xcodebuild.log").read_text(), summary))
             finally:
                 result = folder / "Results.xcresult"
-                if result.exists():
-                    run(["xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(result)],
-                        folder / "test-summary.json", check=False)
+                cleanup_errors = []
+                cleanup_commands = []
+                if result.exists() and not (folder / "test-summary.json").exists():
+                    cleanup_commands.append((["xcrun", "xcresulttool", "get", "test-results", "summary",
+                                              "--path", str(result)], folder / "test-summary.json", True))
                 if device_id:
-                    run(["xcrun", "simctl", "shutdown", device_id], folder / "shutdown.log", check=False)
-                    run(["xcrun", "simctl", "delete", device_id], folder / "delete.log", check=False)
+                    cleanup_commands.extend([
+                        (["xcrun", "simctl", "shutdown", device_id], folder / "shutdown.log", False),
+                        (["xcrun", "simctl", "delete", device_id], folder / "delete.log", True)])
+                for command, path, checked in cleanup_commands:
+                    try:
+                        run(command, path, check=checked)
+                    except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+                        cleanup_errors.append(redact(str(error)))
+                if cleanup_errors:
+                    receipt.update(passed=False, cleanupErrors=cleanup_errors)
                 receipt_path.write_text(json.dumps({"passed": all(r["passed"] for r in receipts) and len(receipts) == 4,
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                     "profile": "chatgpt-settings" if args.ai_settings_only else "native-release", "runs": receipts}, indent=2) + "\n")
+                if cleanup_errors:
+                    raise RuntimeError("Profile diagnostics or simulator cleanup failed: " + name)
             marker = "GSD_AI_SETTINGS_UI_PASS" if args.ai_settings_only else "GSD_NATIVE_UI_PASS"
+            if not receipt["passed"]:
+                marker = marker.removesuffix("PASS") + "FAIL"
             print(marker, name, flush=True)
+    if not all(r["passed"] for r in receipts):
+        raise RuntimeError("One or more required UI profiles failed; full acceptance is rejected")
     marker = "GSD_AI_SETTINGS_UI_ALL_FOUR_PASS" if args.ai_settings_only else "GSD_NATIVE_UI_ALL_FOUR_PASS"
     print(marker, flush=True)
 
