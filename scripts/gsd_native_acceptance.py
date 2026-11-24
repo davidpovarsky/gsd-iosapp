@@ -136,8 +136,10 @@ def main() -> None:
             device = devices[family]
             device_id = None
             cloud_round_trip = not args.ai_settings_only and family == "iPad" and language == "he"
+            command_timeout = 1800 if cloud_round_trip else 1200
             receipt = {"family": family, "language": language, "deviceType": device["name"],
-                       "runtime": runtime["version"], "passed": False, "cloudRoundTrip": cloud_round_trip}
+                       "runtime": runtime["version"], "passed": False, "cloudRoundTrip": cloud_round_trip,
+                       "commandTimeoutSeconds": command_timeout}
             receipts.append(receipt)
             try:
                 device_id = run(["xcrun", "simctl", "create", "GSD48-" + name + "-" + uuid.uuid4().hex[:8],
@@ -167,7 +169,7 @@ def main() -> None:
                     "TEST_RUNNER_GSD_CLOUD_TEST_BASE": environment.get("GSD_CLOUD_TEST_BASE",
                         "https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud"),
                 })
-                log = run(command, folder / "xcodebuild.log", timeout=1200, env=environment)
+                log = run(command, folder / "xcodebuild.log", timeout=command_timeout, env=environment)
                 verified = []
                 for test in selected_tests:
                     marker = r"(?im)^.*Test [Cc]ase.*\b" + re.escape(test) + r"\b.*\bpassed\b"

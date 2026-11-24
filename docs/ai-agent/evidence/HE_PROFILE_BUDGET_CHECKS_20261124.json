@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "timestamp": "2026-11-24T10:14:49.639924+00:00",
+  "base_harness_sha": "f341d359d8cbc9a7759370b4dd26975ddf2c8ebe",
+  "scope": "Static Python syntax, exact reversible two-file delta and configured-budget arithmetic only; no runtime rerun",
+  "checks": {
+    "syntax": true,
+    "all_other_runner_bytes_unchanged": true,
+    "only_native_acceptance_job_timeout_changed": true,
+    "configured_budget_arithmetic": true
+  },
+  "observed_bootstrap_seconds_approximately": 550,
+  "observed_common_three_test_seconds_approximately": 617,
+  "old_remaining_seconds_before_added_cloud_test": 33,
+  "new_remaining_seconds_before_added_cloud_test": 633,
+  "profile_test_command_seconds": {
+    "iphone_en": 1200,
+    "iphone_he": 1200,
+    "ipad_en": 1200,
+    "ipad_he_live_cloud": 1800,
+    "ipad_he_ai_only": 1200
+  },
+  "native_acceptance_job_minutes": 180,
+  "configured_ui_and_cleanup_envelope_seconds": 9220,
+  "remaining_pre_ui_artifact_margin_seconds": 1580,
+  "script_sha256": "88297aeae499d46dc772dad96fe4cf7502072529f3d51bec52d66e66a37cd364",
+  "workflow_sha256": "13ecf96b55886c5c62f7c33f0b93a19aafa690a16f924009156ff3af504aa539"
+}
