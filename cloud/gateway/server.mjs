@@ -172,7 +172,7 @@ export function createGateway({
     res.writeHead(status,{
       'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store',
       'Content-Security-Policy':"default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'",
-      'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'
+      'X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin'
     });
     res.end(text);
   };

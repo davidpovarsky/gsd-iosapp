@@ -173,11 +173,11 @@ test('OAuth language switch changes only language and does not create or extend 
   assert.deepEqual(f.gateway.store.pending[page.request],{...before,language:'en'});
 });
 
-test('OAuth language switch rejects foreign or absent origin, invalid locales and inherited request names',async t=>{
+test('OAuth language switch rejects foreign, null or absent origin, invalid locales and inherited request names',async t=>{
   const f=await fixture(t);
   const page=await f.authorize({ui_locales:'he'});
   const before=structuredClone(f.gateway.store.pending[page.request]);
-  for(const headers of [{origin:'https://foreign.example'},{}]) {
+  for(const headers of [{origin:'https://foreign.example'},{origin:'null'},{}]) {
     const denied=await f.post('/oauth/language',{request:page.request,language:'en'},headers);
     assert.equal(denied.status,403);
     assertPage(await denied.text(),'he');
@@ -246,4 +246,15 @@ test('OAuth expiration during account rejection keeps the selected language afte
   assert.match(html,/Authorization request expired/);
   assert.equal(f.gateway.store.pending[page.request],undefined);
   assert.equal(f.pbCalls(),1);
+});
+
+test('OAuth browser documents preserve same-origin form Origin without cross-origin referrers',async t=>{
+  const f=await fixture(t);
+  // Fetch's Origin-header algorithm makes navigate-mode POST Origin null under no-referrer.
+  // https://fetch.spec.whatwg.org/#append-a-request-origin-header
+  for(const params of [{ui_locales:'he'},{ui_locales:'en',code_challenge:'invalid'}]) {
+    const {response}=await f.authorize(params);
+    assert.equal(response.headers.get('referrer-policy'),'same-origin');
+    assert.match(response.headers.get('content-security-policy'),/form-action 'self'/);
+  }
 });
