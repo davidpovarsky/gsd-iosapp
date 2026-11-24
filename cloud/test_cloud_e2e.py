@@ -2,6 +2,19 @@
 """Black-box GSD account, native wire and OAuth/MCP acceptance; no credentials logged."""
 import base64, hashlib, json, os, secrets, urllib.parse, urllib.request, urllib.error
 BASE = os.environ.get("GSD_TEST_BASE", "https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud").rstrip("/")
+# Optional independent-public-ingress proof. The URL hostname/SNI/certificate check remain
+# unchanged; only this fixture process's DNS lookup is pinned to a verified public Funnel IP.
+if os.environ.get("GSD_TEST_PUBLIC_IP"):
+    import ipaddress, socket
+    public_ip=os.environ["GSD_TEST_PUBLIC_IP"]
+    if not ipaddress.ip_address(public_ip).is_global:
+        raise ValueError("GSD_TEST_PUBLIC_IP must be a public address")
+    target_host=urllib.parse.urlsplit(BASE).hostname
+    original_getaddrinfo=socket.getaddrinfo
+    def public_getaddrinfo(host, port, *args, **kwargs):
+        return original_getaddrinfo(public_ip if host==target_host else host, port, *args, **kwargs)
+    socket.getaddrinfo=public_getaddrinfo
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl): return None
 opener = urllib.request.build_opener(NoRedirect)

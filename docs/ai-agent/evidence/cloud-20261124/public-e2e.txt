@@ -1,0 +1,11 @@
+PASS two_email_accounts
+PASS native_wire_guarded_update_stale_conflict_and_owner_immutability
+PASS oauth_pkce_login_two_accounts_single_use_codes
+PASS mcp_22_catalog_and_cross_account_isolation
+PASS all_22_tools_real_read_write_timer_soft_delete
+PASS native_archive_view_tombstones_version_conflicts_and_account_isolation
+PASS recurrence_month_end_and_idempotent_completion
+PASS oauth_read_scope_cannot_write
+PASS refresh_rotation_replay_rejection_and_grant_revocation
+{"result": "PASS", "checks": ["two_email_accounts", "native_wire_guarded_update_stale_conflict_and_owner_immutability", "oauth_pkce_login_two_accounts_single_use_codes", "mcp_22_catalog_and_cross_account_isolation", "all_22_tools_real_read_write_timer_soft_delete", "native_archive_view_tombstones_version_conflicts_and_account_isolation", "recurrence_month_end_and_idempotent_completion", "oauth_read_scope_cannot_write", "refresh_rotation_replay_rejection_and_grant_revocation"], "base": "https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud"}
+

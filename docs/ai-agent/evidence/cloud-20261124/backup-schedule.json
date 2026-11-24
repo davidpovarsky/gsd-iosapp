@@ -1,0 +1,38 @@
+{
+  "backup_verification": {
+    "backup": "/mnt/development/projects/gsd-cloud/backups/gsd-cloud-20261124T001150Z.tar.gz",
+    "bytes": 48685,
+    "counts": {
+      "gsd_library": 0,
+      "tasks": 0,
+      "users": 1
+    },
+    "restore": "ok",
+    "sha256": "cfe16957e14cb4d780b145a9eb2c76dca485c362b290caae47e0048bb6f7d95e"
+  },
+  "completed_at": "2026-11-24T00:12:59.552449+00:00",
+  "data_free_bytes": 1720471552,
+  "root_free_bytes": 175603712,
+  "sentinel_policy_changed": false,
+  "service": {
+    "ExecMainExitTimestamp": "Tue 2026-11-24 00:11:50 UTC",
+    "ExecMainStatus": "0",
+    "Result": "success"
+  },
+  "service_path": "existing authorized Windows SSH / sudo",
+  "sqlite_wal_sidecar_access": "ReadWritePaths limited to GSD backups and pb_data; source SQLite connections remain mode=ro",
+  "timer": {
+    "ActiveState": "active",
+    "LastTriggerUSec": "",
+    "NextElapseUSecRealtime": "Tue 2026-11-24 03:18:33 UTC",
+    "UnitFileState": "enabled"
+  },
+  "unaffected_services": {
+    "gsd-mcp-bridge.service": "active",
+    "lorvex-cf-quick.service": "active",
+    "lorvex-cloud-backup.service": "inactive",
+    "lorvex-cloud.service": "active",
+    "lorvex-mcp-bridge.service": "active"
+  },
+  "unit_revision": "a908147ffac3a1ef72f3becc427524e58449d355"
+}

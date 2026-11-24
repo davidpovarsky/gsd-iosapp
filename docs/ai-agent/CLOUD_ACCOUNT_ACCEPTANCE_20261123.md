@@ -83,3 +83,50 @@ Native Xcode tests, Hebrew/English simulator UI, closed-app UI flow, private Cha
 ## Guarded-version regression closed
 
 A task PATCH must change its version; reusing the expected version now fails with HTTP 400. A library payload cannot change while keeping the same version; exact idempotent retries remain safe. The native library wire client advances an equal outgoing version by one millisecond, matching the existing active-task guarded-write rule. Public unguarded task PATCH is denied; normal writes use the transactional route. Real-PocketBase staging repeated the nine affected checkpoints and passed, including same-version rejection and denied raw PATCH. Evidence: `/mnt/development/projects/gsd-cloud/backend-staging-evidence-ubuntu.txt`. This run was invoked from Windows over SSH as ubuntu and cleaned its own ephemeral processes/data.
+
+## Public route and repository handoff
+
+All implementation commits through cd039e1 were pushed successfully to the explicitly requested davidpovarsky/gsd-iosapp fork, branch feat/gsd-cloud-testflight-20261123. The worktree's original origin points to upstream vscarpenter, so publication used the explicit David repository URL and the existing gh credential helper without changing shared remotes or force-pushing.
+
+Public DNS lookup returned Funnel ingress addresses 185.40.234.75, 185.40.234.55 and 185.40.234.198. HTTPS health was independently verified through the first public address using curl --resolve with normal certificate validation, returning HTTP 200. This did not use the Oracle tailnet DNS address.
+
+The following additive port-10000 aliases were installed and returned HTTP 200 with the correct cloud issuer/resource:
+- /.well-known/oauth-authorization-server/gsd-cloud
+- /.well-known/oauth-protected-resource/gsd-cloud/mcp
+- /.well-known/oauth-protected-resource/gsd-cloud
+
+Every preexisting Web handler, TCP setting and AllowFunnel flag was compared and preserved. Non-secret operational evidence is in /mnt/development/projects/gsd-cloud/discovery-alias-evidence.json. Only routing changed; the old gateway process remains active until the sanctioned service-policy registration/restart gate is resolved.
+
+For the postdeployment public E2E, set GSD_TEST_PUBLIC_IP to a freshly resolved public Funnel IP, in addition to the normal HTTPS GSD_TEST_BASE. The fixture pins only its own target-host DNS, retains hostname/SNI/certificate validation, and refuses a private address. Keep credentials out of logs.
+
+The official Sentinel service-registration edit was dry-run successfully with YAML validation, but has not been applied. It is scoped to named GSD units/actions, and no existing service policy was relaxed.
+
+
+## Production deployment and public acceptance — 2026-11-24
+
+This section supersedes the earlier deployment gates. Production was deployed from `0e8911a33fc29eed8dfd969e43a0e6a86b63c9a4` at 2026-11-23T23:42:01Z. The existing Windows SSH identity had normal OS authorization for the two exact GSD service restart commands; those permissions were checked before use. No Sentinel registry, allowlist, authentication settings or sudo policy was changed. Both GSD production services are healthy, the gateway encryption key is preserved, and the five unrelated/legacy service states match the predeployment snapshot.
+
+The real public E2E completed at 2026-11-23T23:45:49Z with exit 0 and all nine checkpoints above passing. It used the public Funnel IP `185.40.234.75` with the original HTTPS hostname/SNI and normal certificate validation. It therefore proves the public route without tailnet membership. Synthetic account cleanup succeeded. Raw receipts are in [evidence/cloud-20261124](evidence/cloud-20261124).
+
+The production MCP URL is `https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud/mcp`; scopes are `gsd.read gsd.write offline_access`. All three cloud discovery aliases are active. The coordinating agent published and read back the same private plugin as version 0.2.0, release `pluginrel_6b04d42b006c81919d7c1f65c062159a`, source commit `3ec114fa4f4d7f4913f2de0983824c21899e540f`. Personal ChatGPT Connect consent and an actual ChatGPT invocation remain separate acceptance gates.
+
+### Active backups
+
+The immediate predeployment backup `gsd-cloud-20261123T233809Z.tar.gz` is 29,303 bytes, SHA-256 `1545902635fcf333c51783116c88005f530afb98053e364daee24111bc47d826`. SQLite integrity and restore passed. Its off-server CurrentUser-DPAPI copy on Windows was decrypted in memory and matched that hash; downloaded plaintext was removed.
+
+`gsd-cloud-backup.timer` is installed, enabled and active. It schedules daily 03:15 UTC plus up to ten minutes random delay; the observed next firing was 2026-11-24 03:18:33 UTC. The service was manually invoked through systemd and exited 0. The initial service sandbox blocked SQLite WAL sidecar access; the corrected unit permits writes only to the GSD backup directory and GSD `pb_data`, while source database connections remain `mode=ro`. It keeps the other hardening settings.
+
+The verified scheduled-service archive is `gsd-cloud-20261124T001150Z.tar.gz`, 48,685 bytes, SHA-256 `cfe16957e14cb4d780b145a9eb2c76dca485c362b290caae47e0048bb6f7d95e`. A fresh restore proof succeeded. It contained one existing account and zero active/library task rows at that snapshot; no account was removed by backup work. The next timer firing has not yet occurred. Automatic off-server replication is not configured; the confirmed off-server copy above was made explicitly.
+
+Root filesystem free space was approximately 167 MiB and the GSD data filesystem approximately 1.60 GiB at verification. No package builds, root-filesystem cleanup or other-project deletions were performed.
+
+### Final native ordering regression
+
+Commit `a908147ffac3a1ef72f3becc427524e58449d355` moves library synchronization after the original resurrect-on-sight step, while confirming the account identity before any account data is applied. A remembered Trash ID is not published if resurrection failed transiently. Otherwise the newly introduced library could remove the server task before the original sign-in policy restored it.
+
+Two `CloudLibraryOrderingTests` use the real GRDB repositories/SyncEngine and a destructive library-route fixture: normal sign-in restoration and a failed-then-retried resurrection. Swift frontend syntax parsing passed (exit 0); their runtime execution belongs to the canonical native CI, not to this backend receipt.
+
+Updated native filter:
+`AuthServiceTests|CloudAccountAuthTests|CloudTimerWireTests|CloudLibrarySyncTests|CloudLibraryOrderingTests|CloudNativeSystemTests|SyncEngineGuardedWriteTests|SyncEngineSessionFenceTests|AccountSwitchTests`.
+
+The native-only ordering change does not alter the already accepted gateway/PocketBase code. The backup unit from that commit is active. Xcode, simulator screenshots, actual closed-app native roundtrip, physical-iPad availability, ChatGPT personal consent and signed TestFlight availability must be evidenced by their respective owners before the project is complete.

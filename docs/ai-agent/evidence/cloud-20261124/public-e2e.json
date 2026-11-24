@@ -1,0 +1,9 @@
+{
+  "base": "https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud",
+  "certificate_validation": true,
+  "cleanup_failed": false,
+  "completed_at": "2026-11-23T23:45:49.095721+00:00",
+  "exit_code": 0,
+  "forced_public_ip": "185.40.234.75",
+  "revision": "0e8911a33fc29eed8dfd969e43a0e6a86b63c9a4"
+}
