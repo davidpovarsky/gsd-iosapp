@@ -10,8 +10,9 @@ computed properties without an Observation dependency. A token cleared by a
 rejected background refresh, or a different owner with the same cached email,
 could therefore fail to invalidate a SwiftUI view observing only those fields.
 
-Production edits are limited to `App/Auth/SessionStore.swift` and
-`App/Auth/KeychainTokenStore.swift`. The existing Keychain and `AuthService`
+Production edits are limited to App/Auth/SessionStore.swift,
+App/Auth/KeychainTokenStore.swift, and one call in the existing .active
+path of App/GSDApp.swift. The existing Keychain and `AuthService`
 remain the session authority. `SessionStore` maintains observable UI snapshots
 of token presence and owner, refreshed from that authority on MainActor.
 
@@ -33,7 +34,7 @@ substituted: in-memory Security storage, fake auth/coordinator seams, and a
 non-Apple localized-string initializer. It uses real Swift Observation and
 NotificationCenter. It is not an OS Keychain or network integration test.
 
-The probe contains eleven checks:
+The probe contains thirteen checks:
 
 1. Restore identity from the existing token store.
 2. Verify one payload-free notification for save and for clear.
@@ -46,6 +47,8 @@ The probe contains eleven checks:
 9. Publish the accepted account decision's owner.
 10. Publish the confirmed-deletion signed-out state.
 11. Release SessionStore despite the notification subscription.
+12. Reread an externally replaced token on foreground activation without a local notice.
+13. Reread an externally cleared token on foreground activation without a local notice.
 
 **Behavioral verification is pending the mandatory Xcode 27 native gate.**
 The Windows toolchain attempts did not execute these assertions successfully;
@@ -71,3 +74,19 @@ unconditionally on the final integrated source, followed by the actual app
 build and the live account UI acceptance already assigned to that lane. The
 unchanged package trees may reuse their existing approved package evidence.
 Release acceptance remains blocked until the real native gate succeeds.
+
+
+## Activation follow-up
+
+Root review identified that process-local notifications do not cover another
+process changing the shared Keychain while GSD is inactive. Current source has
+only a shared-token read in ShareViewController; no extension save/clear call
+was found. The snapshot still needs a resume boundary for shared-store changes.
+The existing GSDApp .active path now calls session.enteredForeground()
+immediately before coordinator.enteredForeground(). That narrow method rereads
+the existing authority. There is no polling or UIKit/AppKit observer.
+
+Two additional probe assertions directly replace/clear the shared storage
+without sending the app adapter's notification, then invoke the activation
+method and require observable identity updates. Their runtime result remains
+pending the mandatory Mac gate; no Windows compilation retry was performed.

@@ -269,6 +269,10 @@ final class SessionStore {
         }
     }
 
+    /// Another process can change the shared Keychain while this app is inactive.
+    /// Re-read it on the existing activation path; process-local notices cannot cover that.
+    func enteredForeground() { refreshIdentity() }
+
     /// Manual "Sync Now" (Settings). The launch/after-sign-in triggers fire from the coordinator.
     func syncNow() async { await coordinator?.syncNow() }
 }

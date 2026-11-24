@@ -224,6 +224,7 @@ struct GSDApp: App {
                     switch phase {
                     case .active:
                         AppDatabase.resume()   // restore writes before any foreground sync runs
+                        session.enteredForeground()
                         coordinator.enteredForeground()
                         _Concurrency.Task { await store.refreshBadge() }
                         _Concurrency.Task { await shareDrainer.drain() }

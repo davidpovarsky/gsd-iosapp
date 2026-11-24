@@ -595,3 +595,5 @@ The existing token store remains authoritative; observed identity changes refres
 - Windows behavioral attempts hit toolchain errors/timeouts; no behavioral pass or negative-control result is claimed.
 - Next: mandatory portable probe plus actual app build and account UI acceptance in the single Xcode 27 native gate.
 - No server changes, new localization strings, package changes, or CI dispatch from this lane.
+
+- Activation follow-up: GSDApp's existing .active path refreshes SessionStore before foreground sync; two external-store/resume assertions extend the mandatory probe to 13 checks. Runtime evidence remains pending Mac CI.

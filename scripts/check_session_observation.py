@@ -202,6 +202,24 @@ final class NoticeRecorder: Sendable {
             KeychainTokenStore().save("owner-a|initial")
             let session = makeSession()
             let observed = watch(session)
+            _ = SharedTokenKeychain.save("owner-b|external-process")
+            session.enteredForeground()
+            check("foreground rereads an owner replacement without a process-local notice", observed.count > 0 && session.currentUserID == "owner-b" && session.isSignedIn)
+        }
+        await reset()
+        do {
+            KeychainTokenStore().save("owner-a|initial")
+            let session = makeSession()
+            let observed = watch(session)
+            SharedTokenKeychain.clear()
+            session.enteredForeground()
+            check("foreground rereads a cleared token without a process-local notice", observed.count > 0 && session.currentUserID == nil && !session.isSignedIn)
+        }
+        await reset()
+        do {
+            KeychainTokenStore().save("owner-a|initial")
+            let session = makeSession()
+            let observed = watch(session)
             KeychainTokenStore().save("owner-a|renewed")
             await settle()
             check("same-owner refresh preserves identity without a false switch", observed.count == 0 && session.currentUserID == "owner-a" && session.isSignedIn)
