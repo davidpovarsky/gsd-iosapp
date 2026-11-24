@@ -1,0 +1,70 @@
+{
+  "directory_acls": {
+    "allowed_principals": [
+      "current user",
+      "SYSTEM",
+      "Administrators"
+    ],
+    "protected": true
+  },
+  "first_future_time_trigger_observed": false,
+  "installation": {
+    "catch_up": "StartWhenAvailable and own-user logon + 2 minutes",
+    "installed_at": "2026-11-24T00:31:45.790999+00:00",
+    "logon_type": "InteractiveToken",
+    "password_stored": false,
+    "run_level": "LeastPrivilege",
+    "schedule_utc": "03:35 daily",
+    "source_revision": "c1519a9200e5ef07c591e91bb2b3d4b26f009855",
+    "task_name": "GSD Cloud Offsite Backup",
+    "worker_sha256": "c990199efae4a43cf8838dfc1bb8e2eff7340ca229df69e82058919565a0212b"
+  },
+  "plaintext_archive_files": [],
+  "scheduler": {
+    "Last Result": "0",
+    "Last Run Time": "24/11/2026 02:32:06",
+    "Logon Mode": "Interactive only",
+    "Next Run Time": "24/11/2026 05:35:00",
+    "Run As User": "DAVID",
+    "Scheduled Task State": "Enabled",
+    "Status": "Ready",
+    "TaskName": "\\GSD Cloud Offsite Backup"
+  },
+  "trigger": {
+    "command": "schtasks /Run",
+    "exit": 0,
+    "output": "SUCCESS: Attempted to run the scheduled task \"GSD Cloud Offsite Backup\".\n",
+    "task": "GSD Cloud Offsite Backup",
+    "triggered_at": "2026-11-24T00:32:05.350988+00:00"
+  },
+  "validation": {
+    "corruption_rejected": "PASS",
+    "dpapi_roundtrip": "PASS",
+    "own_retention_seven": "PASS",
+    "unrelated_preserved": "PASS"
+  },
+  "worker": {
+    "completed_at": "2026-11-24T00:32:14.738228+00:00",
+    "dpapi_scope": "CurrentUser",
+    "encrypted_archive": "C:\\Users\\DAVID\\AppData\\Local\\GSD\\Backups\\gsd-cloud-20261124T001150Z.tar.gz.dpapi",
+    "encrypted_bytes": 48902,
+    "manifest_files_verified": 13,
+    "plaintext_written_to_disk": false,
+    "removed_own_archives": [],
+    "restored_counts": {
+      "gsd_library": 0,
+      "tasks": 0,
+      "users": 1
+    },
+    "result": "PASS",
+    "retention_keep": 7,
+    "sha256": "cfe16957e14cb4d780b145a9eb2c76dca485c362b290caae47e0048bb6f7d95e",
+    "source_archive": "gsd-cloud-20261124T001150Z.tar.gz",
+    "source_bytes": 48685,
+    "source_restore": "ok",
+    "source_revision": "c1519a9200e5ef07c591e91bb2b3d4b26f009855",
+    "stored_decrypt_hash": "PASS",
+    "transfer_limit_bytes": 134217728,
+    "transfer_timeout_seconds": 180
+  }
+}
