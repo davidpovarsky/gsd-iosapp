@@ -88,7 +88,7 @@ jobs:
         run: |
           set -euo pipefail
           swift test --package-path GSDKit -j 3 \
-            --filter 'AuthServiceTests|CloudAccountAuthTests|CloudTimerWireTests|CloudLibrarySyncTests|CloudNativeSystemTests|SyncEngineGuardedWriteTests|SyncEngineSessionFenceTests|AccountSwitchTests' \
+            --filter 'AuthServiceTests|CloudAccountAuthTests|CloudTimerWireTests|CloudLibrarySyncTests|CloudLibraryOrderingTests|CloudNativeSystemTests|SyncEngineGuardedWriteTests|SyncEngineSessionFenceTests|AccountSwitchTests' \
             2>&1 | tee "$OUTPUT/logs/cloud-sync-tests.log"
       - name: Build app, four embedded targets and native UI runner once
         shell: bash
