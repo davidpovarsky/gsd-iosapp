@@ -18,7 +18,7 @@ settings:
     # CFBundleShortVersionString/CFBundleVersion (App Store rule). Bump these two lines
     # per release — never per-target (that's how the app/extension versions drifted apart).
     MARKETING_VERSION: "4.1.0"
-    CURRENT_PROJECT_VERSION: "49"
+    CURRENT_PROJECT_VERSION: "50"
     # Xcode 26 "recommended settings" — declared here so they survive `xcodegen
     # generate` (clicking "Perform Changes" in Xcode would edit the generated pbxproj
     # and be wiped). Keep these choices explicit for consistent generated projects.
@@ -33,7 +33,7 @@ settings:
 packages:
   TaskVisualizationKit:
     url: https://github.com/davidpovarsky/task-visualization-kit.git
-    revision: bbec234ce2fc74022226fdf4cdcec3d3ac00fa8a
+    revision: a78c84e1df369ea7c93cf4b23d4f5d8d60e25293
   HanlinSDK:
     path: Vendor/HanlinSDK
   GSDKit:
