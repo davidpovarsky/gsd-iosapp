@@ -275,9 +275,12 @@ final class GSDCloudReleaseUITests: XCTestCase {
         XCTAssertTrue(completeAction.waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons[label("Delete", "מחיקה")].exists)
         try capture(app, "03-context-menu")
-        // Tap the observed in-app backdrop, outside the menu and the status bar.
-        // A status-bar tap left the menu open and Dashboard had no hittable point.
-        app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.50)).tap()
+        // The Hebrew iPad preview leaves a clear interior backdrop above the card.
+        // The edge tap can be intercepted by the system in this layout.
+        let backdrop = hebrew && UIDevice.current.userInterfaceIdiom == .pad
+            ? CGVector(dx: 0.50, dy: 0.22)
+            : CGVector(dx: 0.02, dy: 0.50)
+        app.coordinate(withNormalizedOffset: backdrop).tap()
         XCTAssertTrue(completeAction.waitForNonExistence(timeout: 5), "Context menu did not dismiss")
         try navigate(app, label("Dashboard", "לוח בקרה"))
         try capture(app, "04-dashboard-diagnostic-before-assertion")
@@ -491,7 +494,13 @@ final class GSDCloudReleaseUITests: XCTestCase {
         confirmation.typeText(fixture.password)
         let submit = app.buttons["gsd.cloud.submit"]
         try requireAcceptance(submit.label == label("Create GSD account", "יצירת חשבון GSD"), "Native signup action label is not localized")
-        try requireAcceptance(submit.isEnabled, "Valid native signup must enable submission")
+        if !submit.wait(for: \.isEnabled, toEqual: true, timeout: 8) {
+            let emailEntered = (email.value as? String) == fixture.email
+            let passwordLength = (password.value as? String)?.count ?? 0
+            let confirmationLength = (confirmation.value as? String)?.count ?? 0
+            try requireAcceptance(false, "Valid native signup must enable submission " +
+                "(email entered: \(emailEntered), secure field lengths: \(passwordLength), \(confirmationLength))")
+        }
         for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
         try requireAcceptance(submit.isHittable, "Native signup action is obscured")
         submit.tap()

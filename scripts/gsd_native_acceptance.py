@@ -108,6 +108,7 @@ def main() -> None:
                         help="Run only localized Hanlin/ChatGPT UI; no live cloud fixtures")
     parser.add_argument("--family", choices=("iPhone", "iPad"),
                         help="Run one family as partial evidence; never emits full acceptance")
+    parser.add_argument("--runtime-build", help="Require this exact installed iOS simulator build")
     args = parser.parse_args()
     families = (args.family,) if args.family else ("iPhone", "iPad")
     output = args.output.resolve()
@@ -119,6 +120,7 @@ def main() -> None:
     inventory = json.loads(run(["xcrun", "simctl", "list", "--json"], output / "inventory.log"))
     runtimes = sorted((r for r in inventory["runtimes"]
                        if r.get("isAvailable") and r["identifier"].startswith("com.apple.CoreSimulator.SimRuntime.iOS-")
+                       and (args.runtime_build is None or r.get("buildversion") == args.runtime_build)
                        and version(r["version"]) >= version("27.0")),
                       key=lambda r: version(r["version"]), reverse=True)
     selected = next(((r, devices_for_runtime(inventory, r)) for r in runtimes
@@ -138,7 +140,8 @@ def main() -> None:
             cloud_round_trip = not args.ai_settings_only and family == "iPad" and language == "he"
             command_timeout = 1800 if cloud_round_trip else 1200
             receipt = {"family": family, "language": language, "deviceType": device["name"],
-                       "runtime": runtime["version"], "passed": False, "cloudRoundTrip": cloud_round_trip,
+                       "runtime": runtime["version"], "runtimeBuild": runtime["buildversion"],
+                       "passed": False, "cloudRoundTrip": cloud_round_trip,
                        "commandTimeoutSeconds": command_timeout}
             receipts.append(receipt)
             try:
