@@ -1,0 +1,37 @@
+{
+  "backup": {
+    "backup": "/mnt/development/projects/gsd-cloud/backups/gsd-cloud-20261123T233809Z.tar.gz",
+    "bytes": 29303,
+    "counts": {
+      "tasks": 0,
+      "users": 0
+    },
+    "integrity": "ok",
+    "restore": "ok",
+    "sha256": "1545902635fcf333c51783116c88005f530afb98053e364daee24111bc47d826"
+  },
+  "deployed_at": "2026-11-23T23:42:01.590706+00:00",
+  "gateway_key_preserved": true,
+  "health": "pass",
+  "manifest_sha256": {
+    "backup.py": "efea842528ce51a2f8a358c47216419b97bab5c8f46520720e690352f09e4e4a",
+    "gateway/server.mjs": "0e848d289206cbf014de8c3238c218c385c8c701a0f83d242728b9a0ed797594",
+    "gateway/task-domain.mjs": "cdc760aa2423739df4365eab7e42450fbcbc542d500064078c69927a99a74667",
+    "gateway/tool-catalog.json": "7b9f2bdad26e96e6306f9952a96542c7ea40ec3955e511e31a52c8ee9e3b4fd6",
+    "pb_hooks/gsd_guarded.pb.js": "6e2b76f002afbcf67d04d4e5a9f509040cbf53bef97a2c2cc8cc35b5373da95a",
+    "pb_hooks/gsd_library_helpers.js": "cd4b12d73637160cea71152b442bfb39f196f6ccb59e96afd5cb0de9546f9db8",
+    "pb_migrations/1795456800_initial_gsd.js": "ceb6b20d04ab46a6561f3ee32ce9daf17602750d1f2977b089c1a0472f7d25e3",
+    "pb_migrations/1795467600_cloud_library.js": "b9c5fa950d203fc689631ff4a2d5c6932f313ed34e00be6a4df1388021464c29",
+    "test_cloud_e2e.py": "811ad9b63fd3ee2363d2466112ff1d929b591e7970b7241c749e5f6ddf31fe6c"
+  },
+  "revision": "0e8911a33fc29eed8dfd969e43a0e6a86b63c9a4",
+  "sentinel_policy_changed": false,
+  "service_path": "existing authorized Windows SSH / sudo",
+  "unaffected_services": {
+    "gsd-mcp-bridge.service": "active",
+    "lorvex-cf-quick.service": "active",
+    "lorvex-cloud-backup.service": "inactive",
+    "lorvex-cloud.service": "active",
+    "lorvex-mcp-bridge.service": "active"
+  }
+}

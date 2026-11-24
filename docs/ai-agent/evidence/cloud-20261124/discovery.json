@@ -1,0 +1,9 @@
+{
+  "aliases": {
+    "/.well-known/oauth-authorization-server/gsd-cloud": "/.well-known/oauth-authorization-server",
+    "/.well-known/oauth-protected-resource/gsd-cloud": "/.well-known/oauth-protected-resource",
+    "/.well-known/oauth-protected-resource/gsd-cloud/mcp": "/.well-known/oauth-protected-resource"
+  },
+  "created": "20261123T224822Z",
+  "existing_routes_preserved": true
+}

@@ -1,0 +1,7 @@
+{
+  "completed_at": "2026-11-23T23:46:46.750070+00:00",
+  "status": "succeeded",
+  "plaintext_removed": true,
+  "verified_sha256": "1545902635fcf333c51783116c88005f530afb98053e364daee24111bc47d826",
+  "encrypted_backup": "C:\\Users\\DAVID\\AppData\\Local\\GSD\\Backups\\gsd-cloud-20261123T233809Z.tar.gz.dpapi"
+}
