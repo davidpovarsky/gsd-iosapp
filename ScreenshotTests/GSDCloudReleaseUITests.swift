@@ -9,8 +9,8 @@ import XCTest
 /// or complete gesture, text-clipping, orientation, or manual-layout-direction coverage.
 /// The widget test is an in-app view harness, not a WidgetKit timeline/deep-link test.
 /// Share, Watch, Watch widgets, real Siri, system notifications, and physical devices
-/// require separate runtime evidence. Cloud signup uses the HTTP fixture; personal
-/// ChatGPT authorization and plan inference are not exercised by these UI tests.
+/// require separate runtime evidence. Cloud signup/sign-out/sign-in use the Hebrew
+/// iPad simulator UI; personal ChatGPT authorization and plan inference are not exercised.
 @MainActor
 final class GSDCloudReleaseUITests: XCTestCase {
     private var language: String { ProcessInfo.processInfo.environment["GSD_TEST_LANGUAGE"] ?? "en" }
@@ -240,7 +240,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
         let base = ProcessInfo.processInfo.environment["GSD_CLOUD_TEST_BASE"] ??
             "https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud"
         let fixture = CloudFixture(base: URL(string: base)!)
-        try await fixture.createAccount()
+        // Register cleanup before any native signup work; the fixture never creates an account by API.
         addTeardownBlock { try await fixture.removeAccount() }
         let app = application(demo: false)
         app.launch()
@@ -251,6 +251,9 @@ final class GSDCloudReleaseUITests: XCTestCase {
         for _ in 0..<4 where !open.isHittable { app.swipeUp() }
         XCTAssertTrue(open.waitForExistence(timeout: 10))
         open.tap()
+        let mode = app.segmentedControls["gsd.cloud.mode"]
+        XCTAssertTrue(mode.waitForExistence(timeout: 5), "Native account mode picker is missing")
+        mode.buttons[label("Create account", "יצירת חשבון")].tap()
         let email = app.textFields["gsd.cloud.email"]
         XCTAssertTrue(email.waitForExistence(timeout: 5))
         email.tap()
@@ -258,9 +261,46 @@ final class GSDCloudReleaseUITests: XCTestCase {
         let password = app.secureTextFields["gsd.cloud.password"]
         password.tap()
         password.typeText(fixture.password)
-        app.buttons["gsd.cloud.submit"].tap()
+        let confirmation = app.secureTextFields["gsd.cloud.confirmation"]
+        XCTAssertTrue(confirmation.waitForExistence(timeout: 5), "Native signup confirmation is missing")
+        confirmation.tap()
+        confirmation.typeText(fixture.password)
+        let submit = app.buttons["gsd.cloud.submit"]
+        XCTAssertEqual(submit.label, label("Create GSD account", "יצירת חשבון GSD"))
+        XCTAssertTrue(submit.isEnabled, "Valid native signup must enable submission")
+        for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
+        XCTAssertTrue(submit.isHittable, "Native signup action is obscured")
+        submit.tap()
+        XCTAssertTrue(email.waitForNonExistence(timeout: 30), "Native cloud signup did not finish")
+        let signedIn = app.descendants(matching: .any).matching(identifier: "gsd.cloud.signed-in").firstMatch
+        XCTAssertTrue(signedIn.waitForExistence(timeout: 10), "Native signup did not establish a session")
+        try capture(app, "08-account-created")
+        // Authenticate only the account just created by the app, for server assertions and cleanup.
+        try await fixture.authenticateExistingAccount()
+        let signOut = app.buttons["gsd.cloud.sign-out"]
+        XCTAssertTrue(signOut.waitForExistence(timeout: 5), "Native sign-out action is missing")
+        for _ in 0..<3 where !signOut.isHittable { app.swipeUp() }
+        XCTAssertTrue(signOut.isHittable, "Native sign-out action is obscured")
+        signOut.tap()
+        XCTAssertTrue(signedIn.waitForNonExistence(timeout: 10), "Native sign-out did not clear the account UI")
+        XCTAssertTrue(open.waitForExistence(timeout: 10), "Native sign-in action did not return after sign-out")
+        try capture(app, "08-account-signed-out")
+        open.tap()
+        XCTAssertTrue(mode.waitForExistence(timeout: 5))
+        mode.buttons[label("Sign in", "התחברות")].tap()
+        XCTAssertTrue(email.waitForExistence(timeout: 5))
+        XCTAssertFalse(confirmation.exists, "Ordinary sign-in must not require signup confirmation")
+        email.tap()
+        email.typeText(fixture.email)
+        password.tap()
+        password.typeText(fixture.password)
+        XCTAssertEqual(submit.label, label("Sign in to GSD Cloud", "התחברות ל־GSD Cloud"))
+        XCTAssertTrue(submit.isEnabled, "Valid native sign-in must enable submission")
+        for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
+        XCTAssertTrue(submit.isHittable, "Native sign-in action is obscured")
+        submit.tap()
         XCTAssertTrue(email.waitForNonExistence(timeout: 30), "Cloud sign-in did not finish")
-        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "gsd.cloud.signed-in").firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(signedIn.waitForExistence(timeout: 10), "Native sign-in did not restore the same account session")
         try capture(app, "08-account-connected")
         app.terminate()
         XCTAssertEqual(app.state, .notRunning, "Server mutation must occur while native app is closed")
@@ -303,7 +343,11 @@ private final class CloudFixture {
     private var owner: String?
     private let session = URLSession(configuration: .ephemeral)
 
-    init(base: URL) { self.base = base }
+    init(base: URL) {
+        self.base = base
+        // Mask before any XCTest typing activity; all credentials belong to this disposable account.
+        print("::add-mask::" + password)
+    }
 
     private func request(_ path: String, method: String = "GET", body: [String: Any]? = nil) async throws -> Data {
         var request = URLRequest(url: base.appendingPathComponent(path))
@@ -320,12 +364,7 @@ private final class CloudFixture {
         return data
     }
 
-    func createAccount() async throws {
-        // Ephemeral fixture only. The GitHub command masks XCTest typing activities in CI.
-        print("::add-mask::" + password)
-        let userData = try await request("api/collections/users/records", method: "POST",
-                                        body: ["email": email, "password": password, "passwordConfirm": password])
-        owner = try JSONDecoder().decode(User.self, from: userData).id
+    func authenticateExistingAccount() async throws {
         let authData = try await request("api/collections/users/auth-with-password", method: "POST",
                                         body: ["identity": email, "password": password])
         let auth = try JSONDecoder().decode(Session.self, from: authData)
@@ -334,11 +373,14 @@ private final class CloudFixture {
     }
 
     func removeAccount() async throws {
-        guard token != nil else { return }
+        defer { session.invalidateAndCancel() }
+        // A native assertion may fail after registration but before fixture authentication.
+        // Recover only this fixture's credentials and propagate every failure, including 400.
+        // An authentication failure is not evidence that no account exists.
+        if token == nil { try await authenticateExistingAccount() }
         _ = try await request("api/gsd/account", method: "DELETE")
         token = nil
         owner = nil
-        session.invalidateAndCancel()
     }
 
     func createTask(title: String) async throws -> String {
