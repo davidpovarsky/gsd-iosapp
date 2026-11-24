@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "timestamp": "2026-11-24T13:16:06.266198+00:00",
+  "checks": [
+    "actual_combined_test_source_matches_pin",
+    "mismatched_pin_rejected_by_actual_harness_guard",
+    "helper_reverse_pin_hash_equals_reviewed_33_control_source"
+  ],
+  "helper_sha256": "8a830a470eb256e8a60d4c9812409d802de2f96402f30fe0bf980222c4ecd8d4",
+  "previous_reviewed_helper_sha256": "3b2329fd7649e72dbe9650bde11c843c04978ebde5a1d0a51b8286372b0dba36",
+  "combined_test_sha256": "c00bf373f925489756c03321b38852e358e62639f1c38359dd6805bc28951584",
+  "combined_test_git_blob": "07d80eb6dee2e7452fecbdfbe067108002ad9116",
+  "original_test_git_blob": "d9d6fa16c3e87aa71c034960fa3a9d6e00e8c0ca",
+  "reviewed_source_commits": [
+    "9a791b8c04855932ed7e825978de6aef07377db4",
+    "4ed8729b014dee57e4b4e3dcfb083915fb77c1a3"
+  ],
+  "scope": "Only final test content binding; git commit metadata seam because publication follows; no33/12 rerun, Mac build, simulator or fixture"
+}

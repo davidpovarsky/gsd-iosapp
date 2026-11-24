@@ -12,7 +12,7 @@ on:
         required: true
         type: choice
         default: validate
-        options: [validate, resume-native, diagnose-startup, release]
+        options: [validate, resume-native, recover-he-cases, diagnose-startup, release]
       validation_run:
         description: Successful validation run ID for this exact source (release only)
         required: false
@@ -366,6 +366,53 @@ jobs:
             dist/gsd-native-release/*.json
             dist/gsd-native-release/logs/
             dist/gsd-native-release/inherited-logs/
+            dist/gsd-native-release/ui/**/*.json
+            dist/gsd-native-release/ui/**/*.log
+            dist/gsd-native-release/ui/**/*.png
+          if-no-files-found: warn
+          retention-days: 21
+
+  native-he-recovery:
+    if: inputs.mode == 'recover-he-cases'
+    runs-on: xcode-27
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Only the reviewed test harness changes; source_ref binds the app.
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Complete two HE iPad cases using unchanged validated app products
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/complete_gsd_he_acceptance.py --output "$OUTPUT"
+      - name: Sanitize retained native diagnostic text before upload
+        id: sanitize_native_diagnostics
+        if: always()
+        shell: bash
+        run: python3 scripts/sanitize_gsd_native_diagnostics.py --output "$OUTPUT"
+      - name: Preserve complete composed native validation receipt
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Native-Acceptance-Receipt-${{ github.run_id }}
+          path: dist/gsd-native-release/native-acceptance.json
+          if-no-files-found: error
+          retention-days: 21
+      - name: Preserve case provenance, original failed receipt and fresh HE evidence
+        if: always() && steps.sanitize_native_diagnostics.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Native-Evidence-${{ github.run_id }}
+          path: |
+            dist/gsd-native-release/*.json
+            dist/gsd-native-release/logs/
+            dist/gsd-native-release/inherited/
             dist/gsd-native-release/ui/**/*.json
             dist/gsd-native-release/ui/**/*.log
             dist/gsd-native-release/ui/**/*.png

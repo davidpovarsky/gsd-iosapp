@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "checks": [
+    "truncated_single_quote_secure_action",
+    "full_double_quote_secure_action",
+    "json_escaped_quotes_remain_valid",
+    "ordinary_text_values_ids_dates_unchanged",
+    "escaped_newline_does_not_capture_other_action",
+    "redacted_action_is_idempotent",
+    "late_marker_exact_full_mask_and_partial_payload",
+    "unrelated_binary_unchanged",
+    "placeholder_excluded_from_secret_set",
+    "actual_retained_typing_payloads_redacted",
+    "actual_retained_prefix_count_positive",
+    "immutable_original_artifact_log_unchanged"
+  ],
+  "count": 12,
+  "timestamp": "2026-11-24T12:57:32.075749+00:00",
+  "scope": "Secure typing payloads, existing full masks and preservation controls only; no native runtime/server action",
+  "source_sha256": "1cf97df28572642e0ff3ec1a57f276d90b528c343ed5deff00a25f9727f868bd",
+  "actual_log_sha256": "1e9faef2626021c1ee48c01405cc0671ad129ddb58269a2483eabfd52c13941b",
+  "actual_secure_action_count": 2,
+  "no_credential_values_printed": true,
+  "prior_control_attempt": "job_92e36634f1a0 reached actual-copy read; Windows default decoding failed; explicit UTF-8 corrected in control only",
+  "original_test_blob": "d9d6fa16c3e87aa71c034960fa3a9d6e00e8c0ca"
+}
