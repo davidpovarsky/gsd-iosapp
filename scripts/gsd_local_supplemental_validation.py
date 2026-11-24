@@ -39,12 +39,15 @@ SHARE_ASSERTIONS={"sourceCreated","activitySheetOpened","extensionOpenedForAdd",
  "addedTaskPersisted","extensionOpenedForCancel","cancelCreatedNone","cancelNoneAfterRelaunch"}
 CLAIMS_FALSE=("authorizationSucceeded","grantVerified","entitlementVerified","signInPageVerified",
  "inferenceInvokedByProbe","browserScreenshotsRequestedByProbe","fullHierarchyRequestedByProbe")
-STATES=("continueActivated","officialBrowserObserved","ordinaryCancellationObserved","disconnectedAfterCancel","disconnectedAfterRelaunch")
+STATES=("continueActivated","officialBrowserObserved","ordinaryCancellationObserved","disconnectedAfterCancel",
+ "retryContinueActivated","retryOpeningObserved","officialBrowserObservedOnRetry","ordinaryRetryCancellationObserved",
+ "disconnectedAfterRetryCancel","disconnectedAfterRelaunch")
 PUBLIC_STATES={"official_browser_visible","cancelled_before_browser_observation","secure_window_unavailable",
  "native_authorization_timed_out","native_sign_in_failed_unclassified"}
 ERROR_MARKERS={"invalid_request","invalid_client","unauthorized_client","invalid_scope","unsupported_response_type",
  "access_denied","server_error","temporarily_unavailable","Something went wrong","Unable to sign in","An error occurred"}
 PICTURES={"01-disconnected-before-start.png":"continueActivated","02-disconnected-after-cancel.png":"disconnectedAfterCancel",
+ "03-disconnected-after-retry-cancel.png":"disconnectedAfterRetryCancel",
  "03-disconnected-after-relaunch.png":"disconnectedAfterRelaunch"}
 STOP_REQUESTED=False
 
@@ -293,12 +296,12 @@ def safe_observation(raw: dict, device: str, source: str) -> dict:
     if "browserObservationSummary" in raw:
         owners = raw["browserObservationSummary"]
         require(isinstance(owners, dict) and set(owners) <= {"gsd_app", "springboard"}, "browser_owner")
-        numbers = {"ownerState", "webViewCount", "navigationBarCount", "navigationBarsInspected"}
+        numbers = {"ownerState", "webViewCount", "nativeBrowserBarCount", "nativeBrowserBarsInspected"}
         booleans = {"exactCancelObserved", "uniqueHittableCancelObserved", "officialHostChromeObserved"}
         for item in owners.values():
             require(isinstance(item, dict) and set(item) == numbers | booleans, "browser_summary_keys")
             require(all(type(item[k]) is int and 0 <= item[k] <= 100000 for k in numbers), "browser_counts")
-            require(item["ownerState"] <= 4 and item["navigationBarsInspected"] <= 6, "browser_bounds")
+            require(item["ownerState"] <= 4 and item["nativeBrowserBarsInspected"] <= 1, "browser_bounds")
             require(all(type(item[k]) is bool for k in booleans), "browser_flags")
     if raw["officialBrowserObserved"]:
         require(raw.get("observedOfficialHost") == "auth.openai.com" and

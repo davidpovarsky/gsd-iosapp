@@ -274,7 +274,7 @@ final class GSDSystemSurfaceUITests: XCTestCase {
         share.tap()
         try capture(app, phase + "-activity-sheet")
         let roots = try activityRoots(app)
-        let activity = try uniqueSourceNamedButton("GSD", roots: roots, phase: phase)
+        let activity = try uniqueObservedShareActivity("GSD", roots: roots, phase: phase)
         try shareAssertion("activitySheetOpened")
         activity.tap()
         try captureRaw(phase + "-extension-before-query")
@@ -300,12 +300,17 @@ final class GSDSystemSurfaceUITests: XCTestCase {
         return roots
     }
 
-    private func uniqueSourceNamedButton(_ title: String, roots: [XCUIApplication], phase: String) throws -> XCUIElement {
+    private func uniqueObservedShareActivity(_ title: String, roots: [XCUIApplication], phase: String) throws -> XCUIElement {
         for root in roots {
-            let matches = root.buttons.matching(NSPredicate(format: "label == %@", title))
+            // Observed on this driver/runtime: GSD is a shareCell inside ActivityListView.
+            let sheets = root.otherElements.matching(identifier: "ActivityListView")
+            guard sheets.firstMatch.waitForExistence(timeout: 5) else { continue }
+            try require(sheets.count == 1, "The observed activity sheet is ambiguous.")
+            let matches = sheets.firstMatch.cells.matching(NSPredicate(
+                format: "identifier == %@ AND label == %@", "shareCell", title))
             if matches.firstMatch.waitForExistence(timeout: 5) {
                 try require(matches.count == 1 && matches.firstMatch.isHittable,
-                            "Source-named activity \(title) is ambiguous or obscured; no guessed system action is used.")
+                            "Observed share activity \(title) is ambiguous or obscured.")
                 return matches.firstMatch
             }
         }
@@ -313,7 +318,7 @@ final class GSDSystemSurfaceUITests: XCTestCase {
         for (index, root) in roots.enumerated() where root.state != .notRunning {
             try capture(root, phase + "-post-wait-root-" + String(index))
         }
-        throw SystemSurfaceFailure(message: "The activity lookup exposes no hittable GSD button. Inspect its post-wait host hierarchy before adding a system selector.")
+        throw SystemSurfaceFailure(message: "The observed activity sheet exposes no hittable GSD shareCell. Inspect its post-wait host hierarchy before adding a system selector.")
     }
 
     private func enterMarker(_ marker: String, in host: XCUIApplication) throws {

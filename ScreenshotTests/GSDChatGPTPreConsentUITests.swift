@@ -10,6 +10,7 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
     private let cancelled = "ChatGPT sign-in was cancelled."
     private var output: URL?
     private var receipt: [String: Any] = [:]
+    private var systemPromptContinuedForCurrentAttempt = false
 
     private struct Incomplete: Error {
         let reason: String
@@ -21,7 +22,7 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
         let originEvidence: String
     }
 
-    override func setUpWithError() throws {
+    private func preparePreConsentTest() throws {
         #if targetEnvironment(simulator)
         let environment = ProcessInfo.processInfo.environment
         guard let directory = environment["GSD_SIWC_PRECONSENT_ARTIFACTS"], directory.hasPrefix("/"),
@@ -46,6 +47,8 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
             "signInPageVerified": false, "pageContentClassification": "not_observed",
             "continueActivated": false, "officialBrowserObserved": false,
             "ordinaryCancellationObserved": false, "disconnectedAfterCancel": false,
+            "retryContinueActivated": false, "retryOpeningObserved": false, "officialBrowserObservedOnRetry": false,
+            "ordinaryRetryCancellationObserved": false, "disconnectedAfterRetryCancel": false,
             "disconnectedAfterRelaunch": false, "outcome": "incomplete"
         ]
         try saveReceipt()
@@ -55,6 +58,7 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
     }
 
     func test00ContinueOpensOfficialBrowserAndCancels() throws {
+        try preparePreConsentTest()
         let app = XCUIApplication(bundleIdentifier: "com.itorah.gsd")
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         defer { app.terminate() }
@@ -81,12 +85,38 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
             receipt["disconnectedAfterCancel"] = true
             try saveAppScreenshot("02-disconnected-after-cancel")
 
+            // Retry from this same native account presentation before testing persistence.
+            app.buttons["chatgpt.continue"].tap()
+            receipt["retryContinueActivated"] = true
+            try saveReceipt()
+            try require(wait(15) {
+                self.status(app).exists && self.status(app).label == "Opening secure ChatGPT sign-in…" &&
+                    !app.buttons["chatgpt.continue"].isEnabled
+            }, "Retry did not enter a new native opening/busy state.")
+            receipt["retryOpeningObserved"] = true
+            try saveReceipt()
+            let retrySurface = try observeSignIn(app)
+            receipt["officialBrowserObservedOnRetry"] = true
+            let retryPublicError = publicErrorMarker(in: retrySurface.webView)
+            if let retryPublicError {
+                receipt["publicErrorMarker"] = retryPublicError
+                receipt["pageContentClassification"] = "allowlisted_error_marker_observed"
+            }
+            retrySurface.cancel.tap()
+            try require(wait(15) { self.status(app).exists && self.status(app).label == self.cancelled },
+                        "The retried browser dismissal did not return the native cancellation state.")
+            receipt["ordinaryRetryCancellationObserved"] = true
+            try requireDisconnected(app, expectedStatus: cancelled)
+            receipt["disconnectedAfterRetryCancel"] = true
+            try saveAppScreenshot("03-disconnected-after-retry-cancel")
+
             app.terminate()
             try openAccount(app)
             try requireDisconnected(app, expectedStatus: signedOut)
             receipt["disconnectedAfterRelaunch"] = true
             try saveAppScreenshot("03-disconnected-after-relaunch")
-            try require(publicError == nil, "The official page exposed a public error; sign-in is not accepted.")
+            try require(publicError == nil && retryPublicError == nil,
+                        "The official page exposed a public error; sign-in is not accepted.")
             receipt["probePassed"] = true
             receipt["outcome"] = "official_browser_opened_cancelled_and_disconnected"
             try saveReceipt()
@@ -147,6 +177,7 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
     }
 
     private func observeSignIn(_ app: XCUIApplication) throws -> BrowserSurface {
+        systemPromptContinuedForCurrentAttempt = false
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let owners = [app, springboard]
         let deadline = Date().addingTimeInterval(60)
@@ -181,7 +212,7 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
     }
 
     private func permitObservedSystemPrompt(_ owners: [XCUIApplication]) throws {
-        guard receipt["systemPromptContinued"] as? Bool != true,
+        guard !systemPromptContinuedForCurrentAttempt,
               !owners.contains(where: { $0.state != .notRunning && $0.webViews.count > 0 }) else { return }
         for owner in owners where owner.state != .notRunning {
             guard owner.alerts.count == 1 else { continue }
@@ -200,6 +231,7 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
             receipt["systemPromptObserved"] = true
             receipt["systemPromptDomain"] = "openai.com"
             receipt["systemPromptContinued"] = true
+            systemPromptContinuedForCurrentAttempt = true
             try saveReceipt()
             // Only this native two-button alert is continued. No web-page action is invoked.
             proceed.element(boundBy: 0).tap()
@@ -209,8 +241,8 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
 
     private func observedBrowser(in owner: XCUIApplication, named name: String) -> BrowserSurface? {
         var summary: [String: Any] = [
-            "ownerState": Int(owner.state.rawValue), "webViewCount": 0, "navigationBarCount": 0,
-            "navigationBarsInspected": 0, "exactCancelObserved": false,
+            "ownerState": Int(owner.state.rawValue), "webViewCount": 0, "nativeBrowserBarCount": 0,
+            "nativeBrowserBarsInspected": 0, "exactCancelObserved": false,
             "uniqueHittableCancelObserved": false, "officialHostChromeObserved": false
         ]
         defer {
@@ -221,27 +253,38 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
         guard owner.state != .notRunning else { return nil }
         let webViews = owner.webViews
         let webCount = webViews.count
-        let bars = owner.navigationBars
-        let barCount = bars.count
         summary["webViewCount"] = webCount
-        summary["navigationBarCount"] = barCount
-        summary["navigationBarsInspected"] = min(barCount, 6)
-        let webView = webCount > 0 ? webViews.element(boundBy: 0) : nil
-        for index in 0..<min(barCount, 6) {
-            let bar = bars.element(boundBy: index)
-            let cancels = bar.buttons.matching(NSPredicate(format: "label == %@", "Cancel"))
-            if cancels.count > 0 { summary["exactCancelObserved"] = true }
-            let evidence = officialHostInChrome(bar)
-            if evidence != nil { summary["officialHostChromeObserved"] = true }
-            guard cancels.count == 1 else { continue }
-            let cancel = cancels.element(boundBy: 0)
-            guard cancel.isHittable else { continue }
-            summary["uniqueHittableCancelObserved"] = true
-            if let evidence, let webView, webView.exists && !webView.frame.isEmpty {
-                return .init(cancel: cancel, webView: webView, originEvidence: evidence)
-            }
-        }
-        return nil
+        // Actual native AX evidence: TopBrowserBar has direct Close/URL button children.
+        // The app's underlying settings Cancel is in a different NavigationBar.
+        let bars = owner.otherElements.matching(identifier: "TopBrowserBar")
+            .allElementsBoundByAccessibilityElement
+        summary["nativeBrowserBarCount"] = bars.count
+        guard bars.count == 1, let bar = bars.first, bar.exists else { return nil }
+        summary["nativeBrowserBarsInspected"] = 1
+        let cancels = bar.children(matching: .button).matching(identifier: "Close")
+            .allElementsBoundByAccessibilityElement
+        let addresses = bar.children(matching: .button).matching(identifier: "URL")
+            .allElementsBoundByAccessibilityElement
+        guard cancels.count == 1, addresses.count == 1,
+              let cancel = cancels.first, let address = addresses.first,
+              cancel.exists, address.exists, cancel.label == "Cancel", address.label == "Address" else { return nil }
+        summary["exactCancelObserved"] = true
+        let evidence = officialHostInChrome(address)
+        summary["officialHostChromeObserved"] = evidence != nil
+        guard cancel.isHittable, address.isHittable,
+              bar.frame.contains(cancel.frame), bar.frame.contains(address.frame) else { return nil }
+        summary["uniqueHittableCancelObserved"] = true
+        guard let evidence, webCount > 0 else { return nil }
+        let webView = webViews.firstMatch
+        guard webView.exists, !webView.frame.isEmpty else { return nil }
+        return .init(cancel: cancel, webView: webView, originEvidence: evidence)
+    }
+
+    private func normalizedNativeChromeText(_ raw: String) -> String {
+        let value = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        // The observed native Address value starts with one left-to-right formatting mark.
+        return value.hasPrefix("\u{200E}")
+            ? String(value.dropFirst()).trimmingCharacters(in: .whitespacesAndNewlines) : value
     }
 
     private func officialHostInChrome(_ bar: XCUIElement) -> String? {
@@ -252,7 +295,7 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
         var visibleHostOnly = false
         for node in nodes {
             for raw in [node.label, node.value as? String ?? ""] {
-                let value = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+                let value = normalizedNativeChromeText(raw)
                 if value.lowercased() == "auth.openai.com" { visibleHostOnly = true }
                 if let url = URLComponents(string: value), url.scheme?.lowercased() == "https",
                    url.host?.lowercased() == "auth.openai.com", url.user == nil, url.password == nil,
@@ -265,36 +308,65 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
     }
 
     private func saveChromeDiagnostics(_ owners: [XCUIApplication], name: String) throws {
-        guard let output else { throw Incomplete(reason: "Private artifact output is unavailable.") }
         var records: [[String: Any]] = []
+        try writeChromeDiagnostics(records, name: name)
         for (ownerIndex, owner) in owners.enumerated() where owner.state != .notRunning {
-            var containers: [[String: Any]] = []
-            for (kind, query) in [("navigationBar", owner.navigationBars), ("toolbar", owner.toolbars)] {
-                for index in 0..<min(query.count, 8) {
-                    let container = query.element(boundBy: index)
-                    var record = chromeControl(container)
-                    record["kind"] = kind
-                    record["index"] = index
-                    let controls = Array(container.buttons.allElementsBoundByIndex.prefix(16)) +
-                        Array(container.staticTexts.allElementsBoundByIndex.prefix(12)) +
-                        Array(container.textFields.allElementsBoundByIndex.prefix(3)) +
-                        Array(container.otherElements.allElementsBoundByIndex.prefix(8))
-                    record["controls"] = controls.map(chromeControl)
-                    containers.append(record)
-                }
-            }
+            let recordIndex = records.count
+            records.append([
+                "ownerIndex": ownerIndex, "ownerState": Int(owner.state.rawValue),
+                "webViewCount": owner.webViews.count,
+                "nativeContainers": [[String: Any]](),
+                "unscopedDismissCandidates": [[String: Any]]()
+            ])
+            try writeChromeDiagnostics(records, name: name)
             let actions = owner.buttons.matching(NSPredicate(
                 format: "label IN %@ OR identifier IN %@",
                 ["Close", "Cancel", "Done"] as NSArray,
                 ["Close", "Cancel", "Done", "chatgpt.continue"] as NSArray))
-            records.append([
-                "ownerIndex": ownerIndex, "ownerState": Int(owner.state.rawValue),
-                "webViewCount": owner.webViews.count, "nativeContainers": containers,
-                "unscopedDismissCandidates": actions.allElementsBoundByIndex.prefix(12).map(unscopedDismissCandidate)
-            ])
+            var candidates: [[String: Any]] = []
+            // Bind to actual AX elements: index-bound floating toolbars can change mid-query.
+            for action in actions.allElementsBoundByAccessibilityElement.prefix(12) where action.exists {
+                candidates.append(unscopedDismissCandidate(action))
+                records[recordIndex]["unscopedDismissCandidates"] = candidates
+                try writeChromeDiagnostics(records, name: name)
+            }
+            var containers: [[String: Any]] = []
+            for (kind, query) in [
+                ("nativeBrowserBar", owner.otherElements.matching(identifier: "TopBrowserBar")),
+                ("navigationBar", owner.navigationBars), ("toolbar", owner.toolbars)
+            ] {
+                let elements = Array(query.allElementsBoundByAccessibilityElement.prefix(8))
+                for (index, container) in elements.enumerated() where container.exists {
+                    var record = chromeControl(container)
+                    record["kind"] = kind
+                    record["index"] = index
+                    record["controls"] = [[String: Any]]()
+                    containers.append(record)
+                    records[recordIndex]["nativeContainers"] = containers
+                    try writeChromeDiagnostics(records, name: name)
+                    // Before Continue, container identity/geometry is sufficient for the baseline.
+                    guard name != "before-continue" else { continue }
+                    let controls = Array(container.buttons.allElementsBoundByAccessibilityElement.prefix(16)) +
+                        Array(container.staticTexts.allElementsBoundByAccessibilityElement.prefix(12)) +
+                        Array(container.textFields.allElementsBoundByAccessibilityElement.prefix(3)) +
+                        Array(container.otherElements.allElementsBoundByAccessibilityElement.prefix(8))
+                    var controlRecords: [[String: Any]] = []
+                    for control in controls where control.exists {
+                        controlRecords.append(chromeControl(control))
+                        record["controls"] = controlRecords
+                        containers[containers.count - 1] = record
+                        records[recordIndex]["nativeContainers"] = containers
+                        try writeChromeDiagnostics(records, name: name)
+                    }
+                }
+            }
         }
-        // Only native navigation/tool bars and exact dismissal candidates are inspected.
-        // Global dismissal candidates retain only an allowlisted label and geometry; no raw values.
+    }
+
+    private func writeChromeDiagnostics(_ records: [[String: Any]], name: String) throws {
+        guard let output else { throw Incomplete(reason: "Private artifact output is unavailable.") }
+        // Persist each completed record before another dynamic native query can fail.
+        // Global candidates are unscoped; only allowlisted labels and geometry survive.
         // No browser screenshot or full debug hierarchy is requested.
         let data = try JSONSerialization.data(withJSONObject: [
             "schemaVersion": 1, "appSourceSHA": appSourceSHA, "owners": records,
@@ -329,7 +401,7 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
     }
 
     private func safeChromeString(_ raw: String) -> String {
-        let value = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        let value = normalizedNativeChromeText(raw)
         let officialHosts = ["auth.openai.com", "openai.com", "chatgpt.com"]
         if let url = URLComponents(string: value),
            ["http", "https"].contains(url.scheme?.lowercased() ?? ""),
@@ -342,7 +414,7 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
             "GSD", "Matrix", "Task AI assistant", "Hanlin model settings", "ChatGPT account",
             "Back", "Forward", "Reload", "Stop", "Address", "URL", "Website",
             "Website Information", "Secure", "Search", "Show Completed", "Edit",
-            "MCP", "Model", "Toolbar", "auth.openai.com", "openai.com", "chatgpt.com"
+            "MCP", "Model", "Toolbar", "TopBrowserBar", "auth.openai.com", "openai.com", "chatgpt.com"
         ]
         return knownLabels.contains(value) ? value : "[redacted]"
     }
