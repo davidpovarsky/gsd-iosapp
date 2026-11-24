@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "sourceSHA": "0ae293b8f1d867a09be6d95cc7029a9442728bfc",
+  "manifestSHA256": "d6f999a9647e8bc9c3c7aaaa93aa5bae3f0d02df8124fb6c5f49b6e23779f8b3",
+  "build": "49",
+  "compiler": "Xcode 27.1\nBuild version 27A9275",
+  "driver": "Xcode 27.0\nBuild version 27A266a",
+  "passed": false,
+  "accountGrantVerified": false,
+  "fullSystemSurfaceCoverage": false,
+  "suites": {
+    "share": {
+      "passed": false,
+      "failureCode": "share_assertion_keys",
+      "ownedDevicesRemoved": true
+    }
+  },
+  "productsUnchanged": true,
+  "ownedSimulatorsRemoved": true,
+  "completedAt": "2026-11-24T23:31:52.251922+00:00"
+}

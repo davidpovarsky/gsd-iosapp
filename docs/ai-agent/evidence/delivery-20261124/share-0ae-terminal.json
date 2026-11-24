@@ -1,0 +1,19 @@
+{
+  "completedAt": "2026-11-24T23:31:52.697913+00:00",
+  "passed": false,
+  "testSourceSHA": "0ae293b8f1d867a09be6d95cc7029a9442728bfc",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "sourceClosureSHA256": "4414c2023df50ecbea2bfa8aef4509fc35c3f90e4e8b035cba2a56dca621e6fc",
+  "buildBindingSHA256": "f0272ca38f5d1c6103a2aab0571c17ae23a5a54b3470b919cca56761be7d3da8",
+  "compositionReceiptSHA256": "f163b3b83d760f5138bc858b5dcaa77f157e5e8ac946a787cc7e32d3a5155de2",
+  "composedManifestSHA256": "d6f999a9647e8bc9c3c7aaaa93aa5bae3f0d02df8124fb6c5f49b6e23779f8b3",
+  "runtimeBindingSHA256": "d84829d52e328776b54744e0bd65473fc3026d541651b1555533bd7be8989ef2",
+  "publicSummarySHA256": "63935c8d02927ae0a011e423d13e397a5f9d48f40d1acc3c0a93f84a0334d4b5",
+  "originalProductsUnchanged": true,
+  "ownedSimulatorsRemoved": true,
+  "runtimeExecuted": true,
+  "runtimeOnly": true,
+  "signingOrUploadExecuted": false,
+  "acceptedHistoricalSuitesRepeated": false,
+  "shareObservationSummarySHA256": "66f986096168c4068c67501f2bedf42ab7ef932a37cc07a5668c492396e7f471"
+}
