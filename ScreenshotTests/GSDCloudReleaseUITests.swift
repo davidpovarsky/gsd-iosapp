@@ -9,7 +9,7 @@ import XCTest
 /// or complete gesture, text-clipping, orientation, or manual-layout-direction coverage.
 /// The widget test is an in-app view harness, not a WidgetKit timeline/deep-link test.
 /// Share, Watch, Watch widgets, real Siri, system notifications, and physical devices
-/// require separate runtime evidence. Cloud signup/sign-out/sign-in use the Hebrew
+/// require separate runtime evidence. Cloud signup/sign-out/sign-in/deletion use the Hebrew
 /// iPad simulator UI; personal ChatGPT authorization and plan inference are not exercised.
 @MainActor
 final class GSDCloudReleaseUITests: XCTestCase {
@@ -336,6 +336,38 @@ final class GSDCloudReleaseUITests: XCTestCase {
             format: "identifier BEGINSWITH 'task-card-' AND label CONTAINS %@", localTitle)).firstMatch
         XCTAssertTrue(localCard.waitForExistence(timeout: 30), "Local/cloud task did not persist across relaunch")
         try capture(app, "10-cloud-round-trip")
+
+        // Delete only this same disposable account through the real native confirmation.
+        try await fixture.verifyCurrentOwner()
+        navigate(app, label("Settings", "הגדרות"))
+        let deleteAccount = app.buttons[label("Delete Account…", "מחיקת חשבון…")].firstMatch
+        for _ in 0..<4 where !deleteAccount.isHittable { app.swipeUp() }
+        XCTAssertTrue(signedIn.waitForExistence(timeout: 5), "Account must be signed in before deletion")
+        XCTAssertTrue(deleteAccount.waitForExistence(timeout: 5), "Native account deletion is missing")
+        XCTAssertTrue(deleteAccount.isEnabled)
+        XCTAssertTrue(deleteAccount.isHittable, "Native account deletion is obscured")
+        deleteAccount.tap()
+        XCTAssertTrue(app.staticTexts[label("Delete your account?", "למחוק את החשבון שלך?")]
+            .waitForExistence(timeout: 5), "Account deletion confirmation is missing")
+        let keepTasks = app.buttons[label("Delete & keep tasks on this device", "מחיקת החשבון ושמירת המשימות במכשיר")].firstMatch
+        let eraseEverything = app.buttons[label("Delete & erase everything", "מחיקת החשבון וכל הנתונים")].firstMatch
+        XCTAssertTrue(keepTasks.waitForExistence(timeout: 5), "Keep-local-tasks choice is missing")
+        XCTAssertTrue(eraseEverything.waitForExistence(timeout: 5), "Erase-local-tasks choice is missing")
+        XCTAssertTrue(eraseEverything.isEnabled)
+        XCTAssertTrue(eraseEverything.isHittable)
+        try capture(app, "17-delete-account-confirmation")
+        eraseEverything.tap()
+        XCTAssertTrue(signedIn.waitForNonExistence(timeout: 30), "Native account deletion did not sign out")
+        XCTAssertTrue(open.waitForExistence(timeout: 10), "Sign-in must return after account deletion")
+        try capture(app, "18-account-deleted-signed-out")
+        navigate(app, label("Matrix", "מטריצה"))
+        XCTAssertTrue(field.waitForExistence(timeout: 10), "Matrix did not open after account deletion")
+        XCTAssertTrue(serverCard.waitForNonExistence(timeout: 10), "Server-created task remains after erase")
+        XCTAssertTrue(localCard.waitForNonExistence(timeout: 10), "Native-created task remains after erase")
+        try capture(app, "19-account-deleted-empty-matrix")
+        // Public rejections prove credentials stopped working. Exact database/cascade absence
+        // is independently checked on Oracle using only the sanitized owner marker below.
+        try await fixture.verifyDeletionByApp()
         app.terminate()
     }
 }
@@ -351,6 +383,7 @@ private final class CloudFixture {
     let password = UUID().uuidString + "Aa1!"
     private var token: String?
     private var owner: String?
+    private var deletionVerified = false
     private let session = URLSession(configuration: .ephemeral)
 
     init(base: URL) {
@@ -359,16 +392,34 @@ private final class CloudFixture {
         print("::add-mask::" + password)
     }
 
-    private func request(_ path: String, method: String = "GET", body: [String: Any]? = nil) async throws -> Data {
+    private func request(_ path: String, method: String = "GET", body: [String: Any]? = nil,
+                         includeAuthorization: Bool = true,
+                         expectedRejection: (status: Int, message: String)? = nil) async throws -> Data {
         var request = URLRequest(url: base.appendingPathComponent(path))
         request.httpMethod = method
         request.timeoutInterval = 25
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        if let token { request.setValue("Bearer " + token, forHTTPHeaderField: "Authorization") }
+        if includeAuthorization, let token { request.setValue("Bearer " + token, forHTTPHeaderField: "Authorization") }
         if let body { request.httpBody = try JSONSerialization.data(withJSONObject: body) }
         let (data, response) = try await session.data(for: request)
-        guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
-            throw NSError(domain: "GSDCloudAcceptance", code: (response as? HTTPURLResponse)?.statusCode ?? 0,
+        guard let http = response as? HTTPURLResponse else {
+            throw NSError(domain: "GSDCloudAcceptance", code: 0,
+                          userInfo: [NSLocalizedDescriptionKey: "Missing cloud HTTP response: \(method) \(path)"])
+        }
+        if let expected = expectedRejection {
+            // PocketBase 0.40 uses status, not code. A generic 400/401/404 is insufficient:
+            // require the exact endpoint error, empty details, and no successful session payload.
+            let error = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+            guard http.statusCode == expected.status,
+                  error?["status"] as? Int == expected.status,
+                  error?["message"] as? String == expected.message,
+                  let details = error?["data"] as? [String: Any], details.isEmpty,
+                  error?["token"] == nil, error?["record"] == nil else {
+                throw NSError(domain: "GSDCloudAcceptance", code: http.statusCode,
+                              userInfo: [NSLocalizedDescriptionKey: "Unexpected cloud rejection: \(method) \(path)"])
+            }
+        } else if !(200...299).contains(http.statusCode) {
+            throw NSError(domain: "GSDCloudAcceptance", code: http.statusCode,
                           userInfo: [NSLocalizedDescriptionKey: "Cloud fixture request failed: \(method) \(path)"])
         }
         return data
@@ -382,8 +433,42 @@ private final class CloudFixture {
         owner = auth.record.id
     }
 
+    func verifyCurrentOwner() async throws {
+        let expectedOwner = try XCTUnwrap(owner)
+        _ = try XCTUnwrap(token)
+        let data = try await request("api/collections/users/records/" + expectedOwner)
+        let current = try JSONDecoder().decode(User.self, from: data)
+        guard current.id == expectedOwner else {
+            throw NSError(domain: "GSDCloudAcceptance", code: 0,
+                          userInfo: [NSLocalizedDescriptionKey: "Disposable account owner changed before deletion"])
+        }
+    }
+
+    func verifyDeletionByApp() async throws {
+        let deletedOwner = try XCTUnwrap(owner)
+        _ = try XCTUnwrap(token)
+        guard deletedOwner.range(of: "^[A-Za-z0-9_-]{10,80}$", options: .regularExpression) != nil else {
+            throw NSError(domain: "GSDCloudAcceptance", code: 0,
+                          userInfo: [NSLocalizedDescriptionKey: "Invalid disposable owner identifier"])
+        }
+        _ = try await request("api/collections/users/records/" + deletedOwner,
+                              expectedRejection: (404, "The requested resource wasn't found."))
+        _ = try await request("api/collections/users/auth-refresh", method: "POST",
+                              expectedRejection: (401, "The request requires valid record authorization token."))
+        _ = try await request("api/collections/users/auth-with-password", method: "POST",
+                              body: ["identity": email, "password": password], includeAuthorization: false,
+                              expectedRejection: (400, "Failed to authenticate."))
+        // This flag is reachable only after the native UI assertions and all three explicit checks.
+        // No failed authentication or generic HTTP error can silently skip teardown.
+        deletionVerified = true
+        token = nil
+        owner = nil
+        print("GSD_NATIVE_ACCOUNT_DELETION_PUBLIC_PASS owner=" + deletedOwner)
+    }
+
     func removeAccount() async throws {
         defer { session.invalidateAndCancel() }
+        if deletionVerified { return }
         // A native assertion may fail after registration but before fixture authentication.
         // Recover only this fixture's credentials and propagate every failure, including 400.
         // An authentication failure is not evidence that no account exists.
