@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "kind": "gsd-public-evidence-staging",
+  "completedAtUTC": "2026-11-24T22:15:06.115908+00:00",
+  "stagingPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3",
+  "expectedFileCount": 19,
+  "jsonFileCount": 13,
+  "pngFileCount": 6,
+  "totalEvidenceBytes": 3993541,
+  "all19Matched": true,
+  "allSourceHashesMatched": true,
+  "allDestinationHashesMatched": true,
+  "allDestinationByteCountsMatched": true,
+  "macOriginalsPreserved": true,
+  "runtimeActions": false,
+  "transferMethod": "Existing pinned scaleway-mac SSH; in-memory binary ZIP; exact 19-file allowlist; no binary printed.",
+  "classification": "Screened technical receipts and previously reviewed non-authentication app images. No credential-bearing files, raw logs, xcresult bundles, private auth artifacts, browser screenshots or account-screen images.",
+  "classificationEvidenceJobs": [
+    "job_74fbb345bc75",
+    "job_86c6829c9cd3"
+  ],
+  "scopeNotes": [
+    "Historical package aggregate failures are preserved with their original subresult attribution.",
+    "Preconsent PASS is distinct from the failed historical Share suite; no personal grant, entitlement or inference is claimed.",
+    "Image source identities and accepted prior reviews are preserved; no image review or tests were repeated.",
+    "9f source reuse and simulator-product receipts do not establish Share acceptance, distribution signing, upload or TestFlight availability."
+  ],
+  "files": [
+    {
+      "name": "native-ui-671.json",
+      "sourcePath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/native-ui/native-ui-receipt.json",
+      "bytes": 3054,
+      "sha256": "8549f05885d1c611a7e60c1f6fe9282cac1147de1ef7719e2987dae81ad264f5",
+      "sourceCommit": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+      "classification": "safe technical receipt; no credential-value patterns or secret fields found",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\native-ui-671.json",
+      "verified": true
+    },
+    {
+      "name": "visual-qa-671.json",
+      "sourcePath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/GSD_VISUAL_QA_20261124.json",
+      "bytes": 23307,
+      "sha256": "20c7e138336cb103fbdf05a1c29f8040adb473af604df337bf94a3b454ca8901",
+      "sourceCommit": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+      "classification": "safe technical receipt; no credential-value patterns or secret fields found",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\visual-qa-671.json",
+      "verified": true
+    },
+    {
+      "name": "watch-ee5-summary.json",
+      "sourcePath": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence/watch-supplemental/public/supplemental-summary.json",
+      "bytes": 1711,
+      "sha256": "4a7051190c9bd417778f88f86e4570f4d610cdfaab5d6767c1f57f988a6599c5",
+      "sourceCommit": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+      "classification": "safe technical receipt; no credential-value patterns or secret fields found",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\watch-ee5-summary.json",
+      "verified": true
+    },
+    {
+      "name": "watch-ee5-root-review.json",
+      "sourcePath": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence/watch-root-review.json",
+      "bytes": 1172,
+      "sha256": "06a09f6095af3fd09d8791814173edbc0a08cf2f7ff988c6585d80e6219f49e7",
+      "sourceCommit": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+      "classification": "safe technical receipt; no credential-value patterns or secret fields found",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\watch-ee5-root-review.json",
+      "verified": true
+    },
+    {
+      "name": "watch-ee5-visual-review.json",
+      "sourcePath": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence/watch-visual-review.json",
+      "bytes": 1259,
+      "sha256": "b84b8d128a0228751ff4364a31eec2dae87c31f0df5840af7de6cbec293f60e3",
+      "sourceCommit": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+      "classification": "safe technical receipt; no credential-value patterns or secret fields found",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\watch-ee5-visual-review.json",
+      "verified": true
+    },
+    {
+      "name": "preconsent-f1-observation.json",
+      "sourcePath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/supplemental-retest-b746/evidence-core-f1fc/supplemental/public/siwc-preconsent-observation.json",
+      "bytes": 1880,
+      "sha256": "881e8b78cbea7f0e55f6877cea49350c6f67a90a6d45c20694dc57b16f3b987f",
+      "sourceCommit": "f1fc8676cd1cce5a275f246b0d7dedcfb73416db",
+      "classification": "safe technical receipt; no credential-value patterns or secret fields found",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\preconsent-f1-observation.json",
+      "verified": true
+    },
+    {
+      "name": "supplemental-f1-summary.json",
+      "sourcePath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/supplemental-retest-b746/evidence-core-f1fc/supplemental/public/supplemental-summary.json",
+      "bytes": 1300,
+      "sha256": "484a4e677dc3c8313dc1dbe7e0096edba278fd907fe420ef80d08ff6fd754d55",
+      "sourceCommit": "f1fc8676cd1cce5a275f246b0d7dedcfb73416db",
+      "classification": "safe technical receipt; no credential-value patterns or secret fields found",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\supplemental-f1-summary.json",
+      "verified": true
+    },
+    {
+      "name": "source-reuse-9f.json",
+      "sourcePath": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/evidence/post-share-input-reuse.json",
+      "bytes": 14140,
+      "sha256": "7ebf4dbe4967dda431fde6d849e33e5f91ad0f74bf0d5370aaf1c7af93362eb1",
+      "sourceCommit": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+      "classification": "safe technical receipt; no credential-value patterns or secret fields found",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\source-reuse-9f.json",
+      "verified": true
+    },
+    {
+      "name": "source-root-review-9f.json",
+      "sourcePath": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/evidence/root-post-share-source-verification.json",
+      "bytes": 4856,
+      "sha256": "7155fc11aae63d6a04d51fa19406c4475a59b378f520e7a8351443aa3042176d",
+      "sourceCommit": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+      "classification": "safe technical receipt; no credential-value patterns or secret fields found",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\source-root-review-9f.json",
+      "verified": true
+    },
+    {
+      "name": "simulator-products-9f.json",
+      "sourcePath": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/evidence/local-products.json",
+      "bytes": 6000,
+      "sha256": "38aae93e3330893c26c1ce837a05af933b1d2115b69b01b0ea67f0e8fb2eb67f",
+      "sourceCommit": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+      "classification": "safe technical receipt; no credential-value patterns or secret fields found",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\simulator-products-9f.json",
+      "verified": true
+    },
+    {
+      "name": "packages-77c045-historical.json",
+      "sourcePath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/native-build-status-77c04558-failed.json",
+      "bytes": 1569,
+      "sha256": "7752442ef0839d1a7709aafb1aa2427757e0cf8eb84e3dd8c7521232804e6a7a",
+      "sourceCommit": "77c0455823cad90168106f2196d6e94d1ce03598",
+      "classification": "safe historical stage receipt; aggregate run failed, preserve subresult attribution",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\packages-77c045-historical.json",
+      "verified": true
+    },
+    {
+      "name": "packages-9d0faa-historical.json",
+      "sourcePath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/native-build-status-9d0faa06-packages-pass.json",
+      "bytes": 1500,
+      "sha256": "8490382a5f0dff96b5f7e8970b1d3227f1897950f149b04adb1cf2174a15a408",
+      "sourceCommit": "9d0faa061b0b41f7127fa40c265fef3e3fc3dd88",
+      "classification": "safe historical stage receipt; aggregate run failed, preserve subresult attribution",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\packages-9d0faa-historical.json",
+      "verified": true
+    },
+    {
+      "name": "native-build-671.json",
+      "sourcePath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/native-build-status.json",
+      "bytes": 1449,
+      "sha256": "2f5e0d8b2dfdf78c960e0984a76ce43f0ff9b81f764dcdb88a9242ce418c9ede",
+      "sourceCommit": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+      "classification": "safe technical receipt; no credential-value patterns or secret fields found",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\native-build-671.json",
+      "verified": true
+    },
+    {
+      "name": "iphone-en-matrix.png",
+      "sourcePath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/native-ui/iphone-en/screenshots/01-matrix.png",
+      "bytes": 424809,
+      "sha256": "ef5405d3f8b47ae17a01bee787187e7ec09f988394cdbeceaca4db468f58a9b6",
+      "sourceCommit": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+      "classification": "Previously reviewed non-authentication application image; exact visual receipt hash and byte count matched; no new image review.",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\iphone-en-matrix.png",
+      "verified": true
+    },
+    {
+      "name": "iphone-he-matrix.png",
+      "sourcePath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/native-ui/iphone-he/screenshots/01-matrix.png",
+      "bytes": 406845,
+      "sha256": "99a1942987bd637d683fc19d9d5469b76411641b20e13cdca98d863252f407d3",
+      "sourceCommit": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+      "classification": "Previously reviewed non-authentication application image; exact visual receipt hash and byte count matched; no new image review.",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\iphone-he-matrix.png",
+      "verified": true
+    },
+    {
+      "name": "ipad-en-dashboard.png",
+      "sourcePath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/native-ui/ipad-en/screenshots/04-dashboard.png",
+      "bytes": 1539740,
+      "sha256": "54f18e7caed486cf4b3cf264c6f04747ee990555e8369f919e31d5d0b544b357",
+      "sourceCommit": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+      "classification": "Previously reviewed non-authentication application image; exact visual receipt hash and byte count matched; no new image review.",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\ipad-en-dashboard.png",
+      "verified": true
+    },
+    {
+      "name": "ipad-he-dashboard.png",
+      "sourcePath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/native-ui/ipad-he/screenshots/04-dashboard.png",
+      "bytes": 1510623,
+      "sha256": "7a1d040c28d8a46700beb421ab0a9d51f390f85429f941011d1b78fa9a1aa1a0",
+      "sourceCommit": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+      "classification": "Previously reviewed non-authentication application image; exact visual receipt hash and byte count matched; no new image review.",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\ipad-he-dashboard.png",
+      "verified": true
+    },
+    {
+      "name": "watch-en.png",
+      "sourcePath": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence/watch-supplemental/public/watch-en.png",
+      "bytes": 26299,
+      "sha256": "121a291a5b8955d14e58d73081850059c4d6a3505318d09b950ec41d66d79b59",
+      "sourceCommit": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+      "classification": "Previously reviewed non-authentication Watch application image; exact accepted receipt hash matched; no new image review.",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\watch-en.png",
+      "verified": true
+    },
+    {
+      "name": "watch-he.png",
+      "sourcePath": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence/watch-supplemental/public/watch-he.png",
+      "bytes": 22028,
+      "sha256": "9e9607b9060117e245ccb019ada751c968c6dc0e3adc6056aef35b5c256ed72c",
+      "sourceCommit": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+      "classification": "Previously reviewed non-authentication Watch application image; exact accepted receipt hash matched; no new image review.",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\delivery49-public-evidence-9f2736d3\\watch-he.png",
+      "verified": true
+    }
+  ]
+}

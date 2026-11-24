@@ -1,0 +1,97 @@
+{
+  "passed": true,
+  "timestamp": "2026-11-24T18:45:07.367209+00:00",
+  "profile": "native-release",
+  "selectedFamilies": [
+    "iPhone",
+    "iPad"
+  ],
+  "runs": [
+    {
+      "family": "iPhone",
+      "language": "en",
+      "deviceType": "iPhone 17 Pro",
+      "runtime": "27.2",
+      "runtimeBuild": "24B8117",
+      "passed": true,
+      "cloudRoundTrip": false,
+      "commandTimeoutSeconds": 1200,
+      "simulatorId": "ED7F74FE-C3B4-4294-B72A-CDB9192F9FEC",
+      "selectedTests": [
+        "test01LocalizedNavigationEditorChartsAndRTL",
+        "test03LocalizedWidgetView",
+        "test04LocalizedHanlinProvidersAndChatGPTAccount"
+      ],
+      "verifiedPassedTests": [
+        "test01LocalizedNavigationEditorChartsAndRTL",
+        "test03LocalizedWidgetView",
+        "test04LocalizedHanlinProvidersAndChatGPTAccount"
+      ]
+    },
+    {
+      "family": "iPhone",
+      "language": "he",
+      "deviceType": "iPhone 17 Pro",
+      "runtime": "27.2",
+      "runtimeBuild": "24B8117",
+      "passed": true,
+      "cloudRoundTrip": false,
+      "commandTimeoutSeconds": 1200,
+      "simulatorId": "18C10FC6-644D-4A10-9972-5A600F32BEB5",
+      "selectedTests": [
+        "test01LocalizedNavigationEditorChartsAndRTL",
+        "test03LocalizedWidgetView",
+        "test04LocalizedHanlinProvidersAndChatGPTAccount"
+      ],
+      "verifiedPassedTests": [
+        "test01LocalizedNavigationEditorChartsAndRTL",
+        "test03LocalizedWidgetView",
+        "test04LocalizedHanlinProvidersAndChatGPTAccount"
+      ]
+    },
+    {
+      "family": "iPad",
+      "language": "en",
+      "deviceType": "iPad Pro 13-inch (M5)",
+      "runtime": "27.2",
+      "runtimeBuild": "24B8117",
+      "passed": true,
+      "cloudRoundTrip": false,
+      "commandTimeoutSeconds": 1200,
+      "simulatorId": "9126B3C3-5165-443B-94C5-BFA205CE7848",
+      "selectedTests": [
+        "test01LocalizedNavigationEditorChartsAndRTL",
+        "test03LocalizedWidgetView",
+        "test04LocalizedHanlinProvidersAndChatGPTAccount"
+      ],
+      "verifiedPassedTests": [
+        "test01LocalizedNavigationEditorChartsAndRTL",
+        "test03LocalizedWidgetView",
+        "test04LocalizedHanlinProvidersAndChatGPTAccount"
+      ]
+    },
+    {
+      "family": "iPad",
+      "language": "he",
+      "deviceType": "iPad Pro 13-inch (M5)",
+      "runtime": "27.2",
+      "runtimeBuild": "24B8117",
+      "passed": true,
+      "cloudRoundTrip": true,
+      "commandTimeoutSeconds": 1800,
+      "simulatorId": "4C722F38-A866-4079-BFCE-86D98A20C64B",
+      "selectedTests": [
+        "test01LocalizedNavigationEditorChartsAndRTL",
+        "test03LocalizedWidgetView",
+        "test04LocalizedHanlinProvidersAndChatGPTAccount",
+        "test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload"
+      ],
+      "verifiedPassedTests": [
+        "test01LocalizedNavigationEditorChartsAndRTL",
+        "test03LocalizedWidgetView",
+        "test04LocalizedHanlinProvidersAndChatGPTAccount",
+        "test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload"
+      ]
+    }
+  ]
+}

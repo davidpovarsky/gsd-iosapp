@@ -1,0 +1,43 @@
+{
+  "source": "9d0faa061b0b41f7127fa40c265fef3e3fc3dd88",
+  "startedUTC": "2026-11-24T17:50:52Z",
+  "steps": [
+    {
+      "name": "cloud-sync-tests-final",
+      "startedUTC": "2026-11-24T17:50:52Z",
+      "log": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/logs/cloud-sync-tests-final.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-24T17:51:07Z"
+    },
+    {
+      "name": "account-deletion-tests-final",
+      "startedUTC": "2026-11-24T17:51:07Z",
+      "log": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/logs/account-deletion-tests-final.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-24T17:51:09Z"
+    },
+    {
+      "name": "build-for-testing",
+      "startedUTC": "2026-11-24T17:51:09Z",
+      "log": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/logs/build-for-testing.log",
+      "returncode": 65,
+      "finishedUTC": "2026-11-24T17:52:46Z"
+    }
+  ],
+  "pid": 52980,
+  "reusedEvidence": {
+    "source": "77c0455823cad90168106f2196d6e94d1ce03598",
+    "reason": "Only regression test throw handling changed; production/package inputs unchanged",
+    "steps": [
+      "session-observation",
+      "sync-connectivity",
+      "sdk-final-check",
+      "final-hanlin-tests"
+    ],
+    "priorStatus": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/native-build-status-77c04558-failed.json"
+  },
+  "passed": false,
+  "errorType": "RuntimeError",
+  "error": "build-for-testing_failed",
+  "finishedUTC": "2026-11-24T17:52:46Z"
+}

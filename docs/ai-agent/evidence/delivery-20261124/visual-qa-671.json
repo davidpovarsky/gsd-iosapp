@@ -1,0 +1,618 @@
+{
+  "schemaVersion": 1,
+  "sourceSHA": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+  "sourceProductManifest": "evidence/local-products.json",
+  "sourceProductManifestSHA256": "d92f278855c3a37ad2b94e099db99e4df2203685e09b0d5fe2f6adc66ce147eb",
+  "nativeUIReceiptSHA256": "8549f05885d1c611a7e60c1f6fe9282cac1147de1ef7719e2987dae81ad264f5",
+  "nativeUIBindingSHA256": "2d7aaf24f709ba937b5fe2ec3e470bd7003f8f20c9b4540298f2261b9139e175",
+  "nativeUIBinding": {
+    "sourceSHA": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+    "manifestSHA256": "d92f278855c3a37ad2b94e099db99e4df2203685e09b0d5fe2f6adc66ce147eb",
+    "passed": true,
+    "startedUTC": "2026-11-24T18:20:26Z",
+    "returncode": 0,
+    "receiptSHA256": "8549f05885d1c611a7e60c1f6fe9282cac1147de1ef7719e2987dae81ad264f5",
+    "finishedUTC": "2026-11-24T18:45:08Z"
+  },
+  "writtenUTC": "2026-11-24T19:14:03.253136+00:00",
+  "complete": true,
+  "pendingProfiles": [],
+  "profiles": [
+    {
+      "profile": "iphone-en",
+      "reviewedUTC": "2026-11-24T18:27:54.502174+00:00",
+      "status": "no blocking visual defect observed",
+      "reviewedImages": [
+        {
+          "file": "01-matrix.png",
+          "bytes": 424809,
+          "sha256": "ef5405d3f8b47ae17a01bee787187e7ec09f988394cdbeceaca4db468f58a9b6",
+          "observation": "Task titles wrap and controls remain distinct. Compact due-date metadata uses visible ellipsis; subsequent rows continue under the native bottom bar. No blocking text/control overlap observed."
+        },
+        {
+          "file": "02-editor.png",
+          "bytes": 196473,
+          "sha256": "ada983b805e9ecb4b7b9300a779a95b7603ed982f98d704861d5de5525369332",
+          "observation": "Title, Cancel/Save, quadrant tiles, tag controls and notes fit the phone width. Further form fields continue below viewport."
+        },
+        {
+          "file": "04-dashboard.png",
+          "bytes": 1074808,
+          "sha256": "2823b0ca6ade8ff2f8705a2aa19718efc2e13aed7954150cb01e079aee912484",
+          "observation": "Metric labels/numbers, period segments, chart axes and legend are readable without overlap. Lower quadrant chart continues below viewport."
+        },
+        {
+          "file": "14-chatgpt-account-before-consent.png",
+          "bytes": 189326,
+          "sha256": "8b63508af879b547db4cfa82d3ff2e4b5d38e530c732553fe64b5fa751339ab7",
+          "observation": "Account explanation, Continue, usage and Keychain/privacy copy fit without clipping. This is the app account screen before consent."
+        },
+        {
+          "file": "15-hanlin-assistant.png",
+          "bytes": 215377,
+          "sha256": "53edc3d71c96cc595d706a6b80aa55ee32c5f2666bf93effb7d5ee26f86bf091",
+          "observation": "Header controls, explanatory body and bottom composer are readable and separate."
+        },
+        {
+          "file": "16-cloud-plugin-connection.png",
+          "bytes": 223297,
+          "sha256": "bc23ed81651796352aeaa10c94a4d548ff4f400555a802b17da085f1088f5d73",
+          "observation": "Cloud account and plugin instructions, headings and Done fit without truncation or overlap."
+        }
+      ],
+      "scope": "Actual inspection of six completed non-auth application screenshots; no interaction or native run by reviewer.",
+      "sourceSHA": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+      "sourceManifestSHA256": "d92f278855c3a37ad2b94e099db99e4df2203685e09b0d5fe2f6adc66ce147eb"
+    },
+    {
+      "sourceSHA": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+      "sourceManifestSHA256": "d92f278855c3a37ad2b94e099db99e4df2203685e09b0d5fe2f6adc66ce147eb",
+      "profile": "iphone-he",
+      "reviewedUTC": "2026-11-24T18:31:43.968991+00:00",
+      "status": "no blocking visual defect observed",
+      "reviewedImages": [
+        {
+          "file": "01-matrix.png",
+          "bytes": 406845,
+          "sha256": "99a1942987bd637d683fc19d9d5469b76411641b20e13cdca98d863252f407d3",
+          "observation": "Task titles wrap; Hebrew text, controls and navigation are mirrored consistently. Compact due-date metadata uses visible ellipsis. No blocking overlap observed."
+        },
+        {
+          "file": "02-editor.png",
+          "bytes": 178059,
+          "sha256": "410e3fe6578ce568b98c4653b30926fddd79d0f1d2767e8b66d6c86d6f53ae87",
+          "observation": "Right-aligned title and field, mirrored Save/Cancel and quadrant tiles; long Hebrew tile label fits. Tags and notes remain readable."
+        },
+        {
+          "file": "04-dashboard.png",
+          "bytes": 1045670,
+          "sha256": "66e113d4ac0b41d8b1af27756417c2d22527d1b9853266da16652c9368a0277d",
+          "observation": "Hebrew metric labels, period segments, chart axes/date labels and legend fit without overlap; chart and layout are mirrored consistently."
+        },
+        {
+          "file": "14-chatgpt-account-before-consent.png",
+          "bytes": 189075,
+          "sha256": "af74747a3d94a7760e846fa5073756fe729f72764c1ae0b023a8227523581b14",
+          "observation": "Right-aligned mixed Hebrew/Latin title, explanation, Continue, usage and privacy copy fit. Done is mirrored left."
+        },
+        {
+          "file": "15-hanlin-assistant.png",
+          "bytes": 206526,
+          "sha256": "1c8bd7b5871041beee61e721da61149d688cabe43c537e8e88d507f4911bd137",
+          "observation": "Mirrored Close/settings/Cloud controls and bottom send control; body and right-aligned placeholder fit without overlap."
+        },
+        {
+          "file": "16-cloud-plugin-connection.png",
+          "bytes": 205054,
+          "sha256": "12473280cbbb8c976aa0008379c2799b83a9e9d2ff80a798d75e9c4045bced8d",
+          "observation": "Mixed Hebrew/Latin headings and plugin instructions remain readable in correct RTL sequence. Done is mirrored left; footer fits."
+        }
+      ],
+      "scope": "Actual inspection of six completed non-auth application screenshots; no interaction or native run by reviewer."
+    },
+    {
+      "sourceSHA": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+      "sourceManifestSHA256": "d92f278855c3a37ad2b94e099db99e4df2203685e09b0d5fe2f6adc66ce147eb",
+      "profile": "ipad-en",
+      "reviewedUTC": "2026-11-24T18:38:27.072602+00:00",
+      "status": "no blocking visual defect observed",
+      "reviewedImages": [
+        {
+          "file": "01-matrix.png",
+          "bytes": 1665756,
+          "sha256": "88e5be5285d4f67f2127dd18824eb7ff8b4bfa703d73edf400a47cf190c1686a",
+          "observation": "Landscape sidebar, smart-view labels/counts and four quadrant cards fit. Task titles wrap clearly; compact date metadata uses ellipsis without obscuring controls.",
+          "geometry": {
+            "appFrame": {
+              "height": 1032,
+              "width": 1376,
+              "x": 0,
+              "y": 0
+            },
+            "captureSource": "XCUIScreen.main",
+            "deviceOrientation": 3,
+            "displayedHeight": 2064,
+            "displayedWidth": 2752,
+            "imageOrientation": 2,
+            "language": "en",
+            "name": "01-matrix",
+            "orientationMatchesApp": true,
+            "pixelHeight": 2752,
+            "pixelWidth": 2064,
+            "schemaVersion": 1,
+            "windowFrames": [
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          }
+        },
+        {
+          "file": "02-editor.png",
+          "bytes": 905565,
+          "sha256": "461d8ad0f3cfd14d4cbc928fd1951fb6bd55dc7044ea612beb0b4ca624e63d4a",
+          "observation": "Centered editor is scrolled to due date, recurrence, subtasks and estimates; header actions and all visible form rows are readable without clipping.",
+          "geometry": {
+            "appFrame": {
+              "height": 1032,
+              "width": 1376,
+              "x": 0,
+              "y": 0
+            },
+            "captureSource": "XCUIScreen.main",
+            "deviceOrientation": 3,
+            "displayedHeight": 2064,
+            "displayedWidth": 2752,
+            "imageOrientation": 2,
+            "language": "en",
+            "name": "02-editor",
+            "orientationMatchesApp": true,
+            "pixelHeight": 2752,
+            "pixelWidth": 2064,
+            "schemaVersion": 1,
+            "windowFrames": [
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          }
+        },
+        {
+          "file": "04-dashboard.png",
+          "bytes": 1539740,
+          "sha256": "54f18e7caed486cf4b3cf264c6f04747ee990555e8369f919e31d5d0b544b357",
+          "observation": "Wide trend chart, axes/date labels, legend and period segments are readable. Metric cards and full visible donut remain distinct with no overlap.",
+          "geometry": {
+            "appFrame": {
+              "height": 1032,
+              "width": 1376,
+              "x": 0,
+              "y": 0
+            },
+            "captureSource": "XCUIScreen.main",
+            "deviceOrientation": 3,
+            "displayedHeight": 2064,
+            "displayedWidth": 2752,
+            "imageOrientation": 2,
+            "language": "en",
+            "name": "04-dashboard",
+            "orientationMatchesApp": true,
+            "pixelHeight": 2752,
+            "pixelWidth": 2064,
+            "schemaVersion": 1,
+            "windowFrames": [
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          }
+        },
+        {
+          "file": "14-chatgpt-account-before-consent.png",
+          "bytes": 1372888,
+          "sha256": "93da48b76bc33847fc9347db288072b9a2172418b372a94a8134890f58e87f61",
+          "observation": "Centered account sheet fits its title, explanatory and privacy copy, Continue/usage rows and Done without clipping.",
+          "geometry": {
+            "appFrame": {
+              "height": 1032,
+              "width": 1376,
+              "x": 0,
+              "y": 0
+            },
+            "captureSource": "XCUIScreen.main",
+            "deviceOrientation": 3,
+            "displayedHeight": 2064,
+            "displayedWidth": 2752,
+            "imageOrientation": 2,
+            "language": "en",
+            "name": "14-chatgpt-account-before-consent",
+            "orientationMatchesApp": true,
+            "pixelHeight": 2752,
+            "pixelWidth": 2064,
+            "schemaVersion": 1,
+            "windowFrames": [
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          }
+        },
+        {
+          "file": "15-hanlin-assistant.png",
+          "bytes": 1432456,
+          "sha256": "a71de85b15020823417a89fb5bc5bf7bea73ede2e4d435a04e756c59b8ba1fdf",
+          "observation": "Centered assistant sheet keeps header actions, body and composer distinct; explanatory text wraps naturally.",
+          "geometry": {
+            "appFrame": {
+              "height": 1032,
+              "width": 1376,
+              "x": 0,
+              "y": 0
+            },
+            "captureSource": "XCUIScreen.main",
+            "deviceOrientation": 3,
+            "displayedHeight": 2064,
+            "displayedWidth": 2752,
+            "imageOrientation": 2,
+            "language": "en",
+            "name": "15-hanlin-assistant",
+            "orientationMatchesApp": true,
+            "pixelHeight": 2752,
+            "pixelWidth": 2064,
+            "schemaVersion": 1,
+            "windowFrames": [
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          }
+        },
+        {
+          "file": "16-cloud-plugin-connection.png",
+          "bytes": 1409848,
+          "sha256": "bb21ba6d16cc7f65aebe06aec28a131cb8897e7934b66c444231622182219cb1",
+          "observation": "Centered Cloud sheet title and all connection instructions/footer fit without truncation or overlap.",
+          "geometry": {
+            "appFrame": {
+              "height": 1032,
+              "width": 1376,
+              "x": 0,
+              "y": 0
+            },
+            "captureSource": "XCUIScreen.main",
+            "deviceOrientation": 3,
+            "displayedHeight": 2064,
+            "displayedWidth": 2752,
+            "imageOrientation": 2,
+            "language": "en",
+            "name": "16-cloud-plugin-connection",
+            "orientationMatchesApp": true,
+            "pixelHeight": 2752,
+            "pixelWidth": 2064,
+            "schemaVersion": 1,
+            "windowFrames": [
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          }
+        }
+      ],
+      "scope": "Actual inspection of six completed non-auth application screenshots; no interaction or native run by reviewer."
+    },
+    {
+      "sourceSHA": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+      "sourceManifestSHA256": "d92f278855c3a37ad2b94e099db99e4df2203685e09b0d5fe2f6adc66ce147eb",
+      "profile": "ipad-he",
+      "reviewedUTC": "2026-11-24T19:14:03.253136+00:00",
+      "status": "no blocking visual defect observed",
+      "reviewedImages": [
+        {
+          "file": "01-matrix.png",
+          "bytes": 1602335,
+          "sha256": "b9741469b5261030d29c86b1442cc3439d5ae9da4b0076a7713871621d8776ad",
+          "observation": "Hebrew right-hand sidebar labels/counts, quadrant headings and task titles remain readable. Task titles wrap; compact date metadata has explicit ellipsis. No visible control overlap.",
+          "geometry": {
+            "appFrame": {
+              "height": 1032,
+              "width": 1376,
+              "x": 0,
+              "y": 0
+            },
+            "captureSource": "XCUIScreen.main",
+            "deviceOrientation": 3,
+            "displayedHeight": 2064,
+            "displayedWidth": 2752,
+            "imageOrientation": 2,
+            "language": "he",
+            "name": "01-matrix",
+            "orientationMatchesApp": true,
+            "pixelHeight": 2752,
+            "pixelWidth": 2064,
+            "schemaVersion": 1,
+            "windowFrames": [
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          }
+        },
+        {
+          "file": "02-editor.png",
+          "bytes": 897686,
+          "sha256": "6d7c3af6e6381e5bbcfc365a7a2d56993c7b62a8cd843aea2b9521f8e46f8a09",
+          "observation": "Centered editor is scrolled to date/time, recurrence, subtasks and estimates. Hebrew labels, mirrored Save/Cancel, toggles and visible rows fit; content beyond the scroll viewport is not covered.",
+          "geometry": {
+            "appFrame": {
+              "height": 1032,
+              "width": 1376,
+              "x": 0,
+              "y": 0
+            },
+            "captureSource": "XCUIScreen.main",
+            "deviceOrientation": 3,
+            "displayedHeight": 2064,
+            "displayedWidth": 2752,
+            "imageOrientation": 2,
+            "language": "he",
+            "name": "02-editor",
+            "orientationMatchesApp": true,
+            "pixelHeight": 2752,
+            "pixelWidth": 2064,
+            "schemaVersion": 1,
+            "windowFrames": [
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          }
+        },
+        {
+          "file": "04-dashboard.png",
+          "bytes": 1510623,
+          "sha256": "7a1d040c28d8a46700beb421ab0a9d51f390f85429f941011d1b78fa9a1aa1a0",
+          "observation": "Metric cards, RTL chart labels/date axis, legend and period selector are readable and separated. The visible donut and sidebar do not overlap.",
+          "geometry": {
+            "appFrame": {
+              "height": 1032,
+              "width": 1376,
+              "x": 0,
+              "y": 0
+            },
+            "captureSource": "XCUIScreen.main",
+            "deviceOrientation": 3,
+            "displayedHeight": 2064,
+            "displayedWidth": 2752,
+            "imageOrientation": 2,
+            "language": "he",
+            "name": "04-dashboard",
+            "orientationMatchesApp": true,
+            "pixelHeight": 2752,
+            "pixelWidth": 2064,
+            "schemaVersion": 1,
+            "windowFrames": [
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          }
+        },
+        {
+          "file": "14-chatgpt-account-before-consent.png",
+          "bytes": 1299806,
+          "sha256": "85b2e5f2f1bfcf9e5efc6d5c22336a43d7a9520c3985fd8add655fcd53d00f81",
+          "observation": "Native account sheet title, Continue/usage rows, explanatory/privacy copy and left-side Done fit. Mixed Hebrew/Latin text is readable; no live authorization browser is shown.",
+          "geometry": {
+            "appFrame": {
+              "height": 1032,
+              "width": 1376,
+              "x": 0,
+              "y": 0
+            },
+            "captureSource": "XCUIScreen.main",
+            "deviceOrientation": 3,
+            "displayedHeight": 2064,
+            "displayedWidth": 2752,
+            "imageOrientation": 2,
+            "language": "he",
+            "name": "14-chatgpt-account-before-consent",
+            "orientationMatchesApp": true,
+            "pixelHeight": 2752,
+            "pixelWidth": 2064,
+            "schemaVersion": 1,
+            "windowFrames": [
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          }
+        },
+        {
+          "file": "15-hanlin-assistant.png",
+          "bytes": 1358175,
+          "sha256": "23a204846a20fec4e6af31db779737645ea909ee67c418cc72028fa341a3790f",
+          "observation": "Assistant header controls, Hebrew body and composer fit in the centered sheet. Close and send controls do not overlap text; placeholder is right aligned.",
+          "geometry": {
+            "appFrame": {
+              "height": 1032,
+              "width": 1376,
+              "x": 0,
+              "y": 0
+            },
+            "captureSource": "XCUIScreen.main",
+            "deviceOrientation": 3,
+            "displayedHeight": 2064,
+            "displayedWidth": 2752,
+            "imageOrientation": 2,
+            "language": "he",
+            "name": "15-hanlin-assistant",
+            "orientationMatchesApp": true,
+            "pixelHeight": 2752,
+            "pixelWidth": 2064,
+            "schemaVersion": 1,
+            "windowFrames": [
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          }
+        },
+        {
+          "file": "16-cloud-plugin-connection.png",
+          "bytes": 1310462,
+          "sha256": "b902def78a70c27d8b1ddab4f883434e5f4f8f4da1417a2b3a8406bc5b403712",
+          "observation": "Cloud account/plugin sheet title, connection actions, multiline Hebrew instructions and footer fit. Mixed ChatGPT/GSD/Connect text is readable with right-aligned flow.",
+          "geometry": {
+            "appFrame": {
+              "height": 1032,
+              "width": 1376,
+              "x": 0,
+              "y": 0
+            },
+            "captureSource": "XCUIScreen.main",
+            "deviceOrientation": 3,
+            "displayedHeight": 2064,
+            "displayedWidth": 2752,
+            "imageOrientation": 2,
+            "language": "he",
+            "name": "16-cloud-plugin-connection",
+            "orientationMatchesApp": true,
+            "pixelHeight": 2752,
+            "pixelWidth": 2064,
+            "schemaVersion": 1,
+            "windowFrames": [
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "height": 1032,
+                "width": 1376,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          }
+        }
+      ],
+      "scope": "Actual inspection of six completed non-auth application screenshots; no interaction or native run by reviewer."
+    }
+  ],
+  "observedBlockingVisualDefects": [],
+  "scope": "Actual read-only review of 24 completed non-auth application screenshots across iPhone/iPad EN/HE. No native jobs or source changes by this review.",
+  "limits": [
+    "Visual review establishes visible layout only; native test receipts establish their separate interaction assertions.",
+    "Compact task due-date metadata has explicit ellipsis; task titles remain wrapped and readable.",
+    "Scrolled content beyond each captured viewport is not claimed inspected.",
+    "No personal OAuth grant, live model inference, physical device or live authorization-browser-content acceptance is claimed."
+  ],
+  "reviewedImageCount": 24,
+  "separateDiagnostic": {
+    "file": "diagnostics/ipad-he-live-state-20261124.png",
+    "sha256": "0409af74c4aff1916eba0d18bf793db5e767902d7994d0fa16be489eac01573a",
+    "captureCount": 1,
+    "capturedUTC": "2026-11-24T18:45:02.655093Z",
+    "observation": "Owned simulator showed the Hebrew task matrix at the final stage; the full profile completed successfully seconds later. This is not evidence of a sign-in hang and is excluded from the 24 original profile frames."
+  }
+}

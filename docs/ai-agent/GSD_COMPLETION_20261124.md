@@ -1,5 +1,7 @@
 # GSD and Lorvex completion — 2026-11-24
 
+Current source-bound acceptance and remaining release gates: [GSD delivery status](GSD_DELIVERY_CURRENT_20261124.md). The original build-48 checkpoint below remains historical evidence.
+
 User authorization: complete the remaining Asana work, update the original Hanlin SDK in both apps, fix shared defects, build and release using the Scaleway Mac, and report milestones. Existing accepted work and production data must be preserved.
 
 ## Scope
@@ -19,11 +21,11 @@ A controlled conversation-store suspension drives a real HanlinAgentSession thro
 # GSD completion
 - [x] Read current Asana records and immutable native/release evidence.
 - [x] Isolate source at b19db20 (validated build48 + Hebrew fix and receipts).
-- [ ] Merge latest compatible canonical Hanlin SDK pin.
-- [ ] Repair cancellation ownership and localize AI failure display.
-- [ ] Run focused native checks and required iPhone/iPad acceptance.
-- [ ] Sign, export, upload and verify updated TestFlight build.
-- [ ] Integrate backend milestone and record final evidence.
+- [x] Merge latest compatible canonical Hanlin SDK pin (`bea35c3c2a435d1cc5f7ce93b08a649b104bc10f`).
+- [x] Repair cancellation ownership and localize AI failure display; focused native contracts passed.
+- [x] Run focused package and main iPhone/iPad acceptance: 183 package tests, 13 UI tests and 24 reviewed frames, with exact source/reuse boundaries in the current delivery report. Corrected Share runtime remains a separate open gate.
+- [ ] Sign, export, upload and verify corrected build 49 from its accepted source. Delivered build 48 and the earlier signed ee5 IPA are separate historical artifacts.
+- [x] Integrate the deployed backend milestone and record its scoped evidence: e74 native-auth guard, 21 passing contracts and populated account/OAuth backup restoration.
 
 ## Resuming From Here
 Owner: /root. Canonical source: Oracle worktree gsd-final-20261124-root.
