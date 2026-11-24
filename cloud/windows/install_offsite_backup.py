@@ -150,7 +150,12 @@ def main():
     actual = ET.fromstring(installed.lstrip("\ufeff"))
     ns = {"t": NAMESPACE}
     assert actual.findtext(".//t:LogonType", namespaces=ns) == "InteractiveToken"
-    assert actual.findtext(".//t:RunLevel", namespaces=ns) == "LeastPrivilege"
+    # Task Scheduler omits the default LUA level when exporting XML.
+    assert actual.findtext(".//t:RunLevel", default="LeastPrivilege", namespaces=ns) == "LeastPrivilege"
+    boundary = actual.findtext(".//t:CalendarTrigger/t:StartBoundary", namespaces=ns)
+    utc = datetime.datetime.fromisoformat(boundary.replace("Z", "+00:00")).astimezone(datetime.timezone.utc)
+    assert (utc.hour, utc.minute) == (3, 35)
+    assert actual.findtext(".//t:DaysInterval", namespaces=ns) == "1"
     assert actual.findtext(".//t:StartWhenAvailable", namespaces=ns) == "true"
     assert actual.findtext(".//t:Principal/t:UserId", namespaces=ns) == sid
     assert actual.findtext(".//t:Exec/t:Arguments", namespaces=ns) == '"' + str(target) + '"'
