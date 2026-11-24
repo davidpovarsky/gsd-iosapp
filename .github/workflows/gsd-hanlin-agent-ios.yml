@@ -471,9 +471,10 @@ jobs:
 
   watch-smoke:
     if: inputs.mode == 'watch-smoke'
-    runs-on: xcode-27
+    runs-on: gsd-watch-scaleway-20261124
     timeout-minutes: 25
     env:
+      DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4

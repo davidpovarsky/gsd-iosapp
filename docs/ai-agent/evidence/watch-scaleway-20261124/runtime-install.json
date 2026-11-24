@@ -1,0 +1,89 @@
+{
+  "scope": "one official watchOS27.0 arm64 runtime installation; no global Xcode change",
+  "expectedVersion": "27.0",
+  "expectedBuild": "24R362",
+  "catalogIdentifier": "30beb8dd-a392-5024-a8e0-c178e2a431d7",
+  "downloadBytes": 3825263104,
+  "freeSpaceFloor": 21474836480,
+  "passed": true,
+  "phase": "verified",
+  "startedAt": "2026-11-24T14:44:09.664405+00:00",
+  "updatedAt": "2026-11-24T14:45:10.089222+00:00",
+  "selectedDeveloperBefore": "/Applications/Xcode.app/Contents/Developer",
+  "toolchain": "Xcode 27.0\nBuild version 27A266a",
+  "availableBefore": 372912996352,
+  "runtimesBefore": [
+    {
+      "identifier": "com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+      "name": "iOS 27.0",
+      "version": "27.0",
+      "buildversion": "24A434",
+      "isAvailable": true
+    },
+    {
+      "identifier": "com.apple.CoreSimulator.SimRuntime.iOS-27-2-iPhone19-4",
+      "name": "iOS 27.2",
+      "version": "27.2",
+      "buildversion": "24B91016s",
+      "isAvailable": true
+    },
+    {
+      "identifier": "com.apple.CoreSimulator.SimRuntime.iOS-27-2",
+      "name": "iOS 27.2",
+      "version": "27.2",
+      "buildversion": "24B8117",
+      "isAvailable": true
+    }
+  ],
+  "command": [
+    "/usr/bin/xcodebuild",
+    "-downloadPlatform",
+    "watchOS",
+    "-buildVersion",
+    "27.0",
+    "-architectureVariant",
+    "arm64"
+  ],
+  "installInvocations": 1,
+  "elapsedSeconds": 60.0,
+  "installExit": 0,
+  "runtimesAfter": [
+    {
+      "identifier": "com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+      "name": "iOS 27.0",
+      "version": "27.0",
+      "buildversion": "24A434",
+      "isAvailable": true
+    },
+    {
+      "identifier": "com.apple.CoreSimulator.SimRuntime.iOS-27-2-iPhone19-4",
+      "name": "iOS 27.2",
+      "version": "27.2",
+      "buildversion": "24B91016s",
+      "isAvailable": true
+    },
+    {
+      "identifier": "com.apple.CoreSimulator.SimRuntime.iOS-27-2",
+      "name": "iOS 27.2",
+      "version": "27.2",
+      "buildversion": "24B8117",
+      "isAvailable": true
+    },
+    {
+      "identifier": "com.apple.CoreSimulator.SimRuntime.watchOS-27-0",
+      "name": "watchOS 27.0",
+      "version": "27.0",
+      "buildversion": "24R362",
+      "isAvailable": true
+    }
+  ],
+  "installedRuntime": {
+    "identifier": "com.apple.CoreSimulator.SimRuntime.watchOS-27-0",
+    "name": "watchOS 27.0",
+    "version": "27.0",
+    "buildversion": "24R362",
+    "isAvailable": true
+  },
+  "availableAfter": 368117493760,
+  "selectedDeveloperAfter": "/Applications/Xcode.app/Contents/Developer"
+}
