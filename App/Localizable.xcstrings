@@ -100,8 +100,7 @@
             "value": "%@, %@"
           }
         }
-      },
-      "extractionState": "manual"
+      }
     },
     "%@, %lld tasks": {
       "localizations": {
@@ -185,8 +184,7 @@
             "value": "%@. %@"
           }
         }
-      },
-      "extractionState": "manual"
+      }
     },
     "%@. Undo is available.": {
       "localizations": {
@@ -219,8 +217,7 @@
             "value": "%@: %@"
           }
         }
-      },
-      "extractionState": "manual"
+      }
     },
     "%lld active": {
       "localizations": {
