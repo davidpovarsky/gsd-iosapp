@@ -87,32 +87,41 @@ struct GSDTaskQuery: EntityQuery, EntityStringQuery {
     @Dependency private var store: TaskStore
 
     func entities(for identifiers: [GSDTaskEntity.ID]) async throws -> [GSDTaskEntity] {
-        var found: [GSDTaskEntity] = []
-        for id in identifiers {
-            if let task = try await store.fetchTask(id: id) {
-                found.append(GSDTaskEntity(task: task))
+        let taskStore = store
+        return try await withDatabaseResumedForIntent {
+            var found: [GSDTaskEntity] = []
+            for id in identifiers {
+                if let task = try await taskStore.fetchTask(id: id) {
+                    found.append(GSDTaskEntity(task: task))
+                }
             }
+            return found
         }
-        return found
     }
 
     func suggestedEntities() async throws -> [GSDTaskEntity] {
-        try await store.fetchAllTasks()
-            .filter { !$0.completed && !$0.isSaved }
-            .prefix(20)
-            .map { GSDTaskEntity(task: $0) }
+        let taskStore = store
+        return try await withDatabaseResumedForIntent {
+            try await taskStore.fetchAllTasks()
+                .filter { !$0.completed && !$0.isSaved }
+                .prefix(20)
+                .map { GSDTaskEntity(task: $0) }
+        }
     }
 
     func entities(matching string: String) async throws -> [GSDTaskEntity] {
+        let taskStore = store
         let query = string.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        return try await store.fetchAllTasks()
-            .filter { task in
-                !task.isSaved && (query.isEmpty
-                || task.title.lowercased().contains(query)
-                || task.tags.contains { $0.lowercased().contains(query) })
-            }
-            .prefix(20)
-            .map { GSDTaskEntity(task: $0) }
+        return try await withDatabaseResumedForIntent {
+            try await taskStore.fetchAllTasks()
+                .filter { task in
+                    !task.isSaved && (query.isEmpty
+                    || task.title.lowercased().contains(query)
+                    || task.tags.contains { $0.lowercased().contains(query) })
+                }
+                .prefix(20)
+                .map { GSDTaskEntity(task: $0) }
+        }
     }
 }
 
