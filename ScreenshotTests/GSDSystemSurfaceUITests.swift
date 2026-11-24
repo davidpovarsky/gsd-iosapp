@@ -322,10 +322,9 @@ final class GSDSystemSurfaceUITests: XCTestCase {
     }
 
     private func enterMarker(_ marker: String, in host: XCUIApplication) throws {
-        let fields = host.textFields.matching(NSPredicate(format: "label == %@", "כותרת"))
-        let textViews = host.textViews.matching(NSPredicate(format: "label == %@", "כותרת"))
-        try require(fields.count + textViews.count == 1, "The source-defined Share title field is missing or ambiguous.")
-        let title = fields.count == 1 ? fields.firstMatch : textViews.firstMatch
+        let fields = host.textFields.matching(NSPredicate(format: "placeholderValue == %@", "כותרת"))
+        try require(fields.count == 1, "The source-defined Share title field is missing or ambiguous.")
+        let title = fields.firstMatch
         try require(title.isHittable, "The Share title field is obscured.")
         title.tap()
         // Insert a distinct short marker without guessing Select All/system keyboard labels.

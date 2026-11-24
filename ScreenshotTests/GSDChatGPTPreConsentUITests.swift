@@ -140,7 +140,10 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
         let field = app.textFields["capture-field"]
         try require(field.waitForExistence(timeout: 30), "Normal GSD did not reach Matrix.")
         try require(field.wait(for: \.isHittable, toEqual: true, timeout: 10), "Normal Matrix is obscured.")
-        try tap(app.buttons["Open Hanlin task AI assistant"].firstMatch, "Hanlin assistant is unavailable.")
+        let assistant = app.buttons["Open Hanlin task AI assistant"].firstMatch
+        try require(wait(10) { assistant.exists && assistant.isEnabled && assistant.isHittable },
+                    "Hanlin assistant is unavailable.")
+        try tap(assistant, "Hanlin assistant is unavailable.")
         let modelSettings = app.navigationBars["Hanlin model settings"]
         if !modelSettings.waitForExistence(timeout: 5) {
             try tap(app.buttons["Model"].firstMatch, "Hanlin model settings are unavailable.")
@@ -188,6 +191,7 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
                     receipt["observedOfficialHost"] = "auth.openai.com"
                     receipt["expectedAuthorizationOrigin"] = "https://auth.openai.com"
                     receipt["originEvidence"] = surface.originEvidence
+                    receipt.removeValue(forKey: "observedOrigin")
                     if surface.originEvidence == "visible_https_url" {
                         receipt["observedOrigin"] = "https://auth.openai.com"
                     }
