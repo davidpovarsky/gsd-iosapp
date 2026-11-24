@@ -155,7 +155,27 @@ final class GSDChatGPTPreConsentUITests: XCTestCase {
                     "The native ChatGPT account screen did not open.")
     }
 
+    private func dismissKeyboardIntroductionIfPresent() throws {
+        // The normal first-keyboard introduction is owned by SpringBoard, not sign-in.
+        // Its exact native container was observed on a fresh simulator.
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let containers = springboard.otherElements
+            .matching(identifier: "UIContinuousPathIntroductionView")
+            .allElementsBoundByAccessibilityElement.filter { $0.exists }
+        guard !containers.isEmpty else { return }
+        try require(containers.count == 1, "Keyboard introduction ownership is ambiguous.")
+        let introduction = containers[0]
+        let buttons = introduction.buttons.allElementsBoundByAccessibilityElement.filter {
+            $0.exists && $0.isEnabled && $0.isHittable
+                && ($0.label == "Continue" || $0.label == "המשך")
+        }
+        try require(buttons.count == 1, "The native keyboard introduction has no unique ready Continue control.")
+        try tap(buttons[0], "The native keyboard introduction could not be dismissed.")
+        try require(introduction.waitForNonExistence(timeout: 10), "The native keyboard introduction remained visible.")
+    }
+
     private func openAssistantWhenReady(_ app: XCUIApplication) throws {
+        try dismissKeyboardIntroductionIfPresent()
         let query = app.buttons.matching(identifier: "hanlin.assistant.open")
         var readyAssistant: XCUIElement?
         let ready = wait(15) {
