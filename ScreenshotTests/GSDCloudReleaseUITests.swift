@@ -105,6 +105,77 @@ final class GSDCloudReleaseUITests: XCTestCase {
         try capture(app, "07-account-sign-in")
     }
 
+
+    /// Covers account/provider copy without starting personal OAuth or consuming AI usage.
+    func test04LocalizedHanlinProvidersAndChatGPTAccount() throws {
+        let app = application(demo: true)
+        app.launch()
+        navigate(app, label("Matrix", "מטריצה"))
+        let assistant = app.buttons[label("Open Hanlin task AI assistant", "פתיחת עוזר המשימות של Hanlin")].firstMatch
+        XCTAssertTrue(assistant.waitForExistence(timeout: 15))
+        assistant.tap()
+
+        let modelTitle = label("Hanlin model settings", "הגדרות המודל של Hanlin")
+        let settings = app.navigationBars[modelTitle]
+        // A fresh provider configuration opens this sheet automatically.
+        if !settings.waitForExistence(timeout: 5) {
+            let model = app.buttons[label("Model", "מודל")].firstMatch
+            XCTAssertTrue(model.waitForExistence(timeout: 5))
+            model.tap()
+        }
+        XCTAssertTrue(settings.waitForExistence(timeout: 5))
+        try capture(app, "12-hanlin-model-settings")
+
+        let providerName = label("Provider", "ספק")
+        let provider = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", providerName)).firstMatch
+        if provider.exists {
+            provider.tap()
+        } else {
+            let currentProvider = app.buttons["OpenRouter"].firstMatch
+            XCTAssertTrue(currentProvider.waitForExistence(timeout: 5), "Provider picker is not reachable")
+            currentProvider.tap()
+        }
+        let plan = app.buttons[label("ChatGPT plan", "מכסת ChatGPT")].firstMatch
+        XCTAssertTrue(plan.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["OpenRouter"].exists, "OpenRouter option must remain available")
+        XCTAssertTrue(app.buttons["OpenAI"].exists, "OpenAI API option must remain available")
+        try capture(app, "13-hanlin-provider-options")
+        plan.tap()
+
+        let accountSettings = app.buttons["hanlin.chatgpt.settings"]
+        XCTAssertTrue(accountSettings.waitForExistence(timeout: 5))
+        XCTAssertEqual(accountSettings.label, label("Continue with ChatGPT", "המשך עם ChatGPT"))
+        accountSettings.tap()
+        XCTAssertTrue(app.navigationBars[label("ChatGPT account", "חשבון ChatGPT")].waitForExistence(timeout: 5))
+        let status = app.descendants(matching: .any).matching(identifier: "chatgpt.account.status").firstMatch
+        XCTAssertTrue(status.waitForExistence(timeout: 5))
+        XCTAssertEqual(status.label, label(
+            "Continue with ChatGPT to use your plan for eligible AI requests.",
+            "יש לבחור ״המשך עם ChatGPT״ כדי להשתמש במכסה שלך עבור בקשות AI הזכאיות לכך."))
+        let continueButton = app.buttons["chatgpt.continue"]
+        XCTAssertTrue(continueButton.exists)
+        XCTAssertEqual(continueButton.label, label("Continue with ChatGPT", "המשך עם ChatGPT"))
+        XCTAssertFalse(app.alerts[label("You're using your ChatGPT plan", "השימוש נעשה במכסת ChatGPT שלך")].exists,
+                       "An unauthenticated fixture must not claim active ChatGPT plan use")
+        try capture(app, "14-chatgpt-account-before-consent")
+        // The actual authorization button is intentionally not activated.
+        app.buttons[label("Done", "סיום")].firstMatch.tap()
+        XCTAssertTrue(settings.waitForExistence(timeout: 5))
+        app.buttons[label("Cancel", "ביטול")].firstMatch.tap()
+
+        XCTAssertTrue(app.staticTexts[label("Task AI assistant", "עוזר המשימות")].waitForExistence(timeout: 5))
+        try capture(app, "15-hanlin-assistant")
+        app.buttons["MCP"].firstMatch.tap()
+        XCTAssertTrue(app.navigationBars[label("ChatGPT and GSD Cloud", "ChatGPT ו־GSD Cloud")].waitForExistence(timeout: 5))
+        let plugin = app.links[label("Open GSD Tasks in ChatGPT", "פתיחת GSD Tasks ב־ChatGPT")].firstMatch
+        let pluginButton = app.buttons[label("Open GSD Tasks in ChatGPT", "פתיחת GSD Tasks ב־ChatGPT")].firstMatch
+        XCTAssertTrue(plugin.exists || pluginButton.exists, "Cloud plugin connection entry is missing")
+        try capture(app, "16-cloud-plugin-connection")
+        app.buttons[label("Done", "סיום")].firstMatch.tap()
+        app.buttons[label("Close", "סגירה")].firstMatch.tap()
+        app.terminate()
+    }
+
     /// Uses the existing real widget view harness. This proves rendered strings
     /// and layout, not the separate SpringBoard WidgetKit timeline lifecycle.
     func test03LocalizedWidgetView() throws {

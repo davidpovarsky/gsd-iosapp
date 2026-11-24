@@ -62,6 +62,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--derived-data", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--ai-settings-only", action="store_true",
+                        help="Run only localized Hanlin/ChatGPT UI; no live cloud fixtures")
     args = parser.parse_args()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -88,7 +90,7 @@ def main() -> None:
             folder.mkdir(exist_ok=True)
             device = devices[family]
             device_id = None
-            cloud_round_trip = family == "iPad" and language == "he"
+            cloud_round_trip = not args.ai_settings_only and family == "iPad" and language == "he"
             receipt = {"family": family, "language": language, "deviceType": device["name"],
                        "runtime": runtime["version"], "passed": False, "cloudRoundTrip": cloud_round_trip}
             receipts.append(receipt)
@@ -102,20 +104,32 @@ def main() -> None:
                            "-destination", "platform=iOS Simulator,id=" + device_id,
                            "-destination-timeout", "90", "-parallel-testing-enabled", "NO",
                            "-resultBundlePath", str(folder / "Results.xcresult"),
-                           "-testLanguage", language, "-testRegion", "IL" if language == "he" else "US",
-                           "-only-testing:GSDScreenshotTests/GSDCloudReleaseUITests/test01LocalizedNavigationEditorChartsAndRTL",
-                           "-only-testing:GSDScreenshotTests/GSDCloudReleaseUITests/test03LocalizedWidgetView"]
+                           "-testLanguage", language, "-testRegion", "IL" if language == "he" else "US"]
+                selected_tests = ["test04LocalizedHanlinProvidersAndChatGPTAccount"]
+                if not args.ai_settings_only:
+                    selected_tests = ["test01LocalizedNavigationEditorChartsAndRTL",
+                                      "test03LocalizedWidgetView", *selected_tests]
                 if cloud_round_trip:
-                    command.append("-only-testing:GSDScreenshotTests/GSDCloudReleaseUITests/test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload")
+                    selected_tests.append("test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload")
+                command.extend("-only-testing:GSDScreenshotTests/GSDCloudReleaseUITests/" + name
+                               for name in selected_tests)
+                receipt["selectedTests"] = selected_tests
                 environment = os.environ.copy()
                 environment.update({
                     "TEST_RUNNER_GSD_TEST_LANGUAGE": language,
                     "TEST_RUNNER_GSD_SCREENSHOT_DIR": str(folder / "screenshots"),
-                    "TEST_RUNNER_GSD_CLOUD_SYSTEM_TEST": "1",
+                    "TEST_RUNNER_GSD_CLOUD_SYSTEM_TEST": "1" if cloud_round_trip else "0",
                     "TEST_RUNNER_GSD_CLOUD_TEST_BASE": environment.get("GSD_CLOUD_TEST_BASE",
                         "https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud"),
                 })
-                run(command, folder / "xcodebuild.log", timeout=1200, env=environment)
+                log = run(command, folder / "xcodebuild.log", timeout=1200, env=environment)
+                verified = []
+                for test in selected_tests:
+                    marker = r"(?im)^.*Test [Cc]ase.*\b" + re.escape(test) + r"\b.*\bpassed\b"
+                    if not re.search(marker, log):
+                        raise RuntimeError("XCTest did not report the selected test passed: " + test)
+                    verified.append(test)
+                receipt["verifiedPassedTests"] = verified
                 receipt["passed"] = True
             finally:
                 result = folder / "Results.xcresult"
@@ -126,7 +140,8 @@ def main() -> None:
                     run(["xcrun", "simctl", "shutdown", device_id], folder / "shutdown.log", check=False)
                     run(["xcrun", "simctl", "delete", device_id], folder / "delete.log", check=False)
                 receipt_path.write_text(json.dumps({"passed": all(r["passed"] for r in receipts) and len(receipts) == 4,
-                    "timestamp": datetime.now(timezone.utc).isoformat(), "runs": receipts}, indent=2) + "\n")
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "profile": "chatgpt-settings" if args.ai_settings_only else "native-release", "runs": receipts}, indent=2) + "\n")
             print("GSD_NATIVE_UI_PASS", name, flush=True)
     print("GSD_NATIVE_UI_ALL_FOUR_PASS", flush=True)
 
