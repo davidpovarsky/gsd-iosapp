@@ -488,9 +488,27 @@ jobs:
       - name: Prepare existing Apple Distribution identity securely
         shell: bash
         run: python3 scripts/prepare_gsd_signing.py prepare
-      - name: Install and verify all five App Store profiles
+      - name: Verify the five existing App Store profiles on Scaleway
         shell: bash
-        run: python3 scripts/gsd_appstore_connect.py profiles --install --output "$OUTPUT/profiles.json"
+        run: |
+          set -euo pipefail
+          python3 scripts/gsd_appstore_connect.py profiles --output "$OUTPUT/profiles.json"
+          python3 - <<'PY'
+          import base64, json, os, sys
+          from pathlib import Path
+          sys.path.insert(0, "scripts")
+          from gsd_appstore_connect import decode_profile, validate_profile
+
+          folder = Path.home() / "Library/Developer/Xcode/UserData/Provisioning Profiles"
+          profiles = json.loads(Path(os.environ["OUTPUT"], "profiles.json").read_text())
+          assert len(profiles) == 5
+          for row in profiles:
+              path = folder / (row["uuid"] + ".mobileprovision")
+              _, profile = decode_profile(base64.b64encode(path.read_bytes()).decode("ascii"))
+              validate_profile(profile, row["bundleId"])
+              assert profile["UUID"] == row["uuid"] and profile["Name"] == row["name"]
+          print("GSD_SCALEWAY_EXISTING_APP_STORE_PROFILES_VERIFIED")
+          PY
       - name: Archive signed GSD release
         shell: bash
         run: |
@@ -538,7 +556,7 @@ jobs:
         run: |
           python3 scripts/gsd_appstore_connect.py verify-upload --build "$GSD_BUILD_NUMBER" \
             --timeout 1200 --output "$OUTPUT/testflight-processing.json"
-      - name: Remove CI signing keys, keychain and installed profiles
+      - name: Remove CI signing keys and keychain
         if: always()
         shell: bash
         run: python3 scripts/prepare_gsd_signing.py cleanup --profiles "$OUTPUT/profiles.json"
