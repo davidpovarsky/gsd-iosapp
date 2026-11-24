@@ -1,0 +1,303 @@
+{
+  "scope": "Two explicitly approved generated APT binary index caches only; no GSD or other project data, logs, installed packages, downloads, reservations or volumes changed.",
+  "preflight": {
+    "job": "job_1ff872820c26",
+    "observed_at_utc": "2026-11-24T04:16:56.911343+00:00",
+    "caches": [
+      {
+        "allocated_bytes": 61943808,
+        "ctime_ns": "1795459076727747677",
+        "device": "2049",
+        "gid": 0,
+        "inode": "138759",
+        "link_count": 1,
+        "matches_observed_candidate": true,
+        "mode": 33188,
+        "mtime_ns": "1795459076727747677",
+        "mtime_utc": "2026-11-23T18:37:56.727748+00:00",
+        "no_symlink_components": true,
+        "path": "/var/cache/apt/pkgcache.bin",
+        "regular": true,
+        "safe_file_identity": true,
+        "size": 61937095,
+        "uid": 0
+      },
+      {
+        "allocated_bytes": 61923328,
+        "ctime_ns": "1795459076638747167",
+        "device": "2049",
+        "gid": 0,
+        "inode": "29757",
+        "link_count": 1,
+        "matches_observed_candidate": true,
+        "mode": 33188,
+        "mtime_ns": "1795459076638747167",
+        "mtime_utc": "2026-11-23T18:37:56.638747+00:00",
+        "no_symlink_components": true,
+        "path": "/var/cache/apt/srcpkgcache.bin",
+        "regular": true,
+        "safe_file_identity": true,
+        "size": 61916019,
+        "uid": 0
+      }
+    ],
+    "package_processes": [
+      {
+        "cache_mapping_present": false,
+        "classification": "known shutdown signal waiter",
+        "comm": "unattended-upgr",
+        "pid": 1227,
+        "selected_command": [
+          "/usr/bin/python3",
+          "/usr/share/unattended-upgrades/unattended-upgrade-shutdown",
+          "--wait-for-signal"
+        ],
+        "uid": 0
+      }
+    ],
+    "package_locks": [],
+    "package_units": {
+      "apt-daily-upgrade.service": {
+        "ActiveState": "inactive",
+        "SubState": "dead"
+      },
+      "apt-daily.service": {
+        "ActiveState": "inactive",
+        "SubState": "dead"
+      }
+    },
+    "blockers": []
+  },
+  "prior_guarded_attempt": {
+    "job": "job_2224f8636b2a",
+    "finished_at_utc": "2026-11-24T04:20:35.099499+00:00",
+    "removed": [],
+    "cause": "JavaScript JSON numeric precision rounded expected nanosecond timestamps; the full identity guard stopped before unlink.",
+    "precise_difference": [
+      {
+        "path": "/var/cache/apt/pkgcache.bin",
+        "mtime_ns_original": "1795459076727747677",
+        "mtime_ns_in_rejected_attempt": "1795459076727747600",
+        "rounding_delta_ns": "-77",
+        "matches_original": true
+      },
+      {
+        "path": "/var/cache/apt/srcpkgcache.bin",
+        "mtime_ns_original": "1795459076638747167",
+        "mtime_ns_in_rejected_attempt": "1795459076638747100",
+        "rounding_delta_ns": "-67",
+        "matches_original": true
+      }
+    ]
+  },
+  "exact_original_identity_readback": {
+    "job": "job_83a30082487d",
+    "observed_at_utc": "2026-11-24T04:21:38.099988+00:00",
+    "read_only": true,
+    "rows": [
+      {
+        "current_identity": {
+          "allocated_bytes": 61943808,
+          "ctime_ns": "1795459076727747677",
+          "device": "2049",
+          "gid": 0,
+          "inode": "138759",
+          "link_count": 1,
+          "mode": 33188,
+          "mtime_ns": "1795459076727747677",
+          "size": 61937095,
+          "uid": 0
+        },
+        "matches_original_exact": true,
+        "mismatches": {},
+        "path": "/var/cache/apt/pkgcache.bin"
+      },
+      {
+        "current_identity": {
+          "allocated_bytes": 61923328,
+          "ctime_ns": "1795459076638747167",
+          "device": "2049",
+          "gid": 0,
+          "inode": "29757",
+          "link_count": 1,
+          "mode": 33188,
+          "mtime_ns": "1795459076638747167",
+          "size": 61916019,
+          "uid": 0
+        },
+        "matches_original_exact": true,
+        "mismatches": {},
+        "path": "/var/cache/apt/srcpkgcache.bin"
+      }
+    ]
+  },
+  "execution": {
+    "job": "job_8a5fc9318ddb",
+    "cleanup_pass": true,
+    "disk_after": {
+      "/": {
+        "available_bytes": 277323776,
+        "device": "8:1",
+        "free_bytes": 294100992,
+        "total_bytes": 47321268224
+      },
+      "/mnt/development": {
+        "available_bytes": 702832640,
+        "device": "8:16",
+        "free_bytes": 719609856,
+        "total_bytes": 105089261568
+      }
+    },
+    "disk_before": {
+      "/": {
+        "available_bytes": 153456640,
+        "device": "8:1",
+        "free_bytes": 170233856,
+        "total_bytes": 47321268224
+      },
+      "/mnt/development": {
+        "available_bytes": 702832640,
+        "device": "8:16",
+        "free_bytes": 719609856,
+        "total_bytes": 105089261568
+      }
+    },
+    "exact_identity_readback_job": "job_83a30082487d",
+    "finished_at_utc": "2026-11-24T04:22:32.373668+00:00",
+    "health": {
+      "pocketbase": {
+        "code": 200,
+        "json": true,
+        "ok": null,
+        "status": 200
+      },
+      "public_gateway": {
+        "code": 200,
+        "json": true,
+        "ok": null,
+        "status": 200
+      }
+    },
+    "identities_rechecked": {
+      "/var/cache/apt/pkgcache.bin": {
+        "allocated_bytes": 61943808,
+        "ctime_ns": "1795459076727747677",
+        "device": "2049",
+        "gid": 0,
+        "inode": "138759",
+        "link_count": 1,
+        "mode": 33188,
+        "mtime_ns": "1795459076727747677",
+        "size": 61937095,
+        "uid": 0
+      },
+      "/var/cache/apt/srcpkgcache.bin": {
+        "allocated_bytes": 61923328,
+        "ctime_ns": "1795459076638747167",
+        "device": "2049",
+        "gid": 0,
+        "inode": "29757",
+        "link_count": 1,
+        "mode": 33188,
+        "mtime_ns": "1795459076638747167",
+        "size": 61916019,
+        "uid": 0
+      }
+    },
+    "immediate_package_guard": {
+      "blockers": [],
+      "checked_at_utc": "2026-11-24T04:22:32.292779+00:00",
+      "locks": [],
+      "processes": [
+        {
+          "cache_mapping_present": false,
+          "classification": "known shutdown signal waiter",
+          "comm": "unattended-upgr",
+          "pid": 1227,
+          "uid": 0
+        }
+      ],
+      "units": {
+        "apt-daily-upgrade.service": {
+          "ActiveState": "inactive",
+          "ExecMainStartTimestampMonotonic": "6943131718145",
+          "MainPID": "0",
+          "SubState": "dead"
+        },
+        "apt-daily.service": {
+          "ActiveState": "inactive",
+          "ExecMainStartTimestampMonotonic": "6986145600117",
+          "MainPID": "0",
+          "SubState": "dead"
+        }
+      }
+    },
+    "operation": "remove only two reviewed regenerable APT binary indexes",
+    "preflight_job": "job_1ff872820c26",
+    "prior_guarded_attempt_removed_nothing": "job_2224f8636b2a",
+    "removed": [
+      {
+        "allocated_bytes": 61943808,
+        "path": "/var/cache/apt/pkgcache.bin",
+        "removed_at_utc": "2026-11-24T04:22:32.295606+00:00"
+      },
+      {
+        "allocated_bytes": 61923328,
+        "path": "/var/cache/apt/srcpkgcache.bin",
+        "removed_at_utc": "2026-11-24T04:22:32.296379+00:00"
+      }
+    ],
+    "removed_allocated_bytes": 123867136,
+    "reserved_block_changes": false,
+    "root_available_delta_bytes": 123867136,
+    "service_actions": [],
+    "services_after": {
+      "gsd-cloud-gateway.service": {
+        "ActiveState": "active",
+        "ExecMainStartTimestampMonotonic": "7011118358127",
+        "MainPID": "3422173",
+        "SubState": "running"
+      },
+      "gsd-mcp-bridge.service": {
+        "ActiveState": "active",
+        "ExecMainStartTimestampMonotonic": "6934668490142",
+        "MainPID": "2118307",
+        "SubState": "running"
+      },
+      "gsd-pocketbase.service": {
+        "ActiveState": "active",
+        "ExecMainStartTimestampMonotonic": "7004392915116",
+        "MainPID": "3365518",
+        "SubState": "running"
+      }
+    },
+    "services_before": {
+      "gsd-cloud-gateway.service": {
+        "ActiveState": "active",
+        "ExecMainStartTimestampMonotonic": "7011118358127",
+        "MainPID": "3422173",
+        "SubState": "running"
+      },
+      "gsd-mcp-bridge.service": {
+        "ActiveState": "active",
+        "ExecMainStartTimestampMonotonic": "6934668490142",
+        "MainPID": "2118307",
+        "SubState": "running"
+      },
+      "gsd-pocketbase.service": {
+        "ActiveState": "active",
+        "ExecMainStartTimestampMonotonic": "7004392915116",
+        "MainPID": "3365518",
+        "SubState": "running"
+      }
+    },
+    "services_unchanged": true,
+    "started_at_utc": "2026-11-24T04:22:32.241176+00:00",
+    "target_absent": {
+      "/var/cache/apt/pkgcache.bin": true,
+      "/var/cache/apt/srcpkgcache.bin": true
+    },
+    "volume_resize": false
+  },
+  "precision_note": "inode, device, mtime_ns and ctime_ns are decimal strings in identity receipts and the successful comparison. Python parsed the untouched original preflight receipt before conversion; no comparison requirement was weakened."
+}

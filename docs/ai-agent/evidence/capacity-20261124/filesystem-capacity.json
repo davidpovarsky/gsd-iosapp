@@ -1,0 +1,70 @@
+{
+  "job": "job_1ff872820c26",
+  "observed_at_utc": "2026-11-24T04:16:56.911343+00:00",
+  "read_only": true,
+  "topology": {
+    "/": {
+      "block_device_bytes": 48935976448,
+      "filesystem_block_capacity_bytes": 48935972864,
+      "mount": {
+        "fstype": "ext4",
+        "source": "/dev/sda1",
+        "target": "/"
+      },
+      "reserved_capacity_bytes": 0,
+      "statvfs": {
+        "available_bytes": 153755648,
+        "block_unit": 4096,
+        "device": "8:1",
+        "device_number": 2049,
+        "free_bytes": 170532864,
+        "total_bytes": 47321268224
+      },
+      "superblock": {
+        "Block count": "11947259",
+        "Block size": "4096",
+        "Filesystem state": "clean",
+        "Free blocks": "41842",
+        "Reserved block count": "0",
+        "Reserved blocks gid": "0 (group root)",
+        "Reserved blocks uid": "0 (user root)"
+      },
+      "superblock_query_exit": 0,
+      "unused_bytes_inside_selected_block_device": 3584
+    },
+    "/mnt/development": {
+      "block_device_bytes": 107374182400,
+      "filesystem_block_capacity_bytes": 107374182400,
+      "mount": {
+        "fstype": "ext4",
+        "source": "/dev/sdb",
+        "target": "/mnt/development"
+      },
+      "reserved_capacity_bytes": 0,
+      "statvfs": {
+        "available_bytes": 704356352,
+        "block_unit": 4096,
+        "device": "8:16",
+        "device_number": 2064,
+        "free_bytes": 721133568,
+        "total_bytes": 105089261568
+      },
+      "superblock": {
+        "Block count": "26214400",
+        "Block size": "4096",
+        "Filesystem state": "clean",
+        "Free blocks": "179577",
+        "Reserved block count": "0",
+        "Reserved blocks gid": "0 (group root)",
+        "Reserved blocks uid": "0 (user root)"
+      },
+      "superblock_query_exit": 0,
+      "unused_bytes_inside_selected_block_device": 0
+    }
+  },
+  "limitations": [
+    "Root comparison covers the mounted /dev/sda1 partition, not the containing disk's partition table.",
+    "Free-space and on-disk superblock metadata are separate live observations; concurrent writes can change free-block values.",
+    "No reserve, partition, filesystem, block-volume or billing change was performed."
+  ]
+}
