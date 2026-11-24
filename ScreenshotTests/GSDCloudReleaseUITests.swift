@@ -109,6 +109,39 @@ final class GSDCloudReleaseUITests: XCTestCase {
          "width": Double(frame.width), "height": Double(frame.height)]
     }
 
+    private func accessibilityTextWithoutBidiControls(_ text: String) -> String {
+        // Preserve every visible character, punctuation mark and digit. Localized
+        // interpolation may surround values with Unicode direction controls.
+        String(String.UnicodeScalarView(text.unicodeScalars.filter { scalar in
+            switch scalar.value {
+            case 0x061C, 0x200E...0x200F, 0x202A...0x202E, 0x2066...0x2069: false
+            default: true
+            }
+        }))
+    }
+
+    private func captureSeededRecurringLabel(_ rawLabel: String) throws {
+        // Called only for the built-in row in the disposable --demo-seed app.
+        // Persist the original label before checking it; no account or user data.
+        let receipt: [String: Any] = [
+            "schemaVersion": 1,
+            "language": language,
+            "identifier": "browse-view-recurring",
+            "rawLabel": rawLabel,
+            "unicodeScalars": rawLabel.unicodeScalars.map { String(format: "U+%04X", $0.value) }
+        ]
+        let data = try JSONSerialization.data(withJSONObject: receipt, options: [.prettyPrinted, .sortedKeys])
+        let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+        attachment.name = "\(language)-05-recurring-accessibility-label"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        if let destination = ProcessInfo.processInfo.environment["GSD_SCREENSHOT_DIR"] {
+            let directory = URL(fileURLWithPath: destination, isDirectory: true)
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            try data.write(to: directory.appendingPathComponent("05-recurring-accessibility-label.json"))
+        }
+    }
+
     func test01LocalizedNavigationEditorChartsAndRTL() throws {
         let app = application(demo: true)
         app.launch()
@@ -186,12 +219,17 @@ final class GSDCloudReleaseUITests: XCTestCase {
             let savedLink = app.descendants(matching: .any).matching(identifier: "browse-saved").firstMatch
             XCTAssertTrue(savedLink.waitForExistence(timeout: 8), "Browse list did not open")
             XCTAssertTrue(savedLink.isHittable, "Browse content is obscured")
-            let recurring = app.descendants(matching: .any).matching(NSPredicate(
-                format: "label BEGINSWITH %@", label("Recurring Tasks,", "משימות חוזרות,"))).firstMatch
+            // Locate the actual link independently from localized interpolation controls.
+            let recurring = app.buttons["browse-view-recurring"].firstMatch
             for _ in 0..<3 where !recurring.isHittable { app.swipeUp() }
             let assistant = app.buttons["hanlin.assistant.open"].firstMatch
             try capture(app, "05-browse-diagnostic-before-assertion")
             XCTAssertTrue(recurring.waitForExistence(timeout: 5), "Recurring Tasks row is missing")
+            let rawRecurringLabel = recurring.label
+            try captureSeededRecurringLabel(rawRecurringLabel)
+            XCTAssertEqual(accessibilityTextWithoutBidiControls(rawRecurringLabel),
+                           label("Recurring Tasks, 1 tasks", "משימות חוזרות, מספר המשימות: 1"),
+                           "Recurring Tasks accessibility label must contain its localized name and count")
             XCTAssertTrue(recurring.isHittable, "Recurring Tasks row cannot be reached")
             XCTAssertTrue(assistant.waitForExistence(timeout: 5), "Browse assistant action is missing")
             XCTAssertTrue(assistant.isHittable, "Browse assistant action is obscured")

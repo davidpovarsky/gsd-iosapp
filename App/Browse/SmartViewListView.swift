@@ -117,6 +117,7 @@ struct SmartViewListView: View {
 
     @ViewBuilder private func viewLink(_ view: SmartView) -> some View {
         NavigationLink(value: BrowseRoute.view(view.id)) { SmartViewRow(view: view) }
+            .accessibilityIdentifier("browse-view-\(view.id)")
             .listRowBackground(Surface.surface)
             .swipeActions(edge: .leading) {
                 if store.pinnedSmartViewIds.contains(view.id) {
