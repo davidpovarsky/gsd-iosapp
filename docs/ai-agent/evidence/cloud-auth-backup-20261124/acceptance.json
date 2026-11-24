@@ -1,0 +1,320 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-24",
+  "scope": "GSD Cloud native password IP guard and populated recovery verification",
+  "source": {
+    "baseCommit": "b746c080473439708defc285ceee43e9165aa636",
+    "candidateSHA256": {
+      "cloud/gateway/server.mjs": "4bcc55288e28576aaacf24cd6657f254e6703637f732929b139ca78645b2a598",
+      "cloud/gateway/rate-limit.test.mjs": "cdb3a8c98daa2cc27e84003488d609262970cea0c1783fd8770d8f63d5a6cd86",
+      "cloud/test_backup_acceptance.py": "abb3877a6a4f45873581de7573cba86c3f78f71ea503e2a05a9c3d82925447e8"
+    },
+    "baselineGatewaySHA256": "45526f16d81eaac4b2e1e2f54e764aa7e86e5874b6d9ba7f8441e9ccce5acf54",
+    "deployedSourceSnapshot": {
+      "cloud/gateway/server.mjs": {
+        "sha256": "45526f16d81eaac4b2e1e2f54e764aa7e86e5874b6d9ba7f8441e9ccce5acf54",
+        "sizeBytes": 44604,
+        "identicalRepositoryBytes": true,
+        "identicalRepositoryText": true
+      },
+      "cloud/gateway/task-domain.mjs": {
+        "sha256": "cdc760aa2423739df4365eab7e42450fbcbc542d500064078c69927a99a74667",
+        "sizeBytes": 2607,
+        "identicalRepositoryBytes": false,
+        "identicalRepositoryText": true
+      },
+      "cloud/gateway/tool-catalog.json": {
+        "sha256": "7b9f2bdad26e96e6306f9952a96542c7ea40ec3955e511e31a52c8ee9e3b4fd6",
+        "sizeBytes": 12551,
+        "identicalRepositoryBytes": false,
+        "identicalRepositoryText": true
+      },
+      "cloud/backup.py": {
+        "sha256": "efea842528ce51a2f8a358c47216419b97bab5c8f46520720e690352f09e4e4a",
+        "sizeBytes": 5286,
+        "identicalRepositoryBytes": false,
+        "identicalRepositoryText": true
+      },
+      "cloud/pocketbase/pb_hooks/gsd_guarded.pb.js": {
+        "sha256": "6e2b76f002afbcf67d04d4e5a9f509040cbf53bef97a2c2cc8cc35b5373da95a",
+        "sizeBytes": 5886,
+        "identicalRepositoryBytes": false,
+        "identicalRepositoryText": true
+      },
+      "cloud/pocketbase/pb_hooks/gsd_library_helpers.js": {
+        "sha256": "cd4b12d73637160cea71152b442bfb39f196f6ccb59e96afd5cb0de9546f9db8",
+        "sizeBytes": 2441,
+        "identicalRepositoryBytes": false,
+        "identicalRepositoryText": true
+      },
+      "cloud/pocketbase/pb_migrations/1795456800_initial_gsd.js": {
+        "sha256": "ceb6b20d04ab46a6561f3ee32ce9daf17602750d1f2977b089c1a0472f7d25e3",
+        "sizeBytes": 2481,
+        "identicalRepositoryBytes": false,
+        "identicalRepositoryText": true
+      },
+      "cloud/pocketbase/pb_migrations/1795467600_cloud_library.js": {
+        "sha256": "b9c5fa950d203fc689631ff4a2d5c6932f313ed34e00be6a4df1388021464c29",
+        "sizeBytes": 1200,
+        "identicalRepositoryBytes": false,
+        "identicalRepositoryText": true
+      }
+    },
+    "pocketbaseVersion": "pocketbase version 0.40.6",
+    "pocketbaseSHA256": "419baf8f0b4fb455ac0dd3e0a59f4545eb9cc93eab0c47b20b29ec3a6f99f442"
+  },
+  "liveNonsecretConfigurationReadback": {
+    "checkedUTC": "2026-11-24T19:53:54.904419+00:00",
+    "readMode": "SQLite mode=ro + query_only; SQL selected only rate limit fields",
+    "rateLimitsEnabled": false,
+    "rules": [
+      {
+        "label": "*:auth",
+        "audience": "",
+        "duration": 3,
+        "maxRequests": 2
+      },
+      {
+        "label": "*:create",
+        "audience": "",
+        "duration": 5,
+        "maxRequests": 20
+      },
+      {
+        "label": "/api/batch",
+        "audience": "",
+        "duration": 1,
+        "maxRequests": 3
+      },
+      {
+        "label": "/api/",
+        "audience": "",
+        "duration": 10,
+        "maxRequests": 300
+      }
+    ],
+    "excludedIPCount": 0,
+    "accountRecordsRead": false,
+    "otherSettingsRead": false
+  },
+  "nativeDefaultProbe": {
+    "isolated": true,
+    "productionSettingsRead": false,
+    "rateLimitsEnabled": false,
+    "rejectedAttempts": 24,
+    "allResponseStatuses": 400,
+    "correctPasswordAfterward": true
+  },
+  "identitySemantics": {
+    "fixture": "Exact deployed gateway + PocketBase0.40.6, isolated default accounts",
+    "identities": [
+      {
+        "label": "ascii",
+        "registrationAccepted": true,
+        "variants": {
+          "exact": {
+            "accepted": true,
+            "sameAccount": true
+          },
+          "lowercase": {
+            "accepted": false,
+            "sameAccount": false
+          },
+          "uppercase": {
+            "accepted": false,
+            "sameAccount": false
+          },
+          "surroundingASCIIWhitespace": {
+            "accepted": false,
+            "sameAccount": false
+          },
+          "surroundingNBSP": {
+            "accepted": false,
+            "sameAccount": false
+          }
+        },
+        "uppercaseDuplicateRegistrationAccepted": true
+      },
+      {
+        "label": "unicode",
+        "registrationAccepted": true,
+        "variants": {
+          "exact": {
+            "accepted": true,
+            "sameAccount": true
+          },
+          "lowercase": {
+            "accepted": true,
+            "sameAccount": true
+          },
+          "uppercase": {
+            "accepted": false,
+            "sameAccount": false
+          },
+          "surroundingASCIIWhitespace": {
+            "accepted": false,
+            "sameAccount": false
+          },
+          "surroundingNBSP": {
+            "accepted": false,
+            "sameAccount": false
+          }
+        },
+        "uppercaseDuplicateRegistrationAccepted": true
+      }
+    ],
+    "productionDataUsed": false,
+    "fixtureCleanup": true
+  },
+  "productChange": {
+    "files": [
+      "cloud/gateway/server.mjs"
+    ],
+    "addedLines": 4,
+    "route": "POST /api/collections/users/auth-with-password",
+    "key": "Existing gateway trusted-IP derivation and SHA256, separate native-login group",
+    "maximumRequests": 22,
+    "windowMilliseconds": 900000,
+    "retryAfterSeconds": 900,
+    "responseStatus": 429,
+    "scope": "Per-IP across all body encodings, before upstream dispatch. Successful and failed attempts share the budget. No account/distributed-attempt guarantee.",
+    "preserved": [
+      "Streaming request body bytes and content type",
+      "PocketBase identity/password parsing and validation",
+      "auth-refresh, signup, CRUD and OAuth budgets",
+      "Account records, settings and native app source"
+    ]
+  },
+  "tests": {
+    "baselineLimiter": {
+      "total": 6,
+      "passed": 4,
+      "failed": 2,
+      "logSHA256": "e2b7e7838c3880fb4845c97b6180902b169e54c810716ad818125856c7a00002"
+    },
+    "fixedGateway": {
+      "passed": 21,
+      "failed": 0,
+      "newLimiterCases": 6,
+      "reusedAffectedContractCases": 15,
+      "logSHA256": "c6dd4b280f81cba5bb3439bbe195f613c015469ff59485146438d2c8cffb569d",
+      "command": "node --test --test-concurrency=1 --test-reporter=tap rate-limit.test.mjs gateway-security.test.mjs oauth-localization.test.mjs mcp-auth.test.mjs",
+      "workingDirectory": "cloud/gateway"
+    },
+    "bodyVariants": [
+      "JSON",
+      "URL-encoded form",
+      "Multipart form",
+      "Ambiguous/trailing JSON",
+      "XML",
+      "Malformed JSON",
+      "Unicode plus 128KiB ignored content"
+    ],
+    "fixtureClockOnly": true,
+    "productionAuthAttempts": 0
+  },
+  "populatedBackup": {
+    "actualPocketBaseVersion": "pocketbase version 0.40.6",
+    "allDatabaseTableCount": 13,
+    "archiveSHA256": "c7140a93ac3a5a738b05b59625d3aa271dfa29f6d389b01c9ac2e53015db477e",
+    "archiveSizeBytes": 34795,
+    "backupScriptSHA256": "efea842528ce51a2f8a358c47216419b97bab5c8f46520720e690352f09e4e4a",
+    "completeInitialLogicalDatabaseIdentity": true,
+    "counts": {
+      "gsd_library": 2,
+      "tasks": 2,
+      "users": 2
+    },
+    "databaseSizeBytes": 196608,
+    "fixtureCleanup": true,
+    "gatewayKeyAndStateByteIdentity": true,
+    "gatewaySHA256": "4bcc55288e28576aaacf24cd6657f254e6703637f732929b139ca78645b2a598",
+    "gatewayStateCounts": {
+      "access": 2,
+      "clients": 3,
+      "codes": 0,
+      "pending": 1,
+      "refresh": 2
+    },
+    "gatewayStateSHA256": "dcc82ae3fba6960a6cf7fb1bdb7177064bf1d5f1b35e449240c2b69c1d240162",
+    "integrity": "ok",
+    "logicalSHA256": "174751db6a0a7ff7e1737f7645bcde562e36f2b8d6bbb5f3ca4c08fc0656d5af",
+    "manifestVerify": true,
+    "productionDataUsed": false,
+    "restoredMCPAccessAndRefreshRotation": true,
+    "restoredNativeSessionsAndAccountIsolation": true,
+    "restoredVersionedReplayRejectedWithoutDuplicates": true,
+    "result": "PASS",
+    "sourceConnectionOpenDuringBackup": true,
+    "logSHA256": "dda5b9516d9fbea9d908d15e6e5d7ef44457ee9e7a62b812d35cf7ea2961bb4d",
+    "command": "python3 -B cloud/test_backup_acceptance.py --pocketbase <path-to-pocketbase-0.40.6>",
+    "originalDeployedCodeRun": {
+      "actualPocketBaseVersion": "pocketbase version 0.40.6",
+      "allDatabaseTableCount": 13,
+      "archiveSHA256": "a51dec6b88bb669d2738ec15cf76b7e0ccb74954e258beae56cc2a63a767ac09",
+      "archiveSizeBytes": 34672,
+      "backupScriptSHA256": "efea842528ce51a2f8a358c47216419b97bab5c8f46520720e690352f09e4e4a",
+      "completeInitialLogicalDatabaseIdentity": true,
+      "counts": {
+        "gsd_library": 2,
+        "tasks": 2,
+        "users": 2
+      },
+      "databaseSizeBytes": 196608,
+      "fixtureCleanup": true,
+      "gatewayKeyAndStateByteIdentity": true,
+      "gatewaySHA256": "45526f16d81eaac4b2e1e2f54e764aa7e86e5874b6d9ba7f8441e9ccce5acf54",
+      "gatewayStateCounts": {
+        "access": 2,
+        "clients": 3,
+        "codes": 0,
+        "pending": 1,
+        "refresh": 2
+      },
+      "gatewayStateSHA256": "c6f5d9c062c9a90a8f2e884c38cb6387328497fde0bd9fe9d8a7946deaeb43e0",
+      "integrity": "ok",
+      "logicalSHA256": "a224c6e4b2c9752a2f6ec210b8e75f95cb1afc581b04319d3115d65611cb8b7e",
+      "manifestVerify": true,
+      "productionDataUsed": false,
+      "restoredMCPAccessAndRefreshRotation": true,
+      "restoredNativeSessionsAndAccountIsolation": true,
+      "restoredVersionedReplayRejectedWithoutDuplicates": true,
+      "result": "PASS",
+      "sourceConnectionOpenDuringBackup": true,
+      "logSHA256": "1b251aa7d303cc4934bc2f18c70e9bb7bc9f8cdc13c26c60c287c5f473cade2c"
+    },
+    "priorPublishedRecoveryEvidence": "540bde78d1eb7b90de9eb12d20d319d1c439f1f4",
+    "extension": "Prior populated restore proof is preserved. This run adds actual gateway key/state byte identity, existing native and MCP sessions, refresh rotation/replay rejection and restored CAS behavior."
+  },
+  "nativeClientReadback": {
+    "files": [
+      "GSDKit/Sources/GSDWire/PocketBaseClient.swift",
+      "App/Auth/SessionStore.swift"
+    ],
+    "behavior": "Standard message envelope decodes to PocketBaseError.pocketBase(status:429,...). Existing SessionStore cancellation path shows localized credential-safe generic sign-in error; saves tokens only after success.",
+    "nativeChangesRequired": false
+  },
+  "deployment": {
+    "status": "pending_owned_integration_and_deployment",
+    "performedByThisReceipt": false
+  },
+  "limitations": {
+    "personalDeviceOrChatGPTConsent": false,
+    "providerVolumeRestore": false,
+    "distributedOrAccountScopedNativeRateLimit": false,
+    "liveDatabaseRestore": false
+  },
+  "ingressTrustBoundary": {
+    "tailscaleVersion": "1.104.5",
+    "tailscaleCommit": "78838476328d1a97dc05400ad23086a9dbe616da",
+    "publicPath": "/gsd-cloud",
+    "upstream": "http://127.0.0.1:8770",
+    "gatewayListener": "127.0.0.1:8770",
+    "httpsAndFunnelEnabled": true,
+    "primarySourceURL": "https://github.com/tailscale/tailscale/blob/78838476328d1a97dc05400ad23086a9dbe616da/ipn/ipnlocal/serve.go",
+    "primarySourceBlob": "2093d75949473ed0135c7f1249615a4b64424fe6",
+    "behavior": "Serve passes connection SrcAddr in context; ReverseProxy Rewrite calls addProxyForwardedHeaders, whose Header.Set overwrites X-Forwarded-For with that address.",
+    "runtimeHeaderLoggingOrProductionAuthProbes": false,
+    "scope": "Verified installed Serve/Funnel source and current loopback-only configuration; not a promise for arbitrary proxies or privileged local callers."
+  }
+}

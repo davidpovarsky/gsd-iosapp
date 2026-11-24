@@ -582,6 +582,10 @@ export function createGateway({
         if(!proxyAllowed(u,method))return json(res,403,{error:'not_allowed'});
         if(u==='/api/collections/users/records'&&method==='POST'&&!rate(req,'signup',7,3600000))
           return json(res,429,{error:'signup_rate_limit'});
+        // Keep PocketBase's body/identity binding intact; all native auth formats share this IP budget.
+        if(u==='/api/collections/users/auth-with-password'&&method==='POST'&&!rate(req,'native-login',22,900000))
+          return json(res,429,{status:429,message:'Too many authentication attempts. Please try again later.',data:{}},
+            {'Retry-After':'900'});
         return proxyToPocketBase(req,res,url);
       }
       if(['/.well-known/oauth-protected-resource','/.well-known/oauth-protected-resource/mcp'].includes(u)&&method==='GET')
