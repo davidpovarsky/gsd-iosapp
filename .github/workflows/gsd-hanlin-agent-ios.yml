@@ -58,6 +58,10 @@ jobs:
           set -euo pipefail
           [[ "$GSD_SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
           [[ "$(git rev-parse HEAD)" = "$GSD_SOURCE_SHA" ]]
+          if [[ ! -f scripts/sanitize_gsd_native_diagnostics.py ]]; then
+            echo "::error::Validation source must include the reviewed native diagnostic sanitizer. Freeze a source containing that helper before running validate."
+            exit 1
+          fi
           [[ "$GSD_BUILD_NUMBER" =~ ^[0-9]+$ ]]
           xcode_version="$(xcodebuild -version)"
           printf '%s\n' "$xcode_version"
@@ -247,6 +251,11 @@ jobs:
           set -euo pipefail
           python3 scripts/gsd_native_acceptance.py --derived-data .gsd-release-derived \
             --output "$OUTPUT/ui"
+      - name: Sanitize retained native diagnostic text before upload
+        id: sanitize_native_diagnostics
+        if: always()
+        shell: bash
+        run: python3 scripts/sanitize_gsd_native_diagnostics.py --output "$OUTPUT"
       - name: Create successful native validation receipt
         shell: bash
         run: |
@@ -300,7 +309,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 21
       - name: Preserve test summaries, screenshots and sanitized logs
-        if: always()
+        if: always() && steps.sanitize_native_diagnostics.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: GSD-Native-Evidence-${{ github.run_id }}
@@ -333,6 +342,11 @@ jobs:
         run: |
           set -euo pipefail
           python3 scripts/resume_gsd_native_acceptance.py --output "$OUTPUT"
+      - name: Sanitize retained native diagnostic text before upload
+        id: sanitize_native_diagnostics
+        if: always()
+        shell: bash
+        run: python3 scripts/sanitize_gsd_native_diagnostics.py --output "$OUTPUT"
       - name: Preserve complete composed native validation receipt
         if: success()
         uses: actions/upload-artifact@v4
@@ -342,7 +356,7 @@ jobs:
           if-no-files-found: error
           retention-days: 21
       - name: Preserve provenance, inherited phones, fresh iPads and sanitized logs
-        if: always()
+        if: always() && steps.sanitize_native_diagnostics.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: GSD-Native-Evidence-${{ github.run_id }}

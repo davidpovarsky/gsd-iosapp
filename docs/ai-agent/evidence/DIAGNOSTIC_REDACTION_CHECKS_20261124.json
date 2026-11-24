@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "timestamp": "2026-11-24T09:10:01.187001+00:00",
+  "checks": [
+    {
+      "name": "actual retained Session log copy changes only one explicit unused fixture value; original preserved",
+      "passed": true
+    },
+    {
+      "name": "discover later-file marker before replacing earlier JSON; preserve CRLF, timestamps and unrelated UUID",
+      "passed": true
+    },
+    {
+      "name": "JSON-encoded mask marker discovers only actual string value and preserves valid JSON",
+      "passed": true
+    },
+    {
+      "name": "failed xcresulttool plain-text JSON path remains diagnostic text",
+      "passed": true
+    },
+    {
+      "name": "placeholder excluded; unmarked UUID-like values, binary image and repeated sanitized text remain unchanged",
+      "passed": true
+    },
+    {
+      "name": "unreadable diagnostic text fails before any rewrite",
+      "passed": true
+    },
+    {
+      "name": "symlink boundary fails without changing outside content",
+      "passed": true
+    },
+    {
+      "name": "validate helper guard fails before build; always sanitizer precedes guarded upload in both native jobs; signed job identical",
+      "passed": true
+    }
+  ],
+  "scope": "Local actual-copy and synthetic diagnostic redaction controls only; no native execution or product changes",
+  "script_sha256": "b9913f9346d672e66884b6edd84647fe14f30b726017ae1de637ccf1e71b5985",
+  "workflow_sha256": "e9e7a32e63148842fbecb500dda28c2fc625f3900be388908aef4dffcc342c4d",
+  "checks_passed": 8
+}
