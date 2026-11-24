@@ -13,10 +13,11 @@ concurrency:
 
 jobs:
   system-surface-discovery:
-    runs-on: xcode-27
+    runs-on: gsd-system-surfaces-scaleway-20261124
     timeout-minutes: 75
     env:
       GH_TOKEN: ${{ github.token }}
+      DEVELOPER_DIR: /Users/m1/builds/xcode-27.1.Zoqh5zoP/Xcode.app/Contents/Developer
       OUTPUT: dist/gsd-system-surfaces
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +29,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 scripts/gsd_system_surface_discovery.py --output "$OUTPUT"
+          python3 scripts/gsd_system_surface_discovery.py --driver-developer-dir /Applications/Xcode.app/Contents/Developer --output "$OUTPUT"
       - name: Sanitize supplemental diagnostics
         id: sanitize
         if: always()
