@@ -12,11 +12,12 @@ const browserOrigin=new URL(publicOrigin).origin;
 
 async function fixture(t) {
   const stateDir=await fs.mkdtemp(path.join(os.tmpdir(),'gsd-oauth-locale-'));
-  let now=Date.now(), pbCalls=0, rejectAccount=false;
+  let now=Date.now(), pbCalls=0, rejectAccount=false, rejectionAdvance=0;
   const token='h.'+Buffer.from(JSON.stringify({id:'user12345678901',exp:9999999999})).toString('base64url')+'.s';
   const pb=http.createServer(async(req,res)=>{
     for await(const _ of req) {}
     pbCalls++;
+    if(rejectAccount)now+=rejectionAdvance;
     res.writeHead(rejectAccount?400:200,{'content-type':'application/json'});
     res.end(JSON.stringify(rejectAccount?{message:'<script>unsafe-account-error</script>'}:
       {token,record:{id:'user12345678901',email:'fixture@example.invalid'}}));
@@ -52,7 +53,7 @@ async function fixture(t) {
     return {response,html,request:html.match(/name="request" value="([^"]+)"/)?.[1]};
   };
   return {gateway,origin,post,authorize,query,verifier,pbCalls:()=>pbCalls,
-    advance:amount=>{now+=amount},rejectAccount:()=>{rejectAccount=true}};
+    advance:amount=>{now+=amount},rejectAccount:(advance=0)=>{rejectAccount=true;rejectionAdvance=advance}};
 }
 
 function assertPage(html,language) {
@@ -231,4 +232,18 @@ test('Malformed browser requests get localized HTML while OAuth protocol errors 
   assert.equal(protocol.status,400);
   assert.match(protocol.headers.get('content-type'),/application\/json/);
   assert.equal((await protocol.json()).error,'unsupported_grant_type');
+});
+
+test('OAuth expiration during account rejection keeps the selected language after pending cleanup',async t=>{
+  const f=await fixture(t);
+  const page=await f.authorize({ui_locales:'en'});
+  f.rejectAccount(600001);
+  const response=await f.post('/oauth/login',{request:page.request,email:'fixture@example.invalid',
+    password:'synthetic-password'},{'accept-language':'he'});
+  assert.equal(response.status,400);
+  const html=await response.text();
+  assertPage(html,'en');
+  assert.match(html,/Authorization request expired/);
+  assert.equal(f.gateway.store.pending[page.request],undefined);
+  assert.equal(f.pbCalls(),1);
 });

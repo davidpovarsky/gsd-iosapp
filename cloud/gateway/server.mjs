@@ -212,9 +212,9 @@ export function createGateway({
     return document(res,status,browserHTML(language,label.errorTitle,
       '<h1>GSD Tasks</h1><h2>'+label.errorTitle+'</h2><p role="alert">'+htmlEscape(label[error])+'</p>'));
   };
-  const renderLogin=(res,requestId,error='')=>{
+  const renderLogin=(res,requestId,error='',fallbackLanguage='he')=>{
     const pending=pendingRequest(requestId);
-    if(!pending||pending.expires<=clock())return renderOAuthError(res,400,pending?.language||'he','expired');
+    if(!pending||pending.expires<=clock())return renderOAuthError(res,400,pending?.language||fallbackLanguage,'expired');
     const en=pending.language==='en', label=oauthLabels[en?'en':'he'];
     const errorEnglish={
       'כתובת דוא"ל או סיסמה לא תקינה':'Enter a valid email address and password.',
@@ -615,7 +615,7 @@ export function createGateway({
         store.pending[requestId]={clientId,redirect,challenge,scopes,
           state:url.searchParams.get('state')||'',language:pageLanguage,created:clock(),expires:clock()+authTTL,failures:0};
         save();
-        return renderLogin(res,requestId);
+        return renderLogin(res,requestId,'',pageLanguage);
       }
       if(['/oauth/login','/oauth/create-account','/oauth/language'].includes(u)&&method==='POST'){
         const form=new URLSearchParams(await readBody(req,8000));
@@ -633,14 +633,14 @@ export function createGateway({
           // This action must never refresh the request lifetime, reset failures, or alter consent.
           pending.language=language;
           save();
-          return renderLogin(res,id);
+          return renderLogin(res,id,'',language);
         }
         if(pending.failures>=7)return renderOAuthError(res,429,pageLanguage,'rateLimit');
         let result;
         try{result=await pageFor(id,u==='/oauth/login',form);}
         catch(e){
           pending.failures+=1;save();
-          return renderLogin(res,id,String(e.message).slice(0,150));
+          return renderLogin(res,id,String(e.message).slice(0,150),pageLanguage);
         }
         const code=rand(32);
         store.codes[sha(code)]={...pending,type:'code',
