@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "scope": "actual_foundation_share_input_decoder",
+  "completedAt": "2026-11-24T21:35:14Z",
+  "liveShareAcceptancePending": true,
+  "observedBlankComposeSHA256": "153539119e57555f5b6430750c872152ef9226c89ded9ec7e158e4a63525b7dd",
+  "baselineProductionSource": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+  "baseline": {
+    "mode": "actual-baseline-methods-with-context-argument",
+    "sourceSHA256": "847d09bc807ac86f8fceb11c908f150fee67d295881362fda02686f5d62cc1fc",
+    "fixtureSHA256": "bf3a20ba25cac35a52ddb090a221b21b19ea5052385bb633e62c2ff418c24e72",
+    "urlTitleSHA256": "c0b7f2bfbac2114585c9cc30f42e40c5eec40400cf4a6914ec14114555614202",
+    "compileReturnCode": 0,
+    "compiler": "Xcode 27.1\nBuild version 27A9275",
+    "passed": false,
+    "runReturnCode": 1,
+    "regressions": {
+      "cases": [
+        {
+          "case": "typed_text",
+          "passed": true
+        },
+        {
+          "case": "typed_url_priority",
+          "passed": true
+        },
+        {
+          "case": "failed_typed_text_valid_plain_data",
+          "passed": false
+        },
+        {
+          "case": "failed_typed_text_valid_utf16_data",
+          "passed": false
+        },
+        {
+          "case": "native_utf16_without_bom",
+          "passed": false
+        },
+        {
+          "case": "external_utf16_without_bom",
+          "passed": false
+        },
+        {
+          "case": "plain_text_with_utf16_bom",
+          "passed": false
+        },
+        {
+          "case": "failed_url_then_valid_text",
+          "passed": false
+        },
+        {
+          "case": "empty_first_item_then_text",
+          "passed": false
+        },
+        {
+          "case": "metadata_without_attachments",
+          "passed": false
+        },
+        {
+          "case": "metadata_before_real_payload",
+          "passed": false
+        },
+        {
+          "case": "invalid_data_preserves_metadata",
+          "passed": false
+        },
+        {
+          "case": "invalid_data_is_not_garbled_text",
+          "passed": true
+        },
+        {
+          "case": "empty_input",
+          "passed": true
+        }
+      ],
+      "fixturePreconditions": true,
+      "passed": false,
+      "total": 14
+    }
+  },
+  "fixed": {
+    "mode": "actual-production-decoder",
+    "sourceSHA256": "1bab774a507cb01e9df3a5121fb01e76117a2cef2dca2597f6d7ee233d18b866",
+    "fixtureSHA256": "bf3a20ba25cac35a52ddb090a221b21b19ea5052385bb633e62c2ff418c24e72",
+    "urlTitleSHA256": "c0b7f2bfbac2114585c9cc30f42e40c5eec40400cf4a6914ec14114555614202",
+    "compileReturnCode": 0,
+    "compiler": "Xcode 27.1\nBuild version 27A9275",
+    "passed": true,
+    "runReturnCode": 0,
+    "regressions": {
+      "cases": [
+        {
+          "case": "typed_text",
+          "passed": true
+        },
+        {
+          "case": "typed_url_priority",
+          "passed": true
+        },
+        {
+          "case": "failed_typed_text_valid_plain_data",
+          "passed": true
+        },
+        {
+          "case": "failed_typed_text_valid_utf16_data",
+          "passed": true
+        },
+        {
+          "case": "native_utf16_without_bom",
+          "passed": true
+        },
+        {
+          "case": "external_utf16_without_bom",
+          "passed": true
+        },
+        {
+          "case": "plain_text_with_utf16_bom",
+          "passed": true
+        },
+        {
+          "case": "failed_url_then_valid_text",
+          "passed": true
+        },
+        {
+          "case": "empty_first_item_then_text",
+          "passed": true
+        },
+        {
+          "case": "metadata_without_attachments",
+          "passed": true
+        },
+        {
+          "case": "metadata_before_real_payload",
+          "passed": true
+        },
+        {
+          "case": "invalid_data_preserves_metadata",
+          "passed": true
+        },
+        {
+          "case": "invalid_data_is_not_garbled_text",
+          "passed": true
+        },
+        {
+          "case": "empty_input",
+          "passed": true
+        }
+      ],
+      "fixturePreconditions": true,
+      "passed": true,
+      "total": 14
+    }
+  }
+}

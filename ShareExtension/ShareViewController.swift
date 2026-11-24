@@ -53,43 +53,9 @@ final class ShareViewController: UIViewController {
         }
     }
 
-    /// Prefer a web-URL attachment; fall back to plain text; else present empty (user types).
-    /// Uses `loadObject(ofClass:)` (typed, Sendable values) so no non-Sendable payload or
-    /// completion closure crosses the concurrency boundary (Swift 6 strict concurrency).
     private func extractSharedItem() async -> (String, [String]) {
-        guard let item = extensionContext?.inputItems.first as? NSExtensionItem,
-              let providers = item.attachments, !providers.isEmpty else {
-            return ("", [])
-        }
-        let pageTitle = item.attributedContentText?.string ?? ""
-
-        if let urlProvider = providers.first(where: {
-            $0.hasItemConformingToTypeIdentifier(UTType.url.identifier)
-        }) {
-            let urlString = await loadObject(URL.self, from: urlProvider)?.absoluteString ?? ""
-            // No page title (e.g. macOS Safari only provides the URL) → derive a readable one
-            // so the compose sheet shows it too, not just the materialized task.
-            let title = pageTitle.isEmpty ? URLTitle.derive(from: urlString) : pageTitle
-            return (title, urlString.isEmpty ? [] : [urlString])
-        } else if let textProvider = providers.first(where: {
-            $0.hasItemConformingToTypeIdentifier(UTType.plainText.identifier)
-        }) {
-            let text = await loadObject(String.self, from: textProvider) ?? ""
-            return (text, [])
-        } else {
-            return (pageTitle, [])
-        }
-    }
-
-    /// Bridges `NSItemProvider.loadObject` to async; `T` (URL/String) is Sendable, so nothing
-    /// unsafe escapes the background completion handler.
-    private func loadObject<T>(_ type: T.Type, from provider: NSItemProvider) async -> T?
-    where T: _ObjectiveCBridgeable & Sendable, T._ObjectiveCType: NSItemProviderReading {
-        await withCheckedContinuation { continuation in
-            _ = provider.loadObject(ofClass: type) { value, _ in
-                continuation.resume(returning: value)
-            }
-        }
+        let items = extensionContext?.inputItems.compactMap { $0 as? NSExtensionItem } ?? []
+        return await ShareInputExtractor.extract(from: items)
     }
 
     private func presentCompose(prefilledTitle: String, urls: [String]) {
@@ -114,5 +80,105 @@ final class ShareViewController: UIViewController {
             host.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
         host.didMove(toParent: self)
+    }
+}
+
+// MARK: - Shared input decoding
+
+/// A conforming text provider may support data delivery without a successful typed-object load.
+@MainActor
+enum ShareInputExtractor {
+    static func extract(from inputItems: [NSExtensionItem]) async -> (String, [String]) {
+        var metadataFallback: String?
+        for item in inputItems {
+            let pageTitle = nonempty(item.attributedContentText?.string)
+            if metadataFallback == nil { metadataFallback = pageTitle }
+            let providers = item.attachments ?? []
+
+            for provider in providers where provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
+                if let url = await loadObject(URL.self, from: provider),
+                   !url.absoluteString.isEmpty {
+                    let title = pageTitle ?? URLTitle.derive(from: url.absoluteString)
+                    report("typed_url", bytes: title.utf8.count)
+                    return (title, [url.absoluteString])
+                }
+            }
+            for provider in providers where provider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {
+                if let text = await loadText(from: provider) { return (text, []) }
+            }
+        }
+        report(metadataFallback == nil ? "empty" : "metadata", bytes: metadataFallback?.utf8.count ?? 0)
+        return (metadataFallback ?? "", [])
+    }
+
+    private static func loadText(from provider: NSItemProvider) async -> String? {
+        if let text = nonempty(await loadObject(String.self, from: provider)) {
+            report("typed_text", bytes: text.utf8.count)
+            return text
+        }
+        // Use only declared, supported encodings; never interpret arbitrary binary data as text.
+        for identifier in provider.registeredTypeIdentifiers {
+            guard supportedTextTypes.contains(identifier),
+                  let data = await loadData(from: provider, identifier: identifier),
+                  let text = nonempty(decodeText(data, identifier: identifier)) else { continue }
+            report("text_data", bytes: text.utf8.count)
+            return text
+        }
+        return nil
+    }
+
+    private static let supportedTextTypes: Set<String> = [
+        UTType.plainText.identifier, UTType.utf8PlainText.identifier,
+        UTType.utf16PlainText.identifier, UTType.utf16ExternalPlainText.identifier
+    ]
+
+    private static func decodeText(_ data: Data, identifier: String) -> String? {
+        let hasUTF16BOM = data.starts(with: [0xFF, 0xFE]) || data.starts(with: [0xFE, 0xFF])
+        if identifier == UTType.utf16PlainText.identifier
+            || identifier == UTType.utf16ExternalPlainText.identifier {
+            if hasUTF16BOM { return String(data: data, encoding: .utf16) }
+            // Native UTF-16 follows the host byte order; external UTF-16 defaults to big-endian.
+            if identifier == UTType.utf16PlainText.identifier {
+                #if _endian(little)
+                return String(data: data, encoding: .utf16LittleEndian)
+                #else
+                return String(data: data, encoding: .utf16BigEndian)
+                #endif
+            }
+            return String(data: data, encoding: .utf16BigEndian)
+        }
+        if identifier == UTType.plainText.identifier && hasUTF16BOM {
+            return String(data: data, encoding: .utf16)
+        }
+        return String(data: data, encoding: .utf8)
+    }
+
+    private static func nonempty(_ text: String?) -> String? {
+        guard let text, !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
+        return text
+    }
+
+    private static func loadObject<T>(_ type: T.Type, from provider: NSItemProvider) async -> T?
+    where T: _ObjectiveCBridgeable & Sendable, T._ObjectiveCType: NSItemProviderReading {
+        await withCheckedContinuation { continuation in
+            _ = provider.loadObject(ofClass: type) { value, _ in
+                continuation.resume(returning: value)
+            }
+        }
+    }
+
+    private static func loadData(from provider: NSItemProvider, identifier: String) async -> Data? {
+        await withCheckedContinuation { continuation in
+            _ = provider.loadDataRepresentation(forTypeIdentifier: identifier) { data, _ in
+                continuation.resume(returning: data)
+            }
+        }
+    }
+
+    nonisolated private static func report(_ path: String, bytes: Int) {
+        #if DEBUG
+        // Counts and the selected decoder path only; never shared text, links, or account data.
+        print("GSD_SHARE_INPUT path=\(path) bytes=\(bytes)")
+        #endif
     }
 }
