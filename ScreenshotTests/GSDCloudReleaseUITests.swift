@@ -462,13 +462,15 @@ final class GSDCloudReleaseUITests: XCTestCase {
     private func pasteCloudPassword(_ value: String, into field: XCUIElement) {
         // Use the standard iPad paste gesture for the generated fixture password.
         // Synthesized per-character input into the new-password fields can lose characters.
+        field.tap()
+        if let content = field.value as? String, !content.isEmpty {
+            field.typeKey("a", modifierFlags: .command)
+        }
         let pasteboard = UIPasteboard.general
         pasteboard.setItems([["public.utf8-plain-text": value]], options: [
-            .localOnly: true, .expirationDate: Date().addingTimeInterval(30)
+            .localOnly: true, .expirationDate: Date().addingTimeInterval(300)
         ])
         defer { pasteboard.items = [] }
-        field.tap()
-        field.typeKey("a", modifierFlags: .command)
         field.typeKey("v", modifierFlags: .command)
     }
 
