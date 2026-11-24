@@ -261,6 +261,7 @@ struct GSDApp: App {
                             _Concurrency.Task { await session.signIn(provider: "apple") }
                         }
                     )
+                    .environment(session)
                 }
                 .transformEnvironment(\.layoutDirection) { inherited in
                     switch direction {
