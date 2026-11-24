@@ -69,6 +69,11 @@ jobs:
         run: |
           set -euo pipefail
           python3 scripts/check_session_observation.py 2>&1 | tee "$OUTPUT/logs/session-observation.log"
+      - name: Verify native connectivity restoration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/check_sync_connectivity.py 2>&1 | tee "$OUTPUT/logs/sync-connectivity.log"
       - name: Materialize and audit the original pinned Hanlin SDK
         shell: bash
         run: |
