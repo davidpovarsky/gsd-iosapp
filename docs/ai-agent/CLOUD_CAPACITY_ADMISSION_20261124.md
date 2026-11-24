@@ -2,9 +2,9 @@
 
 ## Outcome and scope
 
-The observed storage pressure comes primarily from new and changing external Hanlin worktrees, rather than GSD's small database. The latest retained read at **10:26:04 UTC** found **951,066,624 available bytes (907.008 MiB)** on the data filesystem and **2,720,710,656 bytes (2,594.672 MiB)** on root. Six original GSD/Lorvex service PID/start identities were unchanged, and both known GSD health endpoints returned HTTP 200 with body code 200.
+The observed storage pressure comes primarily from new and changing external Hanlin worktrees, rather than GSD's small database. The latest retained read at **10:42:37 UTC** found **950,747,136 available bytes (906.703 MiB)** on the data filesystem and **2,720,358,400 bytes (2,594.336 MiB)** on root. Six original GSD/Lorvex service PID/start identities were unchanged, and both known GSD health endpoints returned HTTP 200 with body code 200.
 
-Root accepted a proportional operational admission rule for the existing native acceptance. This does **not** complete Cloud acceptance, reserve disk space, prove a maximum write bound, or guarantee protection against arbitrary concurrent writers. A fresh check is required when Native is ready, and further reads must be coordinated with observed phase transitions. The 10:26 sample is not described as immediately before signup.
+Root accepted a proportional operational admission rule for the existing native acceptance. This does **not** complete Cloud acceptance, reserve disk space, prove a maximum write bound, or guarantee protection against arbitrary concurrent writers. A fresh check is required when Native is ready, and further reads must be coordinated with observed phase transitions. Neither the 10:26 nor the 10:42 sample is described as immediately before signup.
 
 No files were deleted or moved. No service was restarted, no quota changed, no volume purchased, no archive copied, and no account or test fixture was created by this assessment. All external worktrees, source files, caches and incoming archives remain excluded from cleanup.
 
@@ -36,6 +36,7 @@ Deletion is expected to remove account rows and owned records. It is **not** ass
 | 10:14:51 | 963,842,048 | 3,075,047,424 |
 | 10:16:53 | 963,538,944 | 2,674,552,832 |
 | 10:26:04 | 951,066,624 | 2,720,710,656 |
+| 10:42:37 | 950,747,136 | 2,720,358,400 |
 
 A newly inspected external worktree had 265,015,296 allocated bytes and file-change metadata around 10:10:01. Its complete metadata walk found 8,347 regular files with no multi-link allocation, primarily source, resources and retained evidence. This corresponds to 99.4% of the 266,604,544-byte data-free decline in the preceding sampled interval. It is not shared-hard-link double counting and is not a disposable build cache.
 
@@ -64,6 +65,18 @@ The existing schema permits larger general-purpose JSON/library fields, so its m
 - Record actual measurement times. Stage visibility does not justify a claim that a read occurred immediately before signup. If the phase or measurement becomes stale, obtain a fresh read before further live admission.
 
 Compilation and UI preparation do not need a global one-GiB data-volume hold. Passing the admission rule is permission to attempt the fixed scenario, not evidence that it passed.
+
+## Observed competing live phase
+
+Native and root reported another run, [45375597972](https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45375597972), created at **10:31:31 UTC** on `codex/gsd-build48-onboarding` (reported head prefix `55fbae13`), in package/cloud step 11 around **10:37 UTC**. Our candidate had **not** been dispatched. This is an observed extra live phase, not an additional fixture launched by this assessment. Its actor/cause is not attributed.
+
+The external package phase may use its existing two-account fixture; no claim is made that both accounts were actually created. Its account state is left to its owner. Native is waiting for a verified cleanup-complete step boundary before ordinary cancellation. No external account was queried, modified or deleted by the capacity lane.
+
+The **128 MiB** and **three-account/four-task/one-trash** totals above describe the two planned phases of our own run only. Conservatively add **64 MiB** for the observed competing phase: **192 MiB** across that phase and our planned phases. This remains an operational allowance, not a reservation or proven write maximum. The 512/768 MiB admission and 256 MiB stop thresholds remain unchanged. Own dispatch still requires root's source/server GO and a current read; this document does not authorize overlap or new external fixtures.
+
+At **10:43:01 UTC**, Native confirmed the external package/cloud step 11 and deletion/recovery step 12 had completed successfully, with UI step 17 newly active. No UI profile or account-creation evidence was yet available. The 192 MiB figure covers its observed package phase and our two planned phases; it does not silently include an unproven external UI account scenario. Native/root retain coordination of the UI boundary and any later admission.
+
+The first requested read (job `job_2a8e48d0d590`, finished 10:39:53) returned SSH exit 255 without a server receipt; no health, capacity or authorization conclusion was inferred. One bounded retry (`job_4aaa4c273555`) succeeded at **10:42:37 UTC**, without changing SSH, permissions or host settings. It found the values in the table above, only **319,488 fewer data bytes** and **352,256 fewer root bytes** than 10:26. All six service PID/start identities and the six expected listener mappings were unchanged; both GSD health endpoints returned HTTP/body code 200. These observations satisfy the capacity thresholds at the recorded time. They are not a claim that signup had occurred or that the read immediately preceded it.
 
 ## Remaining acceptance
 
