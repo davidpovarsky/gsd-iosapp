@@ -1,0 +1,41 @@
+{
+  "checks": {
+    "GSD_health_200": true,
+    "block_topology": true,
+    "daemon_continuity": true,
+    "devices": true,
+    "mounts": true,
+    "root_partition_table": true,
+    "socket_continuity": true
+  },
+  "free_space": {
+    "/": {
+      "available_bytes": 270479360,
+      "available_inodes": 4364846,
+      "block_size": 4096,
+      "free_bytes": 287256576,
+      "free_inodes": 4364846,
+      "total_bytes": 47321268224
+    },
+    "/mnt/development": {
+      "available_bytes": 413626368,
+      "available_inodes": 4562113,
+      "block_size": 4096,
+      "free_bytes": 430403584,
+      "free_inodes": 4562113,
+      "total_bytes": 105089261568
+    }
+  },
+  "guest_writes": 0,
+  "health": {
+    "pocketbase": {
+      "body_code": 200,
+      "http_status": 200
+    },
+    "public_gateway": {
+      "body_code": 200,
+      "http_status": 200
+    }
+  },
+  "observed_at_utc": "2026-11-24T06:22:36.540493+00:00"
+}

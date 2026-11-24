@@ -1,0 +1,276 @@
+[
+  {
+    "child_exit_code": 2,
+    "finished_utc": "2026-11-24T06:42:21.006884+00:00",
+    "inner": {
+      "backups": {
+        "boot": {
+          "id_sha256": "9790b990d1a830d8174ed2412748f4282ee765f3048e0ffd88aa51528a567220",
+          "role": "boot",
+          "source_matches": true,
+          "state": "AVAILABLE",
+          "type": "FULL"
+        },
+        "data": {
+          "id_sha256": "784bd08cf905158138d0ba98ac78afa8f819e7551e4b1f098e556ee5604f69e3",
+          "role": "data",
+          "source_matches": true,
+          "state": "AVAILABLE",
+          "type": "FULL"
+        }
+      },
+      "binding_sha256": "ec71e521ae5d5b130dbe6f5b825f1977f484c7e7521a45fa48e2c74c4d09dfd1",
+      "calls": [
+        {
+          "operation": "GetBackup[boot]",
+          "status": 200
+        },
+        {
+          "operation": "GetBackup[data]",
+          "status": 200
+        },
+        {
+          "operation": "GetInstance[target]",
+          "status": 200
+        },
+        {
+          "operation": "ListBootAttachments[target]",
+          "status": 200
+        },
+        {
+          "operation": "ListDataAttachments[target]",
+          "status": 200
+        },
+        {
+          "operation": "GetVolume[boot]",
+          "status": 200
+        },
+        {
+          "operation": "GetVolume[data]",
+          "status": 200
+        },
+        {
+          "operation": "ListLimitValues[total-storage-gb]",
+          "status": 200
+        },
+        {
+          "operation": "GetResourceAvailability[total-storage-gb]",
+          "status": 200
+        },
+        {
+          "operation": "ListLimitValues[backup-count]",
+          "status": 200
+        },
+        {
+          "operation": "GetResourceAvailability[backup-count]",
+          "status": 200
+        },
+        {
+          "operation": "UpdateSize[data]",
+          "status": 200
+        },
+        {
+          "operation": "GetInstance[target]",
+          "status": 200
+        },
+        {
+          "operation": "ListBootAttachments[target]",
+          "status": 200
+        },
+        {
+          "operation": "ListDataAttachments[target]",
+          "status": 200
+        },
+        {
+          "operation": "GetVolume[boot]",
+          "status": 200
+        },
+        {
+          "operation": "GetVolume[data]",
+          "status": 200
+        },
+        {
+          "operation": "ListLimitValues[total-storage-gb]",
+          "status": 200
+        },
+        {
+          "operation": "GetResourceAvailability[total-storage-gb]",
+          "status": 200
+        },
+        {
+          "operation": "ListLimitValues[backup-count]",
+          "status": 200
+        },
+        {
+          "operation": "GetResourceAvailability[backup-count]",
+          "status": 200
+        }
+      ],
+      "cloud_mutations_attempted": 1,
+      "context": {
+        "backups": {
+          "available": 3,
+          "used": 2,
+          "value": 5
+        },
+        "storage": {
+          "available": 0,
+          "used": 200,
+          "value": 200
+        },
+        "target_ad_matches_both_volumes": true,
+        "volumes": {
+          "boot": {
+            "autotune_enabled": false,
+            "etag_sha256": "bbc81c96b567403dc868b5c4b6b3cb518d5f8c5b9467d4a56e5500e3630998b3",
+            "id_sha256": "16f63e72133ed38ec16e4431d617c0605d1a54ef309adbaf4b706d6b5313b004",
+            "replicas": 0,
+            "size_gb": 50,
+            "size_mb": 51200,
+            "state": "AVAILABLE",
+            "vpus_per_gb": 10
+          },
+          "data": {
+            "autotune_enabled": false,
+            "etag_sha256": "c54f91b0f9cf5afb9791a52fcc40b721fb599e9232e669e0a77ebd70fd04dc30",
+            "id_sha256": "37610e120e864c0110cd1657aaacc3decd96cbda0341ef209eb57090b8440ba9",
+            "replicas": 0,
+            "size_gb": 103,
+            "size_mb": 105472,
+            "state": "PROVISIONING",
+            "vpus_per_gb": 10
+          }
+        }
+      },
+      "error_code": "PROVIDER_UPDATE_NOT_AVAILABLE",
+      "exit_code": 2,
+      "finished_utc": "2026-11-24T06:42:20.469125+00:00",
+      "operation_id": "6e6b1bb1e28f4d1fada42ec0ada4da58",
+      "phase": "resize-data",
+      "started_utc": "2026-11-24T06:41:28.185122+00:00",
+      "status": "PENDING",
+      "version": "gsd-capacity-provider-20261124-v1"
+    },
+    "phase": "resize-data",
+    "sentinel_job_id": "job_dda1b2cf0540",
+    "source_sha256": "120f7c47e7060d030bfecc5c4b6a5e0d8ec5251d5d2811f6d76e1c10ecd90594",
+    "wrapper_exit_code": 2
+  },
+  {
+    "child_exit_code": 0,
+    "finished_utc": "2026-11-24T06:44:48.504944+00:00",
+    "inner": {
+      "backups": {
+        "boot": {
+          "id_sha256": "9790b990d1a830d8174ed2412748f4282ee765f3048e0ffd88aa51528a567220",
+          "role": "boot",
+          "source_matches": true,
+          "state": "AVAILABLE",
+          "type": "FULL"
+        },
+        "data": {
+          "id_sha256": "784bd08cf905158138d0ba98ac78afa8f819e7551e4b1f098e556ee5604f69e3",
+          "role": "data",
+          "source_matches": true,
+          "state": "AVAILABLE",
+          "type": "FULL"
+        }
+      },
+      "binding_sha256": "ec71e521ae5d5b130dbe6f5b825f1977f484c7e7521a45fa48e2c74c4d09dfd1",
+      "calls": [
+        {
+          "operation": "GetBackup[boot]",
+          "status": 200
+        },
+        {
+          "operation": "GetBackup[data]",
+          "status": 200
+        },
+        {
+          "operation": "GetInstance[target]",
+          "status": 200
+        },
+        {
+          "operation": "ListBootAttachments[target]",
+          "status": 200
+        },
+        {
+          "operation": "ListDataAttachments[target]",
+          "status": 200
+        },
+        {
+          "operation": "GetVolume[boot]",
+          "status": 200
+        },
+        {
+          "operation": "GetVolume[data]",
+          "status": 200
+        },
+        {
+          "operation": "ListLimitValues[total-storage-gb]",
+          "status": 200
+        },
+        {
+          "operation": "GetResourceAvailability[total-storage-gb]",
+          "status": 200
+        },
+        {
+          "operation": "ListLimitValues[backup-count]",
+          "status": 200
+        },
+        {
+          "operation": "GetResourceAvailability[backup-count]",
+          "status": 200
+        }
+      ],
+      "cloud_mutations_attempted": 0,
+      "context": {
+        "backups": {
+          "available": 3,
+          "used": 2,
+          "value": 5
+        },
+        "storage": {
+          "available": 0,
+          "used": 200,
+          "value": 200
+        },
+        "target_ad_matches_both_volumes": true,
+        "volumes": {
+          "boot": {
+            "autotune_enabled": false,
+            "etag_sha256": "bbc81c96b567403dc868b5c4b6b3cb518d5f8c5b9467d4a56e5500e3630998b3",
+            "id_sha256": "16f63e72133ed38ec16e4431d617c0605d1a54ef309adbaf4b706d6b5313b004",
+            "replicas": 0,
+            "size_gb": 50,
+            "size_mb": 51200,
+            "state": "AVAILABLE",
+            "vpus_per_gb": 10
+          },
+          "data": {
+            "autotune_enabled": false,
+            "etag_sha256": "66f543f6a5aba15d72fe99e2743c0949b45b13f1ca69039d37f5159e3ab92c7e",
+            "id_sha256": "37610e120e864c0110cd1657aaacc3decd96cbda0341ef209eb57090b8440ba9",
+            "replicas": 0,
+            "size_gb": 103,
+            "size_mb": 105472,
+            "state": "AVAILABLE",
+            "vpus_per_gb": 10
+          }
+        }
+      },
+      "exit_code": 0,
+      "finished_utc": "2026-11-24T06:44:47.574837+00:00",
+      "operation_id": "6e6b1bb1e28f4d1fada42ec0ada4da58",
+      "phase": "resize-data",
+      "provider_target_verified": true,
+      "started_utc": "2026-11-24T06:43:04.642164+00:00",
+      "status": "PASS",
+      "version": "gsd-capacity-provider-20261124-v1"
+    },
+    "phase": "resize-data",
+    "sentinel_job_id": "job_4dde420cc69e",
+    "source_sha256": "120f7c47e7060d030bfecc5c4b6a5e0d8ec5251d5d2811f6d76e1c10ecd90594",
+    "wrapper_exit_code": 0
+  }
+]

@@ -1,0 +1,438 @@
+{
+  "action": "observe",
+  "child_exit_code": 1,
+  "controller_source_sha256": "0a15c4b5bf601936b581bb90bb7721ec6ba69ba8cea833d0c0fb6995ae17ef4f",
+  "finished_utc": "2026-11-24T06:29:21.975839+00:00",
+  "guest_source_sha256": "9df036eb31b47acd56a3f5e7364c21fa58273c0c907ea7687ddd65050d5e2858",
+  "operation_id": "6e6b1bb1e28f4d1fada42ec0ada4da58",
+  "phase": "preflight",
+  "private_receipt_basename": "20261124T062919.439712Z-guest-preflight-private.json",
+  "private_receipt_sha256": "80c7658ca36be2042af78a0f9aaeac7b5f9445065d27a70bc23d54c699494769",
+  "provider_source_sha256": "120f7c47e7060d030bfecc5c4b6a5e0d8ec5251d5d2811f6d76e1c10ecd90594",
+  "remote": {
+    "commands": [],
+    "error_code": "PROTECTED_BOOT_IDENTITY_CHANGED",
+    "error_type": "GuardFailure",
+    "exit_code": 1,
+    "finished_utc": "2026-11-24T06:29:21.844663+00:00",
+    "operation_id": "6e6b1bb1e28f4d1fada42ec0ada4da58",
+    "phase": "preflight",
+    "service_continuity_scope": "Six daemon PID/start/socket identities and known GSD HTTP health only; not Lorvex functional E2E",
+    "snapshots": {
+      "before": {
+        "block_topology": {
+          "blockdevices": [
+            {
+              "children": [
+                {
+                  "fstype": "ext4",
+                  "maj:min": "8:1",
+                  "mountpoints": [
+                    "/"
+                  ],
+                  "name": "sda1",
+                  "partuuid_sha256": "8393a388fc854eef61a7e08096d57182092427cfff17bff81fd0258434fe66bd",
+                  "path": "/dev/sda1",
+                  "pkname": "sda",
+                  "ptuuid_sha256": "4e44426202694eab4128311e657c132ba2422dd18de921d32759ad33d4bcaa99",
+                  "size": 48935976448,
+                  "type": "part",
+                  "uuid_sha256": "5312b5cffd5a50b5b3901d84f5e016c33d5acd47c08c6109a7480a1ab6947561"
+                },
+                {
+                  "fstype": "vfat",
+                  "maj:min": "8:15",
+                  "mountpoints": [
+                    "/boot/efi"
+                  ],
+                  "name": "sda15",
+                  "partuuid_sha256": "4d37fcca42d085b9834178b6adc2d34f813f91c8c4f0359f4694d340dafb4112",
+                  "path": "/dev/sda15",
+                  "pkname": "sda",
+                  "ptuuid_sha256": "4e44426202694eab4128311e657c132ba2422dd18de921d32759ad33d4bcaa99",
+                  "size": 103809536,
+                  "type": "part",
+                  "uuid_sha256": "6e77d863281574d82c08403bc2ce39f24eca3c420f0e4f335dcda1a2261b80c3"
+                },
+                {
+                  "fstype": "ext4",
+                  "maj:min": "259:0",
+                  "mountpoints": [
+                    "/boot"
+                  ],
+                  "name": "sda16",
+                  "partuuid_sha256": "0cd949437776a437b816e629a604bb8979702a4b742bfa24199868be2c3c870c",
+                  "path": "/dev/sda16",
+                  "pkname": "sda",
+                  "ptuuid_sha256": "4e44426202694eab4128311e657c132ba2422dd18de921d32759ad33d4bcaa99",
+                  "size": 967836160,
+                  "type": "part",
+                  "uuid_sha256": "9cb9073c0d727567850ea3e4d51f3ece22be8b84bc6f793ed5cd825892c54cde"
+                }
+              ],
+              "fstype": null,
+              "maj:min": "8:0",
+              "mountpoints": [
+                null
+              ],
+              "name": "sda",
+              "partuuid": null,
+              "path": "/dev/sda",
+              "pkname": null,
+              "ptuuid_sha256": "4e44426202694eab4128311e657c132ba2422dd18de921d32759ad33d4bcaa99",
+              "size": 50010783744,
+              "type": "disk",
+              "uuid": null
+            },
+            {
+              "fstype": "ext4",
+              "maj:min": "8:16",
+              "mountpoints": [
+                "/mnt/development"
+              ],
+              "name": "sdb",
+              "partuuid": null,
+              "path": "/dev/sdb",
+              "pkname": null,
+              "ptuuid": null,
+              "size": 107374182400,
+              "type": "disk",
+              "uuid_sha256": "fd89070272a5c0ad7fdbb22f8080e0597c1550a537a44193ceb4440032a9179b"
+            }
+          ]
+        },
+        "devices": {
+          "/dev/sda": {
+            "inode": "158",
+            "major": 8,
+            "minor": 0,
+            "node_device": "6",
+            "owner_uid": 0,
+            "realpath": "/dev/sda",
+            "size_bytes": 50010783744
+          },
+          "/dev/sda1": {
+            "inode": "159",
+            "major": 8,
+            "minor": 1,
+            "node_device": "6",
+            "owner_uid": 0,
+            "realpath": "/dev/sda1",
+            "size_bytes": 48935976448
+          },
+          "/dev/sdb": {
+            "inode": "5716",
+            "major": 8,
+            "minor": 16,
+            "node_device": "6",
+            "owner_uid": 0,
+            "realpath": "/dev/sdb",
+            "size_bytes": 107374182400
+          }
+        },
+        "filesystems": {
+          "/dev/sda1": {
+            "Block count": "11947259",
+            "Block size": "4096",
+            "Errors behavior": "Continue",
+            "Filesystem UUID_sha256": "5312b5cffd5a50b5b3901d84f5e016c33d5acd47c08c6109a7480a1ab6947561",
+            "Filesystem created": "Sat Aug 22 11:58:40 2026",
+            "Filesystem features": "has_journal ext_attr resize_inode dir_index filetype needs_recovery extent 64bit flex_bg sparse_super large_file huge_file dir_nlink extra_isize metadata_csum",
+            "Filesystem state": "clean",
+            "Free blocks": "70887",
+            "Last checked": "Sat Aug 22 11:58:40 2026",
+            "Last mount time": "Thu Sep  3 22:02:12 2026",
+            "Last write time": "Tue Nov 24 05:55:51 2026",
+            "Reserved block count": "0"
+          },
+          "/dev/sdb": {
+            "Block count": "26214400",
+            "Block size": "4096",
+            "Errors behavior": "Continue",
+            "Filesystem UUID_sha256": "fd89070272a5c0ad7fdbb22f8080e0597c1550a537a44193ceb4440032a9179b",
+            "Filesystem created": "Sun Nov 22 21:12:24 2026",
+            "Filesystem features": "has_journal ext_attr resize_inode dir_index filetype needs_recovery extent 64bit flex_bg sparse_super large_file huge_file dir_nlink extra_isize metadata_csum",
+            "Filesystem state": "clean",
+            "Free blocks": "105078",
+            "Last checked": "Sun Nov 22 21:12:24 2026",
+            "Last mount time": "Sun Nov 22 21:12:32 2026",
+            "Last write time": "Tue Nov 24 06:13:05 2026",
+            "Reserved block count": "0"
+          }
+        },
+        "finished_at_utc": "2026-11-24T06:29:21.844515+00:00",
+        "free_space": {
+          "/": {
+            "available_bytes": 270311424,
+            "available_inodes": 4364846,
+            "block_size": 4096,
+            "free_bytes": 287088640,
+            "free_inodes": 4364846,
+            "total_bytes": 47321268224
+          },
+          "/mnt/development": {
+            "available_bytes": 412102656,
+            "available_inodes": 4562094,
+            "block_size": 4096,
+            "free_bytes": 428879872,
+            "free_inodes": 4562094,
+            "total_bytes": 105089261568
+          }
+        },
+        "guest_writes": 0,
+        "health": {
+          "pocketbase": {
+            "body_code": 200,
+            "http_status": 200
+          },
+          "public_gateway": {
+            "body_code": 200,
+            "http_status": 200
+          }
+        },
+        "kernel_release": "6.17.0-1020-oracle",
+        "listening_socket_command_exit": 0,
+        "listening_sockets_by_service": {
+          "gsd-cloud-gateway.service": [
+            {
+              "local_address": "127.0.0.1:8770",
+              "peer_address": "0.0.0.0:*",
+              "state": "LISTEN"
+            }
+          ],
+          "gsd-mcp-bridge.service": [
+            {
+              "local_address": "127.0.0.1:8768",
+              "peer_address": "0.0.0.0:*",
+              "state": "LISTEN"
+            }
+          ],
+          "gsd-pocketbase.service": [
+            {
+              "local_address": "127.0.0.1:8095",
+              "peer_address": "0.0.0.0:*",
+              "state": "LISTEN"
+            }
+          ],
+          "lorvex-cf-quick.service": [
+            {
+              "local_address": "127.0.0.1:20241",
+              "peer_address": "0.0.0.0:*",
+              "state": "LISTEN"
+            }
+          ],
+          "lorvex-cloud-backup.service": [],
+          "lorvex-cloud.service": [
+            {
+              "local_address": "127.0.0.1:8769",
+              "peer_address": "0.0.0.0:*",
+              "state": "LISTEN"
+            }
+          ],
+          "lorvex-mcp-bridge.service": [
+            {
+              "local_address": "127.0.0.1:8767",
+              "peer_address": "0.0.0.0:*",
+              "state": "LISTEN"
+            }
+          ]
+        },
+        "lorvex_scope_limitation": "Unit and listening-socket continuity only; no verified Lorvex application health URL or functional E2E was used.",
+        "mounts": {
+          "/": {
+            "filesystems": [
+              {
+                "fstype": "ext4",
+                "maj:min": "8:1",
+                "options": "rw,relatime,discard,errors=remount-ro,commit=30",
+                "partuuid_sha256": "8393a388fc854eef61a7e08096d57182092427cfff17bff81fd0258434fe66bd",
+                "source": "/dev/sda1",
+                "target": "/",
+                "uuid_sha256": "5312b5cffd5a50b5b3901d84f5e016c33d5acd47c08c6109a7480a1ab6947561"
+              }
+            ]
+          },
+          "/mnt/development": {
+            "filesystems": [
+              {
+                "fstype": "ext4",
+                "maj:min": "8:16",
+                "options": "rw,relatime,stripe=256",
+                "partuuid": null,
+                "source": "/dev/sdb",
+                "target": "/mnt/development",
+                "uuid_sha256": "fd89070272a5c0ad7fdbb22f8080e0597c1550a537a44193ceb4440032a9179b"
+              }
+            ]
+          }
+        },
+        "no_guest_rescan_growpart_resizefs_backup_or_restart": true,
+        "observed_at_utc": "2026-11-24T06:29:21.699894+00:00",
+        "os": {
+          "ID": "ubuntu",
+          "PRETTY_NAME": "Ubuntu 24.04.4 LTS",
+          "VERSION_ID": "24.04"
+        },
+        "package_versions": {
+          "exit_code": 0,
+          "rows": [
+            "cloud-guest-utils\t0.33-1\tinstalled",
+            "e2fsprogs\t1.47.0-2.4~exp1ubuntu4.1\tinstalled",
+            "util-linux\t2.39.3-9ubuntu6.6\tinstalled"
+          ]
+        },
+        "read_only": true,
+        "rescan_controls": {
+          "sda": {
+            "exists": true,
+            "mode": "0o200",
+            "owner_uid": 0,
+            "write_performed": false
+          },
+          "sdb": {
+            "exists": true,
+            "mode": "0o200",
+            "owner_uid": 0,
+            "write_performed": false
+          }
+        },
+        "root_partition_table": {
+          "partitiontable": {
+            "device": "/dev/sda",
+            "firstlba": 34,
+            "id_sha256": "4e44426202694eab4128311e657c132ba2422dd18de921d32759ad33d4bcaa99",
+            "label": "gpt",
+            "lastlba": 97677278,
+            "partitions": [
+              {
+                "node": "/dev/sda1",
+                "size": 95578079,
+                "start": 2099200,
+                "type": "0FC63DAF-8483-4772-8E79-3D69D8477DE4",
+                "uuid_sha256": "8393a388fc854eef61a7e08096d57182092427cfff17bff81fd0258434fe66bd"
+              },
+              {
+                "node": "/dev/sda15",
+                "size": 202753,
+                "start": 2048,
+                "type": "C12A7328-F81F-11D2-BA4B-00A0C93EC93B",
+                "uuid_sha256": "4d37fcca42d085b9834178b6adc2d34f813f91c8c4f0359f4694d340dafb4112"
+              },
+              {
+                "node": "/dev/sda16",
+                "size": 1890305,
+                "start": 206848,
+                "type": "BC13C2FF-59E6-4262-A352-B275FD6F7172",
+                "uuid_sha256": "0cd949437776a437b816e629a604bb8979702a4b742bfa24199868be2c3c870c"
+              }
+            ],
+            "sectorsize": 512,
+            "unit": "sectors"
+          }
+        },
+        "scope": "Selected root/data device metadata, installed utilities, GSD/Lorvex unit and socket continuity only",
+        "services": {
+          "gsd-cloud-gateway.service": {
+            "ActiveEnterTimestamp": "Tue 2026-11-24 01:34:06 UTC",
+            "ActiveState": "active",
+            "ExecMainCode": "0",
+            "ExecMainStartTimestamp": "Tue 2026-11-24 01:34:06 UTC",
+            "ExecMainStartTimestampMonotonic": "7011118358127",
+            "ExecMainStatus": "0",
+            "Id": "gsd-cloud-gateway.service",
+            "MainPID": "3422173",
+            "SubState": "running"
+          },
+          "gsd-mcp-bridge.service": {
+            "ActiveEnterTimestamp": "Mon 2026-11-23 04:19:56 UTC",
+            "ActiveState": "active",
+            "ExecMainCode": "0",
+            "ExecMainStartTimestamp": "Mon 2026-11-23 04:19:56 UTC",
+            "ExecMainStartTimestampMonotonic": "6934668490142",
+            "ExecMainStatus": "0",
+            "Id": "gsd-mcp-bridge.service",
+            "MainPID": "2118307",
+            "SubState": "running"
+          },
+          "gsd-pocketbase.service": {
+            "ActiveEnterTimestamp": "Mon 2026-11-23 23:42:01 UTC",
+            "ActiveState": "active",
+            "ExecMainCode": "0",
+            "ExecMainStartTimestamp": "Mon 2026-11-23 23:42:01 UTC",
+            "ExecMainStartTimestampMonotonic": "7004392915116",
+            "ExecMainStatus": "0",
+            "Id": "gsd-pocketbase.service",
+            "MainPID": "3365518",
+            "SubState": "running"
+          },
+          "lorvex-cf-quick.service": {
+            "ActiveEnterTimestamp": "Mon 2026-11-23 00:34:21 UTC",
+            "ActiveState": "active",
+            "ExecMainCode": "0",
+            "ExecMainStartTimestamp": "Mon 2026-11-23 00:34:21 UTC",
+            "ExecMainStartTimestampMonotonic": "6921133171227",
+            "ExecMainStatus": "0",
+            "Id": "lorvex-cf-quick.service",
+            "MainPID": "1807512",
+            "SubState": "running"
+          },
+          "lorvex-cloud-backup.service": {
+            "ActiveEnterTimestamp": "",
+            "ActiveState": "inactive",
+            "ExecMainCode": "1",
+            "ExecMainStartTimestamp": "Tue 2026-11-24 03:31:45 UTC",
+            "ExecMainStartTimestampMonotonic": "7018177199108",
+            "ExecMainStatus": "0",
+            "Id": "lorvex-cloud-backup.service",
+            "MainPID": "0",
+            "SubState": "dead"
+          },
+          "lorvex-cloud.service": {
+            "ActiveEnterTimestamp": "Mon 2026-11-23 22:57:47 UTC",
+            "ActiveState": "active",
+            "ExecMainCode": "0",
+            "ExecMainStartTimestamp": "Mon 2026-11-23 22:57:47 UTC",
+            "ExecMainStartTimestampMonotonic": "7001739566839",
+            "ExecMainStatus": "0",
+            "Id": "lorvex-cloud.service",
+            "MainPID": "3336621",
+            "SubState": "running"
+          },
+          "lorvex-mcp-bridge.service": {
+            "ActiveEnterTimestamp": "Mon 2026-11-23 22:14:21 UTC",
+            "ActiveState": "active",
+            "ExecMainCode": "0",
+            "ExecMainStartTimestamp": "Mon 2026-11-23 22:14:21 UTC",
+            "ExecMainStartTimestampMonotonic": "6999133148522",
+            "ExecMainStatus": "0",
+            "Id": "lorvex-mcp-bridge.service",
+            "MainPID": "3287789",
+            "SubState": "running"
+          }
+        },
+        "tools": {
+          "blockdev": "/usr/sbin/blockdev",
+          "dd": "/usr/bin/dd",
+          "findmnt": "/usr/bin/findmnt",
+          "growpart": "/usr/bin/growpart",
+          "lsblk": "/usr/bin/lsblk",
+          "partx": "/usr/bin/partx",
+          "python3": "/usr/bin/python3",
+          "resize2fs": "/usr/sbin/resize2fs",
+          "sfdisk": "/usr/sbin/sfdisk",
+          "ss": "/usr/bin/ss",
+          "systemctl": "/usr/bin/systemctl",
+          "tune2fs": "/usr/sbin/tune2fs",
+          "udevadm": "/usr/bin/udevadm"
+        }
+      }
+    },
+    "started_utc": "2026-11-24T06:29:21.680948+00:00",
+    "status": "FAILED",
+    "version": "gsd-capacity-guest-20261124-v1"
+  },
+  "sentinel_job_id": "job_77ad03e0cc23",
+  "started_utc": "2026-11-24T06:29:19.439712+00:00",
+  "status": "FAILED",
+  "wrapper_exit_code": 1
+}

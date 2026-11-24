@@ -1,0 +1,22 @@
+{
+  "checks": {
+    "all_selected_partition_uuids_match_case_normalized": true,
+    "data_ext4_clean": true,
+    "data_filesystem_fits_device": true,
+    "data_filesystem_uses_whole_device_without_children": true,
+    "data_fs_uuid_matches_three_tools": true,
+    "data_mount_device_matches": true,
+    "data_zero_reserved_blocks": true,
+    "root_ext4_clean": true,
+    "root_filesystem_fits_device": true,
+    "root_fs_uuid_matches_three_tools": true,
+    "root_gpt_guid_matches_case_normalized": true,
+    "root_mount_device_matches": true,
+    "root_partition_geometry_matches_device_bytes": true,
+    "root_zero_reserved_blocks": true
+  },
+  "observed_utc": "2026-11-24T05:52:06.169400+00:00",
+  "parent_private_receipt_sha256": "8eba004ba030dfb49a976febd23b7bcdf6132e9065c21c95dbb71695cce8ae6e",
+  "passed": true,
+  "scope": "Read-only comparison of already captured selected guest metadata; no additional SSH or cloud call"
+}

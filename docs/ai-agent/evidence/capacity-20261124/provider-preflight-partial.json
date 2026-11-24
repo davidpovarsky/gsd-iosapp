@@ -1,0 +1,116 @@
+{
+  "job_id": "job_3fa475ddac38",
+  "job_started_utc": "2026-11-24T05:43:44.403696+00:00",
+  "job_finished_utc": "2026-11-24T05:48:09.824591+00:00",
+  "assessment": {
+    "attachment_counts": {
+      "boot": 1,
+      "data": 1
+    },
+    "backup_update_permission_untested": true,
+    "calls": [
+      {
+        "operation": "GetInstance[verified target]",
+        "status": 200
+      },
+      {
+        "operation": "ListBootVolumeAttachments[exact instance]",
+        "status": 200
+      },
+      {
+        "operation": "ListVolumeAttachments[exact instance]",
+        "status": 200
+      },
+      {
+        "operation": "GetBootVolume[verified target]",
+        "status": 200
+      },
+      {
+        "operation": "GetVolume[verified target]",
+        "status": 200
+      }
+    ],
+    "cloud_writes": 0,
+    "elapsed_seconds": 27.078,
+    "failed_phase": "GetVolume[verified target]",
+    "finished_at_utc": "2026-11-24T05:48:09.676679+00:00",
+    "gaps": [
+      {
+        "exception_type": "TypeError",
+        "safe_trace_frames": [
+          {
+            "file": "resize-provider-preflight.py",
+            "function": "<module>",
+            "line": 75
+          }
+        ]
+      }
+    ],
+    "instance_binding_unchanged": true,
+    "instance_state": "RUNNING",
+    "no_backup_resize_guest_change": true,
+    "observed_at_utc": "2026-11-24T05:47:42.588824+00:00",
+    "preflight_passed": false,
+    "prior_binding_sha256": "ec71e521ae5d5b130dbe6f5b825f1977f484c7e7521a45fa48e2c74c4d09dfd1",
+    "private_receipt_basename": "resize-provider-preflight-private.json",
+    "private_receipt_sha256": "2df97a753cf5459ecf54842b41b051daf30d81fb7d904c284717a1fd4c85c449",
+    "read_only": true,
+    "region": "il-jerusalem-1",
+    "sdk_version": "2.192.0",
+    "selected_endpoint_hosts": {
+      "block": "iaas.il-jerusalem-1.oraclecloud.com",
+      "compute": "iaas.il-jerusalem-1.oraclecloud.com",
+      "limits": "limits.il-jerusalem-1.oci.oraclecloud.com"
+    },
+    "target_metadata_only": true,
+    "targets": [
+      {
+        "attached_to_expected_instance": true,
+        "attachment_id_unchanged": true,
+        "autotune_enabled": false,
+        "availability_domain_matches_instance_and_prior": true,
+        "customer_managed_key_present": false,
+        "etag_present": true,
+        "etag_sha256": "8277d5177b481e95a31798280544f09f797bd979374a42582fb4a420a972589e",
+        "replica_count": 0,
+        "replica_metadata_field_known": true,
+        "role": "boot",
+        "size_in_gbs": 47,
+        "size_in_mbs": 47694,
+        "state": "AVAILABLE",
+        "volume_id_sha256": "16f63e72133ed38ec16e4431d617c0605d1a54ef309adbaf4b706d6b5313b004",
+        "vpus_per_gb": 10
+      },
+      {
+        "attached_to_expected_instance": true,
+        "attachment_id_unchanged": true,
+        "autotune_enabled": false,
+        "availability_domain_matches_instance_and_prior": true,
+        "customer_managed_key_present": false,
+        "etag_present": true,
+        "etag_sha256": "a7888d4891cbf1fffffa5c528b2a08815a79779d2407267a929cb94ca60c8e48",
+        "read_only": false,
+        "replica_count": 0,
+        "replica_metadata_field_known": true,
+        "role": "data",
+        "shareable": false,
+        "size_in_gbs": 100,
+        "size_in_mbs": 102400,
+        "state": "AVAILABLE",
+        "volume_id_sha256": "37610e120e864c0110cd1657aaacc3decd96cbda0341ef209eb57090b8440ba9",
+        "vpus_per_gb": 10
+      }
+    ]
+  },
+  "authorization": "root authorized exact-target guard and AD scope preflight; all writes HOLD",
+  "cloud_writes": 0,
+  "finished_at_utc": "2026-11-24T05:48:09.809404+00:00",
+  "installer_exit": 0,
+  "isolated_sdk_removed": false,
+  "phase": "finished",
+  "scope": "same verified targets and matching storage-limit AD in il-jerusalem-1 only",
+  "source_sha256": "f3c04de442587f2c50de4a39e968fae9563f52d8ecf4a0c3f74551a4e6560b29",
+  "temporary_sdk_retained_reason": "authorized diagnostic assessment unfinished; no repeated setup needed",
+  "windows_disk_free_after_bytes": 36602515456,
+  "windows_disk_free_before_bytes": 36976197632
+}

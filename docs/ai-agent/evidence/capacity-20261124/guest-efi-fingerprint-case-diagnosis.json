@@ -1,0 +1,12 @@
+{
+  "efi_partition_all_selected_fields_unchanged": true,
+  "efi_uuid_original_bytes_unchanged": true,
+  "lowercase_sha256": "6e77d863281574d82c08403bc2ce39f24eca3c420f0e4f335dcda1a2261b80c3",
+  "observed_utc": "2026-11-24T06:30:56.029481+00:00",
+  "oracle_or_API_calls": 0,
+  "original_case_sha256": "b069780fcef6383ac97d510982a76b21e725b4a850b36e7be7b33eb69c66f3c2",
+  "original_parent_sha256": "8eba004ba030dfb49a976febd23b7bcdf6132e9065c21c95dbb71695cce8ae6e",
+  "original_uuid_has_uppercase": true,
+  "read_only_cached_receipts": true,
+  "strict_parent_sha256": "80c7658ca36be2042af78a0f9aaeac7b5f9445065d27a70bc23d54c699494769"
+}

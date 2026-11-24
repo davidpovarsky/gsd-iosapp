@@ -1,0 +1,110 @@
+{
+  "child_exit_code": 2,
+  "finished_utc": "2026-11-24T06:23:35.203698+00:00",
+  "inner": {
+    "backups": {
+      "data": {
+        "id_sha256": "784bd08cf905158138d0ba98ac78afa8f819e7551e4b1f098e556ee5604f69e3",
+        "role": "data",
+        "source_matches": true,
+        "state": "REQUEST_RECEIVED",
+        "type": "FULL"
+      }
+    },
+    "binding_sha256": "ec71e521ae5d5b130dbe6f5b825f1977f484c7e7521a45fa48e2c74c4d09dfd1",
+    "calls": [
+      {
+        "operation": "GetInstance[target]",
+        "status": 200
+      },
+      {
+        "operation": "ListBootAttachments[target]",
+        "status": 200
+      },
+      {
+        "operation": "ListDataAttachments[target]",
+        "status": 200
+      },
+      {
+        "operation": "GetVolume[boot]",
+        "status": 200
+      },
+      {
+        "operation": "GetVolume[data]",
+        "status": 200
+      },
+      {
+        "operation": "ListLimitValues[total-storage-gb]",
+        "status": 200
+      },
+      {
+        "operation": "GetResourceAvailability[total-storage-gb]",
+        "status": 200
+      },
+      {
+        "operation": "ListLimitValues[backup-count]",
+        "status": 200
+      },
+      {
+        "operation": "GetResourceAvailability[backup-count]",
+        "status": 200
+      },
+      {
+        "operation": "CreateFULLBackup[data]",
+        "status": 200
+      },
+      {
+        "operation": "GetBackup[data]",
+        "status": 200
+      }
+    ],
+    "cloud_mutations_attempted": 1,
+    "context": {
+      "backups": {
+        "available": 4,
+        "used": 1,
+        "value": 5
+      },
+      "storage": {
+        "available": 6,
+        "used": 194,
+        "value": 200
+      },
+      "target_ad_matches_both_volumes": true,
+      "volumes": {
+        "boot": {
+          "autotune_enabled": false,
+          "etag_sha256": "8277d5177b481e95a31798280544f09f797bd979374a42582fb4a420a972589e",
+          "id_sha256": "16f63e72133ed38ec16e4431d617c0605d1a54ef309adbaf4b706d6b5313b004",
+          "replicas": 0,
+          "size_gb": 47,
+          "size_mb": 47694,
+          "state": "AVAILABLE",
+          "vpus_per_gb": 10
+        },
+        "data": {
+          "autotune_enabled": false,
+          "etag_sha256": "a7888d4891cbf1fffffa5c528b2a08815a79779d2407267a929cb94ca60c8e48",
+          "id_sha256": "37610e120e864c0110cd1657aaacc3decd96cbda0341ef209eb57090b8440ba9",
+          "replicas": 0,
+          "size_gb": 100,
+          "size_mb": 102400,
+          "state": "AVAILABLE",
+          "vpus_per_gb": 10
+        }
+      }
+    },
+    "error_code": "BACKUP_NOT_AVAILABLE",
+    "exit_code": 2,
+    "finished_utc": "2026-11-24T06:23:34.664179+00:00",
+    "operation_id": "6e6b1bb1e28f4d1fada42ec0ada4da58",
+    "phase": "backup-data",
+    "started_utc": "2026-11-24T06:22:42.439858+00:00",
+    "status": "PENDING",
+    "version": "gsd-capacity-provider-20261124-v1"
+  },
+  "phase": "backup-data",
+  "sentinel_job_id": "job_3d202f75a4f0",
+  "source_sha256": "120f7c47e7060d030bfecc5c4b6a5e0d8ec5251d5d2811f6d76e1c10ecd90594",
+  "wrapper_exit_code": 2
+}

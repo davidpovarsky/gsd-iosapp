@@ -1,0 +1,45 @@
+{
+  "child_exit_code": 0,
+  "finished_utc": "2026-11-24T06:28:31.241479+00:00",
+  "inner": {
+    "backups": {
+      "boot": {
+        "id_sha256": "9790b990d1a830d8174ed2412748f4282ee765f3048e0ffd88aa51528a567220",
+        "role": "boot",
+        "source_matches": true,
+        "state": "AVAILABLE",
+        "type": "FULL"
+      },
+      "data": {
+        "id_sha256": "784bd08cf905158138d0ba98ac78afa8f819e7551e4b1f098e556ee5604f69e3",
+        "role": "data",
+        "source_matches": true,
+        "state": "AVAILABLE",
+        "type": "FULL"
+      }
+    },
+    "binding_sha256": "ec71e521ae5d5b130dbe6f5b825f1977f484c7e7521a45fa48e2c74c4d09dfd1",
+    "calls": [
+      {
+        "operation": "GetBackup[boot]",
+        "status": 200
+      },
+      {
+        "operation": "GetBackup[data]",
+        "status": 200
+      }
+    ],
+    "cloud_mutations_attempted": 0,
+    "exit_code": 0,
+    "finished_utc": "2026-11-24T06:28:30.554521+00:00",
+    "operation_id": "6e6b1bb1e28f4d1fada42ec0ada4da58",
+    "phase": "backups-status",
+    "started_utc": "2026-11-24T06:27:31.214876+00:00",
+    "status": "PASS",
+    "version": "gsd-capacity-provider-20261124-v1"
+  },
+  "phase": "backups-status",
+  "sentinel_job_id": "job_284610347fed",
+  "source_sha256": "120f7c47e7060d030bfecc5c4b6a5e0d8ec5251d5d2811f6d76e1c10ecd90594",
+  "wrapper_exit_code": 0
+}

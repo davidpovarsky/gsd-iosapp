@@ -1,0 +1,12 @@
+{
+  "cloud_or_guest_mutations": 0,
+  "finished_utc": "2026-11-24T06:53:32.306617+00:00",
+  "isolated_sdk_removed": true,
+  "removed_basename": "sdk-env-bounded-expansion",
+  "scope": "Remove only the operation-owned isolated Windows OCI SDK environment after final PASS; retain all receipts/source/ledger and original credential locations",
+  "started_utc": "2026-11-24T06:52:18.945976+00:00",
+  "status": "PASS",
+  "windows_free_after_bytes": 36592910336,
+  "windows_free_before_bytes": 36274003968,
+  "sentinel_job_id": "job_f39da50933d7"
+}

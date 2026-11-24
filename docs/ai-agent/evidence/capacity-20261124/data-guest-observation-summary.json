@@ -1,0 +1,128 @@
+{
+  "action": "observe",
+  "commands": [
+    {
+      "exit_code": 0,
+      "mutation": false,
+      "step": "sdb-direct-read"
+    },
+    {
+      "exit_code": null,
+      "mutation": true,
+      "step": "sdb-rescan"
+    },
+    {
+      "exit_code": 0,
+      "mutation": false,
+      "step": "sdb-capacity-read"
+    },
+    {
+      "exit_code": 0,
+      "mutation": true,
+      "step": "data-filesystem-grow"
+    }
+  ],
+  "devices": {
+    "/dev/sda": {
+      "inode": "158",
+      "major": 8,
+      "minor": 0,
+      "node_device": "6",
+      "owner_uid": 0,
+      "realpath": "/dev/sda",
+      "size_bytes": 53687091200
+    },
+    "/dev/sda1": {
+      "inode": "159",
+      "major": 8,
+      "minor": 1,
+      "node_device": "6",
+      "owner_uid": 0,
+      "realpath": "/dev/sda1",
+      "size_bytes": 52612283904
+    },
+    "/dev/sdb": {
+      "inode": "5716",
+      "major": 8,
+      "minor": 16,
+      "node_device": "6",
+      "owner_uid": 0,
+      "realpath": "/dev/sdb",
+      "size_bytes": 110595407872
+    }
+  },
+  "error_code": null,
+  "filesystem_target_verified": true,
+  "filesystems": {
+    "/dev/sda1": {
+      "Block count": "12844795",
+      "Block size": "4096",
+      "Errors behavior": "Continue",
+      "Filesystem UUID_sha256": "5312b5cffd5a50b5b3901d84f5e016c33d5acd47c08c6109a7480a1ab6947561",
+      "Filesystem created": "Sat Aug 22 11:58:40 2026",
+      "Filesystem features": "has_journal ext_attr resize_inode dir_index filetype needs_recovery extent 64bit flex_bg sparse_super large_file huge_file dir_nlink extra_isize metadata_csum",
+      "Filesystem state": "clean",
+      "Free blocks": "940721",
+      "Last checked": "Sat Aug 22 11:58:40 2026",
+      "Last mount time": "Thu Sep  3 22:02:12 2026",
+      "Last write time": "Tue Nov 24 05:55:51 2026",
+      "Reserved block count": "0"
+    },
+    "/dev/sdb": {
+      "Block count": "27000832",
+      "Block size": "4096",
+      "Errors behavior": "Continue",
+      "Filesystem UUID_sha256": "fd89070272a5c0ad7fdbb22f8080e0597c1550a537a44193ceb4440032a9179b",
+      "Filesystem created": "Sun Nov 22 21:12:24 2026",
+      "Filesystem features": "has_journal ext_attr resize_inode dir_index filetype needs_recovery extent 64bit flex_bg sparse_super large_file huge_file dir_nlink extra_isize metadata_csum",
+      "Filesystem state": "clean",
+      "Free blocks": "879174",
+      "Last checked": "Sun Nov 22 21:12:24 2026",
+      "Last mount time": "Sun Nov 22 21:12:32 2026",
+      "Last write time": "Tue Nov 24 06:13:05 2026",
+      "Reserved block count": "0"
+    }
+  },
+  "finished_utc": "2026-11-24T06:48:46.554437+00:00",
+  "free_space": {
+    "/": {
+      "available_bytes": 3708596224,
+      "available_inodes": 4807157,
+      "block_size": 4096,
+      "free_bytes": 3725373440,
+      "free_inodes": 4807157,
+      "total_bytes": 50884108288
+    },
+    "/mnt/development": {
+      "available_bytes": 3346681856,
+      "available_inodes": 4749195,
+      "block_size": 4096,
+      "free_bytes": 3363459072,
+      "free_inodes": 4749195,
+      "total_bytes": 108259958784
+    }
+  },
+  "health": {
+    "pocketbase": {
+      "body_code": 200,
+      "http_status": 200
+    },
+    "public_gateway": {
+      "body_code": 200,
+      "http_status": 200
+    }
+  },
+  "operation_id": "6e6b1bb1e28f4d1fada42ec0ada4da58",
+  "phase": "data-growfs",
+  "private_receipt_basename": "20261124T064836.006157Z-guest-data-growfs-private.json",
+  "private_receipt_sha256": "1d1277d10103c77605629bd3787cd5dc3b992d31e168ce9e8f466f561fe86c20",
+  "remote_error_code": null,
+  "remote_status": "PASS",
+  "service_continuity_verified": true,
+  "started_utc": "2026-11-24T06:48:36.006157+00:00",
+  "status": "PASS",
+  "worker_current_step": "data-filesystem-grow",
+  "worker_error_code": null,
+  "worker_pid": 3489055,
+  "wrapper_exit_code": 0
+}

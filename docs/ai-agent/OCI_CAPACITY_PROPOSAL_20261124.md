@@ -97,3 +97,7 @@ The corrected operational script's SHA-256 was `406e251cf2a20bdc04f0e0967e8b78fb
 - [Prior verified exact-target binding](OCI_TARGET_MAPPING_20261124.md)
 
 **Remaining decision:** root is preparing review of the modest 50/103 GB candidate under the existing maintenance authorization. The larger option is rejected. The exact backup, guarded resize, guest-growth and continuity procedure still needs review and a native-safe window. All cloud and guest writes remain on hold; this report itself authorizes no billing, backup or resize operation.
+
+## Later execution outcome
+
+The separately reviewed 50/103 GB operation completed with final verification at 06:51:02 UTC. See [the execution evidence](OCI_BOUNDED_EXPANSION_EXECUTION_20261124.md) and [the exact runbook](OCI_BOUNDED_EXPANSION_RUNBOOK_20261124.md). This dated assessment remains the original pre-change observation; later allocation is 200/200 GB.
