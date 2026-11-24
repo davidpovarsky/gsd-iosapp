@@ -12,7 +12,7 @@ struct CloudAccountAuthTests {
             let registration = request.url!.path.hasSuffix("/records")
             let status = rejectLogin && !registration ? 400 : 200
             let body = registration
-                ? #"{"id":"account12345678","email":"test@example.invalid"}"#
+                ? #"{"id":"account12345678","emailVisibility":false}"#
                 : (status == 200
                    ? #"{"token":"h.eyJpZCI6ImFjY291bnQxMjM0NTY3OCIsImV4cCI6OTk5OTk5OTk5OX0.s","record":{"id":"account12345678","email":"test@example.invalid"}}"#
                    : #"{"message":"Invalid credentials"}"#)
@@ -36,6 +36,7 @@ struct CloudAccountAuthTests {
         let registration = try JSONDecoder().decode([String: String].self, from: #require(executor.requests[0].httpBody))
         #expect(registration["email"] == "test@example.invalid")
         #expect(registration["password"] == registration["passwordConfirm"])
+        #expect(result.record.email == "test@example.invalid")
         #expect(tokens.load() == result.token)
         #expect(auth.currentUserId() == "account12345678")
         auth.signOut()

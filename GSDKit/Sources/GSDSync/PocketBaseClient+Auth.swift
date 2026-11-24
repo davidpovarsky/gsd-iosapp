@@ -5,6 +5,10 @@ import GSDWire
 /// core is `GSDWire.PocketBaseClient`; only the auth flow needs these, so they stay out of the
 /// GRDB-free wire target the Share Extension links.
 extension PocketBaseClient {
+    private struct RegistrationRecord: Decodable {
+        let id: String
+    }
+
     func authMethods() async throws -> AuthMethods {
         var req = URLRequest(url: URL(string: baseURL + "/api/collections/users/auth-methods")!)
         req.httpMethod = "GET"
@@ -37,7 +41,7 @@ extension PocketBaseClient {
         req.httpBody = try JSONEncoder().encode([
             "email": email, "password": password, "passwordConfirm": password
         ])
-        _ = try await send(req, as: AuthRecord.self)
+        _ = try await send(req, as: RegistrationRecord.self)
         return try await authWithPassword(email: email, password: password)
     }
 
