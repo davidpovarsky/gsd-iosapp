@@ -1,0 +1,70 @@
+{
+  "source_sha": "ef3a4d00670037b4583e4952704663191e345be5",
+  "run_id": 45319427964,
+  "run_url": "https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45319427964",
+  "run_conclusion": "failure",
+  "failure_scope": "Audit incorrectly required device-style application identity in the host ad-hoc signature plist; UI did not start.",
+  "artifact_id": 14886949708,
+  "artifact_sha256": "62834f8b932a2c79f28ccb2621693eaa7414326fc3a22e8265b8cd83b7397e52",
+  "build_for_testing_passed": true,
+  "five_bundle_version_localization_audit_passed": true,
+  "runtime_entitlement_location": "Mach-O __TEXT,__entitlements",
+  "inspection": [
+    {
+      "bundle": "com.itorah.gsd",
+      "signature_entitlements": {},
+      "simulated_entitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    },
+    {
+      "bundle": "com.itorah.gsd.widgets",
+      "signature_entitlements": {},
+      "simulated_entitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd.widgets",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    },
+    {
+      "bundle": "com.itorah.gsd.share",
+      "signature_entitlements": {},
+      "simulated_entitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd.share",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    },
+    {
+      "bundle": "com.itorah.gsd.watchkitapp",
+      "signature_entitlements": {},
+      "simulated_entitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd.watchkitapp",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    },
+    {
+      "bundle": "com.itorah.gsd.watchkitapp.widgets",
+      "signature_entitlements": {},
+      "simulated_entitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd.watchkitapp.widgets",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    }
+  ],
+  "focused_parser_checks": {
+    "actual_five_binaries_passed": 5,
+    "wrong_identity_or_group_rejected": 10,
+    "old_unsigned_product_rejected": 1
+  },
+  "limitation": "Local inspection proves embedded simulator identity and App Group values; full current-source UI and physical-device acceptance are still pending. Apple Distribution signatures require the separate release audit."
+}
