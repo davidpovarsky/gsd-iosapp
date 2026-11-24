@@ -16,6 +16,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
     private var language: String { ProcessInfo.processInfo.environment["GSD_TEST_LANGUAGE"] ?? "en" }
     private var hebrew: Bool { language == "he" }
     private func label(_ english: String, _ he: String) -> String { hebrew ? he : english }
+    private var navigationAttempt = 0
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -47,14 +48,71 @@ final class GSDCloudReleaseUITests: XCTestCase {
         return app.descendants(matching: .any).matching(identifier: identifier).firstMatch
     }
 
-    private func navigate(_ app: XCUIApplication, _ title: String) {
+    private func navigate(_ app: XCUIApplication, _ title: String, test: String = #function) throws {
+        navigationAttempt += 1
+        let checkpointName = "00-navigation-\(test.prefix(6))-\(navigationAttempt)"
+        var checkpoint = try beginNavigationCheckpoint(checkpointName, destination: title)
         let item = navigation(app, title)
-        XCTAssertTrue(item.waitForExistence(timeout: 15), "Missing navigation item: \(title)")
+        let exists = item.waitForExistence(timeout: 15)
+        checkpoint?["stage"] = "existence-wait-returned"
+        checkpoint?["exists"] = exists
+        try saveNavigationCheckpoint(checkpoint, name: checkpointName)
+        XCTAssertTrue(exists, "Missing navigation item: \(title)")
         let hittable = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "hittable == true"), object: item)
-        XCTAssertEqual(XCTWaiter.wait(for: [hittable], timeout: 10), .completed,
-                       "Navigation item is obscured: \(title)")
+        let result = XCTWaiter.wait(for: [hittable], timeout: 10)
+        checkpoint?["stage"] = "hittability-wait-returned"
+        checkpoint?["hittabilityWaitResult"] = result.rawValue
+        try saveNavigationCheckpoint(checkpoint, name: checkpointName)
+        XCTAssertEqual(result, .completed, "Navigation item is obscured: \(title)")
         item.tap()
+    }
+
+    private func beginNavigationCheckpoint(_ name: String, destination: String) throws -> [String: Any]? {
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return nil }
+        // Persist the screen before the first remote AX query. Never request a fresh
+        // hierarchy/frame after a timeout; that request can stall for the same reason.
+        let screenshot = XCUIScreen.main.screenshot()
+        let attachment = XCTAttachment(screenshot: screenshot)
+        attachment.name = "\(language)-\(name)"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        if let destination = ProcessInfo.processInfo.environment["GSD_SCREENSHOT_DIR"] {
+            let directory = URL(fileURLWithPath: destination, isDirectory: true)
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            try screenshot.pngRepresentation.write(to: directory.appendingPathComponent(name + ".png"))
+        }
+        let image = screenshot.image
+        let pixels = try XCTUnwrap(image.cgImage, "Navigation screenshot has no bitmap")
+        let swapsAxes: Bool
+        switch image.imageOrientation {
+        case .left, .leftMirrored, .right, .rightMirrored: swapsAxes = true
+        default: swapsAxes = false
+        }
+        let checkpoint: [String: Any] = [
+            "schemaVersion": 1, "diagnosticOnly": true, "captureSource": "XCUIScreen.main",
+            "name": name, "language": language, "destination": destination, "stage": "before-AX-query",
+            "deviceOrientation": XCUIDevice.shared.orientation.rawValue,
+            "imageOrientation": image.imageOrientation.rawValue,
+            "pixelWidth": pixels.width, "pixelHeight": pixels.height,
+            "displayedWidth": swapsAxes ? pixels.height : pixels.width,
+            "displayedHeight": swapsAxes ? pixels.width : pixels.height
+        ]
+        try saveNavigationCheckpoint(checkpoint, name: name)
+        return checkpoint
+    }
+
+    private func saveNavigationCheckpoint(_ checkpoint: [String: Any]?, name: String) throws {
+        guard let checkpoint else { return }
+        let data = try JSONSerialization.data(withJSONObject: checkpoint, options: [.prettyPrinted, .sortedKeys])
+        let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+        attachment.name = "\(language)-\(name)-\(checkpoint["stage"] as? String ?? "unknown")"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        if let destination = ProcessInfo.processInfo.environment["GSD_SCREENSHOT_DIR"] {
+            let directory = URL(fileURLWithPath: destination, isDirectory: true)
+            try data.write(to: directory.appendingPathComponent(name + ".navigation.json"))
+        }
     }
 
     private func capture(_ app: XCUIApplication, _ name: String) throws {
@@ -65,6 +123,12 @@ final class GSDCloudReleaseUITests: XCTestCase {
         attachment.name = "\(language)-\(name)"
         attachment.lifetime = .keepAlways
         add(attachment)
+        // AX-derived application/window frames can stall; keep the raw screen first.
+        if let destination = ProcessInfo.processInfo.environment["GSD_SCREENSHOT_DIR"] {
+            let directory = URL(fileURLWithPath: destination, isDirectory: true)
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            try screenshot.pngRepresentation.write(to: directory.appendingPathComponent(name + ".png"))
+        }
         let image = screenshot.image
         let pixels = try XCTUnwrap(image.cgImage, "Full-screen screenshot has no bitmap")
         let swapsAxes: Bool
@@ -93,8 +157,6 @@ final class GSDCloudReleaseUITests: XCTestCase {
         ]
         if let destination = ProcessInfo.processInfo.environment["GSD_SCREENSHOT_DIR"] {
             let directory = URL(fileURLWithPath: destination, isDirectory: true)
-            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-            try screenshot.pngRepresentation.write(to: directory.appendingPathComponent(name + ".png"))
             try JSONSerialization.data(withJSONObject: geometry, options: [.prettyPrinted, .sortedKeys])
                 .write(to: directory.appendingPathComponent(name + ".geometry.json"))
         }
@@ -147,7 +209,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
         app.launch()
         let matrix = label("Matrix", "מטריצה")
         let settings = label("Settings", "הגדרות")
-        navigate(app, matrix)
+        try navigate(app, matrix)
         let card = app.descendants(matching: .any).matching(identifier: "task-card-demo-deck").firstMatch
         XCTAssertTrue(card.waitForExistence(timeout: 20), "Seeded Matrix content missing")
         XCTAssertTrue(app.textFields["capture-field"].exists)
@@ -194,7 +256,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
         // A status-bar tap left the menu open and Dashboard had no hittable point.
         app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.50)).tap()
         XCTAssertTrue(completeAction.waitForNonExistence(timeout: 5), "Context menu did not dismiss")
-        navigate(app, label("Dashboard", "לוח בקרה"))
+        try navigate(app, label("Dashboard", "לוח בקרה"))
         try capture(app, "04-dashboard-diagnostic-before-assertion")
         XCTAssertTrue(app.staticTexts[label("Completion Trend", "מגמת השלמה")]
             .waitForExistence(timeout: 10), "Dashboard chart section did not open")
@@ -212,10 +274,29 @@ final class GSDCloudReleaseUITests: XCTestCase {
             format: "label == %@", label("Completion trend over 30 days", "מגמת השלמה לאורך 30 ימים"))).firstMatch
         XCTAssertTrue(thirtyDayChart.waitForExistence(timeout: 5), "Chart did not respond to its range control")
         try capture(app, "04-dashboard")
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let quadrants = ["urgent-important", "not-urgent-important",
+                             "urgent-not-important", "not-urgent-not-important"]
+            let values = quadrants.map { app.staticTexts["dashboard.quadrant.value." + $0].firstMatch }
+            for _ in 0..<3 where !values.allSatisfy({ $0.isHittable }) { dashboardScroll.swipeUp() }
+            let assistant = app.buttons["hanlin.assistant.open"].firstMatch
+            try capture(app, "04-quadrant-values-diagnostic-before-assertion")
+            XCTAssertTrue(assistant.waitForExistence(timeout: 5), "Dashboard assistant is missing")
+            XCTAssertTrue(assistant.isHittable, "Dashboard assistant is obscured")
+            for (value, count) in zip(values, ["3", "3", "2", "2"]) {
+                XCTAssertTrue(value.waitForExistence(timeout: 5), "Dashboard legend value is missing")
+                XCTAssertEqual(accessibilityTextWithoutBidiControls(value.label), count, "Seeded quadrant value changed")
+                XCTAssertTrue(value.isHittable, "Dashboard legend value is obscured")
+                XCTAssertTrue(dashboardScroll.frame.contains(value.frame), "Dashboard legend value is clipped")
+                XCTAssertFalse(value.frame.intersects(assistant.frame),
+                               "Dashboard assistant covers a quadrant legend value")
+            }
+            try capture(app, "04-quadrant-values")
+        }
         if app.tabBars.firstMatch.exists {
             // Scrolling collapses the compact tab bar; scrolling back reveals its destinations.
             dashboardScroll.swipeDown()
-            navigate(app, label("Browse", "עיון"))
+            try navigate(app, label("Browse", "עיון"))
             let savedLink = app.descendants(matching: .any).matching(identifier: "browse-saved").firstMatch
             XCTAssertTrue(savedLink.waitForExistence(timeout: 8), "Browse list did not open")
             XCTAssertTrue(savedLink.isHittable, "Browse content is obscured")
@@ -242,7 +323,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
             try capture(app, "05-recurring-tasks-opened")
         } else {
             // Regular iPad has no Browse tab. Its sidebar browses the Library directly.
-            navigate(app, label("Saved", "שמורים"))
+            try navigate(app, label("Saved", "שמורים"))
             let savedLibrary = app.descendants(matching: .any).matching(identifier: "saved-library").firstMatch
             XCTAssertTrue(savedLibrary.waitForExistence(timeout: 8), "Sidebar did not open the Saved library")
             try capture(app, "05-browse")
@@ -251,7 +332,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
             // Reveal the compact tab bar after scrolling to the lower Browse row.
             app.swipeDown()
         }
-        navigate(app, settings)
+        try navigate(app, settings)
         let account = app.buttons["gsd.cloud.open"]
         for _ in 0..<4 where !account.isHittable { app.swipeUp() }
         XCTAssertTrue(account.waitForExistence(timeout: 5))
@@ -268,7 +349,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
     func test04LocalizedHanlinProvidersAndChatGPTAccount() throws {
         let app = application(demo: true)
         app.launch()
-        navigate(app, label("Matrix", "מטריצה"))
+        try navigate(app, label("Matrix", "מטריצה"))
         let assistant = app.buttons[label("Open Hanlin task AI assistant", "פתיחת עוזר המשימות של Hanlin")].firstMatch
         XCTAssertTrue(assistant.waitForExistence(timeout: 15))
         assistant.tap()
@@ -365,7 +446,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
         app.launch()
         let skip = app.buttons[label("Skip", "דילוג")]
         if skip.waitForExistence(timeout: 5) { skip.tap() }
-        navigate(app, label("Settings", "הגדרות"))
+        try navigate(app, label("Settings", "הגדרות"))
         let open = app.buttons["gsd.cloud.open"]
         for _ in 0..<4 where !open.isHittable { app.swipeUp() }
         XCTAssertTrue(open.waitForExistence(timeout: 10))
@@ -426,7 +507,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
         let serverTitle = "Cloud closed app " + UUID().uuidString.prefix(8)
         let serverID = try await fixture.createTask(title: serverTitle)
         app.launch()
-        navigate(app, label("Matrix", "מטריצה"))
+        try navigate(app, label("Matrix", "מטריצה"))
         let serverCard = app.descendants(matching: .any).matching(identifier: "task-card-" + serverID).firstMatch
         XCTAssertTrue(serverCard.waitForExistence(timeout: 45), "Cloud task missing after closed-app mutation/relaunch")
         XCTAssertTrue(serverCard.label.contains(serverTitle))
@@ -440,7 +521,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
         XCTAssertTrue(uploaded, "Native TaskStore mutation did not reach Oracle")
         app.terminate()
         app.launch()
-        navigate(app, label("Matrix", "מטריצה"))
+        try navigate(app, label("Matrix", "מטריצה"))
         let localCard = app.descendants(matching: .any).matching(NSPredicate(
             format: "identifier BEGINSWITH 'task-card-' AND label CONTAINS %@", localTitle)).firstMatch
         XCTAssertTrue(localCard.waitForExistence(timeout: 30), "Local/cloud task did not persist across relaunch")
@@ -448,7 +529,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
 
         // Delete only this same disposable account through the real native confirmation.
         try await fixture.verifyCurrentOwner()
-        navigate(app, label("Settings", "הגדרות"))
+        try navigate(app, label("Settings", "הגדרות"))
         let deleteAccount = app.buttons[label("Delete Account…", "מחיקת חשבון…")].firstMatch
         for _ in 0..<4 where !deleteAccount.isHittable { app.swipeUp() }
         XCTAssertTrue(signedIn.waitForExistence(timeout: 5), "Account must be signed in before deletion")
@@ -469,7 +550,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
         XCTAssertTrue(signedIn.waitForNonExistence(timeout: 30), "Native account deletion did not sign out")
         XCTAssertTrue(open.waitForExistence(timeout: 10), "Sign-in must return after account deletion")
         try capture(app, "18-account-deleted-signed-out")
-        navigate(app, label("Matrix", "מטריצה"))
+        try navigate(app, label("Matrix", "מטריצה"))
         XCTAssertTrue(field.waitForExistence(timeout: 10), "Matrix did not open after account deletion")
         XCTAssertTrue(serverCard.waitForNonExistence(timeout: 10), "Server-created task remains after erase")
         XCTAssertTrue(localCard.waitForNonExistence(timeout: 10), "Native-created task remains after erase")

@@ -75,7 +75,8 @@ struct ContentView: View {
                     .environment(session)
             }
             .overlay(alignment: .bottomTrailing) {
-                if sizeClass != .compact || (palette.compactTab != 1 && palette.compactTab != 3) {
+                if (sizeClass == .compact && palette.compactTab != 1 && palette.compactTab != 3)
+                    || (sizeClass != .compact && palette.regularSelection != .dashboard) {
                     hanlinAssistantButton
                         .padding(.trailing, 18)
                         .padding(.bottom, sizeClass == .compact ? 100 : 24)
@@ -95,7 +96,7 @@ struct ContentView: View {
         .accessibilityIdentifier("hanlin.assistant.open")
     }
 
-    private var compactAssistantInset: some View {
+    private var assistantInset: some View {
         hanlinAssistantButton
             .padding(.horizontal, 18)
             .padding(.vertical, 8)
@@ -280,7 +281,7 @@ struct ContentView: View {
                     .overlay(alignment: .bottom) { UndoTaskToast(undo: undo).padding(.bottom, 72) }
             }
         } else {
-            RegularRootView()
+            RegularRootView { assistantInset }
         }
     }
 
@@ -292,7 +293,7 @@ struct ContentView: View {
             SmartViewListView()
                 // Reserve space in Browse so the assistant cannot cover a list row.
                 .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
-                    compactAssistantInset
+                    assistantInset
                 }
                 .tabItem { Label(String(localized: "Browse"), systemImage: "line.3.horizontal.decrease.circle") }
                 .tag(1)
@@ -302,7 +303,7 @@ struct ContentView: View {
             SettingsView()
                 // Keep account explanations and settings rows clear of the assistant.
                 .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
-                    compactAssistantInset
+                    assistantInset
                 }
                 .tabItem { Label(String(localized: "Settings"), systemImage: "gearshape") }
                 .tag(3)
@@ -392,7 +393,8 @@ struct ContentView: View {
 }
 
 /// iPad split view. Sidebar selection drives the detail column.
-private struct RegularRootView: View {
+private struct RegularRootView<DashboardAssistant: View>: View {
+    let dashboardAssistant: () -> DashboardAssistant
     @Environment(TaskStore.self) private var store
     @Environment(PaletteController.self) private var palette
     @Environment(SyncCoordinator.self) private var sync
@@ -466,6 +468,10 @@ private struct RegularRootView: View {
                 NavigationStack { SavedListView() }
             case .dashboard:
                 DashboardView()
+                    // Reserve the button's own area so chart values remain reachable.
+                    .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
+                        dashboardAssistant()
+                    }
             case .settings:
                 SettingsView()
             case .matrix, .none:
