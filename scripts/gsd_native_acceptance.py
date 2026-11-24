@@ -34,6 +34,16 @@ def redact(text: str) -> str:
         text = text.replace(value, "[REDACTED_EPHEMERAL_PASSWORD]")
     return text
 
+
+def signal_command(process: subprocess.Popen, sig: int) -> None:
+    try:
+        os.killpg(process.pid, sig)
+    except ProcessLookupError:
+        pass
+    except PermissionError:
+        process.send_signal(sig)
+
+
 def run(args: list[str], log: Path, timeout: int = 120, env: dict | None = None,
         check: bool = True) -> str:
     """Keep raw XCTest output outside artifacts and wait for the actual process."""
@@ -47,16 +57,16 @@ def run(args: list[str], log: Path, timeout: int = 120, env: dict | None = None,
         try:
             try:
                 code = process.wait(timeout=timeout)
-            except subprocess.TimeoutExpired:
+            except subprocess.TimeoutExpired as timeout_error:
                 try:
-                    os.killpg(process.pid, signal.SIGTERM)
-                except ProcessLookupError:
-                    pass
-                try:
-                    process.wait(timeout=15)
-                except subprocess.TimeoutExpired:
-                    os.killpg(process.pid, signal.SIGKILL)
-                    process.wait(timeout=10)
+                    signal_command(process, signal.SIGTERM)
+                    try:
+                        process.wait(timeout=15)
+                    except subprocess.TimeoutExpired:
+                        signal_command(process, signal.SIGKILL)
+                        process.wait(timeout=10)
+                except (OSError, subprocess.TimeoutExpired) as cleanup_error:
+                    raise timeout_error from cleanup_error
                 raise
         finally:
             # pread preserves the shared stdout offset if a simulator child
@@ -67,6 +77,37 @@ def run(args: list[str], log: Path, timeout: int = 120, env: dict | None = None,
     if check and code:
         raise CommandFailure(args, code, log)
     return output
+
+
+def simulator_state(device_id: str, log: Path) -> str | None:
+    inventory = json.loads(run(["xcrun", "simctl", "list", "devices", "--json"], log, timeout=30))
+    return next((device["state"] for devices in inventory["devices"].values()
+                 for device in devices if device["udid"] == device_id), None)
+
+
+def await_simulator_boot(device_id: str, folder: Path) -> str:
+    log = folder / "bootstatus.log"
+    try:
+        run(["xcrun", "simctl", "bootstatus", device_id, "-b"], log, timeout=300)
+    except subprocess.TimeoutExpired:
+        if ("Device already booted, nothing to do." not in log.read_text(encoding="utf-8")
+                or simulator_state(device_id, folder / "boot-state.json") != "Booted"):
+            raise
+        return "verified-booted-after-status-timeout"
+    return "bootstatus-completed"
+
+
+def remove_simulator(device_id: str, folder: Path) -> str | None:
+    shutdown_warning = None
+    try:
+        run(["xcrun", "simctl", "shutdown", device_id], folder / "shutdown.log", timeout=30, check=False)
+    except subprocess.TimeoutExpired as error:
+        shutdown_warning = redact(str(error))
+    run(["xcrun", "simctl", "delete", device_id], folder / "delete.log", timeout=60)
+    if simulator_state(device_id, folder / "cleanup-inventory.json") is not None:
+        raise RuntimeError("Owned simulator remained after deletion: " + device_id)
+    return shutdown_warning
+
 
 def completed_assertion_failure(error: CommandFailure, tests: list[str],
                                 log: str, summary: dict) -> dict:
@@ -141,7 +182,7 @@ def main() -> None:
                                  device["identifier"], runtime["identifier"]], folder / "create.log").strip()
                 receipt["simulatorId"] = device_id
                 run(["xcrun", "simctl", "boot", device_id], folder / "boot.log")
-                run(["xcrun", "simctl", "bootstatus", device_id, "-b"], folder / "bootstatus.log", timeout=300)
+                receipt["bootVerification"] = await_simulator_boot(device_id, folder)
                 command = ["xcodebuild", "test-without-building", "-xctestrun", str(xctestrun),
                            "-destination", "platform=iOS Simulator,id=" + device_id,
                            "-destination-timeout", "90", "-parallel-testing-enabled", "NO",
@@ -184,18 +225,18 @@ def main() -> None:
             finally:
                 result = folder / "Results.xcresult"
                 cleanup_errors = []
-                cleanup_commands = []
                 if result.exists() and not (folder / "test-summary.json").exists():
-                    cleanup_commands.append((["xcrun", "xcresulttool", "get", "test-results", "summary",
-                                              "--path", str(result)], folder / "test-summary.json", True))
-                if device_id:
-                    cleanup_commands.extend([
-                        (["xcrun", "simctl", "shutdown", device_id], folder / "shutdown.log", False),
-                        (["xcrun", "simctl", "delete", device_id], folder / "delete.log", True)])
-                for command, path, checked in cleanup_commands:
                     try:
-                        run(command, path, check=checked)
+                        run(["xcrun", "xcresulttool", "get", "test-results", "summary",
+                             "--path", str(result)], folder / "test-summary.json")
                     except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+                        cleanup_errors.append(redact(str(error)))
+                if device_id:
+                    try:
+                        shutdown_warning = remove_simulator(device_id, folder)
+                        if shutdown_warning:
+                            receipt["shutdownWarning"] = shutdown_warning
+                    except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as error:
                         cleanup_errors.append(redact(str(error)))
                 if cleanup_errors:
                     receipt.update(passed=False, cleanupErrors=cleanup_errors)
