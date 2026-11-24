@@ -1,0 +1,74 @@
+name: GSD ChatGPT Pre-consent Probe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: gsd-native-apple
+  cancel-in-progress: false
+
+jobs:
+  preconsent-probe:
+    runs-on: gsd-preconsent-scaleway-20261124
+    timeout-minutes: 75
+    env:
+      GH_TOKEN: ${{ github.token }}
+      OUTPUT: dist/gsd-chatgpt-preconsent
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Materialize the immutable reviewed helper privately
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, os, pathlib, subprocess, tempfile
+          os.umask(0o077)
+          commit = "93a46c1e029387d54df9fb8b9be793c378658d5e"
+          relative = "scripts/gsd_system_surface_discovery.py"
+          expected = "dcb677bb6dea2070dac1611070f3372914ff3581626ea4a23c7e0a35f4d1e783"
+          result = subprocess.run(["git", "show", commit + ":" + relative], capture_output=True, timeout=30)
+          if result.returncode != 0 or hashlib.sha256(result.stdout).hexdigest() != expected:
+              raise SystemExit("Frozen helper identity failed")
+          directory = pathlib.Path(tempfile.mkdtemp(prefix="gsd-preconsent-core-", dir=os.environ["RUNNER_TEMP"]))
+          path = directory / "gsd_system_surface_discovery.py"
+          path.write_bytes(result.stdout)
+          path.chmod(0o600)
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as stream:
+              stream.write("GSD_PRECONSENT_CORE_HELPER=" + str(path) + "\n")
+          PY
+      - name: Build only the private probe and observe ordinary browser cancellation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/gsd_chatgpt_preconsent_probe.py \
+            --source-sha 71b1b7ce4adf7bea2ddacfc683a69906d6acd6ae \
+            --run-id 45397928701 \
+            --build 48 \
+            --runtime-build 24B8117 \
+            --surface-helper "$GSD_PRECONSENT_CORE_HELPER" \
+            --build-developer-dir /Users/m1/builds/xcode-27.1.Zoqh5zoP/Xcode.app/Contents/Developer \
+            --test-developer-dir /Applications/Xcode.app/Contents/Developer \
+            --output "$OUTPUT"
+      - name: Preserve only the explicit safe pre-consent evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-ChatGPT-Preconsent-${{ github.run_id }}
+          path: |
+            dist/gsd-chatgpt-preconsent/probe-summary.json
+            dist/gsd-chatgpt-preconsent/cleanup-proof.json
+            dist/gsd-chatgpt-preconsent/siwc-preconsent-observation.json
+            dist/gsd-chatgpt-preconsent/public-manifest.json
+            dist/gsd-chatgpt-preconsent/01-disconnected-before-start.png
+            dist/gsd-chatgpt-preconsent/02-disconnected-after-cancel.png
+            dist/gsd-chatgpt-preconsent/03-disconnected-after-relaunch.png
+          if-no-files-found: error
+          retention-days: 21
