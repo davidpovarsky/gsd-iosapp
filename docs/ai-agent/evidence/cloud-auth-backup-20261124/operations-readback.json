@@ -1,0 +1,64 @@
+{
+  "checkedUTC": "2026-11-24T20:23:49.678820+00:00",
+  "units": {
+    "lorvex-cloud.service": {
+      "Id": "lorvex-cloud.service",
+      "ActiveState": "active",
+      "SubState": "running",
+      "UnitFileState": "enabled"
+    },
+    "gsd-cloud-gateway.service": {
+      "Id": "gsd-cloud-gateway.service",
+      "ActiveState": "active",
+      "SubState": "running",
+      "UnitFileState": "enabled"
+    },
+    "gsd-pocketbase.service": {
+      "Id": "gsd-pocketbase.service",
+      "ActiveState": "active",
+      "SubState": "running",
+      "UnitFileState": "enabled"
+    },
+    "lorvex-cloud-backup.timer": {
+      "NextElapseUSecRealtime": "Wed 2026-11-25 03:22:53 UTC",
+      "LastTriggerUSec": "Tue 2026-11-24 03:31:45 UTC",
+      "Id": "lorvex-cloud-backup.timer",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "gsd-cloud-backup.timer": {
+      "NextElapseUSecRealtime": "Wed 2026-11-25 03:23:05 UTC",
+      "LastTriggerUSec": "Tue 2026-11-24 03:18:35 UTC",
+      "Id": "gsd-cloud-backup.timer",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    }
+  },
+  "capacity": {
+    "root": {
+      "availableBytes": 1052016640,
+      "availableMiB": 1003.281,
+      "totalBytes": 50884108288,
+      "availablePercent": 2.067
+    },
+    "data": {
+      "availableBytes": 1999716352,
+      "availableMiB": 1907.078,
+      "totalBytes": 108259958784,
+      "availablePercent": 1.847
+    }
+  },
+  "health": {
+    "GSD": {
+      "status": 200,
+      "ok": true
+    },
+    "Lorvex": {
+      "status": 200,
+      "ok": true
+    }
+  },
+  "backupOrRestoreExecuted": false
+}

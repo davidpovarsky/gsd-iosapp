@@ -1,8 +1,8 @@
 # GSD native authentication guard and populated recovery — 2026-11-24
 
-The tested candidate adds four lines to the gateway's native password route. It enforces the existing **22-request / 15-minute per-IP pattern** before proxying `POST /api/collections/users/auth-with-password`, returning PocketBase's standard message envelope with HTTP 429 and `Retry-After: 900`.
+The four-line native password guard was deployed and verified at **20:23:00 UTC** from [published commit `e74abb292cfb10b43cf5dfa11fac5167caa98cad`](https://github.com/davidpovarsky/gsd-iosapp/commit/e74abb292cfb10b43cf5dfa11fac5167caa98cad). It enforces the existing **22-request / 15-minute per-IP pattern** before proxying `POST /api/collections/users/auth-with-password`, returning PocketBase's standard message envelope with HTTP 429 and `Retry-After: 900`.
 
-Candidate gateway SHA-256: `4bcc55288e28576aaacf24cd6657f254e6703637f732929b139ca78645b2a598`. Base commit: `b746c080473439708defc285ceee43e9165aa636`. Integration and live deployment are recorded separately by the branch owner; this receipt proves the candidate tests.
+Tested and active gateway SHA-256: `4bcc55288e28576aaacf24cd6657f254e6703637f732929b139ca78645b2a598`. Base commit: `b746c080473439708defc285ceee43e9165aa636`. The published tree is `733c19e396a3e5700a94aeb2f6a7cb358d0bca84`; fetched source bytes, tested bytes and the running service's file match.
 
 ## Why this repair is needed
 
@@ -39,7 +39,7 @@ The guard is explicitly per-IP. Successful and failed password attempts share it
 
 ## Verified ingress boundary
 
-The installed Tailscale version is 1.104.5, commit `78838476328d1a97dc05400ad23086a9dbe616da`. Current Serve/Funnel configuration routes HTTPS `/gsd-cloud` directly to the gateway's loopback listener `127.0.0.1:8770`. The gateway does not listen on an external interface.
+The installed client and running daemon both report Tailscale 1.104.5, commit `78838476328d1a97dc05400ad23086a9dbe616da`. Current Serve/Funnel configuration routes HTTPS `/gsd-cloud` directly to the gateway's loopback listener `127.0.0.1:8770`. The gateway does not listen on an external interface.
 
 The [exact installed Tailscale source](https://github.com/tailscale/tailscale/blob/78838476328d1a97dc05400ad23086a9dbe616da/ipn/ipnlocal/serve.go) passes the connection source address through its HTTP context. The reverse proxy's `Rewrite` calls `addProxyForwardedHeaders`, which uses `Header.Set` to replace `X-Forwarded-For` with that address. The configured ingress therefore overwrites an incoming client-supplied value before the existing gateway rate helper reads it. This conclusion binds the installed version and current configuration; it does not generalize to other proxies or privileged local callers. No production authentication attempt or header logging was used for this check.
 
@@ -70,6 +70,21 @@ python3 -B cloud/test_backup_acceptance.py --pocketbase <path-to-pocketbase-0.40
 ```
 
 The previous populated recovery proof at [`540bde78`](https://github.com/davidpovarsky/gsd-iosapp/commit/540bde78d1eb7b90de9eb12d20d319d1c439f1f4) remains valid evidence. This new probe extends it with preserved encrypted OAuth state and actual use of restored access/refresh/native credentials. It is not a provider-volume restore or a physical-device migration.
+
+## Live deployment and current operations
+
+Only `cloud/gateway/server.mjs` was replaced, with a protected rollback copy, preserved ownership/mode, a staged syntax check and one successful service restart. The process restarted and the active source hash matches the published tested file. Public health returned 200; issuer/protected-resource discovery, MCP protocol 2025-11-25, protected catalog 401 and the unauthenticated `invalid_token` linking challenge passed.
+
+There were **zero production password-authentication requests** in the deployment verification. PocketBase settings, database/configuration and native checkout were not changed. The deployment receipt SHA-256 is `de34f33fd0ebcd248a74d20c6e5da71db7fac0ed857e996221443cae4a186b22`.
+
+At **20:23:49 UTC**, Lorvex Cloud, the GSD gateway and PocketBase were active/running and enabled. Both public health endpoints returned 200/ok. Both backup timers were active/waiting and enabled; their next observed triggers were **2026-11-25 03:22:53 UTC for Lorvex** and **03:23:05 UTC for GSD**.
+
+| Filesystem | Available bytes | Available MiB |
+|---|---:|---:|
+| Root | 1,052,016,640 | 1,003.281 |
+| Data | 1,999,716,352 | 1,907.078 |
+
+Those point-in-time measurements exceed the previously recorded 768 MiB root and 512 MiB data admission thresholds. They are not a capacity reservation or prediction. No backup, restore or cleanup was repeated for this operations check. The full safe [operations readback](evidence/cloud-auth-backup-20261124/operations-readback.json) preserves timer dates and capacity measurements.
 
 ## Client behavior and remaining acceptance
 

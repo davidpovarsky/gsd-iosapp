@@ -61,7 +61,9 @@
       }
     },
     "pocketbaseVersion": "pocketbase version 0.40.6",
-    "pocketbaseSHA256": "419baf8f0b4fb455ac0dd3e0a59f4545eb9cc93eab0c47b20b29ec3a6f99f442"
+    "pocketbaseSHA256": "419baf8f0b4fb455ac0dd3e0a59f4545eb9cc93eab0c47b20b29ec3a6f99f442",
+    "publishedCommit": "e74abb292cfb10b43cf5dfa11fac5167caa98cad",
+    "publishedTree": "733c19e396a3e5700a94aeb2f6a7cb358d0bca84"
   },
   "liveNonsecretConfigurationReadback": {
     "checkedUTC": "2026-11-24T19:53:54.904419+00:00",
@@ -295,8 +297,43 @@
     "nativeChangesRequired": false
   },
   "deployment": {
-    "status": "pending_owned_integration_and_deployment",
-    "performedByThisReceipt": false
+    "startedUTC": "2026-11-24T20:22:59Z",
+    "sourceCommit": "e74abb292cfb10b43cf5dfa11fac5167caa98cad",
+    "sourceTree": "733c19e396a3e5700a94aeb2f6a7cb358d0bca84",
+    "unit": "gsd-cloud-gateway.service",
+    "file": "cloud/gateway/server.mjs",
+    "beforeSHA256": "45526f16d81eaac4b2e1e2f54e764aa7e86e5874b6d9ba7f8441e9ccce5acf54",
+    "afterSHA256": "4bcc55288e28576aaacf24cd6657f254e6703637f732929b139ca78645b2a598",
+    "publishedBytesFetchedAndVerified": true,
+    "rollbackAvailable": true,
+    "productionPasswordAuthRequests": 0,
+    "pocketBaseSettingsChanged": false,
+    "databaseChangedByDeployment": false,
+    "nativeCheckoutChanged": false,
+    "restartExit": 0,
+    "checks": {
+      "publicHealth": {
+        "status": 200,
+        "ok": true,
+        "name": "GSD Cloud",
+        "mode": "cloud-account"
+      },
+      "issuerIdentification": true,
+      "protectedResourceMetadata": true,
+      "protocolVersion": "2025-11-25",
+      "protectedCatalogStatus": 401,
+      "unauthenticatedTool": {
+        "status": 200,
+        "isError": true,
+        "challenge": "invalid_token"
+      },
+      "sourceHashMatches": true,
+      "active": "active",
+      "processRestarted": true
+    },
+    "outcome": "deployed_verified",
+    "finishedUTC": "2026-11-24T20:23:00Z",
+    "receiptSHA256": "de34f33fd0ebcd248a74d20c6e5da71db7fac0ed857e996221443cae4a186b22"
   },
   "limitations": {
     "personalDeviceOrChatGPTConsent": false,
@@ -315,6 +352,9 @@
     "primarySourceBlob": "2093d75949473ed0135c7f1249615a4b64424fe6",
     "behavior": "Serve passes connection SrcAddr in context; ReverseProxy Rewrite calls addProxyForwardedHeaders, whose Header.Set overwrites X-Forwarded-For with that address.",
     "runtimeHeaderLoggingOrProductionAuthProbes": false,
-    "scope": "Verified installed Serve/Funnel source and current loopback-only configuration; not a promise for arbitrary proxies or privileged local callers."
-  }
+    "scope": "Verified installed Serve/Funnel source and current loopback-only configuration; not a promise for arbitrary proxies or privileged local callers.",
+    "runningDaemonVersion": "1.104.5-t788384763-gd9218e278",
+    "clientAndDaemonVersionsMatch": true
+  },
+  "operationsReadbackFile": "operations-readback.json"
 }
