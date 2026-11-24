@@ -270,14 +270,30 @@ final class GSDCloudReleaseUITests: XCTestCase {
         XCTAssertTrue(save.isHittable, "Editor save action is obscured after scrolling")
         try capture(app, "02-editor")
         cancel.tap()
+        var sidebarDismissalOffset: CGVector? = nil
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let appFrame = app.frame
+            let sidebarRowFrame = matrixItem.frame
+            XCTAssertFalse(sidebarRowFrame.isEmpty, "Selected Matrix sidebar row frame is empty")
+            XCTAssertTrue(appFrame.contains(sidebarRowFrame), "Selected Matrix sidebar row must lie inside the app")
+            sidebarDismissalOffset = CGVector(dx: sidebarRowFrame.midX - appFrame.minX,
+                                              dy: sidebarRowFrame.midY - appFrame.minY)
+        }
         card.press(forDuration: 1)
         let completeAction = app.buttons[label("Complete", "סימון כהושלמה")]
         XCTAssertTrue(completeAction.waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons[label("Delete", "מחיקה")].exists)
         try capture(app, "03-context-menu")
-        // Tap the observed in-app backdrop, outside the menu and the status bar.
-        // A status-bar tap left the menu open and Dashboard had no hittable point.
-        app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.50)).tap()
+        if let sidebarDismissalOffset {
+            // The selected sidebar row is the observed backdrop in either layout direction.
+            app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
+                .withOffset(sidebarDismissalOffset).tap()
+        } else {
+            // Preserve the already-verified phone backdrop interaction.
+            app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.50)).tap()
+        }
+        // Reuse the raw iPad diagnostic capture; no AX query precedes its saved PNG.
+        _ = try beginNavigationCheckpoint("03-context-menu-after-dismissal", destination: matrix)
         XCTAssertTrue(completeAction.waitForNonExistence(timeout: 5), "Context menu did not dismiss")
         try navigate(app, label("Dashboard", "לוח בקרה"))
         try capture(app, "04-dashboard-diagnostic-before-assertion")
