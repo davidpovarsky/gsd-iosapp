@@ -106,7 +106,10 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--ai-settings-only", action="store_true",
                         help="Run only localized Hanlin/ChatGPT UI; no live cloud fixtures")
+    parser.add_argument("--family", choices=("iPhone", "iPad"),
+                        help="Run one family as partial evidence; never emits full acceptance")
     args = parser.parse_args()
+    families = (args.family,) if args.family else ("iPhone", "iPad")
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     candidates = list((args.derived_data / "Build/Products").glob("*.xctestrun"))
@@ -125,7 +128,7 @@ def main() -> None:
     runtime, devices = selected
     receipts = []
     receipt_path = output / "native-ui-receipt.json"
-    for family in ("iPhone", "iPad"):
+    for family in families:
         for language in ("en", "he"):
             name = family.lower() + "-" + language
             folder = output / name
@@ -201,16 +204,17 @@ def main() -> None:
                     receipt.update(passed=False, cleanupErrors=cleanup_errors)
                 receipt_path.write_text(json.dumps({"passed": all(r["passed"] for r in receipts) and len(receipts) == 4,
                     "timestamp": datetime.now(timezone.utc).isoformat(),
-                    "profile": "chatgpt-settings" if args.ai_settings_only else "native-release", "runs": receipts}, indent=2) + "\n")
+                    "profile": "native-release-partial" if args.family else ("chatgpt-settings" if args.ai_settings_only else "native-release"),
+                    "selectedFamilies": list(families), "runs": receipts}, indent=2) + "\n")
                 if cleanup_errors:
                     raise RuntimeError("Profile diagnostics or simulator cleanup failed: " + name)
-            marker = "GSD_AI_SETTINGS_UI_PASS" if args.ai_settings_only else "GSD_NATIVE_UI_PASS"
+            marker = "GSD_NATIVE_UI_PARTIAL_PASS" if args.family else ("GSD_AI_SETTINGS_UI_PASS" if args.ai_settings_only else "GSD_NATIVE_UI_PASS")
             if not receipt["passed"]:
                 marker = marker.removesuffix("PASS") + "FAIL"
             print(marker, name, flush=True)
     if not all(r["passed"] for r in receipts):
         raise RuntimeError("One or more required UI profiles failed; full acceptance is rejected")
-    marker = "GSD_AI_SETTINGS_UI_ALL_FOUR_PASS" if args.ai_settings_only else "GSD_NATIVE_UI_ALL_FOUR_PASS"
+    marker = "GSD_NATIVE_UI_SELECTED_FAMILY_PASS" if args.family else ("GSD_AI_SETTINGS_UI_ALL_FOUR_PASS" if args.ai_settings_only else "GSD_NATIVE_UI_ALL_FOUR_PASS")
     print(marker, flush=True)
 
 if __name__ == "__main__":

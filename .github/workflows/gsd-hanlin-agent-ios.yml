@@ -8,11 +8,11 @@ on:
         required: true
         type: string
       mode:
-        description: Validate source, or release the same already validated source
+        description: Validate source, resume the pinned missing iPads, or release validated source
         required: true
         type: choice
         default: validate
-        options: [validate, release]
+        options: [validate, resume-native, release]
       validation_run:
         description: Successful validation run ID for this exact source (release only)
         required: false
@@ -312,6 +312,47 @@ jobs:
             dist/gsd-native-release/ui/**/*.json
             dist/gsd-native-release/ui/**/*.log
             !dist/gsd-native-release/ui/**/*.xcresult/**
+          if-no-files-found: warn
+          retention-days: 21
+
+  native-resume:
+    if: inputs.mode == 'resume-native'
+    runs-on: xcode-27
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Harness commit is separate from the immutable compiled product source.
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Resume only missing iPads from exact verified compiled products
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/resume_gsd_native_acceptance.py --output "$OUTPUT"
+      - name: Preserve complete composed native validation receipt
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Native-Acceptance-Receipt-${{ github.run_id }}
+          path: dist/gsd-native-release/native-acceptance.json
+          if-no-files-found: error
+          retention-days: 21
+      - name: Preserve provenance, inherited phones, fresh iPads and sanitized logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Native-Evidence-${{ github.run_id }}
+          path: |
+            dist/gsd-native-release/*.json
+            dist/gsd-native-release/logs/
+            dist/gsd-native-release/inherited-logs/
+            dist/gsd-native-release/ui/**/*.json
+            dist/gsd-native-release/ui/**/*.log
+            dist/gsd-native-release/ui/**/*.png
           if-no-files-found: warn
           retention-days: 21
 

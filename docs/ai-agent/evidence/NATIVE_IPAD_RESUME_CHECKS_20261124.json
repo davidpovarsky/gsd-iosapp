@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "checks": 27,
+  "check_names": [
+    "actual API metadata and successful gate outcomes",
+    "reject different source",
+    "reject different attempt",
+    "reject missing build gate",
+    "reject artifact replacement",
+    "reject artifact wrong source",
+    "reject truncated jobs",
+    "all105 original native files match pinned tree",
+    "actual phone6 plus all inherited package/audit logs",
+    "exact original products artifact tree",
+    "exact original project artifact tree",
+    "actual inner Products ZIP and one xctestrun",
+    "reject mixed parent compiler identity",
+    "reject inherited cleanup failure",
+    "synthetic complete13 composition binds both evidence runs",
+    "reject subset incorrectly marked complete",
+    "reject AI-only profile",
+    "reject missing iPad",
+    "reject failed iPad",
+    "reject missing cloud test",
+    "reject missing deletion owner proof",
+    "reject ambiguous deletion owners",
+    "reject skipped iPad test",
+    "iPad selector executes only7 existing tests and stays partial",
+    "default full13 selection unchanged",
+    "AI-only marker and4 selection unchanged",
+    "fresh cleanup failure aborts before second iPad"
+  ],
+  "scope": "Actual preserved artifact/provenance checks plus deliberate corruption and synthetic composer/command-selection controls. No iPad execution or server action.",
+  "reviewed_logic_sha256": "503a9c139aa4e7a5ebd17b16a334b95dbbda9c980333ae3b10b9978dc6b5ea4e",
+  "published_helper_sha256": "e79375a79505d5005c4d447794887b23615cae15f769b0d55a9803cc19216786",
+  "post_validation_delta": "Root-requested wording only: historical simctl cleanup and VM disposal unobserved. No runtime logic change.",
+  "additional_archive_inspection": {
+    "actual_bundles_and_compiled_test_metadata": "passed offline; codesign calls mocked, actual Mac audit still required",
+    "changed_compiled_test_toolchain": "rejected",
+    "xctestrun": "original FormatVersion1 with __TESTROOT__/__TESTHOST__ paths; no rewriting"
+  }
+}
