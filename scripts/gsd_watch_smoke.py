@@ -187,10 +187,13 @@ def smoke_language(language: str, locale: str, bundles: dict, output: Path, repo
 
 def cleanup(output: Path, report: dict) -> None:
     log = output / "cleanup.log"
-    if report.get("pair_id"):
-        run(["xcrun", "simctl", "unpair", report["pair_id"]], log, check=False)
-    created = [d["id"] for d in report["devices"].values()]
     errors = []
+    if report.get("pair_id"):
+        try:
+            run(["xcrun", "simctl", "unpair", report["pair_id"]], log, check=False)
+        except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+            errors.append(str(error))
+    created = [d["id"] for d in report["devices"].values()]
     for device in reversed(created):
         try:
             run(["xcrun", "simctl", "shutdown", device], log, check=False)
