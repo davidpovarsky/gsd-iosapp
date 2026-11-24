@@ -1,0 +1,32 @@
+{
+  "account_mutations": 0,
+  "browser_review": {
+    "credentials_entered": false,
+    "en_to_he_button": "PASS",
+    "fresh_he_to_en_button": "PASS",
+    "reviewer": "root",
+    "screenshots_inspected": true
+  },
+  "completed_at": "2026-11-24T01:34:07.002715+00:00",
+  "controlled_stop_for_atomic_edit": true,
+  "fixture_grants_before": 0,
+  "gateway_key_preserved": true,
+  "health": {
+    "body": {
+      "mode": "cloud-account",
+      "name": "GSD Cloud",
+      "ok": true,
+      "version": "1.0.0"
+    },
+    "status": 200
+  },
+  "other_services_unchanged": true,
+  "other_state_entries_preserved": true,
+  "removed_client_count": 1,
+  "removed_client_id": "[REDACTED_DISPOSABLE_CLIENT_ID]",
+  "removed_pending_count": 1,
+  "removed_pending_ids_sha256": "88e60a5d8bae1424f61c9a3d1320bc1b3e2e0325ab153b0dbc608cabea3fa04f",
+  "sentinel_policy_changed": false,
+  "state_readback_verified": true,
+  "publication_note": "Disposable client identifier redacted. Cleanup counters, assertions, and pending-ID hash preserved. No live authorization URL or private cleanup plan is published."
+}

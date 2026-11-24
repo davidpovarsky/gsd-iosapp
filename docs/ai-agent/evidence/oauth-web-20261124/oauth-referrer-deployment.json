@@ -1,0 +1,44 @@
+{
+  "before_sha256": "6dbbf8d84dd1509b38f12a30eb0d5d2f2a9d6cc2d151ac4a4eedb9f5b3c8183f",
+  "canonical_git_lf_sha256": "dc12fce18f7730f50bc0049a5bde08bfa08038f7c25bd241e5e8e0e953cb9338",
+  "deployed_at": "2026-11-24T01:30:04.472993+00:00",
+  "disk_free_bytes": {
+    "/": 163655680,
+    "/mnt/development/projects/gsd-cloud": 1758871552
+  },
+  "gateway_key_preserved": true,
+  "gateway_state_bytes_preserved": true,
+  "health": {
+    "body": {
+      "mode": "cloud-account",
+      "name": "GSD Cloud",
+      "ok": true,
+      "version": "1.0.0"
+    },
+    "status": 200
+  },
+  "line_endings": "766 canonical LF converted to approved tested CRLF bytes",
+  "node_syntax_check": "PASS",
+  "only_production_change": "Referrer-Policy: no-referrer -> same-origin",
+  "other_services": {
+    "gsd-mcp-bridge.service": "MainPID=2118307\nExecMainStartTimestamp=Mon 2026-11-23 04:19:56 UTC\nActiveState=active",
+    "gsd-pocketbase.service": "MainPID=3365518\nExecMainStartTimestamp=Mon 2026-11-23 23:42:01 UTC\nActiveState=active",
+    "lorvex-cf-quick.service": "MainPID=1807512\nExecMainStartTimestamp=Mon 2026-11-23 00:34:21 UTC\nActiveState=active",
+    "lorvex-cloud-backup.service": "MainPID=0\nExecMainStartTimestamp=Mon 2026-11-23 22:59:27 UTC\nActiveState=inactive",
+    "lorvex-cloud.service": "MainPID=3336621\nExecMainStartTimestamp=Mon 2026-11-23 22:57:47 UTC\nActiveState=active",
+    "lorvex-mcp-bridge.service": "MainPID=3287789\nExecMainStartTimestamp=Mon 2026-11-23 22:14:21 UTC\nActiveState=active"
+  },
+  "other_services_unchanged": true,
+  "public_document_headers": {
+    "Cache-Control": "no-store",
+    "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'",
+    "Content-Type": "text/html; charset=utf-8",
+    "Referrer-Policy": "same-origin",
+    "X-Content-Type-Options": "nosniff"
+  },
+  "revision": "b2dafb4fa130a8deed44caa65475b33c393c7eac",
+  "sentinel_policy_changed": false,
+  "server_sha256": "185af9c292b6f0651b7e757d68d1f911d7e5be690e4cc49de2bf8604496819a2",
+  "strict_origin_guard_changed": false,
+  "visual_fixture_preserved": true
+}
