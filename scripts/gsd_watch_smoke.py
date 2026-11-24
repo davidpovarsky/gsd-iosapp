@@ -195,11 +195,11 @@ def cleanup(output: Path, report: dict) -> None:
             errors.append(str(error))
     created = [d["id"] for d in report["devices"].values()]
     for device in reversed(created):
-        try:
-            run(["xcrun", "simctl", "shutdown", device], log, check=False)
-            run(["xcrun", "simctl", "delete", device], log)
-        except (OSError, RuntimeError, subprocess.SubprocessError) as error:
-            errors.append(str(error))
+        for action in ("shutdown", "delete"):
+            try:
+                run(["xcrun", "simctl", action, device], log, check=action == "delete")
+            except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+                errors.append(str(error))
     inventory = json.loads(run(["xcrun", "simctl", "list", "--json"], log))
     remaining = {d["udid"] for group in inventory["devices"].values() for d in group}
     assert not remaining.intersection(created), "Created smoke simulator was not removed"
