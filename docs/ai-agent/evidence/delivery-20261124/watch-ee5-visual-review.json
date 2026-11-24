@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "sourceSHA": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+  "manifestSHA256": "3660604deb7073b61544ae068d5433346816bc4e433665b97d67b07cdd20435d",
+  "watchRunReceiptSHA256": "4a7051190c9bd417778f88f86e4570f4d610cdfaab5d6767c1f57f988a6599c5",
+  "scope": "actual_watch_launch_and_visual_footer_regression",
+  "passed": true,
+  "reviewedAt": "2026-11-24T20:04:47.433827+00:00",
+  "reviewMethod": "Actual EN and HE PNGs viewed at native416x496 resolution",
+  "languages": [
+    {
+      "language": "en",
+      "imageSHA256": "121a291a5b8955d14e58d73081850059c4d6a3505318d09b950ec41d66d79b59",
+      "initialEmptyFooterHidden": true,
+      "observed": "Today, complete iPhone loading instruction, and Add button are visible; no blank second card."
+    },
+    {
+      "language": "he",
+      "imageSHA256": "9e9607b9060117e245ccb019ada751c968c6dc0e3adc6056aef35b5c256ed72c",
+      "emptyFooterAbsent": true,
+      "observed": "Right-aligned Today title, empty-task message, and populated updated-time footer are visible with Add button; the footer contains real text rather than an empty card."
+    }
+  ],
+  "watchConnectivityFunctionalTransferVerified": false,
+  "watchWidgetTimelineVerified": false,
+  "physicalVoiceOverVerified": false
+}

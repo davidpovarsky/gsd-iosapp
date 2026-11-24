@@ -1,5 +1,7 @@
 # GSD integration and delivery checkpoint — 2026-11-24
 
+Historical build-48 checkpoint (13:58–14:01 UTC). For the later SDK, native/Watch/preconsent receipts and corrected build-49 release gates, use [the current delivery report](GSD_DELIVERY_CURRENT_20261124.md). Later evidence does not change the source, build number or personal-installation limits of the accepted build 48 recorded below.
+
 ## Delivered build and verified source
 
 **GSD 4.1.0 (48) has a real Apple Distribution archive and signed IPA, was uploaded successfully, and is VALID / IN_BETA_TESTING for the verified owner in App Store Connect.** This establishes owner TestFlight availability. Personal invitation acceptance, a physical installation and the two separate personal ChatGPT authorizations remain unobserved.

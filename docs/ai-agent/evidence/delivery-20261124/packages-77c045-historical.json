@@ -1,0 +1,46 @@
+{
+  "source": "77c0455823cad90168106f2196d6e94d1ce03598",
+  "startedUTC": "2026-11-24T17:25:32Z",
+  "steps": [
+    {
+      "name": "session-observation",
+      "startedUTC": "2026-11-24T17:25:32Z",
+      "log": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/logs/session-observation.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-24T17:25:39Z"
+    },
+    {
+      "name": "sync-connectivity",
+      "startedUTC": "2026-11-24T17:25:39Z",
+      "log": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/logs/sync-connectivity.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-24T17:25:40Z"
+    },
+    {
+      "name": "sdk-final-check",
+      "startedUTC": "2026-11-24T17:25:40Z",
+      "log": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/logs/sdk-final-check.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-24T17:25:40Z"
+    },
+    {
+      "name": "final-hanlin-tests",
+      "startedUTC": "2026-11-24T17:25:40Z",
+      "log": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/logs/final-hanlin-tests.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-24T17:26:07Z"
+    },
+    {
+      "name": "cloud-sync-tests-final",
+      "startedUTC": "2026-11-24T17:26:07Z",
+      "log": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/logs/cloud-sync-tests-final.log",
+      "returncode": 1,
+      "finishedUTC": "2026-11-24T17:26:17Z"
+    }
+  ],
+  "pid": 34417,
+  "passed": false,
+  "errorType": "RuntimeError",
+  "error": "cloud-sync-tests-final_failed",
+  "finishedUTC": "2026-11-24T17:26:17Z"
+}

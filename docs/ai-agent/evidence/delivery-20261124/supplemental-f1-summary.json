@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "sourceSHA": "f1fc8676cd1cce5a275f246b0d7dedcfb73416db",
+  "manifestSHA256": "9be24cb3165b114df586104a90ee3119ddc4fe8f61f7ca37982b5d50bb13458c",
+  "build": "49",
+  "compiler": "Xcode 27.1\nBuild version 27A9275",
+  "driver": "Xcode 27.0\nBuild version 27A266a",
+  "passed": false,
+  "accountGrantVerified": false,
+  "fullSystemSurfaceCoverage": false,
+  "suites": {
+    "share": {
+      "passed": false,
+      "failureCode": "share_assertion_keys",
+      "ownedDevicesRemoved": true
+    },
+    "preconsent": {
+      "passed": true,
+      "simulatorID": "441A9D92-9324-43FC-9E27-B1E608E70761",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-2",
+      "runtimeBuild": "24B8117",
+      "test": {
+        "selectedTests": [
+          "GSDChatGPTPreConsentUITests/test00ContinueOpensOfficialBrowserAndCancels"
+        ],
+        "totalTestCount": 1,
+        "passedTests": 1,
+        "failedTests": 0,
+        "skippedTests": 0,
+        "expectedFailures": 0
+      },
+      "scope": "native_preconsent_start_and_cancel_only",
+      "fullSystemSurfaceCoverage": false,
+      "accountGrantVerified": false,
+      "ownedDevicesRemoved": true
+    }
+  },
+  "productsUnchanged": true,
+  "ownedSimulatorsRemoved": true,
+  "completedAt": "2026-11-24T21:25:23.984519+00:00"
+}
