@@ -17211,6 +17211,261 @@
           }
         }
       }
+    },
+    "Workspace": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Workspace"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מרחב משימות"
+          }
+        }
+      }
+    },
+    "Task workspace": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Task workspace"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מרחב המשימות"
+          }
+        }
+      }
+    },
+    "Expand task workspace": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expand task workspace"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הרחבת מרחב המשימות"
+          }
+        }
+      }
+    },
+    "Show live task workspace": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show live task workspace"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הצגת מרחב משימות חי"
+          }
+        }
+      }
+    },
+    "Loading tasks…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading tasks…"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "טעינת משימות…"
+          }
+        }
+      }
+    },
+    "Saved prerequisite": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved prerequisite"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "תנאי מוקדם שמור"
+          }
+        }
+      }
+    },
+    "Saved references": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved references"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "משימות שמורות מקושרות"
+          }
+        }
+      }
+    },
+    "Some selected tasks are no longer available.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Some selected tasks are no longer available."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "חלק מהמשימות שנבחרו אינן זמינות עוד."
+          }
+        }
+      }
+    },
+    "Some prerequisites are no longer available. Open the task to review its dependencies.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Some prerequisites are no longer available. Open the task to review its dependencies."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "חלק מהמשימות המקדימות אינן זמינות עוד. פתחו את המשימה כדי לבדוק את התלויות שלה."
+          }
+        }
+      }
+    },
+    "Saved prerequisites still block their dependents. Open them to return them to the matrix.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved prerequisites still block their dependents. Open them to return them to the matrix."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "משימות מקדימות שמורות עדיין חוסמות את המשימות התלויות בהן. פתחו אותן כדי להחזירן למטריצה."
+          }
+        }
+      }
+    },
+    "This task is no longer available. Refresh the workspace and try again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This task is no longer available. Refresh the workspace and try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "המשימה אינה זמינה עוד. רעננו את מרחב המשימות ונסו שוב."
+          }
+        }
+      }
+    },
+    "Return this saved item to the matrix before changing it here.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Return this saved item to the matrix before changing it here."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "יש להחזיר את הפריט השמור למטריצה לפני שמשנים אותו כאן."
+          }
+        }
+      }
+    },
+    "This workspace view is not supported.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This workspace view is not supported."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "תצוגה זו של מרחב המשימות אינה נתמכת."
+          }
+        }
+      }
+    },
+    "This task board column is not available.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This task board column is not available."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "העמודה הזו בלוח המשימות אינה זמינה."
+          }
+        }
+      }
+    },
+    "GSD uses due dates. Change the due date instead.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GSD uses due dates. Change the due date instead."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ב־GSD משתמשים בתאריכי יעד. אפשר לשנות את תאריך היעד."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

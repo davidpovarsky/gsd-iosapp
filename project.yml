@@ -31,6 +31,9 @@ settings:
     LOCALIZATION_PREFERS_STRING_CATALOGS: "YES"
     ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOL_FRAMEWORK_EXTENSIONS: "NO"
 packages:
+  TaskVisualizationKit:
+    url: https://github.com/davidpovarsky/task-visualization-kit.git
+    revision: bbec234ce2fc74022226fdf4cdcec3d3ac00fa8a
   HanlinSDK:
     path: Vendor/HanlinSDK
   GSDKit:
@@ -97,6 +100,8 @@ targets:
             UIApplicationShortcutItemSubtitle: Open priority tasks
             UIApplicationShortcutItemIconType: UIApplicationShortcutIconTypeFavorite
     dependencies:
+      - package: TaskVisualizationKit
+        product: TaskVisualizationKit
       - package: HanlinSDK
         product: HanlinChatCore
       - package: HanlinSDK

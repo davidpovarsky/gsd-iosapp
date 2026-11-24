@@ -21,6 +21,7 @@ public struct GSDHanlinArguments: Decodable, Sendable {
     public var ids: [String]?
     public var query: String?
     public var status: String?
+    public var presentation: String?
     public var limit: Int?
     public var title: String?
     public var description: String?
@@ -251,6 +252,11 @@ public actor GSDHanlinHost: HanlinHostIntegration {
                 throw HanlinHostError.invalidArguments
             }
             return try Self.encode(task)
+        case "show_task_workspace":
+            let tasks = try await store.fetchAllTasks()
+            let request = try GSDTaskWorkspaceRequest.validated(
+                presentation: a.presentation, title: a.title, taskIDs: a.ids, tasks: tasks)
+            return try Self.encode(request)
         case "get_dashboard":
             let tasks = try await store.fetchAllTasks()
             let now = Date()

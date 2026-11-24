@@ -190,7 +190,7 @@ struct ChatGPTPlanContractTests: Sendable {
         #expect(requests.withLock { $0 } == 1)
     }
 
-    @Test func responsesRequestRetainsAll22ToolsUnderCanonicalNamespaceContract() throws {
+    @Test func responsesRequestRetainsAll23ToolsUnderCanonicalNamespaceContract() throws {
         let tools: [[String: Any]] = try GSDHanlinToolCatalog.specs.map {
             ["type": "function", "name": $0.alias,
              "parameters": try JSONSerialization.jsonObject(with: $0.schemaJSON())]
@@ -216,7 +216,7 @@ struct ChatGPTPlanContractTests: Sendable {
         #expect(namespaces.first?["type"] as? String == "namespace")
         #expect(namespaces.first?["name"] as? String == "hanlin")
         let transferred = try #require(namespaces.first?["tools"] as? [[String: Any]])
-        #expect(transferred.count == 22)
+        #expect(transferred.count == 23)
         #expect(Set(transferred.compactMap { $0["name"] as? String }) ==
                 Set(GSDHanlinToolCatalog.specs.map(\.alias)))
         #expect(prepared.value(forHTTPHeaderField: "Accept") == "text/event-stream")
@@ -302,7 +302,7 @@ struct ChatGPTPlanContractTests: Sendable {
 
 
     @Test @MainActor
-    func originalEngineAdvertises22ToolsWithoutBypassingHostExecution() async throws {
+    func originalEngineAdvertises23ToolsWithoutBypassingHostExecution() async throws {
         let seen = Mutex<Set<String>>([])
         let executionCount = Mutex(0)
         let fetchCount = Mutex(0)

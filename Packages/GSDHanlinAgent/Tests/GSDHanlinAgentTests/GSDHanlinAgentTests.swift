@@ -28,8 +28,8 @@ final class GSDHanlinAgentTests: XCTestCase {
         _ = store
         let catalog = try GSDHanlinToolCatalog.catalog(for: context)
         try catalog.validate()
-        XCTAssertEqual(catalog.tools.count, 22)
-        XCTAssertEqual(Set(catalog.tools.map(\.route.alias)).count, 22)
+        XCTAssertEqual(catalog.tools.count, 23)
+        XCTAssertEqual(Set(catalog.tools.map(\.route.alias)).count, 23)
         XCTAssertEqual(catalog.tools.filter { $0.writeGuarantee != .readOnly }.count, 14)
         for spec in GSDHanlinToolCatalog.specs {
             XCTAssertNoThrow(try HanlinHostSchemaValidation(schemaJSON: spec.schemaJSON()))

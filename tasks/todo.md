@@ -617,3 +617,11 @@ Standard test-only scope approved by root: actual SyncCoordinator callback sched
 ## 2026-11-24 — Shared SDK and native completion
 
 Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLETION_20261124.md). Existing task history above is preserved. Source owner /root uses isolated branch fix/gsd-latest-sdk-completion-20261124; Apple checks and release use Scaleway. SDK, Lorvex and Cloud lanes have separate owners.
+
+
+## Task workspace — 2026-11-25
+
+- Implemented isolated app navigation, canonical task adapters, selected prerequisite projection and Hanlin presentation tool.
+- Added package and native UI acceptance tests; compilation/test execution are pending the coordinator-owned Mac runner.
+- Resuming from here: pin final TaskVisualizationKit implementation revision; merge latest accepted integration branch; regenerate Xcode project; run declared checks; proceed through authorized release gates.
+- No TestFlight or runtime success is claimed by this source handoff. See docs/ai-agent/TASK_WORKSPACE_20261125.md.

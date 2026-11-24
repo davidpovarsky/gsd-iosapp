@@ -55,6 +55,7 @@ public final class GSDHanlinAssistantState {
     public private(set) var pendingApproval: GSDHanlinWriteRequest?
     public private(set) var pendingApprovalID: UUID?
     public private(set) var dashboard: GSDHanlinDashboard?
+    public private(set) var workspace: GSDTaskWorkspaceRequest?
 
     @ObservationIgnored private let store: TaskStore
     @ObservationIgnored private var bundle: GSDHanlinAgentBundle?
@@ -189,7 +190,9 @@ public final class GSDHanlinAssistantState {
             let events = try await bundle.agent.stream(
                 messages: transcript,
                 systemPrompt: "You are a GSD task manager assistant. Use only advertised GSD tools. "
-                    + "Request user approval for changes and never claim a modification before host confirmation.",
+                    + "Request user approval for changes and never claim a modification before host confirmation. "
+                    + "For task plans or dependencies, call show_task_workspace to display the real interactive tasks. "
+                    + "After creating tasks and their dependency links, show their IDs in the workspace; do not invent task IDs.",
                 modelReference: .init(provider: provider, modelID: modelID),
                 maxSteps: 8)
             for try await item in events {
@@ -201,6 +204,11 @@ public final class GSDHanlinAssistantState {
                         messages[index].text += delta
                     }
                 case .toolResult(_, let name, let jsonText, _, let failed):
+                    if !failed, name == "show_task_workspace",
+                       let data = jsonText.data(using: .utf8),
+                       let decoded = try? JSONDecoder().decode(GSDTaskWorkspaceRequest.self, from: data) {
+                        workspace = decoded
+                    }
                     if !failed, name == "get_dashboard",
                        let data = jsonText.data(using: .utf8),
                        let decoded = try? JSONDecoder().decode(GSDHanlinDashboard.self, from: data) {

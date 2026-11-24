@@ -47,7 +47,7 @@ public enum GSDHanlinToolCatalog {
         }
     }
 
-    // 22 scoped tools. Read results are JSON, mutations require host approval again
+    // 23 scoped tools. Read results are JSON, mutations require host approval again
     // even when the model/provider already approved its tool call.
     public static let specs: [Spec] = [
         .init("list_tasks", "List tasks", "Search and filter active GSD tasks",
@@ -57,6 +57,12 @@ public enum GSDHanlinToolCatalog {
         .init("get_task", "Get task", "Get one task by its exact local ID",
               fields: ["id": .text(128)], required: ["id"]),
         .init("get_dashboard", "Task dashboard", "Overview and totals grouped by priority and due date"),
+        .init("show_task_workspace", "Show live task workspace",
+              "Display actual tasks as an interactive graph, quadrant board, timeline, network or table. "
+                + "Call after planning or creating linked tasks. Omit ids to follow all current matrix tasks; "
+                + "selected task IDs include their prerequisites. This presents tasks without changing them.",
+              fields: ["presentation": .choice(["graph", "board", "timeline", "network", "table"]),
+                       "ids": .texts(200, 128), "title": .text(120)]),
         .init("list_tags", "List tags", "List tags used in the local task database"),
         .init("list_smart_views", "Smart views", "List saved GSD smart views"),
         .init("list_saved_tasks", "Saved tasks", "Read tasks saved for later"),

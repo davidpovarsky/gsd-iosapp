@@ -55,3 +55,25 @@ production data probes and unrelated refactors.
 6. A native UI walk saves a task, edits notes, finds it, returns it to the selected
    quadrant and observes the same identity. Verify iPhone/iPad light and dark,
    compile Mac Catalyst, and capture fresh simulator evidence.
+
+## Task workspace extension — 2026-11-25
+
+Authorized by the owner's current request to plan, implement, integrate and deliver both apps to TestFlight. This is a non-trivial UI/host integration; the parent coordinator owns shared-kit implementation, native verification, branch integration and releases.
+
+Goal: show and edit the existing GSD tasks in interactive graph, quadrant board, due-date timeline, dependency network and table views. The same native view must be reachable from app navigation and Hanlin tool results.
+
+Input/output: existing TaskStore snapshots and stable task IDs; all changes call TaskStore's mutation methods. A read-only show_task_workspace tool validates its mode and selected IDs and supplies presentation intent. Explicit selections include prerequisite closure. Omitted IDs mean all current matrix tasks, including future additions. Saved prerequisites remain visible and read-only; their actual state still blocks dependents.
+
+Constraints: no second task database; no model or sync migration; no copied upstream source; external SwiftPM package pinned to a revision; preserve existing tab indices and adaptive-navigation continuity; English/Hebrew labels. GSD's recurrence parentTaskId is not a dependency or a hierarchy. The board moves tasks between real quadrants. No fabricated in-progress status or planned/start date.
+
+Edge cases: missing or deleted selections; cycle/self/missing dependency rejection; Saved references; duplicate selections; empty databases; action failures; concurrent updates; successful completion followed by recurrence; due-date edits preserve other fields.
+
+Acceptance:
+- Workspace opens on iPhone and iPad and carries through compact/regular transitions.
+- Open/create uses the normal editor. Completion, quadrant moves, due edits and dependencies persist through TaskStore and enqueue through the existing sync path.
+- References preserve true blocking state; selected graph is live after later mutations.
+- Hanlin can request any supported presentation; failed or invalid tools do not replace a successful workspace with fabricated data.
+- Focused unit tests verify selector semantics and actual repository mutations; a simulator UI flow opens workspace, completes a real seeded task, verifies completion in an alternate view, and opens the normal editor.
+- Root runner must compile, run the declared tests and native UI acceptance before release. No build/upload is claimed by this source implementation lane.
+
+Out of scope for this lane: shared TaskVisualizationKit implementation, production account changes, build-number allocation, SDK update and TestFlight publication (owned by coordinator).

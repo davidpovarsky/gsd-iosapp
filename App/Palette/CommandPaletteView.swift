@@ -14,7 +14,7 @@ enum PaletteResult {
     case whatsNew
     case navigate(PaletteDestination)
 }
-enum PaletteDestination { case matrix, browse, saved, archive, dashboard, settings }
+enum PaletteDestination { case matrix, browse, saved, archive, dashboard, workspace, settings }
 
 /// A Browse-stack route. The list links are value-based so the palette can push either a
 /// smart view or the Archive by appending to `PaletteController.browsePath` — a plain
@@ -58,6 +58,7 @@ final class PaletteController {
         switch regularSelection {
         case .matrix, .none: compactTab = 0
         case .dashboard: compactTab = 2
+        case .workspace: compactTab = 4
         case .settings: compactTab = 3
         case .archive: compactTab = 1; browsePath = [.archive]
         case .saved: compactTab = 1; browsePath = [.saved]
@@ -79,6 +80,7 @@ final class PaletteController {
             }
         case 2: regularSelection = .dashboard
         case 3: regularSelection = .settings
+        case 4: regularSelection = .workspace
         default: regularSelection = .matrix
         }
     }
@@ -86,7 +88,7 @@ final class PaletteController {
 
 /// iPad sidebar selection. Shared so the palette handler can drive it; `RegularRootView`
 /// binds its `List(selection:)` to `PaletteController.regularSelection`.
-enum RegularItem: Hashable { case matrix, saved, archive, dashboard, settings, smartView(String) }
+enum RegularItem: Hashable { case matrix, saved, archive, dashboard, workspace, settings, smartView(String) }
 
 /// ⌘K command palette: a search field + sectioned, substring-matched results across
 /// Tasks / Smart Views / Actions / Navigation. Case-insensitive; not fuzzy (YAGNI).
@@ -117,6 +119,7 @@ struct CommandPaletteView: View {
     private var navResults: [(String, String, PaletteResult)] {
         [(String(localized: "Matrix"), "square.grid.2x2", .navigate(.matrix)),
          (String(localized: "Dashboard"), "chart.bar.xaxis", .navigate(.dashboard)),
+         (String(localized: "Workspace"), "point.3.connected.trianglepath.dotted", .navigate(.workspace)),
          (String(localized: "Browse"), "line.3.horizontal.decrease.circle", .navigate(.browse)),
          (String(localized: "Saved"), "bookmark", .navigate(.saved)),
          (String(localized: "Archive"), "archivebox", .navigate(.archive)),

@@ -300,6 +300,13 @@ struct ContentView: View {
             DashboardView()
                 .tabItem { Label(String(localized: "Dashboard"), systemImage: "chart.bar.xaxis") }
                 .tag(2)
+            NavigationStack {
+                GSDTaskWorkspaceView(store: store)
+                    .navigationTitle(String(localized: "Task workspace"))
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+            .tabItem { Label(String(localized: "Workspace"), systemImage: "point.3.connected.trianglepath.dotted") }
+            .tag(4)
             SettingsView()
                 // Keep account explanations and settings rows clear of the assistant.
                 .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
@@ -362,6 +369,7 @@ struct ContentView: View {
             case .archive: palette.compactTab = 1; palette.browsePath = [.archive]
             case .saved: palette.compactTab = 1; palette.browsePath = [.saved]
             case .dashboard: palette.compactTab = 2
+            case .workspace: palette.compactTab = 4
             case .settings: palette.compactTab = 3
             }
         } else {
@@ -372,6 +380,7 @@ struct ContentView: View {
             case .archive: palette.regularSelection = .archive
             case .saved: palette.regularSelection = .saved
             case .dashboard: palette.regularSelection = .dashboard
+            case .workspace: palette.regularSelection = .workspace
             case .settings: palette.regularSelection = .settings
             }
         }
@@ -414,6 +423,10 @@ private struct RegularRootView<DashboardAssistant: View>: View {
                     sidebarSymbol("chart.bar.xaxis", .dashboard)
                 }
                 .accessibilityIdentifier("gsd.sidebar.dashboard")
+                sidebarNavLabel(String(localized: "Workspace"), .workspace) {
+                    sidebarSymbol("point.3.connected.trianglepath.dotted", .workspace)
+                }
+                .accessibilityIdentifier("gsd.sidebar.workspace")
 
                 Section(String(localized: "Smart Views")) {
                     ForEach(store.pinnedViews) { view in sidebarRow(view) }
@@ -472,6 +485,12 @@ private struct RegularRootView<DashboardAssistant: View>: View {
                     .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
                         dashboardAssistant()
                     }
+            case .workspace:
+                NavigationStack {
+                    GSDTaskWorkspaceView(store: store)
+                        .navigationTitle(String(localized: "Task workspace"))
+                        .navigationBarTitleDisplayMode(.inline)
+                }
             case .settings:
                 SettingsView()
             case .matrix, .none:

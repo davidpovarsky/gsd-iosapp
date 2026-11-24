@@ -21,6 +21,7 @@ struct GSDHanlinAssistantView: View {
     @State private var showRemoteBridgeSettings = false
     @State private var prompt = ""
     @State private var chartBreakdown = "quadrant"
+    @State private var expandedWorkspace: GSDWorkspaceSheet?
     @State private var showModelSettings = false
     @State private var apiToken = ""
     @State private var configuredToken = ""
@@ -68,6 +69,18 @@ struct GSDHanlinAssistantView: View {
                             }
                             if let dashboard = assistant.dashboard {
                                 visualDashboard(dashboard)
+                            }
+                            if let request = assistant.workspace {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    GSDTaskWorkspaceView(store: taskStore, request: request)
+                                        .id(request)
+                                        .frame(height: 580)
+                                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                                    Button("Expand task workspace", systemImage: "arrow.up.left.and.arrow.down.right") {
+                                        expandedWorkspace = .init(request: request)
+                                    }
+                                    .accessibilityIdentifier("gsd.assistant.expand-workspace")
+                                }
                             }
                             if assistant.isRunning {
                                 ProgressView("Working…")
@@ -124,6 +137,12 @@ struct GSDHanlinAssistantView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) { Button("Close") { dismiss() } }
                 ToolbarItem(placement: .topBarTrailing) {
+                    Button("Task workspace", systemImage: "point.3.connected.trianglepath.dotted") {
+                        expandedWorkspace = .init()
+                    }
+                    .accessibilityIdentifier("gsd.assistant.workspace")
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("MCP", systemImage: "network") { showRemoteBridgeSettings = true }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
@@ -152,6 +171,9 @@ struct GSDHanlinAssistantView: View {
                 if !available, provider == "ChatGPT" {
                     Task { await resetAssistantConversation() }
                 }
+            }
+            .fullScreenCover(item: $expandedWorkspace) { sheet in
+                GSDTaskWorkspaceSheet(store: taskStore, request: sheet.request)
             }
             .sheet(isPresented: $showModelSettings) { settings }
             .sheet(isPresented: $showRemoteBridgeSettings) {

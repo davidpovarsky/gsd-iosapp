@@ -353,3 +353,10 @@ Write the file with the variant, run `testCaptureEveryScreen`, and repeat. Save 
 patch and reverse it with `git apply -R` before asking the owner to choose. A quadrant's empty
 prompt shows only inside a populated matrix, and the demo seed fills all four quadrants. To see
 it, force one quadrant's `items` empty in a throwaway build, then launch with `--demo-seed`.
+
+
+## Task visualization — 2026-11-25
+
+- GSD parentTaskId tracks recurrence lineage; it is not a dependency or task hierarchy.
+- Saved prerequisites remain real blockers even though Saved items are excluded from the matrix.
+- Keep the rich workspace a projection of TaskStore and resolve action IDs again before canonical mutations; a chart snapshot must not become a parallel database.

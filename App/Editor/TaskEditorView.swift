@@ -149,6 +149,7 @@ struct TaskEditorView: View {
                 Group {
                     Section {
                         TextField(String(localized: "Title"), text: $title)
+                            .accessibilityIdentifier("editor-title")
                             .onChange(of: title) { _, _ in saveError = nil }
                     }
                     Section {
