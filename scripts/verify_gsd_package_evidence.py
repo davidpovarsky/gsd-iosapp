@@ -46,14 +46,25 @@ def verify_workflow(previous: str, current: str) -> None:
             raise ValueError("Package test environment changed: " + name)
 
 
-def verify_log_bindings(log: str, source: str, xcode: str) -> None:
+def verify_log_bindings(log: str, source: str, xcode: str) -> dict:
+    current = xcode.strip().splitlines()
+    if len(current) != 2 or not re.fullmatch(r"Build version [A-Za-z0-9.]+", current[1]):
+        raise ValueError("Current full Xcode version/build identity is required")
+    current_build = current[1].removeprefix("Build version ")
     log = re.sub(r"\x1b\[[0-9;]*m", "", log)
     sources = set(re.findall(r"(?m)^\S+Z\s+GSD_SOURCE_SHA: ([0-9a-f]{40})\s*$", log))
     versions = set(re.findall(r"(?m)^\S+Z (Xcode [0-9]+(?:\.[0-9]+)*)\s*$", log))
+    direct_builds = set(re.findall(r"(?m)^\S+Z Build version ([A-Za-z0-9.]+)\s*$", log))
+    metadata_builds = set(re.findall(
+        r"(?m)^\S+Z[ \t]+/\S*/appintentsmetadataprocessor[^\n]*? --xcode-version ([A-Za-z0-9.]+)(?:[ \t]|$)", log))
     if sources != {source}:
         raise ValueError("Prior job logs do not identify exactly the expected source")
-    if versions != {xcode}:
+    if versions != {current[0]}:
         raise ValueError("Xcode version differs from the executed package tests")
+    if direct_builds | metadata_builds != {current_build}:
+        raise ValueError("Xcode build identity is absent, conflicting, or changed")
+    return {"version": current[0], "build_version": current_build,
+            "prior_build_provenance": "xcodebuild-version-log" if direct_builds else "xcode-appintents-command-log"}
 
 
 def tree_digest(source: str) -> str:
@@ -93,8 +104,7 @@ def main() -> None:
         if len(match) != 1 or match[0]["conclusion"] != "success":
             raise ValueError("Prior required package evidence did not pass: " + name)
     log = command(["gh", "api", prefix + "jobs/" + str(job["id"]) + "/logs"])
-    xcode = command(["xcodebuild", "-version"]).splitlines()[0]
-    verify_log_bindings(log, source, xcode)
+    xcode = verify_log_bindings(log, source, command(["xcodebuild", "-version"]))
     if command(["git", "rev-parse", "HEAD"]).strip() != args.current_sha:
         raise ValueError("Current source differs from requested validation source")
     command(["git", "fetch", "--no-tags", "--depth=1", "origin", source])

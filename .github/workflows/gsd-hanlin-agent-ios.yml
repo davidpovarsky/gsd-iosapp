@@ -59,7 +59,9 @@ jobs:
           [[ "$GSD_SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
           [[ "$(git rev-parse HEAD)" = "$GSD_SOURCE_SHA" ]]
           [[ "$GSD_BUILD_NUMBER" =~ ^[0-9]+$ ]]
-          xcodebuild -version | grep '^Xcode 27'
+          xcode_version="$(xcodebuild -version)"
+          printf '%s\n' "$xcode_version"
+          [[ "$xcode_version" == Xcode\ 27* ]]
           mkdir -p "$OUTPUT/logs"
           curl --fail --silent --show-error --max-time 30 "$GSD_CLOUD_TEST_BASE/api/health" > "$OUTPUT/logs/cloud-health.json"
       - name: Materialize and audit the original pinned Hanlin SDK
@@ -89,23 +91,32 @@ jobs:
         run: |
           python3 scripts/resolve_gsd_dependencies.py --package Packages/GSDHanlinAgent --package GSDKit \
             --output "$OUTPUT/logs/dependency-resolution"
-      - name: Verify reusable package tests against identical source and toolchain
+      - name: Check whether prior package tests can be reused
+        id: package_evidence
         if: inputs.package_tests_run != ''
         env:
           GH_TOKEN: ${{ github.token }}
           PACKAGE_TESTS_RUN: ${{ inputs.package_tests_run }}
         shell: bash
         run: |
-          python3 scripts/verify_gsd_package_evidence.py --run-id "$PACKAGE_TESTS_RUN" \
-            --current-sha "$GSD_SOURCE_SHA" --output "$OUTPUT/package-contract-evidence.json"
+          set -euo pipefail
+          rm -f "$OUTPUT/package-contract-evidence.json"
+          if python3 scripts/verify_gsd_package_evidence.py --run-id "$PACKAGE_TESTS_RUN" \
+              --current-sha "$GSD_SOURCE_SHA" --output "$OUTPUT/package-contract-evidence.json"; then
+            echo 'reuse_verified=true' >> "$GITHUB_OUTPUT"
+          else
+            rm -f "$OUTPUT/package-contract-evidence.json"
+            echo 'reuse_verified=false' >> "$GITHUB_OUTPUT"
+            echo 'Prior package proof could not be verified; executing package tests on this source.'
+          fi
       - name: Validate Hanlin tools and official ChatGPT contracts
-        if: inputs.package_tests_run == ''
+        if: steps.package_evidence.outputs.reuse_verified != 'true'
         shell: bash
         run: |
           set -euo pipefail
           swift test --package-path Packages/GSDHanlinAgent -j 3 2>&1 | tee "$OUTPUT/logs/hanlin-tests.log"
       - name: Validate account, cloud and sync conflict contracts
-        if: inputs.package_tests_run == ''
+        if: steps.package_evidence.outputs.reuse_verified != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -173,7 +184,15 @@ jobs:
           output = pathlib.Path(os.environ["OUTPUT"])
           ui = json.loads((output / "ui/native-ui-receipt.json").read_text())
           bundles = json.loads((output / "compiled-bundles.json").read_text())
-          assert ui["passed"] and bundles["passed"]
+          assert ui["passed"] is True and bundles["passed"] is True
+          assert ui["profile"] == "native-release", "Full native UI profile is required"
+          runs = ui["runs"]
+          assert len(runs) == 4 and {(r["family"], r["language"]) for r in runs} == {
+              (family, language) for family in ("iPhone", "iPad") for language in ("en", "he")}
+          assert all(r["passed"] is True for r in runs)
+          cloud_runs = [r for r in runs if r["cloudRoundTrip"] is True]
+          assert len(cloud_runs) == 1 and (cloud_runs[0]["family"], cloud_runs[0]["language"]) == ("iPad", "he")
+          assert "test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload" in cloud_runs[0]["verifiedPassedTests"]
           package_path = output / "package-contract-evidence.json"
           packages = json.loads(package_path.read_text()) if package_path.exists() else {
               "passed": True, "mode": "executed", "current_source_sha": os.environ["GSD_SOURCE_SHA"],
@@ -252,7 +271,9 @@ jobs:
           [[ "$(git rev-parse HEAD)" = "$GSD_SOURCE_SHA" ]]
           [[ "$VALIDATION_RUN" =~ ^[0-9]+$ ]]
           [[ "$GSD_BUILD_NUMBER" =~ ^[0-9]+$ ]]
-          xcodebuild -version | grep '^Xcode 27'
+          xcode_version="$(xcodebuild -version)"
+          printf '%s\n' "$xcode_version"
+          [[ "$xcode_version" == Xcode\ 27* ]]
           mkdir -p "$OUTPUT/logs" "$RUNNER_TEMP/gsd-validation-receipt"
           gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VALIDATION_RUN" > "$RUNNER_TEMP/gsd-validation-run.json"
           gh run download "$VALIDATION_RUN" --repo "$GITHUB_REPOSITORY" \
@@ -267,6 +288,15 @@ jobs:
           assert receipt["passed"] and receipt["source_sha"] == os.environ["GSD_SOURCE_SHA"], "Validation source mismatch"
           assert receipt["run_id"] == os.environ["VALIDATION_RUN"], "Validation run mismatch"
           assert receipt["build"] == os.environ["GSD_BUILD_NUMBER"], "Validation build mismatch"
+          ui = receipt["ui"]
+          assert ui["passed"] is True and ui["profile"] == "native-release", "Full native UI profile is required"
+          runs = ui["runs"]
+          assert len(runs) == 4 and {(r["family"], r["language"]) for r in runs} == {
+              (family, language) for family in ("iPhone", "iPad") for language in ("en", "he")}
+          assert all(r["passed"] is True for r in runs)
+          cloud_runs = [r for r in runs if r["cloudRoundTrip"] is True]
+          assert len(cloud_runs) == 1 and (cloud_runs[0]["family"], cloud_runs[0]["language"]) == ("iPad", "he")
+          assert "test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload" in cloud_runs[0]["verifiedPassedTests"]
           pathlib.Path(os.environ["OUTPUT"], "native-acceptance.json").write_text(json.dumps(receipt, indent=2) + "\n")
           print("GSD_EXACT_SOURCE_NATIVE_ACCEPTANCE_VERIFIED")
           PY
