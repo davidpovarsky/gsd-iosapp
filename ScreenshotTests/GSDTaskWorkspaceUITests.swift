@@ -201,12 +201,18 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         // Compact tables and Kanban columns materialize their rows lazily.
         // Reveal the real row using its scroll container before asking for a hit point.
         for _ in 0..<14 {
-            let candidates: [XCUIElement]
-            if button.exists {
+            var candidates: [XCUIElement] = []
+            let table = app.scrollViews["task-workspace.table"].firstMatch
+            if table.exists {
+                // The live row can disappear between exists and the ancestor query.
+                // Bind the table by its own stable ID, independent of lazy row lifetime.
+                candidates = [table]
+            } else if button.exists {
                 candidates = app.scrollViews.containing(.button, identifier: identifier).allElementsBoundByIndex
                     + app.tables.containing(.button, identifier: identifier).allElementsBoundByIndex
                     + app.collectionViews.containing(.button, identifier: identifier).allElementsBoundByIndex
-            } else {
+            }
+            if candidates.isEmpty {
                 candidates = app.scrollViews.containing(taskButtons).allElementsBoundByIndex
                     + app.tables.containing(taskButtons).allElementsBoundByIndex
                     + app.collectionViews.containing(taskButtons).allElementsBoundByIndex
