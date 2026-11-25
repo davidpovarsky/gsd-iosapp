@@ -1,0 +1,36 @@
+{
+  "completedUTC": "2026-11-25T09:58:32.964863+00:00",
+  "executedScriptSHA256": "f5b759e42daaa622d16a681b141041ef089cc42e517078392d7c18bdd479f699",
+  "entries": [
+    {
+      "name": "owner-group-before-20261125.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/owner-group-before-20261125.json",
+      "bytes": 1455,
+      "sha256": "16e76153702e784ce80a58497857dfa76ec771fd4c8697221ebc0e78453ac9b2",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-owner-testflight-20261125\\owner-group-before-20261125.json"
+    },
+    {
+      "name": "owner-group-build49-association-once.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/owner-group-build49-association-once.json",
+      "bytes": 474,
+      "sha256": "c59b52a3d927e7c8fa0c1227e97a2133bd75e51eb9c09bdbfbcebb9c90494bc0",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-owner-testflight-20261125\\owner-group-build49-association-once.json"
+    },
+    {
+      "name": "owner-group-after-20261125.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/owner-group-after-20261125.json",
+      "bytes": 1741,
+      "sha256": "cb430671e07bbd1dc59db6bab9447dd1d61a0f7505b2014fcada10e2346be53c",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-owner-testflight-20261125\\owner-group-after-20261125.json"
+    },
+    {
+      "name": "owner-testflight-availability-20261125.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/owner-testflight-availability-20261125.json",
+      "bytes": 5501,
+      "sha256": "b0f21357e09b55ccb3f7173bcc33c482dd8a818bae2e88f454b067f68ca8a6e5",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-owner-testflight-20261125\\owner-testflight-availability-20261125.json"
+    }
+  ],
+  "allDestinationHashesVerified": true,
+  "returncode": 0
+}

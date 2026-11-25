@@ -1,0 +1,228 @@
+{
+  "source": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "version": "4.1.0",
+  "build": "49",
+  "startedUTC": "2026-11-25T09:21:07Z",
+  "steps": [
+    {
+      "name": "appstore-build-train",
+      "startedUTC": "2026-11-25T09:21:07Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/appstore-build-train.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:21:08Z"
+    },
+    {
+      "name": "apple-preflight",
+      "startedUTC": "2026-11-25T09:21:08Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/apple-preflight.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:21:10Z"
+    },
+    {
+      "name": "archive",
+      "startedUTC": "2026-11-25T09:21:10Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/archive.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:25:07Z"
+    },
+    {
+      "name": "archive-signatures",
+      "startedUTC": "2026-11-25T09:25:07Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/archive-signatures.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:25:08Z"
+    },
+    {
+      "name": "export-options",
+      "startedUTC": "2026-11-25T09:25:08Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/export-options.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:25:08Z"
+    },
+    {
+      "name": "export",
+      "startedUTC": "2026-11-25T09:25:08Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/export.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:25:13Z"
+    },
+    {
+      "name": "ipa-signatures",
+      "startedUTC": "2026-11-25T09:25:13Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/ipa-signatures.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:25:14Z"
+    },
+    {
+      "name": "apple-validate",
+      "startedUTC": "2026-11-25T09:25:14Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/apple-validate.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:26:21Z"
+    },
+    {
+      "name": "apple-preupload-train-check",
+      "startedUTC": "2026-11-25T09:51:09.207269+00:00",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/apple-preupload-train-check.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:51:10.998527+00:00"
+    },
+    {
+      "name": "apple-preupload-collision-check",
+      "startedUTC": "2026-11-25T09:51:10.999688+00:00",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/apple-preupload-collision-check.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:51:12.548534+00:00"
+    },
+    {
+      "name": "apple-upload",
+      "startedUTC": "2026-11-25T09:51:12.572079+00:00",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/apple-upload.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:52:25.748998+00:00"
+    },
+    {
+      "name": "apple-processing",
+      "startedUTC": "2026-11-25T09:52:25.772308+00:00",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/apple-processing.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:55:02.209583+00:00"
+    }
+  ],
+  "pid": 41505,
+  "acceptanceScope": {
+    "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "version": "4.1.0",
+    "build": "49",
+    "releaseHandoffSHA256": "087cc7b9a7d23f734b0b651f16badcad3572ec981172d6c191b7ba9c1b0634ae",
+    "planSHA256": "536d13fc5f390d4216ee26c565ec52fa2562a3667187ea9e8427cf16b17ff621",
+    "sourceClosureSHA256": "b660995515a5b539536fd7c3bdb4f65177aef82afc13af9a69c788e49cfbdadd",
+    "finalSimulatorManifestSHA256": "7588422c377bdc70c2b564c4c4acd2b11f0353c4ec1d54b7dbb58f63dba22815",
+    "finalSimulatorProductsTree": {
+      "sha256": "b0b6c65c2f9a820cff3d18562361639981931644388d5310ee870d1bde188716",
+      "files": 421
+    },
+    "widgetActionsRunID": 45575270618,
+    "widgetActionsURL": "https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45575270618",
+    "githubArtifactID": 15006680376,
+    "githubArtifactZipSHA256": "b300d6388a6b4456dc49e2e30bf9c391f110b44086d004615d768fca598e4a7d",
+    "artifactTransferManifestSHA256": "ea828dc7505c71cac2f929b0650eabca2a4722a279a6189d2d839b091df48f82",
+    "widgetExecutionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "originalWidgetTest": "GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap",
+    "originalEvidenceSHA256": {
+      "terminal": "2eb0ffba18d78afdf72237dc5a135e98982beb128cabdc0440dbdd0ebfec7952",
+      "binding": "2bdb6bfac2c6e615e901a3868577669c74258a0f6010ed572ac01582a39dd9d0",
+      "observation": "c5cafe4079e2666f005624c108149ce6734ca61734f000438799a6e5797a7dd9"
+    },
+    "actualWidgetAcceptanceVerified": true,
+    "newXCTestExecutedByVerifier": false,
+    "signingOrUploadExecutedByVerifier": false,
+    "historicalAcceptanceIsSeparateEvidence": true
+  },
+  "artifact": {
+    "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/export/GSD.ipa",
+    "fileName": "GSD-4.1.0-49.ipa",
+    "sizeBytes": 27950550,
+    "sha256": "9cb686f13cc4546580d272fa83fb26aa6b13715c5be366412b06efa71fb522f7"
+  },
+  "archiveAndAppleValidationPassed": true,
+  "awaitingUploadAuthorization": false,
+  "finishedUTC": "2026-11-25T09:26:21Z",
+  "finalUploadAcceptance": {
+    "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "version": "4.1.0",
+    "build": "49",
+    "ipa": {
+      "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/export/GSD.ipa",
+      "sizeBytes": 27950550,
+      "sha256": "9cb686f13cc4546580d272fa83fb26aa6b13715c5be366412b06efa71fb522f7"
+    },
+    "uploadHandoffSHA256": "4825814668809b40f62332259f48671f1be8a1834cbdbc214bd32f0de85256d4",
+    "widgetAcceptance": {
+      "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+      "version": "4.1.0",
+      "build": "49",
+      "releaseHandoffSHA256": "087cc7b9a7d23f734b0b651f16badcad3572ec981172d6c191b7ba9c1b0634ae",
+      "planSHA256": "536d13fc5f390d4216ee26c565ec52fa2562a3667187ea9e8427cf16b17ff621",
+      "sourceClosureSHA256": "b660995515a5b539536fd7c3bdb4f65177aef82afc13af9a69c788e49cfbdadd",
+      "finalSimulatorManifestSHA256": "7588422c377bdc70c2b564c4c4acd2b11f0353c4ec1d54b7dbb58f63dba22815",
+      "finalSimulatorProductsTree": {
+        "sha256": "b0b6c65c2f9a820cff3d18562361639981931644388d5310ee870d1bde188716",
+        "files": 421
+      },
+      "widgetActionsRunID": 45575270618,
+      "widgetActionsURL": "https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45575270618",
+      "githubArtifactID": 15006680376,
+      "githubArtifactZipSHA256": "b300d6388a6b4456dc49e2e30bf9c391f110b44086d004615d768fca598e4a7d",
+      "artifactTransferManifestSHA256": "ea828dc7505c71cac2f929b0650eabca2a4722a279a6189d2d839b091df48f82",
+      "widgetExecutionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+      "originalWidgetTest": "GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap",
+      "originalEvidenceSHA256": {
+        "terminal": "2eb0ffba18d78afdf72237dc5a135e98982beb128cabdc0440dbdd0ebfec7952",
+        "binding": "2bdb6bfac2c6e615e901a3868577669c74258a0f6010ed572ac01582a39dd9d0",
+        "observation": "c5cafe4079e2666f005624c108149ce6734ca61734f000438799a6e5797a7dd9"
+      },
+      "actualWidgetAcceptanceVerified": true,
+      "newXCTestExecutedByVerifier": false,
+      "signingOrUploadExecutedByVerifier": false,
+      "historicalAcceptanceIsSeparateEvidence": true
+    },
+    "historicalAcceptance": {
+      "historicalAcceptanceSHA256": "73b76a2b06a598f013b56a19dcd060f4ff6c39cdf5b9fc2888cfc604856af85f",
+      "actualCaseSources": {
+        "share": "b5588f3f0c42df328dba34024d569be8605e51d0",
+        "shortcut": "7098dcb9abdc2d7e8e20afa8d9ec95d7e69c34ef"
+      },
+      "caseProductionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+      "packageTestsReused": 183,
+      "mainUITestsReused": 13,
+      "preconsentTestSourceSHA": "f1fc8676cd1cce5a275f246b0d7dedcfb73416db",
+      "preconsentProductionSourceSHA": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+      "fixtureRowsObservedAtUTC": "2026-11-24T23:58:34.189761+00:00",
+      "newHistoricalTestExecution": false,
+      "historicalOverallDraftRemainsPassedFalse": true,
+      "unverifiedClaims": {
+        "personalChatGPTGrant": false,
+        "ChatGPTEntitlement": false,
+        "ChatGPTInference": false,
+        "physicalDevice": false,
+        "VoiceOverSpeech": false,
+        "SiriVoiceInvocation": false,
+        "WatchConnectivityTransfer": false,
+        "watchWidgetTimeline": false,
+        "HebrewSystemConfirmationLocale": false
+      }
+    },
+    "nativeInputReuseSHA256": "f2474972b394143ee5e693bf70f6f7fd612d63f34def87c66c21d3fddc24d04b",
+    "nativeInputDeltaSHA256": "d1ac8ccc24fdc0e2d3a065ccb6cc8fe201656a19dd140d4e4881d70f80f854f8",
+    "archiveEvidence": {
+      "archiveTerminal": {
+        "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-release49-archive-terminal-attempt2.json",
+        "sha256": "02937196a4e3fbe56cc64e05e1f3470289edb9d55dcaf144a4c3ccb532033583"
+      },
+      "releaseStatus": {
+        "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/release-status.json",
+        "sha256": "7087b91a907f9ff12f537c202e4e3e51da300256ed7590f450296ce1137c0f2b"
+      },
+      "archiveSignatures": {
+        "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/archive-signatures.json",
+        "sha256": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80"
+      },
+      "ipaSignatures": {
+        "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/ipa-signatures.json",
+        "sha256": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80"
+      },
+      "ownershipReconciliation": {
+        "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-release49-ownership-reconciliation.json",
+        "sha256": "7762bb1bf773ef747510e6be83bd6bfaa74563869d5e81d6ac7f1b3d9448f860"
+      }
+    },
+    "newTestsExecuted": false,
+    "personalGrantOrInferenceVerified": false
+  },
+  "uploadStageStartedUTC": "2026-11-25T09:51:09.206225+00:00",
+  "uploadSubmissionAttempted": true,
+  "uploadSubmitted": true,
+  "appleProcessingPassed": true,
+  "uploadStageFinishedUTC": "2026-11-25T09:55:02.562557+00:00"
+}

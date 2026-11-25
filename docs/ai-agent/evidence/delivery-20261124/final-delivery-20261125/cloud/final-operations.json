@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "purpose": "final_read_only_cloud_operational_readiness",
+  "source_jobs": [
+    {
+      "job_id": "job_9335aa42f4f2",
+      "host": "host_299cf75f6b338ecd",
+      "started_at": "2026-11-25T09:35:14.941863+00:00",
+      "finished_at": "2026-11-25T09:35:15.365245+00:00",
+      "exit_code": 0,
+      "status": "succeeded",
+      "output_truncated": false
+    },
+    {
+      "job_id": "job_cce4ad01fe91",
+      "host": "host_7ec8382e82747448",
+      "started_at": "2026-11-25T09:35:18.113408+00:00",
+      "finished_at": "2026-11-25T09:35:18.367221+00:00",
+      "exit_code": 0,
+      "status": "succeeded",
+      "output_truncated": false
+    }
+  ],
+  "oracle": {
+    "actions": {
+      "archive_reads_or_restore": 0,
+      "backup_runs": 0,
+      "data_cleanup": 0,
+      "fixture_writes": 0,
+      "service_changes": 0
+    },
+    "backup_archive_count": 5,
+    "backup_observation_only": true,
+    "backup_service": {
+      "ActiveState": "inactive",
+      "ExecMainCode": "1",
+      "ExecMainExitTimestamp": "Wed 2026-11-25 03:23:05 UTC",
+      "ExecMainStartTimestamp": "Wed 2026-11-25 03:23:05 UTC",
+      "ExecMainStatus": "0",
+      "InvocationID": "4ce35d4534df4d58892353e96e63b9d2",
+      "LoadState": "loaded",
+      "Result": "success",
+      "SubState": "dead"
+    },
+    "ended_at_utc": "2026-11-25T09:35:15.348019+00:00",
+    "filesystems": {
+      "/": {
+        "available_bytes": 1320091648,
+        "capacity_bytes": 50884108288,
+        "free_bytes": 1336868864
+      },
+      "/mnt/development": {
+        "available_bytes": 1035452416,
+        "capacity_bytes": 108259958784,
+        "free_bytes": 1052229632
+      }
+    },
+    "health": {
+      "gateway": {
+        "body_ok": true,
+        "http_status": 200,
+        "observed_at_utc": "2026-11-25T09:35:15.329187+00:00",
+        "passed": true,
+        "url": "https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud/health",
+        "version": "1.0.0"
+      },
+      "pocketbase": {
+        "body_code": 200,
+        "http_status": 200,
+        "observed_at_utc": "2026-11-25T09:35:15.188328+00:00",
+        "passed": true,
+        "url": "https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud/api/health"
+      }
+    },
+    "host": "torah-social",
+    "latest_backup_verification_events": [
+      {
+        "archive_name": "gsd-cloud-20261125T032305Z.tar.gz",
+        "bytes": 229962,
+        "counts": {
+          "gsd_library": 0,
+          "tasks": 2,
+          "users": 2
+        },
+        "integrity": "ok",
+        "invocation_id": "4ce35d4534df4d58892353e96e63b9d2",
+        "journal_timestamp_usec": "1795576985409446",
+        "restore": "ok",
+        "sha256": "0de1b86cee9e005330d44954947bd53631af55f94a6dbd4bc61922f68d12e110"
+      }
+    ],
+    "listening_tcp_ports": [
+      8095,
+      8770
+    ],
+    "newest_archive": {
+      "bytes": 229962,
+      "mtime_utc": "2026-11-25T03:23:05.388127+00:00",
+      "name": "gsd-cloud-20261125T032305Z.tar.gz"
+    },
+    "operational_health_passed": true,
+    "schema_version": 1,
+    "scope": "one_read_only_final_operational_snapshot",
+    "services": {
+      "gsd-cloud-gateway.service": {
+        "ActiveEnterTimestamp": "Tue 2026-11-24 20:22:59 UTC",
+        "ActiveState": "active",
+        "ExecMainStartTimestamp": "Tue 2026-11-24 20:22:59 UTC",
+        "LoadState": "loaded",
+        "MainPID": "3694501",
+        "Result": "success",
+        "SubState": "running"
+      },
+      "gsd-mcp-bridge.service": {
+        "ActiveEnterTimestamp": "Mon 2026-11-23 04:19:56 UTC",
+        "ActiveState": "active",
+        "ExecMainStartTimestamp": "Mon 2026-11-23 04:19:56 UTC",
+        "LoadState": "loaded",
+        "MainPID": "2118307",
+        "Result": "success",
+        "SubState": "running"
+      },
+      "gsd-pocketbase.service": {
+        "ActiveEnterTimestamp": "Mon 2026-11-23 23:42:01 UTC",
+        "ActiveState": "active",
+        "ExecMainStartTimestamp": "Mon 2026-11-23 23:42:01 UTC",
+        "LoadState": "loaded",
+        "MainPID": "3365518",
+        "Result": "success",
+        "SubState": "running"
+      }
+    },
+    "started_at_utc": "2026-11-25T09:35:15.023211+00:00",
+    "timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Wed 2026-11-25 03:23:05 UTC",
+      "LoadState": "loaded",
+      "NextElapseUSecRealtime": "Thu 2026-11-26 03:22:58 UTC",
+      "Persistent": "yes",
+      "RandomizedDelayUSec": "10min",
+      "SubState": "waiting",
+      "Unit": "gsd-cloud-backup.service",
+      "UnitFileState": "enabled"
+    }
+  },
+  "windows_offsite": {
+    "archive_read_or_decrypt": false,
+    "calendar_start_boundaries": [
+      "2026-11-24T05:35:00+02:00"
+    ],
+    "ended_at_utc": "2026-11-25T09:35:18.356241+00:00",
+    "last_run": {
+      "completed_at": "2026-11-25T03:35:02.420906+00:00",
+      "dpapi_scope": "CurrentUser",
+      "encrypted_bytes": 230182,
+      "manifest_files_verified": 13,
+      "plaintext_written_to_disk": false,
+      "restored_counts": {
+        "gsd_library": 0,
+        "tasks": 2,
+        "users": 2
+      },
+      "result": "PASS",
+      "retention_keep": 7,
+      "sha256": "0de1b86cee9e005330d44954947bd53631af55f94a6dbd4bc61922f68d12e110",
+      "source_archive": "gsd-cloud-20261125T032305Z.tar.gz",
+      "source_bytes": 229962,
+      "source_restore": "ok",
+      "source_revision": "c1519a9200e5ef07c591e91bb2b3d4b26f009855",
+      "stored_decrypt_hash": "PASS",
+      "transfer_limit_bytes": 134217728,
+      "transfer_timeout_seconds": 180
+    },
+    "logon_type": "InteractiveToken",
+    "manual_trigger": false,
+    "recorded_encrypted_artifact_bytes": 230182,
+    "recorded_encrypted_artifact_exists": true,
+    "schema_version": 1,
+    "scope": "existing_scheduled_offsite_metadata_only",
+    "start_when_available": "true",
+    "started_at_utc": "2026-11-25T09:35:18.260970+00:00",
+    "state_exists": true,
+    "state_mtime_utc": "2026-11-25T03:35:02.457888+00:00",
+    "state_sha256": "d141dd6ab6490f419fa25260db1d30f7618b689f772b406f8643f793f5489e50",
+    "task_enabled": null,
+    "task_error_type": "RuntimeError",
+    "task_query_exit": 0,
+    "task_xml_query_exit": 0
+  },
+  "interpretation": {
+    "health": "PASS at recorded timestamps only",
+    "capacity": "Low remaining headroom; no cause attribution or cleanup performed",
+    "backup": "The existing scheduled Oracle invocation and existing Windows offsite worker receipt were observed; no backup, restore, archive opening or decryption was run by this check",
+    "offsite_archive_matches_oracle": true,
+    "windows_scheduler_metadata_limit": "The schtasks CSV command exited 0, but the single-row parser rejected its response shape; scheduler Last Result/Next Run Time are not asserted. Existing worker PASS state and calendar trigger XML were read successfully.",
+    "offsite_recovery_limit": "CurrentUser DPAPI depends on the original Windows user profile; no alternate-profile recovery verified",
+    "functional_evidence": "Prior 22-tool, account, sync and restoration evidence is reused; no functional tests or fixtures were run",
+    "lorvex": "No Lorvex process, service, configuration or data was touched"
+  }
+}

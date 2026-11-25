@@ -1,0 +1,430 @@
+{
+  "schemaVersion": 1,
+  "kind": "root-final-docs-merge-tree-preparation",
+  "recordedUTC": "2026-11-25T09:32:29.298209+00:00",
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "documentationSHA": "f46401ccf63d6ebf12f043007156a02b09d5604b",
+  "observedMainSHA": "fe35879146b7994f71b5d0a49289336315604192",
+  "remote": "fork",
+  "remoteRefs": {
+    "refs/heads/docs/gsd-delivery-49-20261124": "f46401ccf63d6ebf12f043007156a02b09d5604b",
+    "refs/heads/fix/gsd-latest-sdk-completion-20261124": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "refs/heads/main": "fe35879146b7994f71b5d0a49289336315604192"
+  },
+  "mergeTreeExitCode": 0,
+  "preparedMergeTree": "05581347efa9efd29cc044a17a9a5421079ceddd",
+  "docsOnlyChangedPathCount": 185,
+  "changedPaths": [
+    "docs/ai-agent/GSD_COMPLETION_20261124.md",
+    "docs/ai-agent/GSD_DELIVERY_CURRENT_20261124.md",
+    "docs/ai-agent/GSD_INTEGRATION_20261124.md",
+    "docs/ai-agent/HEBREW_RTL_ACCEPTANCE.md",
+    "docs/ai-agent/SUPPLEMENTAL_LOCAL_VALIDATION_20261124.md",
+    "docs/ai-agent/evidence/delivery-20261124/asc-readonly-20261124T225746Z.json",
+    "docs/ai-agent/evidence/delivery-20261124/asc49-train-readonly-20261125T021447Z.json",
+    "docs/ai-agent/evidence/delivery-20261124/asc49-train-readonly-20261125T035240Z.json",
+    "docs/ai-agent/evidence/delivery-20261124/asc49-train-readonly-20261125T045248Z.json",
+    "docs/ai-agent/evidence/delivery-20261124/completion-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0106-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0225-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0254-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0324-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0411-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0458-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/asc49-train-readonly-20261125T065354Z.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/github-remote-graph-20261125T070946Z.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-diagnostic-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-diagnostic-observation.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-diagnostic-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-recovery-composition.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-recovery-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-route-trace.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-trace-collection.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-actions-f56-publication.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-actions-guards-25-review.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-build-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-build-dispatch.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-build-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-composition.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-products.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-publication.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-source-closure.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-route-fix-1d4033-publication.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/actions-45573374526-artifact-read.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/actions-45573374526-creation.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/actions-45573374526-pid416-cwd.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/actions-45573374526-private-state.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/actions-45573374526-widget-receipt.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/actions-45575270618-creation.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/oracle-gsd-space-inventory.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/oracle-os-apt-cache-observation.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0842/mac-old-runner-cache-inventory.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0842/manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0842/oci-operation-receipt.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0842/oci-provider-readback.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/actions/actions-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/actions/artifact-transfer-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/actions/widget-actions-receipt.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/actions/widget-binding-public.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/actions/widget-observation-public.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/actions/widget-terminal-public.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/archive-attempt1-admission-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/canonical-fd6-publication.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/maintenance-approved-20-envelope.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/native-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/native-observation.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/native-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/root-widget-acceptance-review.json",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/12-installed-widget-initial.hierarchy.txt",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/12-installed-widget-initial.png",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/14-installed-widget-refreshed.hierarchy.txt",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/14-installed-widget-refreshed.png",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/15-widget-row-task-editor.hierarchy.txt",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/15-widget-row-task-editor.png",
+    "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/completion-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/ipad-en-dashboard.png",
+    "docs/ai-agent/evidence/delivery-20261124/ipad-he-dashboard.png",
+    "docs/ai-agent/evidence/delivery-20261124/iphone-en-matrix.png",
+    "docs/ai-agent/evidence/delivery-20261124/iphone-he-matrix.png",
+    "docs/ai-agent/evidence/delivery-20261124/native-build-671.json",
+    "docs/ai-agent/evidence/delivery-20261124/native-ui-671.json",
+    "docs/ai-agent/evidence/delivery-20261124/oracle-readonly-health-20261125T031134Z.json",
+    "docs/ai-agent/evidence/delivery-20261124/oracle-release-readiness-20261124T235834Z.json",
+    "docs/ai-agent/evidence/delivery-20261124/oracle-scheduled-backup-20261125T032340Z.json",
+    "docs/ai-agent/evidence/delivery-20261124/packages-77c045-historical.json",
+    "docs/ai-agent/evidence/delivery-20261124/packages-9d0faa-historical.json",
+    "docs/ai-agent/evidence/delivery-20261124/preconsent-f1-observation.json",
+    "docs/ai-agent/evidence/delivery-20261124/release49-9f-archive-signatures.json",
+    "docs/ai-agent/evidence/delivery-20261124/release49-9f-archive-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/release49-9f-ipa-signatures.json",
+    "docs/ai-agent/evidence/delivery-20261124/release49-9f-status.json",
+    "docs/ai-agent/evidence/delivery-20261124/release49-9f-transfer-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-0ae-after-cancel.png",
+    "docs/ai-agent/evidence/delivery-20261124/share-0ae-observation-summary.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-0ae-runtime-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-0ae-summary.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-0ae-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-0ae-test-counts.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-9190-observation-summary.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-9190-returned-activity-sheet.png",
+    "docs/ai-agent/evidence/delivery-20261124/share-9190-runtime-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-9190-summary.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-9190-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-9f-post-add-failed.png",
+    "docs/ai-agent/evidence/delivery-20261124/share-b558-after-dismissal.png",
+    "docs/ai-agent/evidence/delivery-20261124/share-b558-observation-summary.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-b558-root-review.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-b558-runtime-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-b558-summary.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-b558-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/share-b558-test-counts.json",
+    "docs/ai-agent/evidence/delivery-20261124/shortcut-7098-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/shortcut-7098-observation.json",
+    "docs/ai-agent/evidence/delivery-20261124/shortcut-7098-task-after-relaunch.png",
+    "docs/ai-agent/evidence/delivery-20261124/shortcuts-9190-registered-gsd.png",
+    "docs/ai-agent/evidence/delivery-20261124/simulator-products-9f.json",
+    "docs/ai-agent/evidence/delivery-20261124/source-reuse-9f.json",
+    "docs/ai-agent/evidence/delivery-20261124/source-root-review-9f.json",
+    "docs/ai-agent/evidence/delivery-20261124/supplemental-f1-summary.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-7098-build-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-7098-build-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-7098-cache-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-7098-composed-products.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-7098-composition.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-7098-source-closure.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-7098-terminal-transfer-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-7098-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-7098-transfer-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-870-build-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-870-build-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-870-capacity-transition.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-870-shortcut-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-870-shortcut-observation.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-870-widget-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-870-widget-observation.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-9190-shortcut-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-9190-shortcut-observation.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-9190-widget-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/systems-9190-widget-observation.json",
+    "docs/ai-agent/evidence/delivery-20261124/visual-qa-671.json",
+    "docs/ai-agent/evidence/delivery-20261124/watch-ee5-root-review.json",
+    "docs/ai-agent/evidence/delivery-20261124/watch-ee5-summary.json",
+    "docs/ai-agent/evidence/delivery-20261124/watch-ee5-visual-review.json",
+    "docs/ai-agent/evidence/delivery-20261124/watch-en.png",
+    "docs/ai-agent/evidence/delivery-20261124/watch-he.png",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-build-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-build-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-build-transfer-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-cache-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-composed-products.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-composition.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-inactive-intermediates-cleanup-v2-20261125.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-observation.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-preservation.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-prior-evidence-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-source-closure.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-source-publication.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-terminal-transfer-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-3ca-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-7098-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-7098-observation.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-build-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-build-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-build-transfer-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-cache-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-composed-products.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-composition.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-home-retained-diagnosis.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-observation.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-preservation.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-prior-evidence-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-source-closure.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-terminal-transfer-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-791-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-9190-menu-and-keyboard-introduction.png",
+    "docs/ai-agent/evidence/delivery-20261124/widget-a2-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-a2-build-binding.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-a2-build-continuation.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-a2-build-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-a2-build-transfer-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-a2-cache-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-a2-composed-products.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-a2-composition.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-a2-observation.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-a2-source-closure.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-a2-terminal-transfer-manifest.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-a2-terminal.json",
+    "docs/ai-agent/evidence/delivery-20261124/widget-cleanup-guard-v2-review-receipt.json"
+  ],
+  "allChangedPathsMatchDocumentationGitBlobs": true,
+  "runtimeInputCount": 819,
+  "allNonDocumentationModesKindsAndGitBlobsEqualFD6": true,
+  "mainIsAncestorOfFD6": true,
+  "original32Before": [
+    {
+      "root": "C:\\Users\\DAVID\\Code\\GSD-Hanlin-AI-20261122",
+      "head": "b90d2a520978c00ee399c654472243b76c09b407",
+      "status": "?? .github/workflows/gsd-hanlin-agent-ios.yml.bak.20261123-032453-325590\u0000?? .github/workflows/gsd-mcp-bridge-tests.yml.bak.20261123-032916-425539\u0000?? docs/ai-agent/GSD_REMOTE_MCP_HANDOFF_20261123.md.bak.20261123-032720-552916\u0000?? docs/ai-agent/job-45059134995-live-utf8.log\u0000?? docs/ai-agent/job-45059134995-live.log\u0000?? gsd_asc_probe.ps1\u0000?? gsd_asc_probe.ps1.bak.20261124-013306-508225\u0000?? gsd_asc_probe.ps1.bak.20261124-013409-145743\u0000?? gsd_portal_probe.ps1\u0000?? gsd_portal_probe.ps1.bak.20261124-012910-691292\u0000?? scripts/__pycache__/package_gsd_sideload_ipa.cpython-312.pyc\u0000?? scripts/build_gsd_hanlin_ipad_ipa.sh.bak.20261123-032421-160052\u0000",
+      "files": [
+        {
+          "path": ".github/workflows/gsd-hanlin-agent-ios.yml.bak.20261123-032453-325590",
+          "size": 1893,
+          "mtime_ns": 1795375347000887400,
+          "mode": 33206
+        },
+        {
+          "path": ".github/workflows/gsd-mcp-bridge-tests.yml.bak.20261123-032916-425539",
+          "size": 0,
+          "mtime_ns": 1795397356407930700,
+          "mode": 33206
+        },
+        {
+          "path": "docs/ai-agent/GSD_REMOTE_MCP_HANDOFF_20261123.md.bak.20261123-032720-552916",
+          "size": 0,
+          "mtime_ns": 1795397240537110600,
+          "mode": 33206
+        },
+        {
+          "path": "docs/ai-agent/job-45059134995-live-utf8.log",
+          "size": 4216586,
+          "mtime_ns": 1795375285576825900,
+          "mode": 33206
+        },
+        {
+          "path": "docs/ai-agent/job-45059134995-live.log",
+          "size": 4239732,
+          "mtime_ns": 1795375179479297800,
+          "mode": 33206
+        },
+        {
+          "path": "gsd_asc_probe.ps1",
+          "size": 1265,
+          "mtime_ns": 1795476849145743700,
+          "mode": 33206
+        },
+        {
+          "path": "gsd_asc_probe.ps1.bak.20261124-013306-508225",
+          "size": 0,
+          "mtime_ns": 1795476786484328400,
+          "mode": 33206
+        },
+        {
+          "path": "gsd_asc_probe.ps1.bak.20261124-013409-145743",
+          "size": 1306,
+          "mtime_ns": 1795476786507671300,
+          "mode": 33206
+        },
+        {
+          "path": "gsd_portal_probe.ps1",
+          "size": 1399,
+          "mtime_ns": 1795476550691292200,
+          "mode": 33206
+        },
+        {
+          "path": "gsd_portal_probe.ps1.bak.20261124-012910-691292",
+          "size": 0,
+          "mtime_ns": 1795476550670293200,
+          "mode": 33206
+        },
+        {
+          "path": "scripts/__pycache__/package_gsd_sideload_ipa.cpython-312.pyc",
+          "size": 10820,
+          "mtime_ns": 1795397108365809300,
+          "mode": 33206
+        },
+        {
+          "path": "scripts/build_gsd_hanlin_ipad_ipa.sh.bak.20261123-032421-160052",
+          "size": 0,
+          "mtime_ns": 1795397061130698500,
+          "mode": 33206
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\DAVID\\Code\\GSD-HE-RTL-20261123",
+      "head": "9fda3bae2f200e7b645b4f2b7ed8bcc39d896b3c",
+      "status": "?? localization-codex.err\u0000?? localization-codex.log\u0000",
+      "files": [
+        {
+          "path": "localization-codex.err",
+          "size": 453678,
+          "mtime_ns": 1795450888409301900,
+          "mode": 33206
+        },
+        {
+          "path": "localization-codex.log",
+          "size": 1183,
+          "mtime_ns": 1795450888409301900,
+          "mode": 33206
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\DAVID\\Code\\GSD-Cloud-Release-20261123",
+      "head": "62d509d54ceb3756872b83ae6d8004b80f830515",
+      "status": "?? App/Auth/CloudAccountSignInView.swift.bak.20261123-183106-402037\u0000?? App/Auth/SessionStore.swift.bak.20261123-183036-605595\u0000?? App/Auth/SessionStore.swift.bak.20261123-183323-914647\u0000?? App/Settings/SettingsView.swift.bak.20261123-183204-681283\u0000?? App/Settings/SettingsView.swift.bak.20261123-183213-911563\u0000?? App/Settings/SettingsView.swift.bak.20261123-183334-908040\u0000?? GSDKit/Sources/GSDSync/AuthSeams.swift.bak.20261123-183021-976340\u0000?? GSDKit/Sources/GSDSync/AuthSeams.swift.bak.20261123-183540-796376\u0000?? GSDKit/Sources/GSDSync/AuthService.swift.bak.20261123-183009-549881\u0000?? GSDKit/Sources/GSDSync/AuthService.swift.bak.20261123-183311-844305\u0000?? GSDKit/Sources/GSDSync/PocketBaseClient+Auth.swift.bak.20261123-182955-184742\u0000?? GSDKit/Sources/GSDWire/PocketBaseEndpoint.swift.bak.20261123-183531-968648\u0000?? cloud/__pycache__/backup.cpython-312.pyc\u0000?? cloud/__pycache__/test_cloud_e2e.cpython-312.pyc\u0000?? cloud/gateway/server.mjs.bak.20261123-182239-346013\u0000?? cloud/gateway/server.mjs.bak.20261123-183558-283297\u0000?? cloud/windows/__pycache__/install_offsite_backup.cpython-312.pyc\u0000?? cloud/windows/__pycache__/offsite_backup.cpython-312.pyc\u0000",
+      "files": [
+        {
+          "path": "App/Auth/CloudAccountSignInView.swift.bak.20261123-183106-402037",
+          "size": 0,
+          "mtime_ns": 1795451466386277200,
+          "mode": 33206
+        },
+        {
+          "path": "App/Auth/SessionStore.swift.bak.20261123-183036-605595",
+          "size": 10249,
+          "mtime_ns": 1795449799085441400,
+          "mode": 33206
+        },
+        {
+          "path": "App/Auth/SessionStore.swift.bak.20261123-183323-914647",
+          "size": 11488,
+          "mtime_ns": 1795451436604090000,
+          "mode": 33206
+        },
+        {
+          "path": "App/Settings/SettingsView.swift.bak.20261123-183204-681283",
+          "size": 25460,
+          "mtime_ns": 1795449799149560100,
+          "mode": 33206
+        },
+        {
+          "path": "App/Settings/SettingsView.swift.bak.20261123-183213-911563",
+          "size": 25514,
+          "mtime_ns": 1795451524681283200,
+          "mode": 33206
+        },
+        {
+          "path": "App/Settings/SettingsView.swift.bak.20261123-183334-908040",
+          "size": 25630,
+          "mtime_ns": 1795451533911563600,
+          "mode": 33206
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/AuthSeams.swift.bak.20261123-183021-976340",
+          "size": 1460,
+          "mtime_ns": 1795449799380804500,
+          "mode": 33206
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/AuthSeams.swift.bak.20261123-183540-796376",
+          "size": 1489,
+          "mtime_ns": 1795451421976340600,
+          "mode": 33206
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/AuthService.swift.bak.20261123-183009-549881",
+          "size": 6694,
+          "mtime_ns": 1795449799381805900,
+          "mode": 33206
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/AuthService.swift.bak.20261123-183311-844305",
+          "size": 7850,
+          "mtime_ns": 1795451409549881100,
+          "mode": 33206
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/PocketBaseClient+Auth.swift.bak.20261123-182955-184742",
+          "size": 1465,
+          "mtime_ns": 1795449799383314700,
+          "mode": 33206
+        },
+        {
+          "path": "GSDKit/Sources/GSDWire/PocketBaseEndpoint.swift.bak.20261123-183531-968648",
+          "size": 287,
+          "mtime_ns": 1795449799389838600,
+          "mode": 33206
+        },
+        {
+          "path": "cloud/__pycache__/backup.cpython-312.pyc",
+          "size": 9793,
+          "mtime_ns": 1795472805973981200,
+          "mode": 33206
+        },
+        {
+          "path": "cloud/__pycache__/test_cloud_e2e.cpython-312.pyc",
+          "size": 20184,
+          "mtime_ns": 1795474506967201400,
+          "mode": 33206
+        },
+        {
+          "path": "cloud/gateway/server.mjs.bak.20261123-182239-346013",
+          "size": 0,
+          "mtime_ns": 1795450959326249300,
+          "mode": 33206
+        },
+        {
+          "path": "cloud/gateway/server.mjs.bak.20261123-183558-283297",
+          "size": 31544,
+          "mtime_ns": 1795450959346013400,
+          "mode": 33206
+        },
+        {
+          "path": "cloud/windows/__pycache__/install_offsite_backup.cpython-312.pyc",
+          "size": 14614,
+          "mtime_ns": 1795480282520677500,
+          "mode": 33206
+        },
+        {
+          "path": "cloud/windows/__pycache__/offsite_backup.cpython-312.pyc",
+          "size": 21599,
+          "mtime_ns": 1795479989522625100,
+          "mode": 33206
+        }
+      ]
+    }
+  ],
+  "original32HEADStatusMetadataPreserved": true,
+  "sourceWorktreeCleanAndUnchanged": true,
+  "gitNormalMergeTreeOnly": true,
+  "branchOrMainMutated": false,
+  "commitOrPushPerformed": false,
+  "testsExecuted": false,
+  "aborted0458ExplicitContentReadHashOrCatFile": false
+}

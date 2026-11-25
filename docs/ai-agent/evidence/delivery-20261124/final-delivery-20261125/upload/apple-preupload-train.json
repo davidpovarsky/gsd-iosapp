@@ -1,0 +1,42 @@
+{
+  "observedUTC": "2026-11-25T09:51:10.953323+00:00",
+  "passed": true,
+  "operation": "GET-only final preupload train and exact-build verification",
+  "appId": "6838520892",
+  "bundleId": "com.itorah.gsd",
+  "marketingVersion": "4.1.0",
+  "build": "49",
+  "platform": "IOS",
+  "allBuildPagesConsumed": true,
+  "totalAppBuilds": 1,
+  "currentTrainBuilds": [
+    {
+      "id": "04715dbf-3b05-4d01-ba3d-d0b0e580d257",
+      "build": "48",
+      "uploadedDate": "2026-11-24T05:27:20-08:00",
+      "processingState": "VALID",
+      "marketingVersion": "4.1.0",
+      "platform": "IOS"
+    }
+  ],
+  "exactBuildAcrossApp": [],
+  "exactBuildAbsent": true,
+  "highestCurrentTrainBuild": {
+    "id": "04715dbf-3b05-4d01-ba3d-d0b0e580d257",
+    "build": "48",
+    "uploadedDate": "2026-11-24T05:27:20-08:00",
+    "processingState": "VALID",
+    "marketingVersion": "4.1.0",
+    "platform": "IOS"
+  },
+  "buildAboveCurrentTrainMaximum": true,
+  "requests": [
+    {
+      "method": "GET",
+      "resource": "builds",
+      "page": 1,
+      "items": 1
+    }
+  ],
+  "mutationsExecuted": false
+}

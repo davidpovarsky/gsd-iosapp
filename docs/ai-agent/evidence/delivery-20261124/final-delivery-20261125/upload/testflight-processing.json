@@ -1,0 +1,13 @@
+{
+  "appId": "6838520892",
+  "buildId": "240ca2cd-4604-4c3c-9c63-87b807adc85d",
+  "build": "49",
+  "processingState": "VALID",
+  "expired": false,
+  "beta": {
+    "autoNotifyEnabled": true,
+    "internalBuildState": "READY_FOR_BETA_TESTING",
+    "externalBuildState": "READY_FOR_BETA_SUBMISSION"
+  },
+  "timestamp": "2026-11-25T09:55:02.056128+00:00"
+}

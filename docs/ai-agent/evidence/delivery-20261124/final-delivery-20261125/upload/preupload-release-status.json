@@ -1,0 +1,103 @@
+{
+  "source": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "version": "4.1.0",
+  "build": "49",
+  "startedUTC": "2026-11-25T09:21:07Z",
+  "steps": [
+    {
+      "name": "appstore-build-train",
+      "startedUTC": "2026-11-25T09:21:07Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/appstore-build-train.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:21:08Z"
+    },
+    {
+      "name": "apple-preflight",
+      "startedUTC": "2026-11-25T09:21:08Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/apple-preflight.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:21:10Z"
+    },
+    {
+      "name": "archive",
+      "startedUTC": "2026-11-25T09:21:10Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/archive.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:25:07Z"
+    },
+    {
+      "name": "archive-signatures",
+      "startedUTC": "2026-11-25T09:25:07Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/archive-signatures.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:25:08Z"
+    },
+    {
+      "name": "export-options",
+      "startedUTC": "2026-11-25T09:25:08Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/export-options.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:25:08Z"
+    },
+    {
+      "name": "export",
+      "startedUTC": "2026-11-25T09:25:08Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/export.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:25:13Z"
+    },
+    {
+      "name": "ipa-signatures",
+      "startedUTC": "2026-11-25T09:25:13Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/ipa-signatures.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:25:14Z"
+    },
+    {
+      "name": "apple-validate",
+      "startedUTC": "2026-11-25T09:25:14Z",
+      "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/logs/apple-validate.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T09:26:21Z"
+    }
+  ],
+  "pid": 41505,
+  "acceptanceScope": {
+    "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "version": "4.1.0",
+    "build": "49",
+    "releaseHandoffSHA256": "087cc7b9a7d23f734b0b651f16badcad3572ec981172d6c191b7ba9c1b0634ae",
+    "planSHA256": "536d13fc5f390d4216ee26c565ec52fa2562a3667187ea9e8427cf16b17ff621",
+    "sourceClosureSHA256": "b660995515a5b539536fd7c3bdb4f65177aef82afc13af9a69c788e49cfbdadd",
+    "finalSimulatorManifestSHA256": "7588422c377bdc70c2b564c4c4acd2b11f0353c4ec1d54b7dbb58f63dba22815",
+    "finalSimulatorProductsTree": {
+      "sha256": "b0b6c65c2f9a820cff3d18562361639981931644388d5310ee870d1bde188716",
+      "files": 421
+    },
+    "widgetActionsRunID": 45575270618,
+    "widgetActionsURL": "https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45575270618",
+    "githubArtifactID": 15006680376,
+    "githubArtifactZipSHA256": "b300d6388a6b4456dc49e2e30bf9c391f110b44086d004615d768fca598e4a7d",
+    "artifactTransferManifestSHA256": "ea828dc7505c71cac2f929b0650eabca2a4722a279a6189d2d839b091df48f82",
+    "widgetExecutionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "originalWidgetTest": "GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap",
+    "originalEvidenceSHA256": {
+      "terminal": "2eb0ffba18d78afdf72237dc5a135e98982beb128cabdc0440dbdd0ebfec7952",
+      "binding": "2bdb6bfac2c6e615e901a3868577669c74258a0f6010ed572ac01582a39dd9d0",
+      "observation": "c5cafe4079e2666f005624c108149ce6734ca61734f000438799a6e5797a7dd9"
+    },
+    "actualWidgetAcceptanceVerified": true,
+    "newXCTestExecutedByVerifier": false,
+    "signingOrUploadExecutedByVerifier": false,
+    "historicalAcceptanceIsSeparateEvidence": true
+  },
+  "artifact": {
+    "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/export/GSD.ipa",
+    "fileName": "GSD-4.1.0-49.ipa",
+    "sizeBytes": 27950550,
+    "sha256": "9cb686f13cc4546580d272fa83fb26aa6b13715c5be366412b06efa71fb522f7"
+  },
+  "archiveAndAppleValidationPassed": true,
+  "awaitingUploadAuthorization": true,
+  "finishedUTC": "2026-11-25T09:26:21Z"
+}

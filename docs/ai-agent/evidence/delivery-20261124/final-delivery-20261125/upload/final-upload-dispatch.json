@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "kind": "gsd-final-upload-dispatch",
+  "dispatchedUTC": "2026-11-25T09:51:08.749006+00:00",
+  "owner": "/root/native_reconcile",
+  "controllerPID": 56551,
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "version": "4.1.0",
+  "build": "49",
+  "handoffSHA256": "4825814668809b40f62332259f48671f1be8a1834cbdbc214bd32f0de85256d4",
+  "gateSHA256": "a5bf76160ba45f65aa84502589e4d7624f2213248fc40211811a4667163f7481",
+  "uploaderSHA256": "a97de4e7abef3043da13d2ba132a45007e21b3ade3acef6d0cf1bc5d2e99d23e",
+  "admissionReceipt": {
+    "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-upload-admission.json",
+    "bytes": 10247,
+    "sha256": "30de4b76e9d381e014e30eda38788ea7627483e63f21a5d3d017e64999798dc4"
+  },
+  "phase": "single_upload_controller_dispatched",
+  "uploadSubmittedNotYetClaimed": true,
+  "ownerLog": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-upload-owner.log",
+  "claimPath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-upload-claim.json",
+  "terminalPath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-upload-terminal.json",
+  "acceptedIPA": {
+    "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/export/GSD.ipa",
+    "sizeBytes": 27950550,
+    "sha256": "9cb686f13cc4546580d272fa83fb26aa6b13715c5be366412b06efa71fb522f7"
+  },
+  "archiveOrTestsRepeated": false
+}

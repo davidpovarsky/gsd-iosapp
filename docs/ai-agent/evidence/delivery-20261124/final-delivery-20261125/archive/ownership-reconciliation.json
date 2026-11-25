@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "kind": "gsd-final-release-ownership-reconciliation",
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "version": "4.1.0",
+  "build": "49",
+  "owner": "/root/native_reconcile",
+  "startedUTC": "2026-11-25T09:32:26.003890+00:00",
+  "passed": true,
+  "originalTerminal": {
+    "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-release49-archive-terminal-attempt2.json",
+    "sha256": "02937196a4e3fbe56cc64e05e1f3470289edb9d55dcaf144a4c3ccb532033583",
+    "passed": false,
+    "phase": "stopped"
+  },
+  "originalFailure": "Command '['/bin/ps', '-axo', 'pid=,pgid=,comm=']' timed out after 5 seconds",
+  "archiveRepeated": false,
+  "signingOrValidationRepeated": false,
+  "testsRepeated": false,
+  "uploadExecuted": false,
+  "signalsDelivered": false,
+  "claimsReleased": [
+    {
+      "kind": "cache",
+      "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-device/gsd-release49-fd6-writer.lock",
+      "sha256": "a8f8dcf78b9d44b7afc4eee8057cbb223f55039c8b9cef08354bca223f007645",
+      "releasedUTC": "2026-11-25T09:32:27.081591+00:00"
+    },
+    {
+      "kind": "source",
+      "path": "/Users/m1/builds/gsd-system-invocation-6bd91d6a-20261124/native-runner-cache-writer.lock",
+      "sha256": "ef6f65a7349df328061a13eaf3c12c1ad76707cee00f40c8979a577224a04951",
+      "releasedUTC": "2026-11-25T09:32:27.082088+00:00"
+    }
+  ],
+  "initialOwnedIdentityProof": {
+    "observedUTC": "2026-11-25T09:32:26.004157+00:00",
+    "controllerPID": 40486,
+    "controllerAbsent": true,
+    "childPID": 41505,
+    "childAbsent": true,
+    "processGroup": 41505,
+    "processGroupAbsent": true,
+    "method": "exact signal-zero existence probes; ESRCH required",
+    "signalsDelivered": false
+  },
+  "releaseOperationsPassed": true,
+  "releaseStatusSHA256": "7087b91a907f9ff12f537c202e4e3e51da300256ed7590f450296ce1137c0f2b",
+  "signatureAuditSHA256": {
+    "archive-signatures.json": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80",
+    "ipa-signatures.json": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80"
+  },
+  "artifact": {
+    "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/export/GSD.ipa",
+    "fileName": "GSD-4.1.0-49.ipa",
+    "sizeBytes": 27950550,
+    "sha256": "9cb686f13cc4546580d272fa83fb26aa6b13715c5be366412b06efa71fb522f7"
+  },
+  "sourceAndAcceptedSimulatorProductsUnchanged": true,
+  "previousReleaseArtifactsUnchanged": true,
+  "prior9fReleaseArtifactsUnchanged": true,
+  "finalReleaseTreeBefore": {
+    "sha256": "3381b4ec72a35ae4431f13e6e12f0ab566c12d7866dbbbb027d7152a7c923aa9",
+    "files": 153
+  },
+  "claimsBefore": [
+    {
+      "kind": "source",
+      "path": "/Users/m1/builds/gsd-system-invocation-6bd91d6a-20261124/native-runner-cache-writer.lock",
+      "sha256": "ef6f65a7349df328061a13eaf3c12c1ad76707cee00f40c8979a577224a04951",
+      "bytes": 367,
+      "statIdentity": [
+        16777232,
+        25661202,
+        367,
+        1795598466887574191
+      ],
+      "preservedPath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/ownership-reconcile-20261125/source-claim-before.json",
+      "value": {
+        "owner": "/root/native_reconcile",
+        "kind": "final_release_source_use",
+        "controllerPID": 40486,
+        "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+        "source": "/Users/m1/builds/gsd-system-invocation-6bd91d6a-20261124/source",
+        "cache": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-device",
+        "createdUTC": "2026-11-25T09:21:06.886112+00:00"
+      }
+    },
+    {
+      "kind": "cache",
+      "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-device/gsd-release49-fd6-writer.lock",
+      "sha256": "a8f8dcf78b9d44b7afc4eee8057cbb223f55039c8b9cef08354bca223f007645",
+      "bytes": 251,
+      "statIdentity": [
+        16777232,
+        25661203,
+        251,
+        1795598466996523249
+      ],
+      "preservedPath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/ownership-reconcile-20261125/cache-claim-before.json",
+      "value": {
+        "owner": "/root/native_reconcile",
+        "controllerPID": 40486,
+        "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+        "cache": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-device",
+        "createdUTC": "2026-11-25T09:21:06.996308+00:00"
+      }
+    }
+  ],
+  "finalOwnedIdentityProof": {
+    "observedUTC": "2026-11-25T09:32:26.984338+00:00",
+    "controllerPID": 40486,
+    "controllerAbsent": true,
+    "childPID": 41505,
+    "childAbsent": true,
+    "processGroup": 41505,
+    "processGroupAbsent": true,
+    "method": "exact signal-zero existence probes; ESRCH required",
+    "signalsDelivered": false
+  },
+  "ownedCacheClaimReleased": true,
+  "ownedSourceClaimReleased": true,
+  "finalReleaseTreeAfter": {
+    "sha256": "3381b4ec72a35ae4431f13e6e12f0ab566c12d7866dbbbb027d7152a7c923aa9",
+    "files": 153
+  },
+  "finalReleaseArtifactsUnchanged": true,
+  "originalStoppedTerminalUnchanged": true,
+  "ownedProcessGroupTerminal": true,
+  "cleanupUncertain": false,
+  "phase": "complete",
+  "finishedUTC": "2026-11-25T09:32:27.177837+00:00"
+}
