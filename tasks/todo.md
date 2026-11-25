@@ -642,3 +642,10 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 - Expanded existing native acceptance methods to exercise timeline date actions, real quadrant movement, dependency removal/re-addition and duplicate/cycle rejection, plus Hanlin-to-workspace-to-canonical-editor navigation.
 - New shared-kit AX controls must be pinned before running these UI methods. Four complete native-release/workspace configurations will be executed fresh; old iPhone/en native evidence is not reused for the changed Hanlin method.
 - Added one package regression for SQLite close/reopen, real task observation in all presentations, concurrent external-field preservation, and sync outbox payloads. Expected agent package total is 31 (18 XCTest plus 13 Swift Testing); result pending.
+
+### 2026-11-25 shared workspace acceptance pin
+
+- [x] Pin TaskVisualizationKit 2e6cf68daa8a45c25f128559ffe157203e99be95 after the original 14-test suite passed and all five native views compiled.
+- [x] Regenerate the Xcode project with XcodeGen on Scaleway Mac and resolve the exact new revision without changing upstream library code.
+- [x] Execute GSDHanlinAgent 31 tests (18 XCTest + 13 Swift Testing), including real SQLite reopen and canonical outbox payload regression, at 93742878545d7eba9ee91c6b96256b2e4afc2902 with Xcode 27.1 / 27A9275.
+- [ ] Execute final source-bound iPhone/iPad English/Hebrew acceptance, including new timeline date, dependency and Hanlin entry actions.
