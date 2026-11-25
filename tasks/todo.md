@@ -655,3 +655,11 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 - Exact-source 7aaa0c6 iPhone English run executed all four selected methods: navigation and widget cases passed; Hanlin workspace and graph action cases failed because SwiftUI propagated the root task-workspace identifier to child controls. The complete xcresult and failure hierarchy are retained in native-ui-7aaa0c6/iphone-en-attempt1.
 - Shared package owner is fixing the native accessibility containment boundary; no UI acceptance is claimed.
 - Added iPad-only actual native cross-column board drag, using observed control frames in either layout direction, with canonical table lane verification. This gesture coverage is pending native execution.
+
+### Native workspace and Hanlin checkpoint — 2026-11-25 17:23 UTC
+
+- e8648f1 with shared kit38ee passed actual iPad English date switch1→0 and canonical Table cleared-date readback, Network pan→Fit→canonical editor, native Board drag and lane readback. The original14-plus4 shared tests had passed.
+- The same diagnostic still failed the new Flow connector assertion: the physical endpoint drag panned the canvas and no canonical dependency appeared. Complete native acceptance remains blocked; shared owner has exact frames, before/after screenshots and xcresult.
+- Extend the geometry-derived Network pan/Fit gate to iPhone as well as iPad, in English and Hebrew. Physical Board and Flow connector gestures retain the measured iPad branch.
+- Add an explicit DEBUG simulator provider-fetch fixture to the existing Hanlin native method: real composer → create_task → production consent → actual created ID → show_task_workspace → actual result card → expand → canonical editor. The demo DB is in memory; durability is proved separately by the real SQLite reopen/outbox test. No synthetic tool result, production credential, provider network request or upstream edit is used.
+- Resuming from here: qualify the genuine Hanlin native path, consume the shared Flow correction, execute31 package tests after the factory change, then execute the full13 native-release +4 workspace +2 share cases on the final frozen source. No final release gate is passed yet.

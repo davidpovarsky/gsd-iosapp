@@ -371,9 +371,12 @@ final class GSDCloudReleaseUITests: XCTestCase {
     }
 
 
-    /// Covers account/provider copy without starting personal OAuth or consuming AI usage.
+    /// Covers provider copy and the original Hanlin SDK/provider-to-host execution
+    /// path. Only provider HTTP is deterministic; task writes still require the UI
+    /// approval and flow through the canonical store before their live card appears.
     func test04LocalizedHanlinProvidersAndChatGPTAccount() throws {
         let app = application(demo: true)
+        app.launchArguments.append("--gsd-native-hanlin-fixture")
         app.launch()
         try navigate(app, label("Matrix", "מטריצה"))
         let assistant = app.buttons[label("Open Hanlin task AI assistant", "פתיחת עוזר המשימות של Hanlin")].firstMatch
@@ -447,6 +450,45 @@ final class GSDCloudReleaseUITests: XCTestCase {
         try capture(app, "17-hanlin-live-workspace")
         app.buttons["task-workspace.create"].tap()
         XCTAssertTrue(app.textFields["editor-title"].waitForExistence(timeout: 10))
+        app.buttons["editor-cancel"].tap()
+        XCTAssertTrue(workspace.waitForExistence(timeout: 10))
+        app.buttons[label("Close", "סגירה")].firstMatch.tap()
+        XCTAssertTrue(workspaceEntry.waitForExistence(timeout: 10))
+
+        // Send through the real composer. The provider fixture requests create_task,
+        // consumes its actual result ID, then requests show_task_workspace. It cannot
+        // return final text until both real tool results satisfy its strict contract.
+        let prompt = app.descendants(matching: .any).matching(identifier: "gsd.assistant.prompt").firstMatch
+        XCTAssertTrue(prompt.waitForExistence(timeout: 10))
+        prompt.tap()
+        prompt.typeText("Create the Hanlin native workspace acceptance task and show it in a table.")
+        app.buttons["gsd.assistant.send"].tap()
+        let approval = app.buttons["gsd.assistant.allow-change"].firstMatch
+        XCTAssertTrue(approval.waitForExistence(timeout: 20), "The real host write must request consent")
+        try capture(app, "18-hanlin-create-approval")
+        approval.tap()
+        let ready = app.staticTexts["Hanlin native workspace ready."].firstMatch
+        XCTAssertTrue(ready.waitForExistence(timeout: 30), "The original SDK did not consume both real tool results")
+        let expand = app.buttons["gsd.assistant.expand-workspace"].firstMatch
+        XCTAssertTrue(expand.waitForExistence(timeout: 10), "The real show_task_workspace result did not render its card")
+        let conversation = app.scrollViews["gsd.assistant.conversation"].firstMatch
+        XCTAssertTrue(conversation.exists)
+        for _ in 0..<6 where !expand.isHittable { conversation.swipeUp() }
+        XCTAssertTrue(expand.isHittable)
+        try capture(app, "19-hanlin-real-tool-workspace-card")
+        expand.tap()
+        XCTAssertTrue(workspace.waitForExistence(timeout: 10))
+        let createdTitle = "Hanlin native workspace acceptance"
+        let created = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "task-workspace.open.", createdTitle)).firstMatch
+        XCTAssertTrue(created.waitForExistence(timeout: 10), "The expanded card lost the actual created task")
+        XCTAssertTrue(created.isHittable)
+        try capture(app, "20-hanlin-expanded-created-task")
+        created.tap()
+        let editor = app.textFields["editor-title"]
+        XCTAssertTrue(editor.waitForExistence(timeout: 10))
+        XCTAssertEqual(editor.value as? String, createdTitle, "The card must open the canonical created task")
+        try capture(app, "21-hanlin-created-task-canonical-editor")
         app.buttons["editor-cancel"].tap()
         XCTAssertTrue(workspace.waitForExistence(timeout: 10))
         app.buttons[label("Close", "סגירה")].firstMatch.tap()

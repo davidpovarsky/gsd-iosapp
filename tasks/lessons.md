@@ -363,3 +363,7 @@ it, force one quadrant's `items` empty in a throwaway build, then launch with `-
 
 - A SwiftUI container accessibilityIdentifier can replace child control identifiers in the actual iOS hierarchy. Give semantic containers an explicit containment boundary, and verify the descendant actions in the native app; a package build or AppKit probe does not prove iOS accessibility behavior.
 - Board completion and a lane menu exercise host mutations but do not cover the original Kanban drag callback. Use a real cross-column gesture and verify the canonical lane in a separate presentation.
+
+- Native accessibility presence and correct node frames do not prove connector dispatch. A drag between visible handles can pan the whole canvas; require the saved canonical edge and retain before/after screenshots.
+- Read physical network frames immediately after native gestures have waited for idle. Reentrant accessibility queries inside a custom predicate can stall polling and leave movement unmeasured.
+- A Hanlin toolbar entry does not exercise a tool-generated card. Inject only provider HTTP at the original SDK fetch seam, then require real consent, canonical tool execution/results and native card expansion. Keep demo UI evidence distinct from on-disk and live-backend evidence.

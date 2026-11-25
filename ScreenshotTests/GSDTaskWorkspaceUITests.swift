@@ -82,9 +82,7 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         capture("04-network")
         let open = app.buttons["task-workspace.open.demo-finance"].firstMatch
         XCTAssertTrue(open.waitForExistence(timeout: 10))
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            exerciseNativeNetworkPanAndFit(node: open, canvas: network, in: app)
-        }
+        exerciseNativeNetworkPanAndFit(node: open, canvas: network, in: app)
         open.tap()
         let editor = app.descendants(matching: .any).matching(identifier: "task-editor").firstMatch
         XCTAssertTrue(editor.waitForExistence(timeout: 10))

@@ -89,6 +89,8 @@ struct GSDHanlinAssistantView: View {
                             }
                         }.padding(15)
                     }
+                    .accessibilityElement(children: .contain)
+                    .accessibilityIdentifier("gsd.assistant.conversation")
                     .onChange(of: assistant.messages.count) { _, _ in
                         if let last = assistant.messages.last?.id {
                             withAnimation(.easeOut(duration: 0.2)) { proxy.scrollTo(last, anchor: .bottom) }
@@ -116,6 +118,7 @@ struct GSDHanlinAssistantView: View {
                         .textFieldStyle(.roundedBorder)
                         .submitLabel(.send)
                         .onSubmit(send)
+                        .accessibilityIdentifier("gsd.assistant.prompt")
                     if assistant.isRunning || isPreparingRequest {
                         Button {
                             cancelAssistantRequest()
@@ -127,6 +130,7 @@ struct GSDHanlinAssistantView: View {
                         }
                         .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                         .accessibilityLabel("Send to AI")
+                        .accessibilityIdentifier("gsd.assistant.send")
                     }
                 }
                 .padding()
@@ -200,6 +204,7 @@ struct GSDHanlinAssistantView: View {
                     Button("Allow change") {
                         approvalOwner.resolveApproval(true, approvalID: approvalID)
                     }
+                    .accessibilityIdentifier("gsd.assistant.allow-change")
                     Button("Deny", role: .cancel) {
                         approvalOwner.resolveApproval(false, approvalID: approvalID)
                     }
@@ -361,10 +366,18 @@ struct GSDHanlinAssistantView: View {
         configurationError = nil
         prompt = ""
         let sendingAssistant = assistant
-        let selectedProvider = provider
-        let selectedModel = modelID
-        let selectedEndpoint = endpoint
-        let selectedCredential = configuredToken
+        #if DEBUG && targetEnvironment(simulator)
+        let nativeFixture = ProcessInfo.processInfo.arguments.contains("--demo-seed") &&
+            ProcessInfo.processInfo.arguments.contains("--gsd-native-hanlin-fixture")
+        #else
+        let nativeFixture = false
+        #endif
+        // The explicit simulator fixture never reads a real provider credential
+        // into its request and never changes Keychain or saved model settings.
+        let selectedProvider = nativeFixture ? "OpenAI" : provider
+        let selectedModel = nativeFixture ? "gsd-native-fixture" : modelID
+        let selectedEndpoint = nativeFixture ? "https://gsd-workspace-acceptance.invalid/v1" : endpoint
+        let selectedCredential = nativeFixture ? "gsd-native-fixture" : configuredToken
         sendTask = Task { @MainActor in
             defer {
                 if requestID == id { isPreparingRequest = false; sendTask = nil; requestID = nil }
