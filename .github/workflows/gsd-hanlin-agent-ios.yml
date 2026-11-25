@@ -12,13 +12,21 @@ on:
         required: true
         type: choice
         default: validate
-        options: [validate, resume-native, diagnose-startup, release]
+        options: [validate, resume-native, diagnose-startup, release, widget-final]
       validation_run:
         description: Successful validation run ID for this exact source (release only)
         required: false
         type: string
       package_tests_run:
         description: Prior run with successful unchanged package tests (validate only)
+        required: false
+        type: string
+      prepared_plan_id:
+        description: Native-owned final Widget plan ID (widget-final only)
+        required: false
+        type: string
+      prepared_plan_sha256:
+        description: Exact reviewed final Widget plan SHA-256 (widget-final only)
         required: false
         type: string
       build_number:
@@ -560,4 +568,38 @@ jobs:
             dist/gsd-native-release/*.json
             dist/gsd-native-release/logs/
           if-no-files-found: warn
+          retention-days: 30
+
+  widget-final:
+    if: inputs.mode == 'widget-final'
+    runs-on: [self-hosted, macOS, ARM64, gsd-widget-final]
+    timeout-minutes: 180
+    env:
+      GSD_WIDGET_PLAN_ID: ${{ inputs.prepared_plan_id }}
+      GSD_WIDGET_PLAN_SHA256: ${{ inputs.prepared_plan_sha256 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Workflow code is separate from the final app/test source in the prepared plan.
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Run exactly one full Widget case through the Native-owned plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          /opt/homebrew/bin/python3.12 -B scripts/gsd_widget_actions_acceptance.py \
+            --plan-id "$GSD_WIDGET_PLAN_ID" --plan-sha256 "$GSD_WIDGET_PLAN_SHA256" \
+            --source-sha "$GSD_SOURCE_SHA" --build "$GSD_BUILD_NUMBER" \
+            --output "$OUTPUT/widget-final"
+      - name: Preserve only scoped Widget Actions evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GSD-Widget-System-Acceptance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            dist/gsd-native-release/widget-final/widget-actions-receipt.json
+            dist/gsd-native-release/widget-final/widget-terminal-public.json
+            dist/gsd-native-release/widget-final/widget-binding-public.json
+            dist/gsd-native-release/widget-final/widget-observation-public.json
+          if-no-files-found: error
           retention-days: 30
