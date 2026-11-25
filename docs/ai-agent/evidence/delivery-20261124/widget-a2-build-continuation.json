@@ -1,0 +1,12 @@
+{
+  "createdUTC": "2026-11-25T03:15:59.404849+00:00",
+  "stoppedTerminalSHA256": "0a16fc98801119cfd141aa47c74a46047747e6d22e42f57860113dad8cfc9d4d",
+  "preservationReceiptSHA256": "e134162b9e209b5fcbfd18e8d225310f63c967fc7e70d98b22bff597e27b103f",
+  "sourceClosureSHA256": "090d094e565009680c0b56d292e3e1ff66f5b6160fbdccfe5f686d9ca65a04f1",
+  "preservationReused": true,
+  "sourceTransferReused": true,
+  "priorNativeBuildExecuted": false,
+  "nativeBuildAttempt": 1,
+  "acceptedShortcutReused": true,
+  "acceptedShareReused": true
+}

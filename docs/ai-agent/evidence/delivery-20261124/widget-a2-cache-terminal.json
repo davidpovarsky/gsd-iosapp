@@ -1,0 +1,13 @@
+{
+  "at": "2026-11-25T03:16:34.624744+00:00",
+  "claim": {
+    "owner": "/root/native_reconcile",
+    "controllerPID": 99445,
+    "testSourceSHA": "a2f1c09d6ef2b3ba9a281288bab985ebe44aa9ac",
+    "sourcePath": "/Users/m1/builds/gsd-system-invocation-6bd91d6a-20261124/source",
+    "cachePath": "/Users/m1/caches/DerivedData/gsd-system-6bd91d6a-20261124",
+    "claimedUTC": "2026-11-25T03:15:56.724935+00:00"
+  },
+  "ownedChildrenTerminal": true,
+  "ownedCacheClaimReleased": true
+}

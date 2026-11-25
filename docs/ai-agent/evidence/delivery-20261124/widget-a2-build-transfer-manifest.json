@@ -1,0 +1,49 @@
+{
+  "copiedUTC": "2026-11-25T03:19:01.138367+00:00",
+  "exactByteCopies": true,
+  "macMutation": false,
+  "files": [
+    {
+      "name": "terminal-receipt.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/terminal-receipt.json",
+      "bytes": 1267,
+      "sha256": "59c6cec09b7f29efc47a8c75e6463108ebc53192fef62309371888287b2b7e32"
+    },
+    {
+      "name": "build-binding.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/build-binding.json",
+      "bytes": 1283,
+      "sha256": "ff26ebd760c60cac329fdf500f280eefcd672c027dab68850f6adb092478ef21"
+    },
+    {
+      "name": "composition-receipt.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/composition-receipt.json",
+      "bytes": 1156,
+      "sha256": "75d406eb12fa0f6bf2672ac9b9b386a0a0b7414ecb869d7f57a2fd7acac931d0"
+    },
+    {
+      "name": "composed-products.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/composed-products.json",
+      "bytes": 6012,
+      "sha256": "1ce5327d90029445753aba9ad329c1ed211541a15aa4574511e20f126411eba7"
+    },
+    {
+      "name": "source-closure.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/source-closure.json",
+      "bytes": 1467,
+      "sha256": "090d094e565009680c0b56d292e3e1ff66f5b6160fbdccfe5f686d9ca65a04f1"
+    },
+    {
+      "name": "cache-owner-terminal.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/cache-owner-terminal.json",
+      "bytes": 481,
+      "sha256": "0a21ff5b97e05098f01053678d27970d3ecf839223e08de8ac83ba69e26b9835"
+    },
+    {
+      "name": "continuation-binding.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/continuation-binding.json",
+      "bytes": 533,
+      "sha256": "95109f25341e5bc70bc18c9bb9a2ac5cd1861038054cff74a1e256b63eab0c9c"
+    }
+  ]
+}
