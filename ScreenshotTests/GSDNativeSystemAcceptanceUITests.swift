@@ -83,9 +83,32 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
         for _ in 0..<2 where !icon.isHittable { home.swipeRight() }
         try require(icon.exists && icon.isHittable, "Observed GSD Home icon is unavailable.")
         icon.press(forDuration: 1.2)
+        try capture(home, "11-before-keyboard-introduction-dismissal")
+        try dismissObservedKeyboardIntroduction()
+        try capture(home, "11-after-keyboard-introduction-dismissal")
+        let editHomeActions = home.buttons.matching(NSPredicate(
+            format: "identifier == %@ AND label == %@",
+            "com.apple.springboardhome.application-shortcut-item.rearrange-icons", "עריכת מסך הבית"))
+        if !editHomeActions.firstMatch.waitForExistence(timeout: 3) {
+            try require(icon.exists && icon.isHittable, "Observed GSD Home icon is unavailable after keyboard introduction.")
+            icon.press(forDuration: 1.2)
+            try capture(home, "11-restored-home-context-menu")
+        }
         let medium = home.buttons["וידג׳ט בינוני"]
-        try require(medium.waitForExistence(timeout: 10) && medium.isHittable, "Observed medium WidgetKit control is unavailable.")
+        let mediumExists = medium.waitForExistence(timeout: 10)
         try capture(home, "11-widget-size-control")
+        if !mediumExists {
+            try require(editHomeActions.firstMatch.waitForExistence(timeout: 10)
+                        && editHomeActions.count == 1,
+                        "Observed Edit Home control is absent or ambiguous for widget gallery discovery.")
+            let editHome = editHomeActions.firstMatch
+            try require(editHome.wait(for: \.isHittable, toEqual: true, timeout: 10),
+                        "Observed Edit Home control is obscured.")
+            editHome.tap()
+            try capture(home, "11-widget-gallery-discovery-needed")
+            throw NativeSurfaceFailure(message: "Medium WidgetKit control is unavailable; captured Edit Home UI for gallery discovery. Widget installation and timeline verification have not run.")
+        }
+        try require(medium.isHittable, "Observed medium WidgetKit control is unavailable.")
         medium.tap()
         XCUIDevice.shared.press(.home)
         try capture(home, "11b-after-widget-placement")
@@ -188,13 +211,18 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
                         "One native GSD App Shortcuts row is required.")
             appRows.firstMatch.tap()
             try capture(shortcuts, "33-registered-gsd-shortcuts")
-            let actions = shortcuts.buttons.matching(NSPredicate(
-                format: "label BEGINSWITH %@", "הוספת משימה"))
-            try require(actions.firstMatch.waitForExistence(timeout: 15),
-                        "Registered Add Task App Shortcut is absent.")
-            let visibleActions = actions.allElementsBoundByAccessibilityElement.filter { $0.exists && $0.isHittable }
-            try require(visibleActions.count == 1, "Registered Add Task control is not uniquely owned.")
-            let action = visibleActions[0]
+            let actionContainers = shortcuts.otherElements.matching(NSPredicate(
+                format: "label == %@", "הוספת משימה"))
+            try require(actionContainers.firstMatch.waitForExistence(timeout: 15)
+                        && actionContainers.count == 1,
+                        "Registered Add Task App Shortcut container is absent or ambiguous.")
+            let actions = actionContainers.firstMatch.buttons.matching(NSPredicate(
+                format: "identifier == %@ AND label == %@", "plus.circle", "הוספה"))
+            try require(actions.firstMatch.waitForExistence(timeout: 15) && actions.count == 1,
+                        "Registered Add Task App Shortcut button is absent or ambiguous.")
+            let action = actions.firstMatch
+            try require(action.wait(for: \.isHittable, toEqual: true, timeout: 10),
+                        "Registered Add Task control is obscured.")
             proof["registeredAppShortcutLabel"] = action.label
             proof["registeredAppShortcutIdentifier"] = action.identifier
             try requireAppOutsideForeground("GSD became foreground before the Shortcut ran.")
