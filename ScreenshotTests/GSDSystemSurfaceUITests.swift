@@ -459,14 +459,14 @@ final class GSDSystemSurfaceUITests: XCTestCase {
             guard viewport.contains(start), viewport.contains(end),
                   path.height >= 44, !overlay.intersects(path) else { continue }
             try writeJSON([
-                "listFrame": NSStringFromCGRect(list.frame),
-                "viewport": NSStringFromCGRect(viewport),
-                "anchorFrame": NSStringFromCGRect(anchor.frame),
+                "listFrame": NSCoder.string(for: list.frame),
+                "viewport": NSCoder.string(for: viewport),
+                "anchorFrame": NSCoder.string(for: anchor.frame),
                 "anchorLabel": anchor.element.label,
                 "anchorIdentifier": anchor.element.identifier,
                 "anchorHittable": anchor.element.isHittable,
-                "assistantFrame": NSStringFromCGRect(overlay),
-                "start": NSStringFromCGPoint(start), "end": NSStringFromCGPoint(end)
+                "assistantFrame": NSCoder.string(for: overlay),
+                "start": NSCoder.string(for: start), "end": NSCoder.string(for: end)
             ], name: phase + ".matrix-scroll.json")
             try require(anchor.element.isHittable,
                         "The observed Matrix scroll origin stopped being hittable.")
