@@ -663,3 +663,10 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 - Extend the geometry-derived Network pan/Fit gate to iPhone as well as iPad, in English and Hebrew. Physical Board and Flow connector gestures retain the measured iPad branch.
 - Add an explicit DEBUG simulator provider-fetch fixture to the existing Hanlin native method: real composer → create_task → production consent → actual created ID → show_task_workspace → actual result card → expand → canonical editor. The demo DB is in memory; durability is proved separately by the real SQLite reopen/outbox test. No synthetic tool result, production credential, provider network request or upstream edit is used.
 - Resuming from here: qualify the genuine Hanlin native path, consume the shared Flow correction, execute31 package tests after the factory change, then execute the full13 native-release +4 workspace +2 share cases on the final frozen source. No final release gate is passed yet.
+
+### Hanlin tool execution and connector candidate — 2026-11-25 17:46 UTC
+
+- d7fca3c passed a fresh31 package cases after the factory change and the genuine Hanlin native04 on iPhone English: actual create_task consent, actual result ID, show_task_workspace card, expansion and canonical editor title;1/1 in81.254s.
+- The native screenshot showed the composer keyboard hiding much of the embedded workspace. Release focus when sending, and strengthen the existing case to require both the actual inline task and Expand to be physically hittable with the keyboard absent. This presentation correction still needs final native verification.
+- Pin the root-reviewed shared connector adapter79d44b68bb3e3ee49a93414487e8c0d1ba4ff0a1 after21/21 package qualification; original upstream libraries remain untouched. Project generated and exact dependencies resolved on Mac.
+- Next: unchanged strict iPad physicalconnector→canonicaledge assertion; if successful and visually reviewed, execute all final13 native-release,4 workspace and2 share cases. Keep new31 evidence bound via complete package closure; no reuse of the earlier pre-factory unit execution.

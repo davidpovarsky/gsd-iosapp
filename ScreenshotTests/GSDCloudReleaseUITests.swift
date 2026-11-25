@@ -475,10 +475,15 @@ final class GSDCloudReleaseUITests: XCTestCase {
         XCTAssertTrue(conversation.exists)
         for _ in 0..<6 where !expand.isHittable { conversation.swipeUp() }
         XCTAssertTrue(expand.isHittable)
+        let createdTitle = "Hanlin native workspace acceptance"
+        let inlineCreated = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "task-workspace.open.", createdTitle)).firstMatch
+        XCTAssertTrue(inlineCreated.waitForExistence(timeout: 10))
+        XCTAssertTrue(inlineCreated.isHittable, "The embedded card must expose its real task together with Expand")
+        XCTAssertFalse(app.keyboards.firstMatch.exists, "Sending a task request must release the composer keyboard")
         try capture(app, "19-hanlin-real-tool-workspace-card")
         expand.tap()
         XCTAssertTrue(workspace.waitForExistence(timeout: 10))
-        let createdTitle = "Hanlin native workspace acceptance"
         let created = app.buttons.matching(NSPredicate(
             format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "task-workspace.open.", createdTitle)).firstMatch
         XCTAssertTrue(created.waitForExistence(timeout: 10), "The expanded card lost the actual created task")

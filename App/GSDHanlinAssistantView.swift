@@ -20,6 +20,7 @@ struct GSDHanlinAssistantView: View {
     let remoteBridge: GSDRemoteBridgeState?
     @State private var showRemoteBridgeSettings = false
     @State private var prompt = ""
+    @FocusState private var promptFocused: Bool
     @State private var chartBreakdown = "quadrant"
     @State private var expandedWorkspace: GSDWorkspaceSheet?
     @State private var showModelSettings = false
@@ -118,6 +119,7 @@ struct GSDHanlinAssistantView: View {
                         .textFieldStyle(.roundedBorder)
                         .submitLabel(.send)
                         .onSubmit(send)
+                        .focused($promptFocused)
                         .accessibilityIdentifier("gsd.assistant.prompt")
                     if assistant.isRunning || isPreparingRequest {
                         Button {
@@ -365,6 +367,7 @@ struct GSDHanlinAssistantView: View {
         isPreparingRequest = true
         configurationError = nil
         prompt = ""
+        promptFocused = false
         let sendingAssistant = assistant
         #if DEBUG && targetEnvironment(simulator)
         let nativeFixture = ProcessInfo.processInfo.arguments.contains("--demo-seed") &&
