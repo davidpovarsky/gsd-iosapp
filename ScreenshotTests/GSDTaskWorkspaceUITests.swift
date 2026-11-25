@@ -239,7 +239,8 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
                           "A native connector drag must persist the exact canonical prerequisite edge")
             capture("08-flow-canonical-dependency-readback")
             remove.tap()
-            XCTAssertEqual(XCTWaiter.wait(for: [removed], timeout: 10), .completed)
+            let removedAgain = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: remove)
+            XCTAssertEqual(XCTWaiter.wait(for: [removedAgain], timeout: 10), .completed)
             waitForConnectionWrite(in: app)
         }
 
