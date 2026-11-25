@@ -1,5 +1,6 @@
 import Foundation
 import XCTest
+import GRDB
 import GSDModel
 import GSDStore
 import HanlinHostContracts
@@ -82,6 +83,80 @@ final class GSDTaskWorkspaceTests: XCTestCase {
         XCTAssertTrue(persisted.completed)
         let rows = try await store.fetchAllTasks()
         XCTAssertEqual(rows.count, 1)
+    }
+
+    func testWorkspaceWritesSurviveDatabaseReopenAndRetainSyncPayloads() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("GSDWorkspace-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let path = directory.appendingPathComponent("tasks.sqlite").path
+        let due = Date(timeIntervalSince1970: 1_800_086_400)
+        try await writePersistentWorkspace(at: path, due: due)
+
+        let reopened = try AppDatabase(try DatabaseQueue(path: path))
+        let repository = GRDBTaskRepository(reopened)
+        let stored = try await repository.fetch(id: "launch")
+        let task = try XCTUnwrap(stored)
+        XCTAssertTrue(task.completed)
+        XCTAssertEqual(task.quadrant, .urgentNotImportant)
+        XCTAssertEqual(task.dueDate, due)
+        XCTAssertEqual(task.dependencies, ["prerequisite"])
+        XCTAssertEqual(task.title, "תכנון השקה")
+        XCTAssertEqual(task.description, "Context from another surface")
+
+        let queue = try await GRDBSyncQueueRepository(reopened).pending()
+        let writes = queue.filter { $0.taskId == "launch" && $0.operation == .update }
+        XCTAssertTrue(writes.contains { $0.payload?.completed == true
+            && $0.payload?.dueDate == due
+            && $0.payload?.quadrant == .urgentNotImportant
+            && $0.payload?.dependencies == ["prerequisite"] })
+        let all = try await repository.fetchAll()
+        XCTAssertEqual(all.count, 2)
+        try reopened.writer.close()
+    }
+
+    private func writePersistentWorkspace(at path: String, due: Date) async throws {
+        let database = try AppDatabase(try DatabaseQueue(path: path))
+        try await exercisePersistentWorkspace(database: database, due: due)
+        try database.writer.close()
+    }
+
+    private func exercisePersistentWorkspace(database: AppDatabase, due: Date) async throws {
+        let repository = GRDBTaskRepository(database)
+        let store = TaskStore(
+            repository: repository,
+            smartViewRepository: GRDBSmartViewRepository(database),
+            archiveRepository: GRDBArchiveRepository(database),
+            trashRepository: GRDBTrashRepository(database),
+            syncQueue: GRDBSyncQueueRepository(database))
+        try await store.create(task("prerequisite"))
+        var launch = task("launch")
+        launch.title = "תכנון השקה"
+        try await store.create(launch)
+        store.start()
+
+        let commands = GSDTaskWorkspaceMutations(store: store)
+        try await commands.addDependency(prerequisiteID: "prerequisite", dependentID: "launch")
+        try await commands.moveTask(id: "launch", quadrant: .urgentNotImportant)
+        var external = try await storedTask("launch", in: store)
+        external.description = "Context from another surface"
+        try await repository.upsert(external)
+        try await commands.setDueDate(id: "launch", date: due)
+        try await commands.setCompleted(id: "launch", completed: true)
+
+        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
+        while ContinuousClock.now < deadline {
+            if store.tasks.first(where: { $0.id == "launch" })?.completed == true { break }
+            try await _Concurrency.Task.sleep(for: .milliseconds(10))
+        }
+        let observed = try XCTUnwrap(store.tasks.first { $0.id == "launch" })
+        XCTAssertTrue(observed.completed)
+        XCTAssertEqual(observed.description, external.description)
+        for mode in GSDTaskWorkspacePresentation.allCases {
+            let snapshot = GSDTaskWorkspaceRequest(presentation: mode).visibleTasks(in: store.tasks)
+            XCTAssertEqual(snapshot.first { $0.id == "launch" }, observed)
+        }
     }
 
     func testDependencyMutationsUsePersistedTasksAndRejectCycles() async throws {
