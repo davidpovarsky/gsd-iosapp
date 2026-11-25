@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "publishedUTC": "2026-11-25T06:50:40.323037+00:00",
+  "status": "published_exact_reviewed_one_file_change",
+  "worktree": "C:\\Users\\DAVID\\Code\\GSD-Widget-Route-Fix-20261125",
+  "branch": "fix/gsd-widget-route-db-20261125",
+  "remote": "fork",
+  "remoteURL": "https://github.com/davidpovarsky/gsd-iosapp.git",
+  "remoteRef": "refs/heads/fix/gsd-widget-route-db-20261125",
+  "remoteSHA": "1d4033c54542b161da65ab34f083cac8aec0b1c4",
+  "commit": "1d4033c54542b161da65ab34f083cac8aec0b1c4",
+  "parent": "3ca346ef595a6a7e062a2a2fc66cbe5b2a76ff2c",
+  "tree": "5ed5761969395a02c07b1d355271d4ae3e733c13",
+  "commitSubject": "fix(widget): hold database access while opening task links",
+  "numstat": "11\t0\tApp/ContentView.swift",
+  "file": {
+    "path": "App/ContentView.swift",
+    "gitBlob": "78e848f5284477a2bc41125975478fcd998dc168",
+    "lfBytes": 26291,
+    "lfSHA256": "8c6f03cde4dca592fb92f8e4f2ba9c6cccf96b37a0472f27a08b1098819ed288"
+  },
+  "reviewedPatchSHA256": "7b2271f2b4ea1e1a3cc1f7ad9ae57edcd7b2989fdd7c6a54d52dae2259a218db",
+  "reviewReceiptSHA256": "af74033d61f5523736a103b2c7fb49347491e9dc1360e4b68bc03dc723a3a759",
+  "systemTest": {
+    "path": "ScreenshotTests/GSDNativeSystemAcceptanceUITests.swift",
+    "gitBlob": "ff2e6164cc201053feff63230480948315dc3740",
+    "lfBytes": 26872,
+    "lfSHA256": "2443a031bee63c546062de0f90192e793ac07f09bf84c46dddc2d9e0252efeba",
+    "unchangedFrom3ca": true
+  },
+  "checks": {
+    "normalPush": true,
+    "remoteExact": true,
+    "clean": true,
+    "onlyReviewedFileCommitted": true,
+    "allProtectedWorktreesUnchanged": true,
+    "protectedWorktreeCount": 9,
+    "originalThreeLocalFileCount": 32,
+    "docsHeldFileCount": 35,
+    "diagnostic620Excluded": true,
+    "ciIntegrationPerformed": false,
+    "buildOrRuntimePerformed": false,
+    "macActionPerformed": false
+  },
+  "protectedBefore": {
+    "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-route-db-fix-review-odwsfrsz\\protected-before-publication.json",
+    "bytes": 29090,
+    "sha256": "875905c2e68b828bd85d4e36f85bd646eecc3c9227518cb1bcf96cfdf8946189"
+  },
+  "protectedAfter": {
+    "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-route-db-fix-review-odwsfrsz\\protected-after-publication.json",
+    "bytes": 29090,
+    "sha256": "2bba42c132a56d1fe8c2f1277b654c89d99b3e6379c0a8557bb634c3301106b2"
+  }
+}

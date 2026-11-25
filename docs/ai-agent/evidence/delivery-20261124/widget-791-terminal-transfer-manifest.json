@@ -1,0 +1,46 @@
+{
+  "completedUTC": "2026-11-25T03:54:59.794391+00:00",
+  "files": [
+    {
+      "name": "widget-791-binding.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-791faede-20261125/runs/ui791faede-widget-l9vb2h2h/binding.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-791-terminal-20261125\\widget-791-binding.json",
+      "bytes": 7746,
+      "sha256": "55b1c999ae5c2c3cf2279233e4c24789c539153fe8b4da2814a764083e374ff3",
+      "classification": "technical and synthetic Widget acceptance evidence; no account credentials"
+    },
+    {
+      "name": "widget-791-observation.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-791faede-20261125/runs/ui791faede-widget-l9vb2h2h/private/widget-ui/widget/observation.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-791-terminal-20261125\\widget-791-observation.json",
+      "bytes": 511,
+      "sha256": "077caa5612214926f4b3bbd465b8254105612dd4f65663ef901d64169fc91ebc",
+      "classification": "technical and synthetic Widget acceptance evidence; no account credentials"
+    },
+    {
+      "name": "widget-791-terminal.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-791faede-20261125/widget-only-runtime-terminal.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-791-terminal-20261125\\widget-791-terminal.json",
+      "bytes": 9859,
+      "sha256": "58b1a1eb756930c44e148dc279e4ef677189b28f3c40e56031ab3d383a159c56",
+      "classification": "technical and synthetic Widget acceptance evidence; no account credentials"
+    }
+  ],
+  "allExactBytesVerified": true,
+  "originalsPreserved": true,
+  "testSourceSHA": "791faede904ec32e4254c0346919515edd792626",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "passed": false,
+  "counts": {
+    "totalTestCount": 1,
+    "passedTests": 0,
+    "failedTests": 1,
+    "skippedTests": 0,
+    "expectedFailures": 0
+  },
+  "lastCapture": "10-widget-source-task",
+  "failure": "failed: caught error: \"NativeSurfaceFailure(message: \"Observed GSD Home icon is unavailable.\")\"",
+  "ownedSimulatorsRemoved": true,
+  "sourceAndFrozenProductsUnchanged": true,
+  "newRuntimeExecuted": false
+}

@@ -1,0 +1,12 @@
+{
+  "sourceSHA": "791faede904ec32e4254c0346919515edd792626",
+  "root": "/Users/m1/builds/gsd-widget-791faede-20261125",
+  "buildEvidenceRoot": "/Users/m1/builds/gsd-widget-791faede-20261125/evidence",
+  "receipts": {
+    "widget-only-runtime-terminal.json": "58b1a1eb756930c44e148dc279e4ef677189b28f3c40e56031ab3d383a159c56",
+    "runs/ui791faede-widget-l9vb2h2h/binding.json": "55b1c999ae5c2c3cf2279233e4c24789c539153fe8b4da2814a764083e374ff3",
+    "runs/ui791faede-widget-l9vb2h2h/private/widget-ui/widget/observation.json": "077caa5612214926f4b3bbd465b8254105612dd4f65663ef901d64169fc91ebc"
+  },
+  "originalArtifactsPreservedInPlace": true,
+  "createdUTC": "2026-11-25T04:12:45.510633+00:00"
+}

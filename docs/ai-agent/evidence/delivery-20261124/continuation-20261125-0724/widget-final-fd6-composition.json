@@ -1,0 +1,107 @@
+{
+  "createdUTC": "2026-11-25T07:18:16.165590+00:00",
+  "kind": "fresh-complete-products",
+  "diagnosticOnly": false,
+  "productionAcceptance": false,
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "productionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "testSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "workflowSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "productionTargetCount": 5,
+  "completeProductsFromSource": true,
+  "mixedProductionProducts": false,
+  "allTargetsFromSameCompletedBuild": true,
+  "testRunnerUnchangedByComposition": true,
+  "productsRoot": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/products",
+  "productsTree": {
+    "sha256": "b0b6c65c2f9a820cff3d18562361639981931644388d5310ee870d1bde188716",
+    "files": 421
+  },
+  "appRelativePath": "Debug-iphonesimulator/GSD.app",
+  "appTree": {
+    "sha256": "b5d1b8c10d8f15b7d2f866006b79e3997b0451d7336f9ca42bc9219fae61f537",
+    "files": 128
+  },
+  "runnerRelativePath": "Debug-iphonesimulator/GSDScreenshotTests-Runner.app",
+  "runnerTree": {
+    "sha256": "bff1ae711d71c1875da1b3a6625ba393c02af9386e879433b6c58b14efaf51a6",
+    "files": 7
+  },
+  "productionTargetAudits": {
+    "com.itorah.gsd": {
+      "tree": {
+        "sha256": "b5d1b8c10d8f15b7d2f866006b79e3997b0451d7336f9ca42bc9219fae61f537",
+        "files": 128
+      },
+      "executableSHA256": "a69858c66c46f635988f0fb58a95bc8ffa924ffc17596ea9026200d4cd861a8f",
+      "runtimeEntitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    },
+    "com.itorah.gsd.widgets": {
+      "tree": {
+        "sha256": "07b8f58e16bcd3c8d0d26dabfb5437c2713864e0c79eb6b165196ee9661db09a",
+        "files": 15
+      },
+      "executableSHA256": "5d5fecfb0e9f38a7b2a61bc2604cf478af8439e884a0136759c2999e82d62214",
+      "runtimeEntitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd.widgets",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    },
+    "com.itorah.gsd.share": {
+      "tree": {
+        "sha256": "e4fb60c70716547ffe966a07a65da7d5499844993d5b0d8b530906868dd1978c",
+        "files": 14
+      },
+      "executableSHA256": "01d8b5c0147d2898b5bfa99425fdc091bb23cf7126fd41bf21b79e6b8ddb9636",
+      "runtimeEntitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd.share",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    },
+    "com.itorah.gsd.watchkitapp": {
+      "tree": {
+        "sha256": "c56b0c33329bcfcd57694d072af29166312ac163e8f3a6844d57604b973c4d5b",
+        "files": 36
+      },
+      "executableSHA256": "840de1e6c30c92c4a2663224f686987562b52187232b1d4fa0af2bbeb753c731",
+      "runtimeEntitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd.watchkitapp",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    },
+    "com.itorah.gsd.watchkitapp.widgets": {
+      "tree": {
+        "sha256": "635c202f3f4fe10547cdba19997e370c7cf35f2550648655264c5b0e9fa29f9b",
+        "files": 17
+      },
+      "executableSHA256": "f3eaee9df11cb8b07580306315ae43fcc2e766918aca908e7aae7f51e914afa0",
+      "runtimeEntitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd.watchkitapp.widgets",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    }
+  },
+  "xctestrunSHA256": "8768188bbe98de68228c0fb8e791d5972f53516685069b2be00f0169fc3ffe4c",
+  "manifestSHA256": "7588422c377bdc70c2b564c4c4acd2b11f0353c4ec1d54b7dbb58f63dba22815",
+  "systemTestSHA256": "2443a031bee63c546062de0f90192e793ac07f09bf84c46dddc2d9e0252efeba",
+  "appInfoSHA256": "8cbed2b686160da6df62b40b170e5196e303d5b599027575448d4e289d704692",
+  "sourceClosureSHA256": "b660995515a5b539536fd7c3bdb4f65177aef82afc13af9a69c788e49cfbdadd",
+  "buildBindingSHA256": "487058a2b1c0ec9c72b42de8bd5858c9dd3689e96c59183de3c0cb4cc14ac13d",
+  "copySizingReceiptSHA256": "f5a373f858aa500ab17547d4d58682c5bc2cc42c9f0e05643c53824be9f55479",
+  "cacheProductsUnchangedDuringCopy": true,
+  "historical620And9fPreserved": true,
+  "noBundleSplicingOrResigning": true
+}

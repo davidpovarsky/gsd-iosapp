@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "kind": "retained-sentinelx-observation-projection",
+  "observedUTC": "2026-11-25T08:06:26.927652+00:00",
+  "scope": "OS apt download cache metadata only",
+  "source": "Root-retained SentinelX result from the existing Oracle read; no new remote observation",
+  "capturedOutput": "{\"observedUTC\": \"2026-11-25T08:06:26.927652+00:00\", \"scope\": \"OS apt download cache metadata only\", \"rows\": [{\"path\": \"/var/cache/apt/archives\", \"exists\": true, \"duExitCode\": 0, \"allocatedBytes\": 28672, \"debFileCount\": 0}, {\"path\": \"/var/lib/apt/lists/partial\", \"exists\": true, \"duExitCode\": 0, \"allocatedBytes\": 20480}], \"mutations\": false}",
+  "parsedOutput": {
+    "observedUTC": "2026-11-25T08:06:26.927652+00:00",
+    "scope": "OS apt download cache metadata only",
+    "rows": [
+      {
+        "path": "/var/cache/apt/archives",
+        "exists": true,
+        "duExitCode": 0,
+        "allocatedBytes": 28672,
+        "debFileCount": 0
+      },
+      {
+        "path": "/var/lib/apt/lists/partial",
+        "exists": true,
+        "duExitCode": 0,
+        "allocatedBytes": 20480
+      }
+    ],
+    "mutations": false
+  },
+  "toolReturnCode": 0,
+  "toolDurationSeconds": 0.07,
+  "originalReadOnly": true,
+  "observationRepeated": false
+}

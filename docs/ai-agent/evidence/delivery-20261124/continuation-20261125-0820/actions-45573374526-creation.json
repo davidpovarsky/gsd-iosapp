@@ -1,0 +1,33 @@
+{
+  "observedUTC": "2026-11-25T08:06:14.610386+00:00",
+  "run": {
+    "id": 45573374526,
+    "run_number": 39,
+    "run_attempt": 1,
+    "html_url": "https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45573374526",
+    "status": "in_progress",
+    "conclusion": null,
+    "created_at": "2026-11-25T08:06:08Z",
+    "updated_at": "2026-11-25T08:06:12Z",
+    "head_sha": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "head_branch": "fix/gsd-widget-final-20261125",
+    "event": "workflow_dispatch",
+    "workflow_id": 427066662
+  },
+  "planID": "gsd-widget-fd6e2944-final-v2-20261125",
+  "planSHA256": "259986c5fd19e47887b87d1c0af0f6e07f59acc37ef6275b3f6659ae3183bafa",
+  "runnerID": 25,
+  "existingListenerWrapperPID": 89184,
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "stagingReceipt": {
+    "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6e2944-actions-execution-v3-20261125\\plan-staging-preflight.json",
+    "bytes": 1310,
+    "sha256": "25e3ab42328a51d30de818d6a35fe992e6585f93c87f5e9a3da3af9a9c6b13f9"
+  },
+  "dispatchReceipt": {
+    "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6e2944-actions-execution-v3-20261125\\corrected-workflow-dispatch-result.json",
+    "bytes": 373,
+    "sha256": "fe7b9226b86f6513cefb2cae1b77f74e984f04fac6242fb51867922901844181"
+  },
+  "noLocalXCTest": true
+}

@@ -1,0 +1,27 @@
+{
+  "publishedUTC": "2026-11-25T04:10:38.208520+00:00",
+  "repository": "https://github.com/davidpovarsky/gsd-iosapp.git",
+  "commit": "3ca346ef595a6a7e062a2a2fc66cbe5b2a76ff2c",
+  "parent": "791faede904ec32e4254c0346919515edd792626",
+  "tree": "7edcd11fda5c22649aaf69f4b7595eb910be21cd",
+  "file": "ScreenshotTests/GSDNativeSystemAcceptanceUITests.swift",
+  "gitBlob": "ff2e6164cc201053feff63230480948315dc3740",
+  "sourceLFBytes": 26872,
+  "sourceLFSHA256": "2443a031bee63c546062de0f90192e793ac07f09bf84c46dddc2d9e0252efeba",
+  "numstat": "6\t2\tScreenshotTests/GSDNativeSystemAcceptanceUITests.swift",
+  "worktree": "C:\\Users\\DAVID\\Code\\GSD-Widget-Home-Ready-20261125",
+  "branch": "fix/gsd-widget-home-ready-20261125",
+  "remoteSHA": "3ca346ef595a6a7e062a2a2fc66cbe5b2a76ff2c",
+  "remoteVerified": true,
+  "clean": true,
+  "normalPush": true,
+  "changedPaths": [
+    "ScreenshotTests/GSDNativeSystemAcceptanceUITests.swift"
+  ],
+  "approvedPatchSHA256": "fcba4cf6809aebd4dd7c27fef6a1ce02d3929c289bef26b42c999737817dbcd5",
+  "testsOrBuildOrRuntimeRun": false,
+  "protectedSixWorktreesUnchanged": true,
+  "protectedLocalFiles": 32,
+  "widgetHelperAndShortcutSHA256": "e42186e39a6fc3db9caac656806a023fb13807c3c3e00f5556fc2223d6e6f944",
+  "shortcutAndSharedSHA256": "29b346bfc65393a11b200c65719e7aa1f44aa8d13426d7cda3389675c56d766a"
+}

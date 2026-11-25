@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "kind": "held-delivery-incremental-evidence-manifest",
+  "createdUTC": "2026-11-25T08:23:43.477145+00:00",
+  "scope": "retained Oracle capacity observations; first Actions pre-XCTest guard failure; subsequent run creation snapshot; official locale context only",
+  "rootReviewedReportBefore": {
+    "path": "docs/ai-agent/GSD_DELIVERY_CURRENT_20261124.md",
+    "bytes": 103393,
+    "sha256": "63fd7a44e1724ba7fda0eee488f04fa6bb89bfbb79c4d69fc18c5e53c99fa7bf"
+  },
+  "heldReportAfter": {
+    "path": "docs/ai-agent/GSD_DELIVERY_CURRENT_20261124.md",
+    "bytes": 110206,
+    "sha256": "b1f9d2543d88c1345e518799c92b03c62ce2ac6b2170929b9d5dc1223228a00b"
+  },
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "newExistingEvidenceCopies": 8,
+  "files": [
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\oracle-gsd-space-inventory-20261125T075750Z.json",
+      "destination": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/oracle-gsd-space-inventory.json",
+      "bytes": 11123,
+      "sha256": "7bcfbfc23edb76100add18aa3e86023bb3ac5b766a4d4ebe894c5e8ff209925c",
+      "sourceNature": "exact copy of an already derived agent projection of retained read-only SentinelX observations; not a separately emitted native receipt",
+      "byteForByteCopy": true,
+      "lineEndingNormalization": false
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\root-actions-45573374526-sp9crky4\\artifact-read-receipt.json",
+      "destination": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/actions-45573374526-artifact-read.json",
+      "bytes": 1781,
+      "sha256": "1a57ca7a024a03bbb015ed15097eee3dd97581fc59f75ce8bd36c765187fa5d0",
+      "sourceNature": "exact copy of existing artifact download/extraction receipt containing the public adapter receipt; not a new native runtime observation",
+      "byteForByteCopy": true,
+      "lineEndingNormalization": false
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\root-actions-45573374526-sp9crky4\\widget-actions-receipt.json",
+      "destination": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/actions-45573374526-widget-receipt.json",
+      "bytes": 1240,
+      "sha256": "13340bb9e1ce6654a1286ee340d604a1284702161ff067c1f46626d52c529cbd",
+      "sourceNature": "exact downloaded native adapter receipt from GitHub Actions artifact 15003511971; bytes preserved",
+      "byteForByteCopy": true,
+      "lineEndingNormalization": false
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-actions-45573374526-private-state-20261125T081116Z\\private-runtime-state.json",
+      "destination": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/actions-45573374526-private-state.json",
+      "bytes": 5151,
+      "sha256": "46cd062d3e1e71f50c0f522b40e43f794598423f8d7052bc75ac449b7df046ae",
+      "sourceNature": "exact copy of an existing read-only metadata capture containing native terminal records; capture is not itself a separately emitted native test receipt",
+      "byteForByteCopy": true,
+      "lineEndingNormalization": false
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-actions-45573374526-private-state-20261125T081116Z\\scoped-root-cwd-read.json",
+      "destination": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/actions-45573374526-pid416-cwd.json",
+      "bytes": 198,
+      "sha256": "dc29ec00d194a9de61ab424e4a36f96320e66715faf71b99dfc94f769feed5ae",
+      "sourceNature": "exact copy of an existing targeted read-only lsof observation; subsequent to the failed run",
+      "byteForByteCopy": true,
+      "lineEndingNormalization": false
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6e2944-actions-execution-v3-20261125\\workflow-run.json",
+      "destination": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/actions-45573374526-creation.json",
+      "bytes": 1381,
+      "sha256": "da4c8a4a17b4fdcb1b3968c40883fba7cd7ed0b68f3f804212cd189641b5fae6",
+      "sourceNature": "exact copy of an existing GitHub run-creation observation/projection; historical in_progress status preserved, not a terminal success assertion",
+      "byteForByteCopy": true,
+      "lineEndingNormalization": false
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\oracle-os-apt-cache-observation-20261125T080626Z.json",
+      "destination": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/oracle-os-apt-cache-observation.json",
+      "bytes": 1286,
+      "sha256": "dfa19efb0df74bc22b032ccf181b3e976e6a19101e1b7ac40606d877a9f34304",
+      "sourceNature": "exact copy of an existing Root projection of retained SentinelX stdout; not a new server observation or original native emitted file",
+      "byteForByteCopy": true,
+      "lineEndingNormalization": false
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6e2944-actions-execution-v4-20261125\\workflow-run.json",
+      "destination": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0820/actions-45575270618-creation.json",
+      "bytes": 1359,
+      "sha256": "42599baffdfba602c321a0d433e8ab684d65d1db1fffb3951602ac5a15370045",
+      "sourceNature": "exact copy of an existing GitHub run-creation observation/projection; historical in_progress and null conclusion preserved; not a test-start or success receipt",
+      "byteForByteCopy": true,
+      "lineEndingNormalization": false
+    }
+  ],
+  "failedRunInterpretation": {
+    "runID": 45573374526,
+    "nativeCases": {},
+    "executedXCTestCasesDerivedFromRetainedPretestEvidence": 0,
+    "testCountFieldsPresentInPublicAdapterReceipt": false,
+    "nativeGuardCode": "writer_cwd_unavailable",
+    "widgetTestPassed": false,
+    "failureReceiptsRewritten": false
+  },
+  "subsequentRunObservation": {
+    "runID": 45575270618,
+    "observedUTC": "2026-11-25T08:19:36.982902+00:00",
+    "status": "in_progress",
+    "conclusion": null,
+    "provesTestStartedOrPassed": false
+  },
+  "asanaReferencesProvidedByRoot": {
+    "cloudComment": "1220891801102370",
+    "capacityProjectStatus": "1220891755231379",
+    "appleComment": "1220892085553541",
+    "latestProjectStatus": "1220891783334908",
+    "projectColor": "yellow"
+  },
+  "officialDocumentationURLs": [
+    "https://developer.apple.com/documentation/foundation/localizedstringresource.md",
+    "https://developer.apple.com/documentation/appintents/intentsystemcontext/locale.md"
+  ],
+  "preservationScope": {
+    "oldHeldPaths": 55,
+    "originalWorktreeFiles": 32,
+    "oldEvidenceComparedByMetadataOnly": true,
+    "aborted0458ContentRead": false
+  },
+  "executionScope": {
+    "newNativeOrOracleRuntime": false,
+    "sourceEdit": false,
+    "testRun": false,
+    "macAccess": false,
+    "authOrUpload": false,
+    "commitOrPush": false
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "createdUTC": "2026-11-25T06:36:14.928279+00:00",
+  "worktree": "C:\\Users\\DAVID\\Code\\GSD-Widget-Actions-20261125",
+  "branch": "ci/gsd-widget-final-20261125",
+  "baseCommit": "620d66f2c0ef3368ec772b236450873a01e74b73",
+  "files": [
+    {
+      "path": ".github/workflows/gsd-hanlin-agent-ios.yml",
+      "bytes": 31498,
+      "sha256": "b050d0020fe0fd94364f4407b9b5f754580e3b231833822f2d89ad1ad8f6d8b5",
+      "gitBlob": "7337e321c4f0aa5c30a5931403f03246960219f0"
+    },
+    {
+      "path": "scripts/gsd_widget_actions_acceptance.py",
+      "bytes": 27244,
+      "sha256": "02459ac20eb67e1da5c73b3969c632698444997a980d2260efb1217552399eb9",
+      "gitBlob": "9e7683e5c62a54307c83638a113e7e4dce3e56cd"
+    },
+    {
+      "path": "scripts/test_gsd_widget_actions_acceptance.py",
+      "bytes": 19874,
+      "sha256": "627dee020ebc11e3ae3ab3f599973918e7dda36a2e0cdcb9ae86840b4eb925d0",
+      "gitBlob": "ffc2e946363d7fa63d9daad8c536ee0ced65424a"
+    }
+  ],
+  "correction": {
+    "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-actions-implementation-20261125\\appinfo-correction.diff",
+    "bytes": 7986,
+    "sha256": "1dcdad09cfa22de37c15aa170151c95bcbc4f41dfba560f122bfcf469902763c"
+  },
+  "fullPatch": {
+    "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-actions-implementation-20261125\\widget-final-actions-appinfo-full.patch",
+    "bytes": 51258,
+    "sha256": "71ad7ce66e27e822d1d2578e1275cfbd2ce0f290793d17cc174ede64782a060c"
+  },
+  "reverseApplyChecks": {
+    "appinfo-correction.diff": 0,
+    "widget-final-actions-appinfo-full.patch": 0
+  },
+  "pythonASTPassed": true,
+  "workflowUnchangedFromRootReviewedVersion": true,
+  "existingFourJobsExactBytesUnchanged": true,
+  "existingJobsSHA256": "feb89f8ee90b7f21ab9eb65090129b1949a012d15529634a9c72219f8bb604eb",
+  "yamlValidationReusedFromUnchangedWorkflow": true,
+  "focusedTests": {
+    "exit": 0,
+    "count": 25,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "logPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-actions-implementation-20261125\\focused-tests-appinfo.log",
+    "logSHA256": "725b40e8ac74156c6c30c73c1f4e7c36629340f737049c7dda17688604c15409"
+  },
+  "gitDiffCheckExit": 0,
+  "preserved": [
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Delivery-49-20261124",
+      "unchanged": true,
+      "fileCount": 35,
+      "contentRead": false
+    },
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Hanlin-AI-20261122",
+      "unchanged": true,
+      "fileCount": 12,
+      "contentRead": true
+    },
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-HE-RTL-20261123",
+      "unchanged": true,
+      "fileCount": 2,
+      "contentRead": true
+    },
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Cloud-Release-20261123",
+      "unchanged": true,
+      "fileCount": 18,
+      "contentRead": true
+    }
+  ],
+  "heldDocsContentsReread": false,
+  "runnerReadEvidence": {
+    "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-actions-implementation-20261125\\runner-permissions-readonly-20261125.json",
+    "bytes": 8774,
+    "sha256": "e7d7fa7e405917a0f14a50afc36000a4beb33e1c36c1e04e4d2dae15968aad07"
+  },
+  "commitCreated": false,
+  "pushExecuted": false,
+  "macCommandsExecuted": false,
+  "actionsDispatched": false,
+  "widgetRuntimeExecuted": false,
+  "nativeControllerModified": false
+}

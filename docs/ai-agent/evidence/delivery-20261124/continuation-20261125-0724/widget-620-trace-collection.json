@@ -1,0 +1,50 @@
+{
+  "kind": "collection_fields_extracted_from_binding",
+  "sourceBindingSHA256": "098324a4c8b396803a251c87859d29257216b4d1cc8d24ea73b02bca246e4d2b",
+  "diagnosticOnly": true,
+  "productionAcceptance": false,
+  "collections": {
+    "widget-route-diagnostic": {
+      "schemaVersion": 1,
+      "diagnosticOnly": true,
+      "productionAcceptance": false,
+      "collectedUTC": "2026-11-25T06:32:54.873871+00:00",
+      "relativeReceipt": "Library/Application Support/GSDWidgetRouteDiagnostics/receipt.json",
+      "sourceSHA": "620d66f2c0ef3368ec772b236450873a01e74b73",
+      "simulatorID": "4467FB8E-0161-4A9E-BF0E-8433A2396DDE",
+      "status": "captured",
+      "instrumentationAvailable": true,
+      "runtimeOrSimulatorMutation": false,
+      "bytes": 2838,
+      "sha256": "c6a1a24f4f8bce4119e632dcaac94f9989f522b791f5bb8553d2690cc14d9f3d",
+      "path": "/Users/m1/builds/gsd-widget-route-diag-620d66f2-20261125/diagnostic-runtime/runs/ui620d66f2-widget-route-diagnostic-im0yu1st/private/route-diagnostic/receipt.json",
+      "facts": {
+        "eventCount": 13,
+        "startupArmed": true,
+        "nonce": "80ECC8BB",
+        "simulatorID": "4467FB8E-0161-4A9E-BF0E-8433A2396DDE",
+        "diagnosticSourceSHA": "620d66f2c0ef3368ec772b236450873a01e74b73",
+        "processID": 37155,
+        "truncated": false,
+        "expectedTaskIDSHA256": "8193a0e61e7c52c3053536fca0279a4be2895a8ae54f5a5945566f4384dfa6b8",
+        "incomingEventCount": 1,
+        "expectedTaskEventCount": 4,
+        "expectedTaskIncomingCount": 1,
+        "completeTraceEligibleForAbsenceAssessment": true,
+        "absenceProvesNoSystemDelivery": false,
+        "postTapApplication": {
+          "status": "bound",
+          "path": "/Users/m1/builds/gsd-widget-route-diag-620d66f2-20261125/diagnostic-runtime/runs/ui620d66f2-widget-route-diagnostic-im0yu1st/private/widget-route-diagnostic-ui/widget-route-diagnostic/15-route-after-editor-wait.hierarchy.txt",
+          "processID": 37155,
+          "bytes": 18448,
+          "sha256": "3fad0d6630bfaaebf0d48737ff5e152f32586ae5b99222a2363e62b6d28ccbe0",
+          "modifiedUTC": "2026-11-25T06:32:51.164761+00:00",
+          "currentTestWindow": true
+        },
+        "postTapProcessMatchesTrace": true,
+        "absenceAssessment": "eligible_for_same_process_trace_review",
+        "absenceAssessmentReason": "current_post_tap_process_bound"
+      }
+    }
+  }
+}

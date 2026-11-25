@@ -1,0 +1,29 @@
+{
+  "finishedUTC": "2026-11-25T06:12:24.572263+00:00",
+  "kind": "diagnostic_products_snapshot_only",
+  "passed": true,
+  "diagnosticOnly": true,
+  "productionAcceptance": false,
+  "sourceSHA": "620d66f2c0ef3368ec772b236450873a01e74b73",
+  "baseProductionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "actualCompletedBuildBindingSHA256": "5adc8273c4b67a23bb4bdd6cb352cb26ce6aa28a5187a1a8afe952e715f780e3",
+  "sourceClosureSHA256": "22fa4fbfc06a348501bdc827b4450204bcc3b37c9c97e868266d920e288f3694",
+  "compositionReceiptSHA256": "6a80542cc1487da8120a76a2f5c7b722e2092561b0db6b357626cbcb1442a90c",
+  "manifestSHA256": "4eb68b5721742490b8dd33b391a6cb8265fbb49537041f765ddef544f612a506",
+  "productsTree": {
+    "sha256": "11879ccd2b68974d346ce7b7c1f0833b163dbe02464237820e6309bd440fee4a",
+    "files": 421
+  },
+  "cacheProductsUnchanged": true,
+  "failedCompositionPreserved": true,
+  "frozenProductsPreserved": true,
+  "signed9fIPASHA256": "1a5f770ca236fe43d0091fe0d649f9a266a78dfb6106f8a3545a2cd99db93c69",
+  "fiveActualTargetAuditsVerified": true,
+  "embeddedAndExternalWatchEqual": true,
+  "freshCompanionLineageSHA256": "3e1009d24539249d013f2f7449fce070af79571a7c78d497810f5ef3202e180d",
+  "copySizingReceiptSHA256": "696ce2aa0c23c8223187d91804c71afd03cd3d0b233d4a85c52fef8ca4851b92",
+  "compileRepeated": false,
+  "runtimeExecuted": false,
+  "signingOrUploadExecuted": false,
+  "ownedCacheClaimReleased": true
+}

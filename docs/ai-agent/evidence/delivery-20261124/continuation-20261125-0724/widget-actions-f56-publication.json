@@ -1,0 +1,77 @@
+{
+  "createdUTC": "2026-11-25T06:38:58.315408+00:00",
+  "branch": "ci/gsd-widget-final-20261125",
+  "commit": "f56a8acea008336d26ed832ab5fee0525b126023",
+  "tree": "8f846f83247ad4f292898a489ff6edcf69b1af62",
+  "parent": "620d66f2c0ef3368ec772b236450873a01e74b73",
+  "files": [
+    {
+      "path": ".github/workflows/gsd-hanlin-agent-ios.yml",
+      "gitBlob": "7337e321c4f0aa5c30a5931403f03246960219f0",
+      "workingBytes": 31498,
+      "workingSHA256": "b050d0020fe0fd94364f4407b9b5f754580e3b231833822f2d89ad1ad8f6d8b5",
+      "committedBytes": 30893,
+      "committedSHA256": "a2cac6c926f490bbb51fc7102ec2e778de52dd34147fed3cc48f1eca7e569b5d"
+    },
+    {
+      "path": "scripts/gsd_widget_actions_acceptance.py",
+      "gitBlob": "9e7683e5c62a54307c83638a113e7e4dce3e56cd",
+      "workingBytes": 27244,
+      "workingSHA256": "02459ac20eb67e1da5c73b3969c632698444997a980d2260efb1217552399eb9",
+      "committedBytes": 27244,
+      "committedSHA256": "02459ac20eb67e1da5c73b3969c632698444997a980d2260efb1217552399eb9"
+    },
+    {
+      "path": "scripts/test_gsd_widget_actions_acceptance.py",
+      "gitBlob": "ffc2e946363d7fa63d9daad8c536ee0ced65424a",
+      "workingBytes": 19874,
+      "workingSHA256": "627dee020ebc11e3ae3ab3f599973918e7dda36a2e0cdcb9ae86840b4eb925d0",
+      "committedBytes": 19874,
+      "committedSHA256": "627dee020ebc11e3ae3ab3f599973918e7dda36a2e0cdcb9ae86840b4eb925d0"
+    }
+  ],
+  "preserved": [
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Delivery-49-20261124",
+      "unchanged": true,
+      "fileCount": 35,
+      "contentsRead": false
+    },
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Hanlin-AI-20261122",
+      "unchanged": true,
+      "fileCount": 12,
+      "contentsRead": true
+    },
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-HE-RTL-20261123",
+      "unchanged": true,
+      "fileCount": 2,
+      "contentsRead": true
+    },
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Cloud-Release-20261123",
+      "unchanged": true,
+      "fileCount": 18,
+      "contentsRead": true
+    }
+  ],
+  "worktreeClean": true,
+  "pushExecuted": true,
+  "remoteVerified": "https://github.com/davidpovarsky/gsd-iosapp",
+  "remoteBranchAbsentBeforeCommit": true,
+  "reviewedFullPatchSHA256": "71ad7ce66e27e822d1d2578e1275cfbd2ce0f290793d17cc174ede64782a060c",
+  "reviewedReceiptSHA256": "94bbeb53720e1bc0d319d0cc1812a7024894dc4230561cb941d737d6a26a48f2",
+  "publishedUTC": "2026-11-25T06:39:38.984251+00:00",
+  "pushMode": "normal, new branch; no force",
+  "pushExitCode": 0,
+  "remoteSHA": "f56a8acea008336d26ed832ab5fee0525b126023",
+  "upstream": "fork/ci/gsd-widget-final-20261125",
+  "canonicalOrMainMerged": false,
+  "macCommandsExecuted": false,
+  "runnerRegistered": false,
+  "actionsDispatched": false,
+  "originalWorkflowJobsCanonicalLFUnchanged": true,
+  "originalWorkflowJobsCanonicalLFSHA256": "2fff9e2476b934f9c5c6c1251614676d95e58518bb14f27e1f27a673f3403066",
+  "commitURL": "https://github.com/davidpovarsky/gsd-iosapp/commit/f56a8acea008336d26ed832ab5fee0525b126023"
+}

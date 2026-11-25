@@ -1,0 +1,53 @@
+{
+  "completedUTC": "2026-11-25T04:56:23.200046+00:00",
+  "files": [
+    {
+      "name": "widget-3ca-binding.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/runs/ui3ca346ef-widget-w03pmt0k/binding.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-terminal-20261125\\widget-3ca-binding.json",
+      "bytes": 10524,
+      "sha256": "b52ee34c98a52ac548eee30223df460a107d358927e33365b5735129cac9a5e9",
+      "classification": "technical and synthetic Widget acceptance evidence; no account credentials"
+    },
+    {
+      "name": "widget-3ca-observation.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/runs/ui3ca346ef-widget-w03pmt0k/private/widget-ui/widget/observation.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-terminal-20261125\\widget-3ca-observation.json",
+      "bytes": 2589,
+      "sha256": "32a139120901bbe3769a8f46019fd76bc35ec3bb5c34ca3d8e6de387519bf65b",
+      "classification": "technical and synthetic Widget acceptance evidence; no account credentials"
+    },
+    {
+      "name": "widget-3ca-terminal.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/widget-only-runtime-terminal.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-terminal-20261125\\widget-3ca-terminal.json",
+      "bytes": 13095,
+      "sha256": "8e8223d8c5f3682896e388d840d10800fdc762d5966ef54f57c58ca6d0c821d5",
+      "classification": "technical and synthetic Widget acceptance evidence; no account credentials"
+    }
+  ],
+  "allExactBytesVerified": true,
+  "originalsPreserved": true,
+  "testSourceSHA": "3ca346ef595a6a7e062a2a2fc66cbe5b2a76ff2c",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "passed": false,
+  "counts": {
+    "totalTestCount": 1,
+    "passedTests": 0,
+    "failedTests": 1,
+    "skippedTests": 0,
+    "expectedFailures": 0
+  },
+  "lastCapture": "14-installed-widget-refreshed",
+  "failure": "failed: caught error: \"NativeSurfaceFailure(message: \"Widget row tap did not open the task editor.\")\"",
+  "functionalProgress": {
+    "widgetHomeIconWaitSucceeded": true,
+    "installedWidgetDisplayedInitialTask": true,
+    "realWidgetTimelineRefreshObserved": true,
+    "widgetRowOpenedExactTask": null
+  },
+  "ownedSimulatorsRemoved": true,
+  "sourceAndFrozenProductsUnchanged": true,
+  "newRuntimeExecuted": false,
+  "copyCompletionRecovery": "Existing three exact UTF-8 files reused after Windows default-codepage parsing failure; no retransfer."
+}

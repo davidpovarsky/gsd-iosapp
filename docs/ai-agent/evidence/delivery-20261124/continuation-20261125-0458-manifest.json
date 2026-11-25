@@ -1,0 +1,133 @@
+{
+  "schema": "gsd-delivery-evidence-continuation-v1",
+  "preparedUTC": "2026-11-25T05:02:19.024639+00:00",
+  "snapshotCutoffUTC": "2026-11-25T04:57:59.732Z",
+  "baseCommit": "ad5e6641bf8fdcf6943c29c7ae179cdb89b59d2f",
+  "scope": "actual 3ca failed Widget terminal with verified initial display and timeline refresh, cleanup v2, and fresh read-only ASC; documentation only",
+  "testSourceSHA": "3ca346ef595a6a7e062a2a2fc66cbe5b2a76ff2c",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "widgetRuntimeAcceptance": "failed",
+  "widgetRuntimeCounts": {
+    "totalTestCount": 1,
+    "passedTests": 0,
+    "failedTests": 1,
+    "skippedTests": 0,
+    "expectedFailures": 0
+  },
+  "widgetFunctionalProgress": {
+    "widgetHomeIconWaitSucceeded": true,
+    "installedWidgetDisplayedInitialTask": true,
+    "realWidgetTimelineRefreshObserved": true,
+    "widgetRowOpenedExactTask": null
+  },
+  "aggregateWidgetTimelineVerified": false,
+  "widgetFailure": "failed: caught error: \"NativeSurfaceFailure(message: \"Widget row tap did not open the task editor.\")\"",
+  "widgetFinishedUTC": "2026-11-25T04:50:53.735553+00:00",
+  "shareAcceptanceReused": true,
+  "shareTestSourceSHA": "b5588f3f0c42df328dba34024d569be8605e51d0",
+  "shortcutAcceptanceReused": true,
+  "shortcutTestSourceSHA": "7098dcb9abdc2d7e8e20afa8d9ec95d7e69c34ef",
+  "runtimeExecutedByThisDocumentationChange": false,
+  "uploadExecutedByThisDocumentationChange": false,
+  "latestASCReadUTC": "2026-11-25T04:52:48.078803+00:00",
+  "files": [
+    {
+      "name": "widget-3ca-binding.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-terminal-20261125\\widget-3ca-binding.json",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-3ca-binding.json",
+      "bytes": 10524,
+      "sha256": "b52ee34c98a52ac548eee30223df460a107d358927e33365b5735129cac9a5e9",
+      "exactCopy": true,
+      "normalization": null,
+      "classification": "reviewed technical GSD evidence or synthetic acceptance records; no credentials",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/runs/ui3ca346ef-widget-w03pmt0k/binding.json"
+    },
+    {
+      "name": "widget-3ca-observation.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-terminal-20261125\\widget-3ca-observation.json",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-3ca-observation.json",
+      "bytes": 2589,
+      "sha256": "32a139120901bbe3769a8f46019fd76bc35ec3bb5c34ca3d8e6de387519bf65b",
+      "exactCopy": true,
+      "normalization": null,
+      "classification": "reviewed technical GSD evidence or synthetic acceptance records; no credentials",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/runs/ui3ca346ef-widget-w03pmt0k/private/widget-ui/widget/observation.json"
+    },
+    {
+      "name": "widget-3ca-terminal.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-terminal-20261125\\widget-3ca-terminal.json",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-3ca-terminal.json",
+      "bytes": 13095,
+      "sha256": "8e8223d8c5f3682896e388d840d10800fdc762d5966ef54f57c58ca6d0c821d5",
+      "exactCopy": true,
+      "normalization": null,
+      "classification": "reviewed technical GSD evidence or synthetic acceptance records; no credentials",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/widget-only-runtime-terminal.json"
+    },
+    {
+      "name": "widget-3ca-terminal-transfer-manifest.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-terminal-20261125\\completion-manifest.json",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-3ca-terminal-transfer-manifest.json",
+      "bytes": 2602,
+      "sha256": "95920179e258270c12e191cf73e95d0ca469c2ab4da1de077c53106f72cf535c",
+      "exactCopy": true,
+      "normalization": null,
+      "classification": "reviewed technical GSD evidence or synthetic acceptance records; no credentials"
+    },
+    {
+      "name": "asc49-train-readonly-20261125T045248Z.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\asc49-train-readonly-20261125T045248Z.json",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/asc49-train-readonly-20261125T045248Z.json",
+      "bytes": 1491,
+      "sha256": "fbb1b2789a1baad7a5fa9139ca238140c08e900ded9b8d983b198ac78db4e7be",
+      "exactCopy": true,
+      "normalization": null,
+      "classification": "reviewed technical GSD evidence or synthetic acceptance records; no credentials"
+    },
+    {
+      "name": "widget-3ca-inactive-intermediates-cleanup-v2-20261125.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-inactive-intermediates-cleanup-v2-20261125.json",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-3ca-inactive-intermediates-cleanup-v2-20261125.json",
+      "bytes": 23993,
+      "sha256": "db0b96a685692437491e24801261fc7cc108906665c3944c891408ec97c293a3",
+      "exactCopy": true,
+      "normalization": null,
+      "classification": "reviewed technical GSD evidence or synthetic acceptance records; no credentials",
+      "format": "Windows JSON envelope; not a byte copy of the nested Mac receipt",
+      "nestedMacReceipt": {
+        "path": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/maintenance-inactive-caches-v2-hrx7cuc6/receipt.json",
+        "bytes": 22567,
+        "sha256": "b91667226d118dc84d883295b6f4eef49e9aae012c1e0a5f3e98846dc0aeec18"
+      }
+    },
+    {
+      "name": "widget-cleanup-guard-v2-review-receipt.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-cleanup-guard-review-20261125\\review-receipt.json",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-cleanup-guard-v2-review-receipt.json",
+      "bytes": 1668,
+      "sha256": "7a9c20be20f9d9a11943c52e16f622037428d6583d1229124f67a3c4c832f4b5",
+      "exactCopy": true,
+      "normalization": null,
+      "classification": "reviewed technical GSD evidence or synthetic acceptance records; no credentials"
+    }
+  ],
+  "exactCopyCount": 7,
+  "normalizedCopyCount": 0,
+  "originalsPreserved": true,
+  "previousManifests": {
+    "completion-manifest.json": "962447560b2f51792430534676befb608527c09677c3b2feee2b2f7b56365060",
+    "continuation-20261125-0106-manifest.json": "d0f85c760aeac9b31c46b0e2d3a938c4a6198e98cd0bcb8e4a5094ed5108e76c",
+    "continuation-20261125-0225-manifest.json": "e1587bf6a1ba5be31e205de37e180f2c0ce924645dca9ac5db0257e053046d97",
+    "continuation-20261125-0254-manifest.json": "fd62dbe8db03283a5b1fb6a3fac35c7e908b2f64818e58d9d3c75dbdab182164",
+    "continuation-20261125-0324-manifest.json": "5b0ca51eb55faf84426dd40b991c2752b1f3711510f6d58e728fd06aabe982f5",
+    "continuation-20261125-0411-manifest.json": "02651691c1e5e357e00387dd97c204e705fc518b04daccbabdce9c87d29c163e"
+  },
+  "priorRootReviewedReportSHA256": "0b5286836c2a4b7c4925649ca24d3007c79c8ca9fdf547157c071f4cfcc34dec",
+  "pluginMobileFinding": "Official Desktop-only classification excludes mobile; exact GSD package classification cause unresolved, no proven owner-setting fix, no Connect retry",
+  "pluginResearchEvidence": "Primary source links and Asana comment 1220888481711955 in the report; this documentation change did not perform authentication or package mutations",
+  "asana": {
+    "hebrewComment": "1220888482885931",
+    "projectStatus": "1220888467899647",
+    "pluginComment": "1220888481711955"
+  }
+}

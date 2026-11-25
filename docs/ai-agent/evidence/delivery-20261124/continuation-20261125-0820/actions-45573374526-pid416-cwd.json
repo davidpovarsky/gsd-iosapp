@@ -1,0 +1,9 @@
+{
+  "observedUTC": "2026-11-25T08:14:01.830100+00:00",
+  "pid": 416,
+  "operation": "sudo-n-scoped-lsof-cwd",
+  "returncode": 0,
+  "stdout": "p416\nfcwd\nn/\n",
+  "stderr": "",
+  "readOnly": true
+}
