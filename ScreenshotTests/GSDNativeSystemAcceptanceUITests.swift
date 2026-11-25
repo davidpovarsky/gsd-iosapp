@@ -113,8 +113,12 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
         saved.tap()
         let editor = app.descendants(matching: .any).matching(identifier: "task-editor").firstMatch
         try require(editor.waitForExistence(timeout: 10), "Task editor did not open.")
-        let title = app.textFields.matching(NSPredicate(format: "value == %@", initialTitle)).firstMatch
-        try require(title.waitForExistence(timeout: 10) && title.isHittable, "The task title field is unavailable.")
+        let titles = editor.textFields.matching(NSPredicate(format: "placeholderValue == %@", "כותרת"))
+        try require(titles.firstMatch.waitForExistence(timeout: 10) && titles.count == 1,
+                    "The task title field is absent or ambiguous.")
+        let title = titles.element
+        try require(title.isEnabled && title.isHittable && title.value as? String == initialTitle,
+                    "The task title field is unavailable or does not contain the exact original value.")
         title.tap()
         title.typeKey("a", modifierFlags: .command)
         title.typeText(updatedTitle)
