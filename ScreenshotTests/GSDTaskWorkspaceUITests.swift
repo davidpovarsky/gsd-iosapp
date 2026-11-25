@@ -207,13 +207,36 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         due.tap()
         let toggle = app.switches["task-workspace.date.toggle"].firstMatch
         XCTAssertTrue(toggle.waitForExistence(timeout: 10))
-        // A SwiftUI Form can expose both the whole row and the nested UISwitch.
-        // Use the actual native switch when present, including in RTL layouts.
-        let nested = toggle.descendants(matching: .switch).firstMatch
-        let dateSwitch = nested.exists ? nested : toggle
+        // A SwiftUI Form exposes its row and the nested native UISwitch. Require
+        // that actual control and observe its geometry before the native touch.
+        let dateSwitch = toggle.switches.firstMatch
+        XCTAssertTrue(dateSwitch.waitForExistence(timeout: 5))
+        let rowFrame = toggle.frame
+        let switchFrame = dateSwitch.frame
+        XCTAssertTrue(rowFrame.contains(switchFrame) && app.frame.contains(switchFrame))
+        XCTAssertTrue(dateSwitch.isHittable)
         XCTAssertEqual(dateSwitch.value as? String, "1")
-        dateSwitch.tap()
-        XCTAssertEqual(dateSwitch.value as? String, "0", "The date must be disabled before saving")
+        let before = XCTAttachment(string:
+            "row=\(rowFrame) switch=\(switchFrame) app=\(app.frame)\n\(app.debugDescription)")
+        before.name = "native-date-before-toggle-observed-elements"
+        before.lifetime = .keepAlways
+        add(before)
+        capture("03-date-before-toggle")
+        // Use the observed native center and retain the geometry and bounded
+        // state transition together; this makes no assumption about tap timing.
+        dateSwitch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        let disabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "0"), object: toggle)
+        let result = XCTWaiter.wait(for: [disabled], timeout: 5)
+        let after = XCTAttachment(string:
+            "rowValue=\(String(describing: toggle.value)) switchValue=\(String(describing: dateSwitch.value))\n"
+            + app.debugDescription)
+        after.name = "native-date-after-toggle-observed-elements"
+        after.lifetime = .keepAlways
+        add(after)
+        capture("03-date-after-toggle")
+        XCTAssertEqual(result, .completed, "The date must be disabled before saving")
+        XCTAssertEqual(dateSwitch.value as? String, "0")
         app.buttons["task-workspace.date.save"].tap()
         XCTAssertTrue(due.waitForExistence(timeout: 10))
         app.buttons["task-workspace.timeline.close-actions"].tap()
@@ -394,16 +417,22 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
                           "Board scrolling must target its actual vertical task column")
         let column = container.frame
         let viewport = taskViewport(container, in: app).insetBy(dx: 1, dy: 8)
-        let cardElements = container.otherElements.matching(
+        let cardElements = container.descendants(matching: .any).matching(
             NSPredicate(format: "identifier BEGINSWITH %@", "task-workspace.card."))
             .allElementsBoundByIndex
         let cardFrames = cardElements.map(\.frame).filter { !$0.isEmpty }
-        XCTAssertFalse(cardFrames.isEmpty, "The native Board card geometry must be observable")
+        // The upstream card combines its children for accessibility, so its inner
+        // card ID is optional. The observed column's outer 12pt list padding
+        // bounds all resting draggable chrome, even when no inner ID is exposed.
+        let draggableRegion = column.insetBy(dx: 12, dy: 0).intersection(viewport)
+        guard !draggableRegion.isNull && !draggableRegion.isEmpty else {
+            XCTFail("The observed Board column must have a nonempty draggable content region")
+            return
+        }
         // AdvancedKanban's untouched vertical card list has 12pt outer padding.
-        // Each draggable wrapper adds another 12pt around our identified card.
-        // A center swipe hits that wrapper's DragGesture and reorders cards;
-        // scroll through the measured column's outer gutter instead.
-        let chrome = cardFrames.map { $0.insetBy(dx: -12, dy: -12) }
+        // All resting card chrome is inside that content strip. A center swipe
+        // hits its DragGesture and reorders cards; scroll through the measured
+        // column's outer gutter instead.
         let controls = container.buttons.allElementsBoundByIndex.map(\.frame).filter { !$0.isEmpty }
         let startY = viewport.minY + viewport.height * (swipingUp ? 0.8 : 0.2)
         let endY = viewport.minY + viewport.height * (swipingUp ? 0.2 : 0.8)
@@ -413,14 +442,15 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
             let end = CGPoint(x: x, y: endY)
             let path = CGRect(x: x - 1, y: min(startY, endY), width: 2, height: abs(endY - startY))
             return viewport.contains(start) && viewport.contains(end)
-                && !(chrome + controls).contains { $0.intersects(path) }
+                && !([draggableRegion] + cardFrames + controls).contains { $0.intersects(path) }
         }) else {
             XCTFail("A visible Board gutter outside the measured draggable cards is required")
             return
         }
         let observation = XCTAttachment(string:
             "column=\(column) viewport=\(viewport) cards=\(cardFrames) "
-            + "draggableChrome=\(chrome) scroll=(\(x),\(startY))->(\(x),\(endY))")
+            + "draggableRegion=\(draggableRegion) controls=\(controls) "
+            + "scroll=(\(x),\(startY))->(\(x),\(endY))")
         observation.name = "native-board-scroll-gutter"
         observation.lifetime = .keepAlways
         add(observation)

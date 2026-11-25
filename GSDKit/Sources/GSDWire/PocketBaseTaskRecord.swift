@@ -1,8 +1,9 @@
 import Foundation
 import GSDModel
 
-/// The flattened wire form of a `TimeEntry` (§7.1): the wire drops `endedAt`/`notes` and carries
-/// a whole-minute `minutes` duration. `startedAt` is a raw ISO-8601 string (parsed via `WireDate`).
+/// The wire form of a `TimeEntry` retains the whole-minute `minutes` duration for legacy
+/// consumers and carries an optional exact `endedAt` plus `notes`. Date strings use ISO-8601
+/// (parsed via `WireDate`); a missing exact end identifies a legacy minute-only record.
 package struct WireTimeEntry: Codable, Equatable {
     package var id: String
     package var startedAt: String

@@ -55,8 +55,10 @@ struct TaskWireMapperTests {
         ])
         let r = TaskWireMapper.toWire(task, owner: "u", deviceId: "d", defaultReminder: 15)
         #expect(r.timeEntries == [
-            WireTimeEntry(id: "te1", startedAt: "2026-06-15T08:00:00.000Z", minutes: 1),  // floor(95s)
-            WireTimeEntry(id: "te2", startedAt: "2026-06-15T08:00:00.000Z", minutes: 0)   // running → 0
+            WireTimeEntry(id: "te1", startedAt: "2026-06-15T08:00:00.000Z", minutes: 1,
+                          endedAt: "2026-06-15T08:01:35.000Z", notes: "x"),
+            WireTimeEntry(id: "te2", startedAt: "2026-06-15T08:00:00.000Z", minutes: 0,
+                          endedAt: "", notes: nil)  // explicitly running, with legacy minutes 0
         ])
     }
 
@@ -73,8 +75,18 @@ struct TaskWireMapperTests {
         #expect(task.quadrant == Quadrant(urgent: true, important: false))  // recomputed from flags
         #expect(task.parentTaskId == nil)
         #expect(task.timeEntries.count == 1)
-        #expect(task.timeEntries[0].endedAt == start.addingTimeInterval(120))  // synthesized startedAt+minutes
-        #expect(task.timeEntries[0].notes == nil)            // documented loss
+        #expect(task.timeEntries[0].endedAt == start.addingTimeInterval(120))
+        #expect(task.timeEntries[0].notes == "n")             // current wire preserves notes
+
+        // Older records omit the exact end and notes. Their minute-only fallback
+        // remains readable; it must not replace the richer current wire contract.
+        var legacy = wire
+        legacy.timeEntries = [
+            WireTimeEntry(id: "te1", startedAt: "2026-06-15T08:00:00.000Z", minutes: 2)
+        ]
+        let reconstructedLegacy = TaskWireMapper.toDomain(legacy, mergingInto: nil)
+        #expect(reconstructedLegacy.timeEntries[0].endedAt == start.addingTimeInterval(120))
+        #expect(reconstructedLegacy.timeEntries[0].notes == nil)
     }
 
     // MARK: toDomain — merge (local task exists)
@@ -180,7 +192,7 @@ struct TaskWireMapperTests {
 
     // MARK: round-trip
 
-    @Test func roundTripPreservesJoinKeyAndDocumentsLoss() {
+    @Test func roundTripPreservesJoinKeyAndExactTimeEntries() {
         let start = date("2026-06-15T08:00:00.000Z")
         let original = sampleTask(timeEntries: [TimeEntry(id: "te1", startedAt: start,
                                                           endedAt: start.addingTimeInterval(125), notes: "keep?")])
@@ -189,7 +201,7 @@ struct TaskWireMapperTests {
         #expect(restored.id == original.id)                           // Task.id ↔ task_id preserved
         #expect(wire.id == "rec-1" && wire.id != wire.taskId)         // record id kept distinct from join key
         #expect(restored.title == original.title)
-        #expect(restored.timeEntries[0].endedAt == start.addingTimeInterval(120))  // floored to 2 min (loss)
-        #expect(restored.timeEntries[0].notes == nil)                 // notes lost (documented)
+        #expect(wire.timeEntries[0].minutes == 2)                    // legacy whole-minute view
+        #expect(restored.timeEntries == original.timeEntries)        // exact 125s stop and notes
     }
 }

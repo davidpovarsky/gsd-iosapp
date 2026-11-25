@@ -352,7 +352,7 @@ final class GSDSystemSurfaceUITests: XCTestCase {
             ], name: phase + ".matrix-traversal.json")
             if reachedBottom { break }
             previousViewport = viewport
-            if step < 8 { list.swipeUp() }
+            if step < 8 { try scrollMatrixContent(app, list: list, swipingUp: true, phase: phase + "-scroll-\(step)") }
         }
         try capture(app, phase)
         try require(reachedBottom,
@@ -377,9 +377,20 @@ final class GSDSystemSurfaceUITests: XCTestCase {
             try capture(app, "matrix-list-identity-failure")
             throw SystemSurfaceFailure(message: "The observed Matrix CollectionView is not unique.")
         }
-        guard list.wait(for: \.isHittable, toEqual: true, timeout: 15) else {
-            try capture(app, "matrix-list-hittability-failure")
-            throw SystemSurfaceFailure(message: "The observed Matrix CollectionView is not hittable.")
+        // Share dismissal exposed a visible list whose wrapper had no computed
+        // hit point. Establish readiness on actual native content, then prove
+        // scrolling and persistence through the existing outcome assertions.
+        let deadline = Date().addingTimeInterval(15)
+        var contentReady = false
+        repeat {
+            let viewport = try matrixContentViewport(app, list: list)
+            contentReady = !matrixScrollAnchors(list, viewport: viewport).isEmpty
+            if contentReady { break }
+            Thread.sleep(forTimeInterval: 0.2)
+        } while Date() < deadline
+        guard contentReady else {
+            try capture(app, "matrix-content-hittability-failure")
+            throw SystemSurfaceFailure(message: "The observed Matrix has no visible hittable native content.")
         }
         for step in 0...6 {
             let today = list.staticTexts.matching(NSPredicate(format: "label == %@", "היום, 0 מתוך 3"))
@@ -387,9 +398,87 @@ final class GSDSystemSurfaceUITests: XCTestCase {
             let first = list.staticTexts.matching(NSPredicate(format: "label == %@", "לביצוע מיידי"))
                 .allElementsBoundByAccessibilityElement.contains { $0.exists && $0.isHittable }
             if today && first { return list }
-            if step < 6 { list.swipeDown() }
+            if step < 6 { try scrollMatrixContent(app, list: list, swipingUp: false, phase: "matrix-to-top-\(step)") }
         }
         throw SystemSurfaceFailure(message: "Bounded native scrolling did not reveal the Matrix Today and Q1 headings.")
+    }
+
+    private func matrixContentViewport(_ app: XCUIApplication, list: XCUIElement) throws -> CGRect {
+        let visible = list.frame.intersection(app.frame)
+        try require(!visible.isNull && !visible.isEmpty, "The Matrix list has no visible screen intersection.")
+        var top = visible.minY
+        var bottom = visible.maxY
+        let navigation = app.navigationBars.firstMatch
+        if navigation.exists { top = max(top, navigation.frame.maxY) }
+        let captureField = app.textFields["capture-field"]
+        if captureField.exists { top = max(top, captureField.frame.maxY) }
+        let tabs = app.tabBars.firstMatch
+        if tabs.exists { bottom = min(bottom, tabs.frame.minY) }
+        try require(visible.width > 60 && bottom - top > 104,
+                    "The observed Matrix content viewport is too small for a contained native scroll.")
+        let viewport = CGRect(x: visible.minX + 8, y: top + 8,
+                              width: visible.width - 16, height: bottom - top - 16)
+        return viewport
+    }
+
+    private func matrixScrollAnchors(_ list: XCUIElement, viewport: CGRect)
+        -> [(element: XCUIElement, frame: CGRect)] {
+        // Prefer noninteractive native section labels over draggable task rows.
+        // All labels below are already required by the Matrix traversal.
+        let headings = list.staticTexts.matching(NSPredicate(format: "label IN %@",
+            ["היום, 0 מתוך 3", "לביצוע מיידי", "לתכנן", "להעביר לאחרים", "לוותר"] as NSArray))
+        for query in [headings, list.cells] {
+            let anchors = query.allElementsBoundByAccessibilityElement.compactMap { element
+                -> (element: XCUIElement, frame: CGRect)? in
+                guard element.exists, element.isHittable else { return nil }
+                let frame = element.frame
+                guard !frame.isEmpty, viewport.contains(frame) else { return nil }
+                return (element: element, frame: frame)
+            }
+            if !anchors.isEmpty { return anchors }
+        }
+        return []
+    }
+
+    private func scrollMatrixContent(_ app: XCUIApplication, list: XCUIElement,
+                                     swipingUp: Bool, phase: String) throws {
+        let viewport = try matrixContentViewport(app, list: list)
+        let anchors = matrixScrollAnchors(list, viewport: viewport).sorted {
+            swipingUp ? $0.frame.midY > $1.frame.midY : $0.frame.midY < $1.frame.midY
+        }
+        let assistant = app.buttons["hanlin.assistant.open"]
+        let overlay = assistant.exists ? assistant.frame.insetBy(dx: -2, dy: -2) : .null
+        for anchor in anchors {
+            let start = CGPoint(x: anchor.frame.midX, y: anchor.frame.midY)
+            let endY = swipingUp
+                ? max(viewport.minY + 4, start.y - viewport.height * 0.6)
+                : min(viewport.maxY - 4, start.y + viewport.height * 0.6)
+            let end = CGPoint(x: start.x, y: endY)
+            let path = CGRect(x: start.x - 1, y: min(start.y, end.y),
+                              width: 2, height: abs(end.y - start.y))
+            guard viewport.contains(start), viewport.contains(end),
+                  path.height >= 44, !overlay.intersects(path) else { continue }
+            try writeJSON([
+                "listFrame": NSStringFromCGRect(list.frame),
+                "viewport": NSStringFromCGRect(viewport),
+                "anchorFrame": NSStringFromCGRect(anchor.frame),
+                "anchorLabel": anchor.element.label,
+                "anchorIdentifier": anchor.element.identifier,
+                "anchorHittable": anchor.element.isHittable,
+                "assistantFrame": NSStringFromCGRect(overlay),
+                "start": NSStringFromCGPoint(start), "end": NSStringFromCGPoint(end)
+            ], name: phase + ".matrix-scroll.json")
+            try require(anchor.element.isHittable,
+                        "The observed Matrix scroll origin stopped being hittable.")
+            let appFrame = app.frame
+            let origin = app.coordinate(withNormalizedOffset: .zero)
+            let from = origin.withOffset(CGVector(dx: start.x - appFrame.minX, dy: start.y - appFrame.minY))
+            let to = origin.withOffset(CGVector(dx: end.x - appFrame.minX, dy: end.y - appFrame.minY))
+            from.press(forDuration: 0.01, thenDragTo: to)
+            return
+        }
+        try capture(app, phase + "-no-contained-scroll-origin")
+        throw SystemSurfaceFailure(message: "No measured hittable Matrix content origin has a contained native scroll path.")
     }
 
     private func relaunch(_ app: XCUIApplication, captureName: String) throws {

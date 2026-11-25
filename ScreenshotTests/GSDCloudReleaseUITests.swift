@@ -232,6 +232,56 @@ final class GSDCloudReleaseUITests: XCTestCase {
         }
     }
 
+    private func tapContextBackdrop(_ app: XCUIApplication, menuAction: XCUIElement) throws {
+        // Resolve a coordinate through the visible menu's native window, not the
+        // application root. Keep one physical tap and the caller's dismissal gate.
+        let preview = app.otherElements.matching(
+            NSPredicate(format: "label == %@", label("Preview", "תצוגה מקדימה"))
+        ).firstMatch
+        let menu = app.collectionViews.containing(.button, identifier: menuAction.label).firstMatch
+        let window = app.windows.containing(.button, identifier: menuAction.label).firstMatch
+        try requireAcceptance(preview.exists && menu.exists && window.exists,
+                              "Context menu preview, collection, or owning window missing")
+        try requireAcceptance(menuAction.isHittable, "Context menu anchor is not hittable")
+        let windowFrame = window.frame
+        let previewFrame = preview.frame
+        let actionFrame = menuAction.frame
+        let menuFrames = menu.buttons.allElementsBoundByIndex.map { $0.frame }
+            .filter { !$0.isEmpty && !$0.isNull && $0.intersects(windowFrame) }
+        try requireAcceptance(!menuFrames.isEmpty, "Context menu action frames missing")
+        let menuFrame = menuFrames.reduce(CGRect.null) { $0.union($1) }
+        let excluded = previewFrame.union(menuFrame).insetBy(dx: -24, dy: -24)
+        let viewport = windowFrame.insetBy(dx: 24, dy: 24)
+        let backdrop = CGRect(x: viewport.minX, y: viewport.minY,
+                              width: viewport.width, height: excluded.minY - viewport.minY)
+        try requireAcceptance(backdrop.width >= 44 && backdrop.height >= 44,
+                              "Measured context-menu backdrop has no usable interior")
+        let point = CGPoint(x: min(max(previewFrame.midX, backdrop.minX + 22), backdrop.maxX - 22),
+                            y: backdrop.midY)
+        try requireAcceptance(viewport.contains(point) && !excluded.contains(point),
+                              "Context backdrop point overlaps menu/preview or leaves the window")
+        let coordinate = menuAction.coordinate(withNormalizedOffset: .zero)
+            .withOffset(CGVector(dx: point.x - actionFrame.minX, dy: point.y - actionFrame.minY))
+        let resolved = coordinate.screenPoint
+        try requireAcceptance(abs(resolved.x - point.x) < 1 && abs(resolved.y - point.y) < 1,
+                              "Native context coordinate disagrees with measured backdrop")
+        let geometry: [String: Any] = [
+            "schemaVersion": 1, "language": language,
+            "anchorIdentifier": menuAction.identifier, "anchorLabel": menuAction.label,
+            "windowFrame": captureFrame(windowFrame), "previewFrame": captureFrame(previewFrame),
+            "menuFrame": captureFrame(menuFrame), "actionFrame": captureFrame(actionFrame),
+            "backdropFrame": captureFrame(backdrop), "excludedFrame": captureFrame(excluded),
+            "point": ["x": Double(point.x), "y": Double(point.y)],
+            "resolvedPoint": ["x": Double(resolved.x), "y": Double(resolved.y)]
+        ]
+        let data = try JSONSerialization.data(withJSONObject: geometry, options: [.prettyPrinted, .sortedKeys])
+        let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+        attachment.name = "\(language)-03-context-backdrop-observed-elements"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        coordinate.tap()
+    }
+
     func test01LocalizedNavigationEditorChartsAndRTL() throws {
         let app = application(demo: true)
         app.launch()
@@ -280,12 +330,11 @@ final class GSDCloudReleaseUITests: XCTestCase {
         XCTAssertTrue(completeAction.waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons[label("Delete", "מחיקה")].exists)
         try capture(app, "03-context-menu")
-        // The Hebrew iPad preview leaves a clear interior backdrop above the card.
-        // The edge tap can be intercepted by the system in this layout.
-        let backdrop = hebrew && UIDevice.current.userInterfaceIdiom == .pad
-            ? CGVector(dx: 0.50, dy: 0.22)
-            : CGVector(dx: 0.02, dy: 0.50)
-        app.coordinate(withNormalizedOffset: backdrop).tap()
+        if hebrew && UIDevice.current.userInterfaceIdiom == .pad {
+            try tapContextBackdrop(app, menuAction: completeAction)
+        } else {
+            app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.50)).tap()
+        }
         XCTAssertTrue(completeAction.waitForNonExistence(timeout: 5), "Context menu did not dismiss")
         try navigate(app, label("Dashboard", "לוח בקרה"))
         try capture(app, "04-dashboard-diagnostic-before-assertion")
