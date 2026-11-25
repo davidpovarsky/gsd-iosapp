@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "sourceSHA": "b5588f3f0c42df328dba34024d569be8605e51d0",
+  "manifestSHA256": "605a5631510c1632d690dac26a2b71132237065fbfb7a9b54c081dbe412d2a8a",
+  "build": "49",
+  "compiler": "Xcode 27.1\nBuild version 27A9275",
+  "driver": "Xcode 27.0\nBuild version 27A266a",
+  "passed": true,
+  "accountGrantVerified": false,
+  "fullSystemSurfaceCoverage": false,
+  "suites": {
+    "share": {
+      "passed": true,
+      "simulatorID": "9C36F613-2EAD-4A89-926B-AC9A6ECEC95E",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-2",
+      "runtimeBuild": "24B8117",
+      "test": {
+        "selectedTests": [
+          "GSDSystemSurfaceUITests/test00RecordSystemSurfaceDiscovery",
+          "GSDSystemSurfaceUITests/test01TextShareExtensionRoundTripAndCancellation"
+        ],
+        "totalTestCount": 2,
+        "passedTests": 2,
+        "failedTests": 0,
+        "skippedTests": 0,
+        "expectedFailures": 0
+      },
+      "scope": "real_text_share_add_cancel_and_persistence",
+      "fullSystemSurfaceCoverage": false,
+      "accountGrantVerified": false,
+      "ownedDevicesRemoved": true
+    }
+  },
+  "productsUnchanged": true,
+  "ownedSimulatorsRemoved": true,
+  "completedAt": "2026-11-25T00:44:37.778196+00:00"
+}

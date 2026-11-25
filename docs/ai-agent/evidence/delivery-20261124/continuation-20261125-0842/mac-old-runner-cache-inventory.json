@@ -1,0 +1,237 @@
+{
+  "observedUTC": "2026-11-25T08:42:57.770552+00:00",
+  "installation": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2",
+  "currentWorkFolderExcluded": "_widget_final_fd6e_v3",
+  "readOnly": true,
+  "sourceContentsRead": false,
+  "cachePathBasis": {
+    "sourceSHA": "71b1b7ce4adf7bea2ddacfc683a69906d6acd6ae",
+    "workflowSHA256": "b0b49cbfbc9d8f34db64db5eaa7f007049859c670848428f9276690159653720",
+    "relativePaths": [
+      ".gsd-release-derived",
+      ".gsd-signed-derived"
+    ]
+  },
+  "derived": [
+    {
+      "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived",
+      "ownerRunID": "45397928701",
+      "exists": true,
+      "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived",
+      "uid": 501,
+      "dev": 16777232,
+      "inode": 1367444,
+      "mode": 16384,
+      "mtimeNs": 1795525033282689138,
+      "symlink": false,
+      "allocatedBytes": 1574563840,
+      "immediateDirectories": [
+        "SDKStatCaches.noindex",
+        "Index.noindex",
+        "SourcePackages",
+        "SDKExplicitPrecompiledModules",
+        "Logs",
+        "ModuleCache.noindex",
+        "CompilationCache.noindex",
+        "Build"
+      ],
+      "cacheCandidates": [
+        {
+          "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/Build/Intermediates.noindex",
+          "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/Build/Intermediates.noindex",
+          "uid": 501,
+          "dev": 16777232,
+          "inode": 1373798,
+          "mode": 16384,
+          "mtimeNs": 1795525030555988917,
+          "symlink": false,
+          "allocatedBytes": 382640128,
+          "classification": "reproducible-intermediate-candidate-only",
+          "deletionAuthorized": false
+        },
+        {
+          "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/ModuleCache.noindex",
+          "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/ModuleCache.noindex",
+          "uid": 501,
+          "dev": 16777232,
+          "inode": 1374354,
+          "mode": 16384,
+          "mtimeNs": 1795525072020582035,
+          "symlink": false,
+          "allocatedBytes": 121733120,
+          "classification": "reproducible-intermediate-candidate-only",
+          "deletionAuthorized": false
+        },
+        {
+          "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/Index.noindex",
+          "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/Index.noindex",
+          "uid": 501,
+          "dev": 16777232,
+          "inode": 1375495,
+          "mode": 16384,
+          "mtimeNs": 1795525033282731971,
+          "symlink": false,
+          "allocatedBytes": 75042816,
+          "classification": "reproducible-intermediate-candidate-only",
+          "deletionAuthorized": false
+        },
+        {
+          "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/CompilationCache.noindex",
+          "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/CompilationCache.noindex",
+          "uid": 501,
+          "dev": 16777232,
+          "inode": 1374356,
+          "mode": 16384,
+          "mtimeNs": 1795525030389321039,
+          "symlink": false,
+          "allocatedBytes": 28672,
+          "classification": "reproducible-intermediate-candidate-only",
+          "deletionAuthorized": false
+        },
+        {
+          "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/SDKStatCaches.noindex",
+          "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/SDKStatCaches.noindex",
+          "uid": 501,
+          "dev": 16777232,
+          "inode": 1374373,
+          "mode": 16384,
+          "mtimeNs": 1795525030752264679,
+          "symlink": false,
+          "allocatedBytes": 2715648,
+          "classification": "reproducible-intermediate-candidate-only",
+          "deletionAuthorized": false
+        }
+      ],
+      "productsProtected": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/Build/Products"
+    },
+    {
+      "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived",
+      "ownerRunID": "45401779393",
+      "exists": true,
+      "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived",
+      "uid": 501,
+      "dev": 16777232,
+      "inode": 1529630,
+      "mode": 16384,
+      "mtimeNs": 1795526270616353752,
+      "symlink": false,
+      "allocatedBytes": 1555648512,
+      "immediateDirectories": [
+        "SDKStatCaches.noindex",
+        "SourcePackages",
+        "SDKExplicitPrecompiledModules",
+        "Logs",
+        "ModuleCache.noindex",
+        "CompilationCache.noindex",
+        "Build"
+      ],
+      "cacheCandidates": [
+        {
+          "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived/Build/Intermediates.noindex",
+          "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived/Build/Intermediates.noindex",
+          "uid": 501,
+          "dev": 16777232,
+          "inode": 1538808,
+          "mode": 16384,
+          "mtimeNs": 1795526268814577851,
+          "symlink": false,
+          "allocatedBytes": 526606336,
+          "classification": "reproducible-intermediate-candidate-only",
+          "deletionAuthorized": false
+        },
+        {
+          "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived/ModuleCache.noindex",
+          "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived/ModuleCache.noindex",
+          "uid": 501,
+          "dev": 16777232,
+          "inode": 1539797,
+          "mode": 16384,
+          "mtimeNs": 1795526354005696395,
+          "symlink": false,
+          "allocatedBytes": 131399680,
+          "classification": "reproducible-intermediate-candidate-only",
+          "deletionAuthorized": false
+        },
+        {
+          "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived/CompilationCache.noindex",
+          "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived/CompilationCache.noindex",
+          "uid": 501,
+          "dev": 16777232,
+          "inode": 1539799,
+          "mode": 16384,
+          "mtimeNs": 1795526270525918710,
+          "symlink": false,
+          "allocatedBytes": 28672,
+          "classification": "reproducible-intermediate-candidate-only",
+          "deletionAuthorized": false
+        },
+        {
+          "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived/SDKStatCaches.noindex",
+          "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived/SDKStatCaches.noindex",
+          "uid": 501,
+          "dev": 16777232,
+          "inode": 1539816,
+          "mode": 16384,
+          "mtimeNs": 1795526271101368705,
+          "symlink": false,
+          "allocatedBytes": 2764800,
+          "classification": "reproducible-intermediate-candidate-only",
+          "deletionAuthorized": false
+        }
+      ],
+      "productsProtected": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived/Build/Products"
+    }
+  ],
+  "oldTemp": [
+    {
+      "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/_temp",
+      "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/_temp",
+      "uid": 501,
+      "dev": 16777232,
+      "inode": 1332145,
+      "mode": 16384,
+      "mtimeNs": 1795526125180628467,
+      "symlink": false,
+      "allocatedBytes": 0,
+      "entries": []
+    },
+    {
+      "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/_temp",
+      "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/_temp",
+      "uid": 501,
+      "dev": 16777232,
+      "inode": 1524910,
+      "mode": 16384,
+      "mtimeNs": 1795526936426026165,
+      "symlink": false,
+      "allocatedBytes": 0,
+      "entries": []
+    },
+    {
+      "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_watch_work_20261124/_temp",
+      "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_watch_work_20261124/_temp",
+      "uid": 501,
+      "dev": 16777232,
+      "inode": 2211854,
+      "mode": 16384,
+      "mtimeNs": 1795533584743466154,
+      "symlink": false,
+      "allocatedBytes": 0,
+      "entries": []
+    },
+    {
+      "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_widget_final_fd6e2944/_temp",
+      "realpath": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_widget_final_fd6e2944/_temp",
+      "uid": 501,
+      "dev": 16777232,
+      "inode": 24491457,
+      "mode": 16384,
+      "mtimeNs": 1795593982430574378,
+      "symlink": false,
+      "allocatedBytes": 0,
+      "entries": []
+    }
+  ],
+  "availableBytes": 6049550336,
+  "noDeletionPerformed": true
+}

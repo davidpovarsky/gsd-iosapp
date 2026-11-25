@@ -1,0 +1,105 @@
+{
+  "baseProductionSourceSHA" : "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "diagnosticActualWidgetTapCompleted" : true,
+  "diagnosticAppForeground" : true,
+  "diagnosticEditorOpened" : false,
+  "diagnosticInstalledWidgetDisplayedTask" : true,
+  "diagnosticNonce" : "80ECC8BB",
+  "diagnosticOnly" : true,
+  "diagnosticSourceSHA" : "620d66f2c0ef3368ec772b236450873a01e74b73",
+  "diagnosticTapControl" : {
+    "elementType" : 9,
+    "enabled" : true,
+    "hittable" : true,
+    "identifier" : "",
+    "label" : "GSD-Widget-D-80ECC8BB",
+    "selected" : false,
+    "value" : ""
+  },
+  "lastCapture" : "15-route-after-editor-wait",
+  "passed" : false,
+  "personalAccountUsed" : false,
+  "productionAcceptance" : false,
+  "schemaVersion" : 1,
+  "scope" : "diagnostic_only_native_widget_row_route",
+  "shortcutInvoked" : false,
+  "simulatorID" : "4467FB8E-0161-4A9E-BF0E-8433A2396DDE",
+  "siriVerified" : false,
+  "taskCardID" : "task-card-aHomygN0Bfh2",
+  "voiceOverSpeechVerified" : false,
+  "watchConnectivityVerified" : false,
+  "widgetGalleryControls" : [
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "com.apple.springboardhome.application-shortcut-item.rearrange-icons",
+      "label" : "עריכת מסך הבית",
+      "selected" : false,
+      "stage" : "11-widget-gallery-00-context-menu",
+      "value" : ""
+    },
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "עריכה",
+      "selected" : false,
+      "stage" : "11-widget-gallery-01-edit-mode",
+      "value" : ""
+    },
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "הוספת וידג׳ט",
+      "selected" : false,
+      "stage" : "11-widget-gallery-02-edit-menu",
+      "value" : ""
+    },
+    {
+      "elementType" : 45,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "חיפוש וידג׳טים",
+      "selected" : false,
+      "stage" : "11-widget-gallery-03-search",
+      "value" : "חיפוש וידג׳טים"
+    },
+    {
+      "elementType" : 75,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "GSD",
+      "selected" : false,
+      "stage" : "11-widget-gallery-04-gsd-results",
+      "value" : ""
+    },
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : " הוספת הווידג׳ט",
+      "selected" : false,
+      "stage" : "11-widget-gallery-05-install-ready",
+      "value" : ""
+    }
+  ],
+  "widgetGalleryFamilyControls" : [
+
+  ],
+  "widgetGalleryFamilySelectionMode" : "native_default_preview",
+  "widgetGalleryInstallationRequested" : true,
+  "widgetGalleryPreviewNames" : [
+    "GSD",
+    "המיקוד להיום"
+  ],
+  "widgetGallerySelectedFamily" : "unknown\/default",
+  "widgetHomeIconExists" : true,
+  "widgetHomeIconWaitSucceeded" : true
+}

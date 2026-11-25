@@ -1,0 +1,595 @@
+{
+  "receiptPath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/maintenance-inactive-caches-v2-hrx7cuc6/receipt.json",
+  "receiptBytes": 22567,
+  "receiptSHA256": "b91667226d118dc84d883295b6f4eef49e9aae012c1e0a5f3e98846dc0aeec18",
+  "receipt": {
+    "schema": "gsd-owned-intermediate-maintenance-v1",
+    "startedUTC": "2026-11-25T04:45:56.936377+00:00",
+    "authorizationScope": "20 exact inactive simulator intermediate/cache directories from approved inventory",
+    "inventorySHA256": "a7efb99852d1f6519301425ff301733ae8654b4ab504bd7472125ab65400475e",
+    "owner": "/root/native_reconcile",
+    "runtimeControllerUnchanged": true,
+    "results": [
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/Build/Intermediates.noindex",
+        "result": "skipped",
+        "reason": "lease_or_owner_uncertain"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/Index.noindex",
+        "result": "skipped",
+        "reason": "lease_or_owner_uncertain"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/ModuleCache.noindex",
+        "result": "skipped",
+        "reason": "lease_or_owner_uncertain"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/CompilationCache.noindex",
+        "result": "skipped",
+        "reason": "lease_or_owner_uncertain"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/SDKStatCaches.noindex",
+        "result": "skipped",
+        "reason": "lease_or_owner_uncertain"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-3c552350-20261124/derived-sim/Build/Intermediates.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 459526144,
+        "diskAvailableBeforeBytes": 8153845760,
+        "diskAvailableAfterBytes": 8511176704,
+        "guardedMetadataSHA256": "e29354d263d63ec02d297a5e74f8e739c74ddddd0d502976ac15fa5140102ce9",
+        "guardedEntries": 9431,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:03.287922+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-3c552350-20261124/derived-sim/Index.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 73359360,
+        "diskAvailableBeforeBytes": 8510697472,
+        "diskAvailableAfterBytes": 8515493888,
+        "guardedMetadataSHA256": "64a6a5cb5f7038a1b70505214590197d597e106b5015e1e32cbd998b8a267ced",
+        "guardedEntries": 6892,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:04.574670+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-3c552350-20261124/derived-sim/ModuleCache.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 363397120,
+        "diskAvailableBeforeBytes": 8519438336,
+        "diskAvailableAfterBytes": 8518799360,
+        "guardedMetadataSHA256": "181a26a754c05b7d3e449d4ddd165230511220e70f6f8858788217afdf6a8f84",
+        "guardedEntries": 4073,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:05.555142+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-3c552350-20261124/derived-sim/CompilationCache.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 28672,
+        "diskAvailableBeforeBytes": 8518623232,
+        "diskAvailableAfterBytes": 8518656000,
+        "guardedMetadataSHA256": "532ebb1ff4331933b55a6858066807e6d7e702ac3a484382d300b0fedca6f290",
+        "guardedEntries": 9,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:06.081517+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-3c552350-20261124/derived-sim/SDKStatCaches.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 2715648,
+        "diskAvailableBeforeBytes": 8518430720,
+        "diskAvailableAfterBytes": 8518463488,
+        "guardedMetadataSHA256": "7913a07bcaab7a13212c2afccb35f6379d43f7d2278176f32d6e6d3281145ada",
+        "guardedEntries": 2,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:06.280013+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/derived-sim/Build/Intermediates.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 471179264,
+        "diskAvailableBeforeBytes": 8601915392,
+        "diskAvailableAfterBytes": 9002151936,
+        "guardedMetadataSHA256": "92f34dd04aa05ac6abc5c4805cf168d3806452cc25f95d5bcedf25ca1c5ea3cf",
+        "guardedEntries": 9482,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:06.487593+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/derived-sim/Index.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 73969664,
+        "diskAvailableBeforeBytes": 9002209280,
+        "diskAvailableAfterBytes": 9007939584,
+        "guardedMetadataSHA256": "7f5eabdf38b4c6c5a951d2ebb743b5b1ec6666be520f86400b628221ce9806c5",
+        "guardedEntries": 6974,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:07.806625+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/derived-sim/ModuleCache.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 484532224,
+        "diskAvailableBeforeBytes": 8882253824,
+        "diskAvailableAfterBytes": 9106354176,
+        "guardedMetadataSHA256": "65d6ddb6eb6aa1c92c5d6f8e0a77a55a59be84afd3365baf92adac5d17e80690",
+        "guardedEntries": 5430,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:08.830356+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/derived-sim/CompilationCache.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 28672,
+        "diskAvailableBeforeBytes": 9105661952,
+        "diskAvailableAfterBytes": 9105661952,
+        "guardedMetadataSHA256": "fc062f7fe27b0ebe6f495f767ff54e5fad5e0a3a6c5a917b40163fd1af96d6ac",
+        "guardedEntries": 9,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:09.534813+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/derived-sim/SDKStatCaches.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 2715648,
+        "diskAvailableBeforeBytes": 9040498688,
+        "diskAvailableAfterBytes": 9040531456,
+        "guardedMetadataSHA256": "a531768901665f24386e125d7e27863a57d12880640911a836b627ff08eccb4f",
+        "guardedEntries": 2,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:09.770381+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-sim/Build/Intermediates.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 426713088,
+        "diskAvailableBeforeBytes": 9041620992,
+        "diskAvailableAfterBytes": 9403613184,
+        "guardedMetadataSHA256": "c4a7359392755358ea28033e8a692c3b23d57945f6d620e4c1a90f0454eeb07f",
+        "guardedEntries": 9116,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:09.989710+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-sim/Index.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 72699904,
+        "diskAvailableBeforeBytes": 9404895232,
+        "diskAvailableAfterBytes": 9410064384,
+        "guardedMetadataSHA256": "6c4648eaf625654555e7ee472a2a5c34bbe0c8671c043c2d646e1e5b2dcdd422",
+        "guardedEntries": 6808,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:11.188255+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-sim/ModuleCache.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 242262016,
+        "diskAvailableBeforeBytes": 9281961984,
+        "diskAvailableAfterBytes": 9402662912,
+        "guardedMetadataSHA256": "80e727d7772a54ddfb379c6de3b36f546e14f7395772dcd36059585dc3fcbc19",
+        "guardedEntries": 2716,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:12.200848+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-sim/CompilationCache.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 28672,
+        "diskAvailableBeforeBytes": 9402175488,
+        "diskAvailableAfterBytes": 9402208256,
+        "guardedMetadataSHA256": "adad29aea509b1806aa54ffc50df87c11e0c63aa9400e3a8d524f69afc6f76fd",
+        "guardedEntries": 9,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:12.779204+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-sim/SDKStatCaches.noindex",
+        "result": "removed_regenerable_intermediates",
+        "allocatedBytesAtGuard": 2715648,
+        "diskAvailableBeforeBytes": 9659535360,
+        "diskAvailableAfterBytes": 9659568128,
+        "guardedMetadataSHA256": "7f1d7ad79e47f01d5acadbaaf53126f1ea0c0ff31af63b1fdda6cd7a9d55239f",
+        "guardedEntries": 2,
+        "ownership": {
+          "observedUTC": "2026-11-25T04:46:13.005100+00:00",
+          "processes": [],
+          "openHandles": [],
+          "complete": true
+        }
+      }
+    ],
+    "guardedRecoveryInputs": [
+      {
+        "root": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r",
+        "manifestPath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/local-products.json",
+        "manifestSHA256": "d92f278855c3a37ad2b94e099db99e4df2203685e09b0d5fe2f6adc66ce147eb",
+        "sourceSHA": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+        "repoRoot": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/source",
+        "pinnedCommitObjectAvailable": true,
+        "sdkLockSHA256": "547ff0ab3f548296079b4a5ecc0c5fbfdf513d621209197f498b1ae21c200ed9",
+        "projectSHA256": "ad5502cde7ae689dab4f4d730fc9f19bbf7713b8fb5a04f9fa2b8d3656062a82",
+        "recoveryInputsMatch": true
+      },
+      {
+        "root": "/Users/m1/builds/gsd49-watch-ee5e95-20261124",
+        "manifestPath": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence/local-products.json",
+        "manifestSHA256": "3660604deb7073b61544ae068d5433346816bc4e433665b97d67b07cdd20435d",
+        "sourceSHA": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+        "repoRoot": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/source",
+        "pinnedCommitObjectAvailable": true,
+        "sdkLockSHA256": "547ff0ab3f548296079b4a5ecc0c5fbfdf513d621209197f498b1ae21c200ed9",
+        "projectSHA256": "ad5502cde7ae689dab4f4d730fc9f19bbf7713b8fb5a04f9fa2b8d3656062a82",
+        "recoveryInputsMatch": true
+      },
+      {
+        "root": "/Users/m1/builds/gsd49-share-3c552350-20261124",
+        "manifestPath": "/Users/m1/builds/gsd49-share-3c552350-20261124/evidence/local-products.json",
+        "manifestSHA256": "af52024f2f80ca76b0a3d89a3e4bbaf9af6ffc67bcdc3f433afd2fdc3825e8b9",
+        "sourceSHA": "3c55235035560873d9263dcba6229d9e87919412",
+        "repoRoot": "/Users/m1/builds/gsd49-share-3c552350-20261124/source",
+        "pinnedCommitObjectAvailable": true,
+        "sdkLockSHA256": "547ff0ab3f548296079b4a5ecc0c5fbfdf513d621209197f498b1ae21c200ed9",
+        "projectSHA256": "ad5502cde7ae689dab4f4d730fc9f19bbf7713b8fb5a04f9fa2b8d3656062a82",
+        "recoveryInputsMatch": true
+      },
+      {
+        "root": "/Users/m1/builds/gsd49-share-9f2736d3-20261124",
+        "manifestPath": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/evidence/local-products.json",
+        "manifestSHA256": "38aae93e3330893c26c1ce837a05af933b1d2115b69b01b0ea67f0e8fb2eb67f",
+        "sourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+        "repoRoot": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/source",
+        "pinnedCommitObjectAvailable": true,
+        "sdkLockSHA256": "547ff0ab3f548296079b4a5ecc0c5fbfdf513d621209197f498b1ae21c200ed9",
+        "projectSHA256": "ad5502cde7ae689dab4f4d730fc9f19bbf7713b8fb5a04f9fa2b8d3656062a82",
+        "recoveryInputsMatch": true
+      }
+    ],
+    "preservedProducts": [
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/Build/Products",
+        "before": {
+          "sha256": "769127ee5662da46a086cbb168006a4439e83b9658be6c42b0b88279b5c5fcb1",
+          "entries": 585,
+          "contentHashes": true
+        },
+        "after": {
+          "sha256": "769127ee5662da46a086cbb168006a4439e83b9658be6c42b0b88279b5c5fcb1",
+          "entries": 585,
+          "contentHashes": true
+        },
+        "unchanged": true
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-sim/Build/Products",
+        "before": {
+          "sha256": "b81997d2f2b38b76e40f14c2a36d67b8ee70d9d30cd8bceee10713e4cf89df9d",
+          "entries": 587,
+          "contentHashes": true
+        },
+        "after": {
+          "sha256": "b81997d2f2b38b76e40f14c2a36d67b8ee70d9d30cd8bceee10713e4cf89df9d",
+          "entries": 587,
+          "contentHashes": true
+        },
+        "unchanged": true
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-3c552350-20261124/derived-sim/Build/Products",
+        "before": {
+          "sha256": "65ea8e917ed43467932927ef226ed9a244945be6867906910b0f2ab8678b53f3",
+          "entries": 589,
+          "contentHashes": true
+        },
+        "after": {
+          "sha256": "65ea8e917ed43467932927ef226ed9a244945be6867906910b0f2ab8678b53f3",
+          "entries": 589,
+          "contentHashes": true
+        },
+        "unchanged": true
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/derived-sim/Build/Products",
+        "before": {
+          "sha256": "f8b862b22b34cf008c9db39f87b04ee1f7fc087f72789c822e40b5f2519ba942",
+          "entries": 591,
+          "contentHashes": true
+        },
+        "after": {
+          "sha256": "f8b862b22b34cf008c9db39f87b04ee1f7fc087f72789c822e40b5f2519ba942",
+          "entries": 591,
+          "contentHashes": true
+        },
+        "unchanged": true
+      }
+    ],
+    "preservedEvidenceMetadata": [
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence",
+        "before": {
+          "sha256": "718fed615e5827409fa94ff1dd00234033e822d6887f1eac063055fd8bab1730",
+          "entries": 878,
+          "contentHashes": false
+        },
+        "after": {
+          "sha256": "718fed615e5827409fa94ff1dd00234033e822d6887f1eac063055fd8bab1730",
+          "entries": 878,
+          "contentHashes": false
+        },
+        "unchanged": true
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence",
+        "before": {
+          "sha256": "cc8be9e42e30b6de95ccd0b4bfe9b1aca108429f9b4638815e2603cc6474adcc",
+          "entries": 71,
+          "contentHashes": false
+        },
+        "after": {
+          "sha256": "cc8be9e42e30b6de95ccd0b4bfe9b1aca108429f9b4638815e2603cc6474adcc",
+          "entries": 71,
+          "contentHashes": false
+        },
+        "unchanged": true
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-3c552350-20261124/evidence",
+        "before": {
+          "sha256": "a69903d379ddd7f6fded3124a99730d7dea23cbb7fddefcdc0e7b5cba38d20c1",
+          "entries": 158,
+          "contentHashes": false
+        },
+        "after": {
+          "sha256": "a69903d379ddd7f6fded3124a99730d7dea23cbb7fddefcdc0e7b5cba38d20c1",
+          "entries": 158,
+          "contentHashes": false
+        },
+        "unchanged": true
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/evidence",
+        "before": {
+          "sha256": "7bebad1d913c24c5cd10b6673584fc6b729eed325b3a8076ca9a83989ebc95f5",
+          "entries": 188,
+          "contentHashes": false
+        },
+        "after": {
+          "sha256": "7bebad1d913c24c5cd10b6673584fc6b729eed325b3a8076ca9a83989ebc95f5",
+          "entries": 188,
+          "contentHashes": false
+        },
+        "unchanged": true
+      }
+    ],
+    "leases": [
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/oracle-owner-zero.json",
+        "isFile": true,
+        "symlink": false,
+        "bytes": 644,
+        "sha256": "a10be64a80ef745d7191a5a1c8da8419559a4b7d933cca137ab3e089cbf877f2",
+        "phase": null,
+        "finishedUTC": null,
+        "recordedPIDs": [],
+        "liveRecordedPIDs": [],
+        "uncertain": true
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/evidence/release49-archive-claim.json",
+        "isFile": true,
+        "symlink": false,
+        "bytes": 7214,
+        "sha256": "14add2ebd2dff4e6ee4a6762adad97fb0af30a1290b38aeb963aa3e604d9300f",
+        "phase": "complete",
+        "finishedUTC": "2026-11-25T02:24:43.584230+00:00",
+        "recordedPIDs": [
+          47341,
+          48121
+        ],
+        "liveRecordedPIDs": []
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/evidence/release49-cache-owner-terminal.json",
+        "isFile": true,
+        "symlink": false,
+        "bytes": 329,
+        "sha256": "d51148561e1587c0cc13a057cc0bcc615f215b6eac1b031dbe811accac16c802",
+        "phase": null,
+        "finishedUTC": "2026-11-25T02:24:43.819130+00:00",
+        "recordedPIDs": [
+          47341
+        ],
+        "liveRecordedPIDs": []
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/evidence/release49-archive-dispatch.json",
+        "isFile": true,
+        "symlink": false,
+        "bytes": 949,
+        "sha256": "8518624b62662c7e1558c2119dc9f5b415b743448bae591877849133266ce195",
+        "phase": "prepared",
+        "finishedUTC": null,
+        "recordedPIDs": [
+          47341
+        ],
+        "liveRecordedPIDs": [],
+        "terminalResolution": {
+          "dispatchSHA256": "8518624b62662c7e1558c2119dc9f5b415b743448bae591877849133266ce195",
+          "terminalSHA256": "14add2ebd2dff4e6ee4a6762adad97fb0af30a1290b38aeb963aa3e604d9300f",
+          "cacheTerminalSHA256": "d51148561e1587c0cc13a057cc0bcc615f215b6eac1b031dbe811accac16c802",
+          "actualCachePath": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-device",
+          "recordedPIDs": [
+            47341,
+            48121
+          ],
+          "recordedPIDsDead": true,
+          "cacheClaimReleased": true,
+          "terminalFinishedUTC": "2026-11-25T02:24:43.584230+00:00"
+        }
+      }
+    ],
+    "deletedAllocatedBytes": 2675871744,
+    "safeScopeCompleted": true,
+    "diskAvailableBeforeBytes": 8132505600,
+    "signedIPABeforeSHA256": "1a5f770ca236fe43d0091fe0d649f9a266a78dfb6106f8a3545a2cd99db93c69",
+    "initialOwnership": {
+      "observedUTC": "2026-11-25T04:46:03.097482+00:00",
+      "processes": [],
+      "openHandles": [],
+      "complete": true
+    },
+    "signedIPAAfterSHA256": "1a5f770ca236fe43d0091fe0d649f9a266a78dfb6106f8a3545a2cd99db93c69",
+    "finishedUTC": "2026-11-25T04:46:14.734266+00:00",
+    "diskAvailableAfterBytes": 9656012800,
+    "observedVolumeFreeDeltaBytes": 1523507200,
+    "currentWidgetClaim": {
+      "sha256": "ac676bb1a44debbf2a00d2b06f964177f0856ebb16db222162a15d7c48663c42",
+      "phase": "running_widget",
+      "cases": {
+        "widget": {
+          "kind": "widget",
+          "startedUTC": "2026-11-25T04:43:38.679511+00:00",
+          "pid": 66449,
+          "command": [
+            "/opt/homebrew/opt/python@3.12/bin/python3.12",
+            "-B",
+            "/Users/m1/builds/gsd-widget-3ca346ef-20261125/run-native-system-case-capacity-wait.py",
+            "--kind",
+            "widget",
+            "--repo",
+            "/Users/m1/builds/gsd-system-invocation-6bd91d6a-20261124/source",
+            "--composition-receipt",
+            "/Users/m1/builds/gsd-widget-3ca346ef-20261125/evidence/composition-receipt.json",
+            "--composition-sha256",
+            "0cad8f724b71df3696e84c598aa093675b4ceca2ad0fb7198338141cb868a6ee",
+            "--manifest",
+            "/Users/m1/builds/gsd-widget-3ca346ef-20261125/evidence/composed-products.json",
+            "--manifest-sha256",
+            "6a7d63dfa7b4c42970c056965679341d10338106d321ef8dbe360f9854e1402d",
+            "--output-parent",
+            "/Users/m1/builds/gsd-widget-3ca346ef-20261125/runs"
+          ],
+          "wrapperSHA256": "934f853bfae862cf8bc673bf9e4c8500646e75f4dfcb61495fc76ee66f9d8d19",
+          "admission": {
+            "at": "2026-11-25T04:43:38.593383+00:00",
+            "stage": "coordinator_widget",
+            "fits": true,
+            "riskReasons": [],
+            "kernelMemoryPressureLevel": 1,
+            "reclaimableMemoryBytes": 9624354816,
+            "memoryBudgetBytes": 4294967296,
+            "additionalMemoryGiB": 3,
+            "memoryTransientMarginGiB": 1,
+            "swapUsedBytes": 251857469,
+            "swapChangeFromObservedBaselineBytes": 29160898,
+            "diskAvailableBytes": 10916954112,
+            "diskBudgetBytes": 9138564891,
+            "additionalDiskGiB": 4,
+            "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+            "growthHorizonSeconds": 720,
+            "osDiskMarginGiB": 2,
+            "pages": {
+              "Pages free": 312776,
+              "Pages inactive": 265761,
+              "Pages speculative": 8887
+            },
+            "pageSize": 16384,
+            "cpuOrJobCountGate": false,
+            "otherNativeProcesses": [
+              {
+                "pid": 64895,
+                "ppid": 64873,
+                "executable": "xcodebuild",
+                "startedAt": "Wed Nov 25 05:42:05 2026"
+              },
+              {
+                "pid": 66031,
+                "ppid": 66000,
+                "executable": "xcodebuild",
+                "startedAt": "Wed Nov 25 05:43:09 2026"
+              },
+              {
+                "pid": 66425,
+                "ppid": 65343,
+                "executable": "swift-frontend",
+                "startedAt": "Wed Nov 25 05:43:28 2026"
+              },
+              {
+                "pid": 66431,
+                "ppid": 65343,
+                "executable": "swift-frontend",
+                "startedAt": "Wed Nov 25 05:43:31 2026"
+              }
+            ],
+            "conflictingOwnedWrappers": []
+          },
+          "runtimeStarted": true
+        }
+      },
+      "controllerPID": 58253
+    },
+    "actualAPFSReclaimedBytesNotSeparatelyAttributable": true
+  }
+}

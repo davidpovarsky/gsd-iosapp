@@ -1,0 +1,1500 @@
+{
+  "receiptPath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/maintenance-approved-20-s_r39xhi/receipt.json",
+  "bytes": 43481,
+  "sha256": "ea8d3df46651d8f57d820a6715aae9ca50e5c67999a1e0ceed6b59059481a101",
+  "receipt": {
+    "schema": "gsd-exact-owned-cache-maintenance-v2",
+    "startedUTC": "2026-11-25T08:46:49.370899+00:00",
+    "authorization": "Root conditional exact 11 + exact 9 candidate directories only",
+    "inventories": [
+      {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-owned-storage-inventory-20261125T082620Z.json",
+        "sha256": "d10d34b56fc1b92feebc585e84b4ef0f81018cdc8a9b62ce500b5874b73092e9"
+      },
+      {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-old-runner-cache-inventory-20261125T084258Z.json",
+        "sha256": "e49ccdb542f876ab7aa1c705bef8611bbc90ee7e6c4fee645aa46ec0159a0b77"
+      }
+    ],
+    "results": [
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-device/Build/Intermediates.noindex",
+        "result": "skipped",
+        "reason": "protected_products_missing"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-device/ModuleCache.noindex",
+        "result": "skipped",
+        "reason": "protected_products_missing"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-device/CompilationCache.noindex",
+        "result": "skipped",
+        "reason": "protected_products_missing"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-device/SDKStatCaches.noindex",
+        "result": "skipped",
+        "reason": "protected_products_missing"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/Build/Intermediates.noindex",
+        "openHandles": {
+          "complete": true,
+          "openPIDs": []
+        },
+        "realpath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/Build/Intermediates.noindex",
+        "identity": {
+          "sha256": "a72dbc3728c53a39edf2d28ec6a85b4811aa3d2d0642a9f2cf3aa81bdc6c9781",
+          "entries": 8812,
+          "allocatedBytes": 394178560,
+          "inode": 4395650,
+          "dev": 16777232,
+          "mtimeNs": 1795542682240840885,
+          "ownerUID": 501
+        },
+        "allocatedBytesAtGuard": 394178560,
+        "diskAvailableBeforeBytes": 9581973504,
+        "result": "removed_regenerable_intermediates",
+        "diskAvailableAfterBytes": 9952403456
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/Index.noindex",
+        "openHandles": {
+          "complete": true,
+          "openPIDs": []
+        },
+        "realpath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/Index.noindex",
+        "identity": {
+          "sha256": "9eaca05811cf9de6aa7e250c478366b593e15af8587d275d97417293de2dd686",
+          "entries": 6725,
+          "allocatedBytes": 72065024,
+          "inode": 4397460,
+          "dev": 16777232,
+          "mtimeNs": 1795542688599684875,
+          "ownerUID": 501
+        },
+        "allocatedBytesAtGuard": 72065024,
+        "diskAvailableBeforeBytes": 9948729344,
+        "result": "removed_regenerable_intermediates",
+        "diskAvailableAfterBytes": 9958133760
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/ModuleCache.noindex",
+        "openHandles": {
+          "complete": true,
+          "openPIDs": []
+        },
+        "realpath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/ModuleCache.noindex",
+        "identity": {
+          "sha256": "a9e2a05b9e4e9d62c8f268a5898e2e2cf58986beae8a582797d61df14a71fdae",
+          "entries": 1360,
+          "allocatedBytes": 121139200,
+          "inode": 4396221,
+          "dev": 16777232,
+          "mtimeNs": 1795542764354308312,
+          "ownerUID": 501
+        },
+        "allocatedBytesAtGuard": 121139200,
+        "diskAvailableBeforeBytes": 9959518208,
+        "result": "removed_regenerable_intermediates",
+        "diskAvailableAfterBytes": 9959497728
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/CompilationCache.noindex",
+        "openHandles": {
+          "complete": true,
+          "openPIDs": []
+        },
+        "realpath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/CompilationCache.noindex",
+        "identity": {
+          "sha256": "3c37bc074529962c5fe6c307c23d3ad0e70620f679c65a10a701c6d54b21a80e",
+          "entries": 10,
+          "allocatedBytes": 28672,
+          "inode": 4396223,
+          "dev": 16777232,
+          "mtimeNs": 1795542682037164107,
+          "ownerUID": 501
+        },
+        "allocatedBytesAtGuard": 28672,
+        "diskAvailableBeforeBytes": 9959038976,
+        "result": "removed_regenerable_intermediates",
+        "diskAvailableAfterBytes": 9959038976
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/SDKStatCaches.noindex",
+        "openHandles": {
+          "complete": true,
+          "openPIDs": []
+        },
+        "realpath": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim/SDKStatCaches.noindex",
+        "identity": {
+          "sha256": "5d6753ab0f659d2ec14d011421ca1e45c4879f520d602434946271a1eb755b8f",
+          "entries": 3,
+          "allocatedBytes": 2715648,
+          "inode": 4396241,
+          "dev": 16777232,
+          "mtimeNs": 1795542682603195480,
+          "ownerUID": 501
+        },
+        "allocatedBytesAtGuard": 2715648,
+        "diskAvailableBeforeBytes": 9959735296,
+        "result": "removed_regenerable_intermediates",
+        "diskAvailableAfterBytes": 9959755776
+      },
+      {
+        "path": "/Users/m1/caches/DerivedData/gsd-system-67f1c759-20261124/CompilationCache.noindex",
+        "result": "skipped",
+        "reason": "old_system_cache_recovery_identity_not_explicitly_pinned"
+      },
+      {
+        "path": "/Users/m1/caches/DerivedData/gsd-system-67f1c759-20261124/SDKStatCaches.noindex",
+        "result": "skipped",
+        "reason": "old_system_cache_recovery_identity_not_explicitly_pinned"
+      },
+      {
+        "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/Build/Intermediates.noindex",
+        "result": "skipped",
+        "reason": "owner_receipt_nonterminal_or_uncertain"
+      },
+      {
+        "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/ModuleCache.noindex",
+        "result": "skipped",
+        "reason": "owner_receipt_nonterminal_or_uncertain"
+      },
+      {
+        "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/Index.noindex",
+        "result": "skipped",
+        "reason": "owner_receipt_nonterminal_or_uncertain"
+      },
+      {
+        "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/CompilationCache.noindex",
+        "result": "skipped",
+        "reason": "owner_receipt_nonterminal_or_uncertain"
+      },
+      {
+        "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_work/gsd-iosapp/gsd-iosapp/.gsd-release-derived/SDKStatCaches.noindex",
+        "result": "skipped",
+        "reason": "owner_receipt_nonterminal_or_uncertain"
+      },
+      {
+        "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived/Build/Intermediates.noindex",
+        "result": "skipped",
+        "reason": "owner_receipt_nonterminal_or_uncertain"
+      },
+      {
+        "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived/ModuleCache.noindex",
+        "result": "skipped",
+        "reason": "owner_receipt_nonterminal_or_uncertain"
+      },
+      {
+        "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived/CompilationCache.noindex",
+        "result": "skipped",
+        "reason": "owner_receipt_nonterminal_or_uncertain"
+      },
+      {
+        "path": "/Users/m1/builds/gsd48-release-runner.9tn4Pjq2/_release_work/gsd-iosapp/gsd-iosapp/.gsd-signed-derived/SDKStatCaches.noindex",
+        "result": "skipped",
+        "reason": "owner_receipt_nonterminal_or_uncertain"
+      }
+    ],
+    "preservation": [
+      {
+        "cache": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/derived-sim",
+        "recovery": {
+          "sourceSHA": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+          "statusSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "inputs": {
+            "HanlinSDK.lock.json": "547ff0ab3f548296079b4a5ecc0c5fbfdf513d621209197f498b1ae21c200ed9",
+            "project.yml": "0916d09e3123ba71df742bbe61aac2c4a054188be2b7bb2918219aa73fd94022",
+            "GSD.xcodeproj/project.pbxproj": "ad5502cde7ae689dab4f4d730fc9f19bbf7713b8fb5a04f9fa2b8d3656062a82",
+            "App/Info.plist": "8cbed2b686160da6df62b40b170e5196e303d5b599027575448d4e289d704692",
+            "GSDKit/Package.resolved": "eefdfbcd29981fbb8288a4268c7804d6e2cfefe17aa874a1fb968c8de336254b",
+            "Packages/GSDHanlinAgent/Package.resolved": "806e7a7ca013eeb211f96cc506632058b17cc0ea36eaedba65e62499efddf1bf"
+          }
+        },
+        "ownerRecords": [
+          {
+            "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/oracle-owner-zero.json",
+            "sha256": "a10be64a80ef745d7191a5a1c8da8419559a4b7d933cca137ab3e089cbf877f2",
+            "classification": "pinned Oracle synthetic-fixture cleanup receipt, not native lease"
+          }
+        ],
+        "productsBefore": {
+          "sha256": "42f7907629ef44cd35c1fcdace14dffa38c0bab49f5de47accd9a81ddd939d1f",
+          "entries": 586,
+          "allocatedBytes": 233275392,
+          "inode": 4396242,
+          "dev": 16777232,
+          "mtimeNs": 1795543557801367249,
+          "ownerUID": 501
+        },
+        "evidenceBefore": {
+          "sha256": "963627644c04eee9579367ed3b30ab1144e2a8e4da733a474da28b7f48eec7cc",
+          "entries": 879,
+          "allocatedBytes": 206925824,
+          "inode": 3077693,
+          "dev": 16777232,
+          "mtimeNs": 1795548896187706744,
+          "ownerUID": 501
+        },
+        "productsAfter": {
+          "sha256": "42f7907629ef44cd35c1fcdace14dffa38c0bab49f5de47accd9a81ddd939d1f",
+          "entries": 586,
+          "allocatedBytes": 233275392,
+          "inode": 4396242,
+          "dev": 16777232,
+          "mtimeNs": 1795543557801367249,
+          "ownerUID": 501
+        },
+        "productsUnchanged": true,
+        "evidenceAfter": {
+          "sha256": "963627644c04eee9579367ed3b30ab1144e2a8e4da733a474da28b7f48eec7cc",
+          "entries": 879,
+          "allocatedBytes": 206925824,
+          "inode": 3077693,
+          "dev": 16777232,
+          "mtimeNs": 1795548896187706744,
+          "ownerUID": 501
+        },
+        "evidenceUnchanged": true,
+        "sourceUnchanged": true
+      }
+    ],
+    "ownershipInventories": [
+      {
+        "observedUTC": "2026-11-25T08:46:49.445855+00:00",
+        "method": "names_then_scoped_writer_argv_cwd",
+        "globalArgumentsRead": false,
+        "budgetSeconds": 15,
+        "complete": true,
+        "processCount": 532,
+        "candidates": [
+          {
+            "pid": 416,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "scopedNoninteractiveCwdRead": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15838,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15843,
+            "parentPID": 15838,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15848,
+            "parentPID": 15843,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15849,
+            "parentPID": 15848,
+            "executable": "Runner.Worker",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16099,
+            "parentPID": 15849,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16100,
+            "parentPID": 16099,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16104,
+            "parentPID": 16100,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16206,
+            "parentPID": 16104,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 19825,
+            "parentPID": 19824,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24166,
+            "parentPID": 16206,
+            "executable": "xcodebuild",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24189,
+            "parentPID": 23668,
+            "executable": "GSDScreenshotTests-Runner",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24232,
+            "parentPID": 24166,
+            "executable": "DTServiceHub",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24555,
+            "parentPID": 24554,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25057,
+            "parentPID": 24555,
+            "executable": "xcodebuild",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25064,
+            "parentPID": 25057,
+            "executable": "SWBBuildService",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25078,
+            "parentPID": 1,
+            "executable": "ibtoold",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25383,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25388,
+            "parentPID": 25383,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25393,
+            "parentPID": 25388,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25468,
+            "parentPID": 25064,
+            "executable": "swift-frontend",
+            "complete": true,
+            "exitedDuringRead": true
+          },
+          {
+            "pid": 25469,
+            "parentPID": 25064,
+            "executable": "swift-frontend",
+            "complete": true,
+            "exitedDuringRead": true
+          },
+          {
+            "pid": 25471,
+            "parentPID": 25466,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 65368,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          }
+        ],
+        "elapsedSeconds": 0.503
+      },
+      {
+        "observedUTC": "2026-11-25T08:46:49.983175+00:00",
+        "method": "names_then_scoped_writer_argv_cwd",
+        "globalArgumentsRead": false,
+        "budgetSeconds": 15,
+        "complete": true,
+        "processCount": 533,
+        "candidates": [
+          {
+            "pid": 416,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "scopedNoninteractiveCwdRead": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15838,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15843,
+            "parentPID": 15838,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15848,
+            "parentPID": 15843,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15849,
+            "parentPID": 15848,
+            "executable": "Runner.Worker",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16099,
+            "parentPID": 15849,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16100,
+            "parentPID": 16099,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16104,
+            "parentPID": 16100,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16206,
+            "parentPID": 16104,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 19825,
+            "parentPID": 19824,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24166,
+            "parentPID": 16206,
+            "executable": "xcodebuild",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24189,
+            "parentPID": 23668,
+            "executable": "GSDScreenshotTests-Runner",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24232,
+            "parentPID": 24166,
+            "executable": "DTServiceHub",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24555,
+            "parentPID": 24554,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25057,
+            "parentPID": 24555,
+            "executable": "xcodebuild",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25064,
+            "parentPID": 25057,
+            "executable": "SWBBuildService",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25078,
+            "parentPID": 1,
+            "executable": "ibtoold",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25383,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25388,
+            "parentPID": 25383,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25393,
+            "parentPID": 25388,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25471,
+            "parentPID": 25466,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25497,
+            "parentPID": 25064,
+            "executable": "swift-frontend",
+            "complete": true,
+            "exitedDuringRead": true
+          },
+          {
+            "pid": 25535,
+            "parentPID": 25064,
+            "executable": "swift-frontend",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 65368,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          }
+        ],
+        "elapsedSeconds": 0.422
+      },
+      {
+        "observedUTC": "2026-11-25T08:46:51.675699+00:00",
+        "method": "names_then_scoped_writer_argv_cwd",
+        "globalArgumentsRead": false,
+        "budgetSeconds": 15,
+        "complete": true,
+        "processCount": 528,
+        "candidates": [
+          {
+            "pid": 416,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "scopedNoninteractiveCwdRead": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15838,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15843,
+            "parentPID": 15838,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15848,
+            "parentPID": 15843,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15849,
+            "parentPID": 15848,
+            "executable": "Runner.Worker",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16099,
+            "parentPID": 15849,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16100,
+            "parentPID": 16099,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16104,
+            "parentPID": 16100,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16206,
+            "parentPID": 16104,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 19825,
+            "parentPID": 19824,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24166,
+            "parentPID": 16206,
+            "executable": "xcodebuild",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24189,
+            "parentPID": 23668,
+            "executable": "GSDScreenshotTests-Runner",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24232,
+            "parentPID": 24166,
+            "executable": "DTServiceHub",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24555,
+            "parentPID": 24554,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25057,
+            "parentPID": 24555,
+            "executable": "xcodebuild",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25064,
+            "parentPID": 25057,
+            "executable": "SWBBuildService",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25078,
+            "parentPID": 1,
+            "executable": "ibtoold",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25383,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25388,
+            "parentPID": 25383,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25393,
+            "parentPID": 25388,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25729,
+            "parentPID": 25064,
+            "executable": "swift-frontend",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25730,
+            "parentPID": 25064,
+            "executable": "swift-frontend",
+            "complete": true,
+            "exitedDuringRead": true
+          },
+          {
+            "pid": 65368,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          }
+        ],
+        "elapsedSeconds": 0.356
+      },
+      {
+        "observedUTC": "2026-11-25T08:46:54.031504+00:00",
+        "method": "names_then_scoped_writer_argv_cwd",
+        "globalArgumentsRead": false,
+        "budgetSeconds": 15,
+        "complete": true,
+        "processCount": 519,
+        "candidates": [
+          {
+            "pid": 416,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "scopedNoninteractiveCwdRead": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15838,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15843,
+            "parentPID": 15838,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15848,
+            "parentPID": 15843,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15849,
+            "parentPID": 15848,
+            "executable": "Runner.Worker",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16099,
+            "parentPID": 15849,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16100,
+            "parentPID": 16099,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16104,
+            "parentPID": 16100,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16206,
+            "parentPID": 16104,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 19825,
+            "parentPID": 19824,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24166,
+            "parentPID": 16206,
+            "executable": "xcodebuild",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24189,
+            "parentPID": 23668,
+            "executable": "GSDScreenshotTests-Runner",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24232,
+            "parentPID": 24166,
+            "executable": "DTServiceHub",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25078,
+            "parentPID": 1,
+            "executable": "ibtoold",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25383,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25388,
+            "parentPID": 25383,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25393,
+            "parentPID": 25388,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 65368,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          }
+        ],
+        "elapsedSeconds": 0.218
+      },
+      {
+        "observedUTC": "2026-11-25T08:46:55.227989+00:00",
+        "method": "names_then_scoped_writer_argv_cwd",
+        "globalArgumentsRead": false,
+        "budgetSeconds": 15,
+        "complete": true,
+        "processCount": 520,
+        "candidates": [
+          {
+            "pid": 416,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "scopedNoninteractiveCwdRead": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15838,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15843,
+            "parentPID": 15838,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15848,
+            "parentPID": 15843,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15849,
+            "parentPID": 15848,
+            "executable": "Runner.Worker",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16099,
+            "parentPID": 15849,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16100,
+            "parentPID": 16099,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16104,
+            "parentPID": 16100,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16206,
+            "parentPID": 16104,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 19825,
+            "parentPID": 19824,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24166,
+            "parentPID": 16206,
+            "executable": "xcodebuild",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24189,
+            "parentPID": 23668,
+            "executable": "GSDScreenshotTests-Runner",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24232,
+            "parentPID": 24166,
+            "executable": "DTServiceHub",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25078,
+            "parentPID": 1,
+            "executable": "ibtoold",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25383,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25388,
+            "parentPID": 25383,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25393,
+            "parentPID": 25388,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 65368,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          }
+        ],
+        "elapsedSeconds": 0.208
+      },
+      {
+        "observedUTC": "2026-11-25T08:46:55.648117+00:00",
+        "method": "names_then_scoped_writer_argv_cwd",
+        "globalArgumentsRead": false,
+        "budgetSeconds": 15,
+        "complete": true,
+        "processCount": 520,
+        "candidates": [
+          {
+            "pid": 416,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "scopedNoninteractiveCwdRead": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15838,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15843,
+            "parentPID": 15838,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15848,
+            "parentPID": 15843,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15849,
+            "parentPID": 15848,
+            "executable": "Runner.Worker",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16099,
+            "parentPID": 15849,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16100,
+            "parentPID": 16099,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16104,
+            "parentPID": 16100,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16206,
+            "parentPID": 16104,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 19825,
+            "parentPID": 19824,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24166,
+            "parentPID": 16206,
+            "executable": "xcodebuild",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24189,
+            "parentPID": 23668,
+            "executable": "GSDScreenshotTests-Runner",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24232,
+            "parentPID": 24166,
+            "executable": "DTServiceHub",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25078,
+            "parentPID": 1,
+            "executable": "ibtoold",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25383,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25388,
+            "parentPID": 25383,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25393,
+            "parentPID": 25388,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 65368,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          }
+        ],
+        "elapsedSeconds": 0.209
+      },
+      {
+        "observedUTC": "2026-11-25T08:46:55.943307+00:00",
+        "method": "names_then_scoped_writer_argv_cwd",
+        "globalArgumentsRead": false,
+        "budgetSeconds": 15,
+        "complete": true,
+        "processCount": 520,
+        "candidates": [
+          {
+            "pid": 416,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "scopedNoninteractiveCwdRead": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15838,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15843,
+            "parentPID": 15838,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15848,
+            "parentPID": 15843,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 15849,
+            "parentPID": 15848,
+            "executable": "Runner.Worker",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16099,
+            "parentPID": 15849,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16100,
+            "parentPID": 16099,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16104,
+            "parentPID": 16100,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 16206,
+            "parentPID": 16104,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 19825,
+            "parentPID": 19824,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24166,
+            "parentPID": 16206,
+            "executable": "xcodebuild",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24189,
+            "parentPID": 23668,
+            "executable": "GSDScreenshotTests-Runner",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 24232,
+            "parentPID": 24166,
+            "executable": "DTServiceHub",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25078,
+            "parentPID": 1,
+            "executable": "ibtoold",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25383,
+            "parentPID": 1,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25388,
+            "parentPID": 25383,
+            "executable": "bash",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 25393,
+            "parentPID": 25388,
+            "executable": "Runner.Listener",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          },
+          {
+            "pid": 65368,
+            "parentPID": 1,
+            "executable": "Python",
+            "complete": true,
+            "stableExecutable": true,
+            "sourceOrCacheMatch": false
+          }
+        ],
+        "elapsedSeconds": 0.206
+      }
+    ],
+    "noOtherProjectAction": true,
+    "runtimeBudgetAndControllerUnchanged": true,
+    "diskAvailableBeforeBytes": 9624432640,
+    "finishedUTC": "2026-11-25T08:46:56.504364+00:00",
+    "diskAvailableAfterBytes": 9959473152,
+    "observedVolumeFreeDeltaBytes": 335040512,
+    "deletedAllocatedBytes": 590127104,
+    "actualAPFSReclaimedBytesNotSeparatelyAttributable": true,
+    "complete": true
+  }
+}

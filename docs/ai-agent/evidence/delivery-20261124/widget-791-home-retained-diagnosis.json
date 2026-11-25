@@ -1,0 +1,91 @@
+{
+  "source": "791faede904ec32e4254c0346919515edd792626",
+  "production": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "run": "/Users/m1/builds/gsd-widget-791faede-20261125/runs/ui791faede-widget-l9vb2h2h",
+  "bindingSHA256": "55b1c999ae5c2c3cf2279233e4c24789c539153fe8b4da2814a764083e374ff3",
+  "observationSHA256": "077caa5612214926f4b3bbd465b8254105612dd4f65663ef901d64169fc91ebc",
+  "commandLogSHA256": "f8b25f78f278d13ab3070c5fb375276db383157f2eb1478043811fec4e479250",
+  "counts": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "expectedFailures": 0
+  },
+  "failure": "Observed GSD Home icon is unavailable.",
+  "snapshot": {
+    "path": "/Users/m1/builds/gsd-widget-791faede-20261125/retained-791-failure-8wjgn80n/home-snapshot-034949/F1C03B5E-0ABF-4E13-978A-88305DCA237B",
+    "bytes": 1304,
+    "sha256": "31170cbb52cc0ddb95e63dc010c37ae9309a992fd7714c70df071fb342d64629",
+    "timestampUTC": "2026-11-25T03:49:49.077Z",
+    "ownerPID": 36764,
+    "children": 0,
+    "limitation": "Application-only query snapshot has no icon, page or overlay metadata."
+  },
+  "retainedVideo": {
+    "originalVideo": "C:\\ProgramData\\SentinelX\\uploads\\gsd-widget-791-retained-gi8ts_ka\\recording.mp4",
+    "originalVideoSHA256": "cc8b2a9d91e42869fd2e9aa9f383bd2890900670ec13eb51a9609d2fdd698d4a",
+    "recordingAttachmentStartedUTC": "2026-11-25T03:49:26.754Z",
+    "metadata": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1206,
+          "height": 2622,
+          "r_frame_rate": "600/1",
+          "start_time": "0.000000",
+          "duration": "22.986667"
+        }
+      ],
+      "format": {
+        "duration": "22.986667"
+      }
+    },
+    "frames": [
+      {
+        "path": "C:\\ProgramData\\SentinelX\\uploads\\gsd-widget-791-retained-gi8ts_ka\\recorded-frame-20.400.png",
+        "requestedVideoOffsetSeconds": 20.4,
+        "bytes": 733103,
+        "sha256": "43fea57e3a9801eccb198857fc9ced0612e8e1eedb9e81a91a5415f3f70d0a0d",
+        "source": "existing retained screen recording",
+        "newSimulatorCapture": false
+      },
+      {
+        "path": "C:\\ProgramData\\SentinelX\\uploads\\gsd-widget-791-retained-gi8ts_ka\\recorded-frame-21.500.png",
+        "requestedVideoOffsetSeconds": 21.5,
+        "bytes": 1436675,
+        "sha256": "45222fd0c6edbdfddaa7b52a6a33290b5a7b45994f17864c7dac4848d75cc467",
+        "source": "existing retained screen recording",
+        "newSimulatorCapture": false
+      },
+      {
+        "path": "C:\\ProgramData\\SentinelX\\uploads\\gsd-widget-791-retained-gi8ts_ka\\recorded-frame-22.837.png",
+        "requestedVideoOffsetSeconds": 22.836667000000002,
+        "bytes": 1686882,
+        "sha256": "9a765cd67bcc3605bbd3ca899e5da4b24ee30bb52ec067055e6122b6797bf466",
+        "source": "existing retained screen recording",
+        "newSimulatorCapture": false
+      }
+    ],
+    "originalVideoUnchanged": true,
+    "newRuntimeOrCapture": false
+  },
+  "pixelReview": {
+    "reviewedOffsetsSeconds": [
+      20.4,
+      21.5,
+      22.836667
+    ],
+    "findings": [
+      "At +20.400 s GSD is visibly shrinking into Home; transition remains in progress.",
+      "At +21.500 s the GSD Home icon is visible while its page moves out and App Library moves in.",
+      "At +22.837 s the visible surface is App Library, headed \u05e1\u05e4\u05e8\u05d9\u05d9\u05ea \u05d4\u05d9\u05d9\u05e9\u05d5\u05de\u05d9\u05dd; GSD is visible in the Other group.",
+      "No QuickPath overlay is visible in these reviewed frames."
+    ],
+    "limitation": "These are frames decoded from the original recording, not a final failure-time screenshot; the recording ends at +22.986667 s. No new native selector metadata is inferred from pixels."
+  },
+  "correction": "Remove the immediate two-swipe loop, wait up to 10 seconds for the existing observed GSD icon to become hittable, and capture Home before/after the wait with explicit existence/readiness observations. Preserve the previously observed icon/context-menu route and every downstream gate.",
+  "newRuntimeOrCapture": false
+}

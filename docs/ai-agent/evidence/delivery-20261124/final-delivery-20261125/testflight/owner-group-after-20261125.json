@@ -1,0 +1,68 @@
+{
+  "app": {
+    "bundleId": "com.itorah.gsd",
+    "id": "6838520892"
+  },
+  "beta": {
+    "autoNotifyEnabled": true,
+    "externalBuildState": "READY_FOR_BETA_SUBMISSION",
+    "internalBuildState": "IN_BETA_TESTING"
+  },
+  "build": {
+    "expired": false,
+    "id": "240ca2cd-4604-4c3c-9c63-87b807adc85d",
+    "minOsVersion": "27.0",
+    "processingState": "VALID",
+    "type": "builds",
+    "uploadedDate": "2026-11-25T01:53:47-08:00",
+    "version": "49"
+  },
+  "existingOwner": {
+    "id": "73170283-fec7-467a-8a27-77764393ec4a",
+    "state": "INSTALLED"
+  },
+  "group": {
+    "hasAccessToAllBuilds": false,
+    "id": "791ccd13-9b19-46c4-b1c6-380887f27edb",
+    "isInternalGroup": true,
+    "name": "GSD Owner Testing",
+    "publicLinkEnabled": null
+  },
+  "groupBuildIDs": [
+    "240ca2cd-4604-4c3c-9c63-87b807adc85d",
+    "04715dbf-3b05-4d01-ba3d-d0b0e580d257"
+  ],
+  "groupBuilds": [
+    {
+      "expired": false,
+      "id": "240ca2cd-4604-4c3c-9c63-87b807adc85d",
+      "minOsVersion": "27.0",
+      "processingState": "VALID",
+      "type": "builds",
+      "uploadedDate": "2026-11-25T01:53:47-08:00",
+      "version": "49"
+    },
+    {
+      "expired": false,
+      "id": "04715dbf-3b05-4d01-ba3d-d0b0e580d257",
+      "minOsVersion": "27.0",
+      "processingState": "VALID",
+      "type": "builds",
+      "uploadedDate": "2026-11-24T05:27:20-08:00",
+      "version": "48"
+    }
+  ],
+  "groupContainsAcceptedBuild": true,
+  "groupContainsExistingOwner": true,
+  "groupTesterCount": 1,
+  "observedUTC": "2026-11-25T09:58:32.749562+00:00",
+  "pagination": {
+    "buildPages": 1,
+    "testerPages": 1
+  },
+  "preReleaseVersion": {
+    "id": "6329fc31-4fd2-44b7-a86f-7ad972428929",
+    "platform": "IOS",
+    "version": "4.1.0"
+  }
+}

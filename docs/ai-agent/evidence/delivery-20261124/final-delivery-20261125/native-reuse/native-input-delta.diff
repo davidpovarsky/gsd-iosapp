@@ -1,0 +1,85 @@
+diff --git a/App/ContentView.swift b/App/ContentView.swift
+index 5df44b6..78e848f 100644
+--- a/App/ContentView.swift
++++ b/App/ContentView.swift
+@@ -1,6 +1,7 @@
+ import SwiftUI
++import UIKit
+ import CoreSpotlight
+ import GSDModel
+ import GSDStore
+ import GSDSnapshot
+ import GSDHanlinAgent
+@@ -253,10 +254,20 @@ struct ContentView: View {
+     /// Resolve a task link by direct repository read: on a cold launch (widget tap,
+     /// Spotlight result, pending handoff) the observation snapshot is still empty when
+     /// the URL arrives, so a `store.tasks` lookup would silently miss every time.
+     private func openTask(_ id: String) {
+         _Concurrency.Task { @MainActor in
++            #if !targetEnvironment(macCatalyst)
++            // A task URL can arrive before the scene's foreground database resume.
++            let databaseLease = BackgroundDatabaseWindow(isBackgrounded: {
++                UIApplication.shared.applicationState != .active
++            }).begin()
++            defer { databaseLease.finish() }
++            if UIApplication.shared.applicationState == .active {
++                BackgroundDatabaseWindow.resumeAppDatabaseForForeground()
++            }
++            #endif
+             if let task = try? await store.fetchTask(id: id) {
+                 if task.isSaved { openSavedTask(task.id) }
+                 else { palette.editor = .edit(task) }
+             } else {
+                 navigate(to: .matrix)
+diff --git a/GSD.xcodeproj/project.pbxproj b/GSD.xcodeproj/project.pbxproj
+index 42a0479..1ef7b55 100644
+--- a/GSD.xcodeproj/project.pbxproj
++++ b/GSD.xcodeproj/project.pbxproj
+@@ -60,10 +60,11 @@
+ 		485687599CEB0F40E2CC2AB0 /* EditorDiscardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8E104EE6182557CF60E607 /* EditorDiscardTests.swift */; };
+ 		48CB01575B1329F3DB509651 /* ReminderActionInbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107F6AD74CE5EC416DF2E1AA /* ReminderActionInbox.swift */; };
+ 		4A297BF5B9DB7F065BC85EE1 /* TodaysFocusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24761F3BB6078DC0F318A8 /* TodaysFocusProvider.swift */; };
+ 		4C05C5BFBBD1A5A3E3BFA8F1 /* AppShortcuts.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 2986CDC741E24F511659201D /* AppShortcuts.xcstrings */; };
+ 		4CA5862BAD963FCB53AE3285 /* ReminderResyncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 201AED667DF059BD3CEA6C01 /* ReminderResyncer.swift */; };
++		4D346B7D7C6D567A656DC871 /* GSDNativeSystemAcceptanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0E46D0B7802D5F22C4288B /* GSDNativeSystemAcceptanceUITests.swift */; };
+ 		4DA9D0A3ED767DB33C16F013 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 73ECCE8CBC8DAF6C58379DED /* Localizable.xcstrings */; };
+ 		4E5277A66510785848896617 /* SkeletonShimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0F320A150281F72B39E5C5 /* SkeletonShimmer.swift */; };
+ 		4EFB3C5C91933695350D6770 /* GSDChatGPTAccountState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8154AB78B4532161F2D5DE10 /* GSDChatGPTAccountState.swift */; };
+ 		511369ABE5B10E9AB12EEE51 /* ShareComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20E914ACF6FFFD780E61B77 /* ShareComposeView.swift */; };
+ 		52058F06635130DE73D6A92D /* BackgroundRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D8BB8C39DEADCA05DC6DDE /* BackgroundRefresh.swift */; };
+@@ -272,10 +273,11 @@
+ 		2429471CF154E2FD234BA738 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+ 		249F029B40FD9FDAA6A68A25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+ 		263862633905FD14A543830B /* EscalationFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EscalationFlowTests.swift; sourceTree = "<group>"; };
+ 		2986CDC741E24F511659201D /* AppShortcuts.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = AppShortcuts.xcstrings; sourceTree = "<group>"; };
+ 		2E61BF464A0EEA058FFBF78D /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
++		2F0E46D0B7802D5F22C4288B /* GSDNativeSystemAcceptanceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GSDNativeSystemAcceptanceUITests.swift; sourceTree = "<group>"; };
+ 		2F90A281F6CBFA4C37A0A537 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+ 		30895EFC952028C78E9F99EE /* BulkActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkActionBar.swift; sourceTree = "<group>"; };
+ 		30A03169462530BB59EC808C /* CaptureBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureBar.swift; sourceTree = "<group>"; };
+ 		3198C1DBF5E5DEB48729A558 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+ 		341D1D06F9C4F12D204BDF12 /* ShareInboxDrainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareInboxDrainer.swift; sourceTree = "<group>"; };
+@@ -839,10 +841,11 @@
+ 				D986295B486E3122D21BC4C2 /* EditorSaveShortcutTests.swift */,
+ 				263862633905FD14A543830B /* EscalationFlowTests.swift */,
+ 				79DBE02C7478A306C40B7B29 /* GlassSetting.swift */,
+ 				79A46924E42E6DA40A62F4D4 /* GSDChatGPTPreConsentUITests.swift */,
+ 				A3CD41483C583795D056DD22 /* GSDCloudReleaseUITests.swift */,
++				2F0E46D0B7802D5F22C4288B /* GSDNativeSystemAcceptanceUITests.swift */,
+ 				5F7DB716736DD601688EE816 /* GSDSystemSurfaceUITests.swift */,
+ 				664E6FF5137DE167118E123D /* PreviewChoreography.swift */,
+ 				AB571C8749323E0E3C429823 /* RefreshBaseline.swift */,
+ 				F929B8A44EF5345956008833 /* SavedFlowTests.swift */,
+ 				E87C46CC1405702B23330578 /* ScreenshotTests.swift */,
+@@ -1348,10 +1351,11 @@
+ 				485687599CEB0F40E2CC2AB0 /* EditorDiscardTests.swift in Sources */,
+ 				76545B52D43B79FA49C3523A /* EditorSaveShortcutTests.swift in Sources */,
+ 				E543A615D7278FC47442DC50 /* EscalationFlowTests.swift in Sources */,
+ 				9B9419E6CA8EDF837A566BDA /* GSDChatGPTPreConsentUITests.swift in Sources */,
+ 				1762F6D6F5F8ADCDB643B21D /* GSDCloudReleaseUITests.swift in Sources */,
++				4D346B7D7C6D567A656DC871 /* GSDNativeSystemAcceptanceUITests.swift in Sources */,
+ 				1964BADB75CF9FE3EDA587C4 /* GSDSystemSurfaceUITests.swift in Sources */,
+ 				258511F5108C63A1FCFE399D /* GlassSetting.swift in Sources */,
+ 				32AC8D69042D0AA6FEA03C34 /* PreviewChoreography.swift in Sources */,
+ 				9D045973ADABC27A5E62E5C4 /* RefreshBaseline.swift in Sources */,
+ 				9D3FFB7FF14F3C5C122EB234 /* SavedFlowTests.swift in Sources */,

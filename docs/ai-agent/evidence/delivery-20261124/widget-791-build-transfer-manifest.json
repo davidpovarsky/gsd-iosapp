@@ -1,0 +1,56 @@
+{
+  "copiedUTC": "2026-11-25T03:49:11.246633+00:00",
+  "exactByteCopies": true,
+  "macMutation": false,
+  "rootFiveFrozenTargetsComparedToAcceptedA2": true,
+  "files": [
+    {
+      "name": "terminal-receipt.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-791faede-20261125/evidence/terminal-receipt.json",
+      "bytes": 1183,
+      "sha256": "0297de5f0f0563c2bf6eb5e3afe7c231a563dea613f76551af01a02be26b6a8f"
+    },
+    {
+      "name": "build-binding.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-791faede-20261125/evidence/build-binding.json",
+      "bytes": 1283,
+      "sha256": "d30e5cf431a4868038b816cb6c16ff801b6a6e24f04bb5ba17e83f8924636506"
+    },
+    {
+      "name": "source-closure.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-791faede-20261125/evidence/source-closure.json",
+      "bytes": 1467,
+      "sha256": "99a8aea4e57957c9ec7373e54ec2f6290905e036b1d21a3df91304c584fe9bda"
+    },
+    {
+      "name": "composition-receipt.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-791faede-20261125/evidence/composition-receipt.json",
+      "bytes": 1156,
+      "sha256": "d7b787d6b38ea901a02d8b2b4902a706ef6d8744630c89892dbdca079f17cb18"
+    },
+    {
+      "name": "composed-products.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-791faede-20261125/evidence/composed-products.json",
+      "bytes": 6006,
+      "sha256": "c32b73cbc2e5d442ffc15e0b994c48b31da3836151b66dd0b1e6c20e49b9f33e"
+    },
+    {
+      "name": "cache-owner-terminal.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-791faede-20261125/evidence/cache-owner-terminal.json",
+      "bytes": 481,
+      "sha256": "ebf312c8f770c114bb82ceb5e1987bb993429cef9600573bfe4ecc2e945dcdd2"
+    },
+    {
+      "name": "preservation-receipt.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-791faede-20261125/evidence/preservation-receipt.json",
+      "bytes": 1228,
+      "sha256": "8a0cd82719d6a31b105d828d7565206c4a5e3cc3a6837e903f7378ce8b733f27"
+    },
+    {
+      "name": "prior-widget-evidence-binding.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-791faede-20261125/evidence/prior-widget-evidence-binding.json",
+      "bytes": 703,
+      "sha256": "23ac0cb3804711b8991bc545ae09348e3bc49695e0829dfa61927571bebbdda9"
+    }
+  ]
+}

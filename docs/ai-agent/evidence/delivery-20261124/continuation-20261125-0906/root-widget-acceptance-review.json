@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "kind": "root-review-projection-from-retained-github-tool-responses",
+  "recordedUTC": "2026-11-25 09:05:57 UTC",
+  "provenance": "Projection of GitHub connector GET results already retrieved during Root's actual Widget acceptance review; this save did not make a new GitHub request.",
+  "newRemoteObservation": false,
+  "run": {
+    "id": 45575270618,
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1,
+    "workflow_id": 427066662,
+    "head_sha": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "head_branch": "fix/gsd-widget-final-20261125",
+    "html_url": "https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45575270618",
+    "created_at": "2026-11-25T08:19:30Z",
+    "updated_at": "2026-11-25T08:51:40Z"
+  },
+  "jobs": [
+    {
+      "id": 139071555983,
+      "name": "widget-final",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 139071558149,
+      "name": "signed-testflight",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 139071558373,
+      "name": "native-acceptance",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 139071558398,
+      "name": "native-startup-diagnostic",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 139071558612,
+      "name": "native-resume",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ],
+  "artifact": {
+    "id": 15006680376,
+    "name": "GSD-Widget-System-Acceptance-45575270618-1",
+    "size_in_bytes": 2784,
+    "url": "https://api.github.com/repos/davidpovarsky/gsd-iosapp/actions/artifacts/15006680376",
+    "archive_download_url": "https://api.github.com/repos/davidpovarsky/gsd-iosapp/actions/artifacts/15006680376/zip",
+    "expired": false,
+    "created_at": "2026-11-25T08:51:30Z",
+    "expires_at": "2026-12-25T08:51:29Z",
+    "updated_at": "2026-11-25T08:51:30Z",
+    "digest": "sha256:b300d6388a6b4456dc49e2e30bf9c391f110b44086d004615d768fca598e4a7d",
+    "workflow_run": {
+      "id": 45575270618,
+      "repository_id": 1467886923,
+      "head_repository_id": 1467886923,
+      "head_branch": "fix/gsd-widget-final-20261125",
+      "head_sha": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61"
+    }
+  },
+  "nativeAcceptanceReviewed": {
+    "originalTest": "GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap",
+    "counts": {
+      "totalTestCount": 1,
+      "passedTests": 1,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "expectedFailures": 0
+    },
+    "actualXCTestStartUTC": "2026-11-25T08:45:00.491718+00:00",
+    "actualXCTestFinishUTC": "2026-11-25T08:51:21.870241+00:00",
+    "sourceAndProductsUnchanged": true,
+    "ownedSimulatorRemoved": true,
+    "ownedSourceUseClaimReleased": true,
+    "nativeTerminalSHA256": "2eb0ffba18d78afdf72237dc5a135e98982beb128cabdc0440dbdd0ebfec7952",
+    "receiptSHA256": "2572bcb446e7a7e462f31757eba5604573d622d5931855ddb7bdc87fd8ffc7ec"
+  },
+  "rootVisualReview": {
+    "performed": true,
+    "newCaptures": false,
+    "images": [
+      {
+        "file": "12-installed-widget-initial.png",
+        "sha256": "6333acb3693db529142299a236bbbf91ee828554ae18b4342ab630a7c794a30e",
+        "observation": "Installed native home-screen widget has Hebrew heading and the A task title."
+      },
+      {
+        "file": "14-installed-widget-refreshed.png",
+        "sha256": "15dac9e4b162905d7ef57956dd74c30bd054b0623aaed557e0db3556404768e7",
+        "observation": "Same native widget displays updated B task title."
+      },
+      {
+        "file": "15-widget-row-task-editor.png",
+        "sha256": "3172d2bb5391a11feb75bbc732e945b8c1974abf5ea46cfa629cefed4d9ff5ac",
+        "observation": "The exact GSD-Widget-B-2C89BA1D title is visible in the Hebrew RTL task editor with Save/Cancel and quadrant controls."
+      }
+    ],
+    "editorImageFirstDisplayWasOutputOmitted": true,
+    "editorImageRedisplayedFromSameRetainedFile": true
+  },
+  "limits": {
+    "fullSystemSurfaceCoverage": false,
+    "personalAccountGrantVerified": false,
+    "hebrewShortcutHostedDialogVerified": false,
+    "physicalDeviceVerified": false,
+    "voiceOverSpeechVerified": false,
+    "watchConnectivityVerified": false,
+    "appleUploadVerified": false
+  },
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "acceptedForNextArchiveGate": true,
+  "releaseHandoffSHA256": "087cc7b9a7d23f734b0b651f16badcad3572ec981172d6c191b7ba9c1b0634ae"
+}

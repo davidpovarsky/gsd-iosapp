@@ -1,0 +1,18 @@
+{
+  "sourceObservationSHA256": "6d6c1e02bcfff5ed4f5062f3927869f52970e69d20902244c17e82be1545a182",
+  "appSourceSHA": "b5588f3f0c42df328dba34024d569be8605e51d0",
+  "language": "he",
+  "status": "passed",
+  "assertions": {
+    "activitySheetOpened": true,
+    "addCreatedExactlyOne": true,
+    "addedTaskPersisted": true,
+    "cancelCreatedNone": true,
+    "cancelNoneAfterRelaunch": true,
+    "extensionOpenedForAdd": true,
+    "extensionOpenedForCancel": true,
+    "sourceCreated": true
+  },
+  "coverageComplete": false,
+  "accountGrantVerified": false
+}

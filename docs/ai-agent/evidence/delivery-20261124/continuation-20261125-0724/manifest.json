@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 1,
+  "kind": "held_delivery_incremental_evidence_manifest",
+  "createdUTC": "2026-11-25T07:31:56.385745+00:00",
+  "reportStateAsOfUTC": "2026-11-25T07:24:31.089Z",
+  "status": "held_for_root_review_not_committed_or_published",
+  "baselineReport": {
+    "path": "C:\\Users\\DAVID\\Code\\GSD-Delivery-49-20261124\\docs\\ai-agent\\GSD_DELIVERY_CURRENT_20261124.md",
+    "bytes": 92737,
+    "sha256": "cc753ab208e731184334979a7dfab7210fd3d66995d272a7264c49328a1ee3a2"
+  },
+  "updatedReport": {
+    "path": "docs/ai-agent/GSD_DELIVERY_CURRENT_20261124.md",
+    "bytes": 103393,
+    "sha256": "63fd7a44e1724ba7fda0eee488f04fa6bb89bfbb79c4d69fc18c5e53c99fa7bf"
+  },
+  "rootIndexUsed": {
+    "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\root-continuation-20261125T070053Z.json",
+    "bytes": 18963,
+    "sha256": "bff0740575dfcb87e7174156086fb7ae737d7e44a19eaca5c690fd8c9e3f9824"
+  },
+  "finalSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "evidenceScope": {
+    "diagnostic620": "recovery_passed_then_diagnostic_test03_failed_with_bound_causal_trace",
+    "finalFd6Build": "passed_build_for_testing_and_complete_products_only",
+    "finalFd6Runtime": "pending",
+    "finalFd6ReleaseAndTestFlight": "pending",
+    "personalPluginSIWCAndPhysicalDevice": "unverified_no_action_performed"
+  },
+  "copiedExistingReceiptFiles": [
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-recovery-terminal.json",
+      "bytes": 1428,
+      "sha256": "af428fb084ff2360d4d0fed632a8d4a9a42e85641a443dcbb8b2408bbcb9d328",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-route-620-recovery-20261125\\terminal-receipt.json",
+        "bytes": 1428,
+        "sha256": "af428fb084ff2360d4d0fed632a8d4a9a42e85641a443dcbb8b2408bbcb9d328"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-recovery-composition.json",
+      "bytes": 4716,
+      "sha256": "6a80542cc1487da8120a76a2f5c7b722e2092561b0db6b357626cbcb1442a90c",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-route-620-recovery-20261125\\composition-receipt.json",
+        "bytes": 4716,
+        "sha256": "6a80542cc1487da8120a76a2f5c7b722e2092561b0db6b357626cbcb1442a90c"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-diagnostic-terminal.json",
+      "bytes": 1315,
+      "sha256": "fd27dbc6557b5fd05e9b57b44deaab91a228cfed5f165620f625c16bfac00a4d",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-route-620-runtime-execution-20261125\\terminal-evidence\\runtime-terminal.json",
+        "bytes": 1315,
+        "sha256": "fd27dbc6557b5fd05e9b57b44deaab91a228cfed5f165620f625c16bfac00a4d"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-diagnostic-observation.json",
+      "bytes": 3003,
+      "sha256": "3a522120a4e11db8571f1c990df809346d643698bfbb44bbb8618a67622980c4",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-route-620-runtime-execution-20261125\\terminal-evidence\\observation.json",
+        "bytes": 3003,
+        "sha256": "3a522120a4e11db8571f1c990df809346d643698bfbb44bbb8618a67622980c4"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-route-trace.json",
+      "bytes": 2838,
+      "sha256": "c6a1a24f4f8bce4119e632dcaac94f9989f522b791f5bb8553d2690cc14d9f3d",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-route-620-runtime-execution-20261125\\terminal-evidence\\sanitized-route-trace.json",
+        "bytes": 2838,
+        "sha256": "c6a1a24f4f8bce4119e632dcaac94f9989f522b791f5bb8553d2690cc14d9f3d"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-trace-collection.json",
+      "bytes": 2401,
+      "sha256": "f59d2c28dd3d5a9b554d1d7eed1ea562de9bd17494c67768247c24a20322eb8e",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-route-620-runtime-execution-20261125\\terminal-evidence\\collection-receipt-from-binding.json",
+        "bytes": 2401,
+        "sha256": "f59d2c28dd3d5a9b554d1d7eed1ea562de9bd17494c67768247c24a20322eb8e"
+      },
+      "sourceNature": "pre_existing_derived_field_extraction_from_binding",
+      "derivationSourceBindingSHA256": "098324a4c8b396803a251c87859d29257216b4d1cc8d24ea73b02bca246e4d2b",
+      "derivationRepeatedForThisReport": false
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-route-fix-1d4033-publication.json",
+      "bytes": 2391,
+      "sha256": "d41c3d8570cdf0c0c2d811a8e67830059e365fa1b8ee91763588e5d1fb776a9c",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-route-db-fix-review-odwsfrsz\\publication-receipt.json",
+        "bytes": 2391,
+        "sha256": "d41c3d8570cdf0c0c2d811a8e67830059e365fa1b8ee91763588e5d1fb776a9c"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-actions-f56-publication.json",
+      "bytes": 3025,
+      "sha256": "4a3891b62646aaf2318028fe8d3a8ac7501c858c0418cf45a08d9979a5391d9e",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-actions-implementation-20261125\\publication-receipt.json",
+        "bytes": 3025,
+        "sha256": "4a3891b62646aaf2318028fe8d3a8ac7501c858c0418cf45a08d9979a5391d9e"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-actions-guards-25-review.json",
+      "bytes": 3359,
+      "sha256": "94bbeb53720e1bc0d319d0cc1812a7024894dc4230561cb941d737d6a26a48f2",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-actions-implementation-20261125\\review-receipt-appinfo.json",
+        "bytes": 3359,
+        "sha256": "94bbeb53720e1bc0d319d0cc1812a7024894dc4230561cb941d737d6a26a48f2"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-publication.json",
+      "bytes": 2900,
+      "sha256": "3ae2735ef58cd7c8bd45a141c3d2f266af65e55e438d11d7af9539f640d6afe8",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-integration-20261125T065601Z\\publication-receipt.json",
+        "bytes": 2900,
+        "sha256": "3ae2735ef58cd7c8bd45a141c3d2f266af65e55e438d11d7af9539f640d6afe8"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/asc49-train-readonly-20261125T065354Z.json",
+      "bytes": 1107,
+      "sha256": "0c03160609bf86fc74f5e7e32f1d23a34e27aebbf8eea6522143582a20515986",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\final-readonly-preflight-20261125T065354Z\\asc-build-train.json",
+        "bytes": 1107,
+        "sha256": "0c03160609bf86fc74f5e7e32f1d23a34e27aebbf8eea6522143582a20515986"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-build-dispatch.json",
+      "bytes": 1885,
+      "sha256": "38b61652014405ef89079b1bb31f3ef6cd55311608e92c53e46830b4e093e36d",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6e2944-build-execution-20261125\\dispatch-receipt.json",
+        "bytes": 1885,
+        "sha256": "38b61652014405ef89079b1bb31f3ef6cd55311608e92c53e46830b4e093e36d"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-source-closure.json",
+      "bytes": 4603,
+      "sha256": "b660995515a5b539536fd7c3bdb4f65177aef82afc13af9a69c788e49cfbdadd",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6e2944-build-20261125\\source-closure.json",
+        "bytes": 4603,
+        "sha256": "b660995515a5b539536fd7c3bdb4f65177aef82afc13af9a69c788e49cfbdadd"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-build-binding.json",
+      "bytes": 1534,
+      "sha256": "487058a2b1c0ec9c72b42de8bd5858c9dd3689e96c59183de3c0cb4cc14ac13d",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6e2944-build-20261125\\build-binding.json",
+        "bytes": 1534,
+        "sha256": "487058a2b1c0ec9c72b42de8bd5858c9dd3689e96c59183de3c0cb4cc14ac13d"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-products.json",
+      "bytes": 6008,
+      "sha256": "7588422c377bdc70c2b564c4c4acd2b11f0353c4ec1d54b7dbb58f63dba22815",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6e2944-build-20261125\\final-products.json",
+        "bytes": 6008,
+        "sha256": "7588422c377bdc70c2b564c4c4acd2b11f0353c4ec1d54b7dbb58f63dba22815"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-composition.json",
+      "bytes": 4319,
+      "sha256": "45206c3820c269f657efcd743ac7adf8a1ea278cd307d7d910dc3003cf5624e8",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6e2944-build-20261125\\composition-receipt.json",
+        "bytes": 4319,
+        "sha256": "45206c3820c269f657efcd743ac7adf8a1ea278cd307d7d910dc3003cf5624e8"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-final-fd6-build-terminal.json",
+      "bytes": 1587,
+      "sha256": "70337f126a34610b0c27579ee7e4f95ddfe23acf521807b517015cdb94df4049",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6e2944-build-20261125\\terminal-receipt.json",
+        "bytes": 1587,
+        "sha256": "70337f126a34610b0c27579ee7e4f95ddfe23acf521807b517015cdb94df4049"
+      }
+    },
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/widget-620-diagnostic-binding.json",
+      "bytes": 31023,
+      "sha256": "098324a4c8b396803a251c87859d29257216b4d1cc8d24ea73b02bca246e4d2b",
+      "copyMode": "byte-for-byte",
+      "source": {
+        "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-route-620-runtime-execution-20261125\\terminal-evidence\\binding.json",
+        "bytes": 31023,
+        "sha256": "098324a4c8b396803a251c87859d29257216b4d1cc8d24ea73b02bca246e4d2b"
+      }
+    }
+  ],
+  "derivedEvidence": [
+    {
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0724/github-remote-graph-20261125T070946Z.json",
+      "bytes": 39319,
+      "sha256": "2387c396493d0ce491d93b8f9e33f9c578214b41c7b33ff9839e7b950b612162",
+      "kind": "projection_of_retained_read_only_GitHub_GET_observations",
+      "sourceObservedWindow": [
+        "2026-11-25T07:06:31.468538+00:00",
+        "2026-11-25T07:09:46.274498+00:00"
+      ],
+      "newNetworkRequestPerformed": false
+    }
+  ],
+  "latestAsanaReportedByRoot": {
+    "appleComment": "1220890694014039",
+    "appleUTC": "2026-11-25T07:24:29.481Z",
+    "projectStatus": "1220890575943543",
+    "projectUTC": "2026-11-25T07:24:31.089Z",
+    "color": "yellow"
+  },
+  "preservationScope": {
+    "originalThreeWorktrees": "32 changed files verified by SHA256 plus metadata before/after in private review receipt",
+    "priorHeldDocs": "35 paths; intentional report-only edit, other34 checked by metadata; old historical validation not repeated",
+    "aborted0458ContentsRead": false
+  },
+  "mutations": {
+    "reportEdited": true,
+    "newEvidenceFilesAdded": 20,
+    "sourceEdited": false,
+    "gitCommitOrPush": false,
+    "macBuildAuthOrRuntimeAction": false
+  },
+  "copiedSourceNatureCounts": {
+    "existingFilesCopiedByteForByte": 18,
+    "nativeOrSourceReceipts": 17,
+    "alreadyDerivedBindingExtractions": 1
+  },
+  "precisionCorrectionUTC": "2026-11-25T07:40:22.103569+00:00"
+}

@@ -1,0 +1,31 @@
+[
+  {
+    "at": "2026-11-25T09:56:10.315590+00:00",
+    "stage": "upload_observed_terminal",
+    "fits": true,
+    "riskReasons": [],
+    "kernelMemoryPressureLevel": 1,
+    "reclaimableMemoryBytes": 9796190208,
+    "memoryBudgetBytes": 1610612736,
+    "additionalMemoryGiB": 0.5,
+    "memoryTransientMarginGiB": 1,
+    "swapUsedBytes": 226691645,
+    "swapChangeFromObservedBaselineBytes": -8388607,
+    "diskAvailableBytes": 3924443136,
+    "diskBudgetBytes": 2466642067,
+    "additionalDiskGiB": 0.0625,
+    "concurrentDiskGrowthBytesPerSecond": 350068.8272209055,
+    "growthHorizonSeconds": 720,
+    "osDiskMarginGiB": 2,
+    "pages": {
+      "Pages free": 6752,
+      "Pages inactive": 590890,
+      "Pages speculative": 270
+    },
+    "pageSize": 16384,
+    "cpuOrJobCountGate": false,
+    "observedByReadOnlyObserver": true,
+    "uploadAlreadyStartedUTC": "2026-11-25T09:51:08.749006+00:00",
+    "notRetroactive": true
+  }
+]

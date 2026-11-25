@@ -1,0 +1,185 @@
+{
+  "active_compartments_including_root": 1,
+  "assessment_completed": true,
+  "billing_entitlement_exposed_by_selected_apis": false,
+  "binding_sha256": "ec71e521ae5d5b130dbe6f5b825f1977f484c7e7521a45fa48e2c74c4d09dfd1",
+  "calls": [
+    {
+      "operation": "GetTenancy[existing DEFAULT only]",
+      "status": 200
+    },
+    {
+      "operation": "GetBoundVolume[boot]",
+      "status": 200
+    },
+    {
+      "operation": "GetBoundVolume[data]",
+      "status": 200
+    },
+    {
+      "operation": "ListCompartments[root subtree, ANY]",
+      "status": 200
+    },
+    {
+      "compartment_index": 0,
+      "operation": "ListBootVolumes",
+      "status": 200
+    },
+    {
+      "compartment_index": 0,
+      "operation": "ListVolumes",
+      "status": 200
+    },
+    {
+      "operation": "ListLimitValues[total-storage-gb]",
+      "status": 200
+    },
+    {
+      "operation": "GetResourceAvailability[total-storage-gb]",
+      "status": 200
+    }
+  ],
+  "cloud_writes": 0,
+  "combined_provisioned_gb": 200,
+  "compartment_discovery_complete": true,
+  "cost_is_verified_zero": false,
+  "derived_readonly_source_sha256": "406e251cf2a20bdc04f0e0967e8b78fb3ec06516abf248eba2c0e348cc25900d",
+  "documented_always_free_combined_gb": 200,
+  "duplicate_resource_rows": 0,
+  "elapsed_seconds": 18.422,
+  "exact_bound_volumes": [
+    {
+      "autotune_enabled": false,
+      "id_sha256": "16f63e72133ed38ec16e4431d617c0605d1a54ef309adbaf4b706d6b5313b004",
+      "identity_compartment_and_ad_match": true,
+      "matches_last_verified_size": true,
+      "role": "boot",
+      "size_in_gbs": 50,
+      "size_in_mbs": 51200,
+      "state": "AVAILABLE",
+      "vpus_per_gb": 10
+    },
+    {
+      "autotune_enabled": false,
+      "id_sha256": "37610e120e864c0110cd1657aaacc3decd96cbda0341ef209eb57090b8440ba9",
+      "identity_compartment_and_ad_match": true,
+      "matches_last_verified_size": true,
+      "role": "data",
+      "size_in_gbs": 103,
+      "size_in_mbs": 105472,
+      "state": "AVAILABLE",
+      "vpus_per_gb": 10
+    }
+  ],
+  "execution_authorized_by_this_receipt": false,
+  "finished_at_utc": "2026-11-25T08:38:20.497774+00:00",
+  "gaps": [],
+  "home_region_identifier": "il-jerusalem-1",
+  "home_region_key": "MTZ",
+  "home_region_matches_selected_region": true,
+  "limits_are_not_billing_entitlements": true,
+  "limits_complete": true,
+  "no_credential_values_or_other_resource_names_ids": true,
+  "observed_at_utc": "2026-11-25T08:38:02.078610+00:00",
+  "other_resource_identifiers_or_names_emitted": false,
+  "provider_billing_label_verified": false,
+  "quantity_headroom_under_documented_allowance_gb": 0,
+  "read_only": true,
+  "region": "il-jerusalem-1",
+  "regional_volume_lists_unfiltered_by_ad": true,
+  "resource_enumeration_complete": true,
+  "resources": {
+    "boot": {
+      "autotune_enabled_count": 0,
+      "missing_size_count": 0,
+      "nonterminated_count": 2,
+      "performance_counts": {
+        "10": 2
+      },
+      "returned_count": 2,
+      "states": {
+        "AVAILABLE": 2
+      },
+      "total_size_in_gbs": 97,
+      "unknown_performance_count": 0
+    },
+    "data": {
+      "autotune_enabled_count": 0,
+      "missing_size_count": 0,
+      "nonterminated_count": 1,
+      "performance_counts": {
+        "10": 1
+      },
+      "returned_count": 1,
+      "states": {
+        "AVAILABLE": 1
+      },
+      "total_size_in_gbs": 103,
+      "unknown_performance_count": 0
+    }
+  },
+  "scope": "Same existing DEFAULT tenancy and il-jerusalem-1; exact two bound volumes, regional aggregate and matching-AD storage limit only.",
+  "sdk_version": "2.192.0",
+  "selected_endpoint_hosts": [
+    {
+      "hostname": "identity.il-jerusalem-1.oci.oraclecloud.com",
+      "old_raw_template_guard_passed": true,
+      "raw_endpoint_contains_dualstack_option": false,
+      "scheme": "https",
+      "service": "identity"
+    },
+    {
+      "hostname": "iaas.il-jerusalem-1.oraclecloud.com",
+      "old_raw_template_guard_passed": false,
+      "raw_endpoint_contains_dualstack_option": true,
+      "scheme": "https",
+      "service": "blockstorage"
+    },
+    {
+      "hostname": "limits.il-jerusalem-1.oci.oraclecloud.com",
+      "old_raw_template_guard_passed": true,
+      "raw_endpoint_contains_dualstack_option": false,
+      "scheme": "https",
+      "service": "limits"
+    }
+  ],
+  "selected_profile_region_matches_authorized": true,
+  "service_limits": [
+    {
+      "matches_both_target_ad": true,
+      "name": "total-storage-gb",
+      "resource_availability": {
+        "available": 0,
+        "effective_quota_value": null,
+        "fractional_availability": 0.0,
+        "fractional_usage": 200.0,
+        "used": 200
+      },
+      "scope_type": "AD",
+      "value": 200
+    }
+  ],
+  "snapshot_not_atomic": true,
+  "target_ad_matches_both_volumes": true,
+  "target_volumes": [
+    {
+      "autotune_enabled": false,
+      "matches_prior_size": true,
+      "role": "boot",
+      "size_in_gbs": 50,
+      "state": "AVAILABLE",
+      "vpus_per_gb": 10
+    },
+    {
+      "autotune_enabled": false,
+      "matches_prior_size": true,
+      "role": "data",
+      "size_in_gbs": 103,
+      "state": "AVAILABLE",
+      "vpus_per_gb": 10
+    }
+  ],
+  "targets_found_and_unchanged": true,
+  "update_permission_verified": false,
+  "write_backup_resize_or_billing_changes": false
+}

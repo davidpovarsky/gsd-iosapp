@@ -1,0 +1,275 @@
+{
+  "startedUTC": "2026-11-25T03:21:23.073120+00:00",
+  "phase": "complete",
+  "testSourceSHA": "a2f1c09d6ef2b3ba9a281288bab985ebe44aa9ac",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "composedManifestSHA256": "1ce5327d90029445753aba9ad329c1ed211541a15aa4574511e20f126411eba7",
+  "compositionReceiptSHA256": "75d406eb12fa0f6bf2672ac9b9b386a0a0b7414ecb869d7f57a2fd7acac931d0",
+  "systemTestSHA256": "f512cf030bfff35a63c834dcb18783380568e9219f71c814659b84a71a153814",
+  "selectedKind": "widget",
+  "singleCaseOnly": true,
+  "passed": false,
+  "shortcutInvoked": false,
+  "widgetTimelineVerified": false,
+  "fullSystemSurfaceCoverage": false,
+  "accountGrantVerified": false,
+  "ownedSimulatorsRemoved": true,
+  "suites": {
+    "widget": {
+      "passed": false,
+      "startedUTC": "2026-11-25T03:21:24.919525+00:00",
+      "method": "test01RealWidgetTimelineRefreshAndTaskTap",
+      "ownedDevicesRemoved": true,
+      "device": "4C85AC28-E47D-4AAD-A3EC-0000DF21B0DB",
+      "deviceType": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "command": [
+        "xcodebuild",
+        "test-without-building",
+        "-xctestrun",
+        "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/composed-products/GSDScreenshots_iphonesimulator27.1-arm64.xctestrun",
+        "-destination",
+        "platform=iOS Simulator,id=4C85AC28-E47D-4AAD-A3EC-0000DF21B0DB",
+        "-destination-timeout",
+        "90",
+        "-parallel-testing-enabled",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "-resultBundlePath",
+        "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/runs/uia2f1c09d-widget-a3cijbv7/private/widget.xcresult",
+        "-testLanguage",
+        "he",
+        "-testRegion",
+        "IL",
+        "-only-testing:GSDScreenshotTests/GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap"
+      ],
+      "result": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/runs/uia2f1c09d-widget-a3cijbv7/private/widget.xcresult",
+      "artifacts": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/runs/uia2f1c09d-widget-a3cijbv7/private/widget-ui",
+      "returncode": 65,
+      "testSummary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "4C85AC28-E47D-4AAD-A3EC-0000DF21B0DB",
+              "deviceName": "GSD-Supplemental-widget-70095529aa4f4d52a56b2e8d1c87b564",
+              "modelName": "iPhone 17 Pro",
+              "osBuildNumber": "24B8117",
+              "osVersion": "27.2",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 1,
+            "passedTests": 0,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "GSDScreenshots \u00b7 Built with macOS 27.0",
+        "expectedFailures": 0,
+        "failedTests": 1,
+        "finishTime": 1795577301.941,
+        "passedTests": 0,
+        "result": "Failed",
+        "runtimeWarnings": [],
+        "skippedTests": 0,
+        "startTime": 1795576939.707,
+        "statistics": [],
+        "testFailures": [
+          {
+            "failureText": "Failed to get matching snapshot: No matches found for first query match sequence: `Descendants matching type TextField` -> `Elements matching predicate 'value == \"GSD-Widget-A-0ADEF83A\"'`, given input App element pid: 6646",
+            "targetName": "GSDScreenshotTests",
+            "testIdentifier": 1,
+            "testIdentifierString": "GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap()",
+            "testIdentifierURL": "test://com.apple.xcode/GSD/GSDScreenshotTests/GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap",
+            "testName": "test01RealWidgetTimelineRefreshAndTaskTap()"
+          }
+        ],
+        "title": "Test - GSDScreenshots",
+        "topInsights": [],
+        "totalTestCount": 1
+      },
+      "observation": {
+        "initialTitle": "GSD-Widget-A-0ADEF83A",
+        "installedWidgetDisplayedInitialTask": true,
+        "lastCapture": "12-installed-widget-initial",
+        "passed": false,
+        "personalAccountUsed": false,
+        "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+        "schemaVersion": 1,
+        "shortcutInvoked": false,
+        "simulatorID": "4C85AC28-E47D-4AAD-A3EC-0000DF21B0DB",
+        "siriVerified": false,
+        "taskCardID": "task-card-PyJF4VC4HVvQ",
+        "updatedTitle": "GSD-Widget-B-0ADEF83A",
+        "voiceOverSpeechVerified": false,
+        "watchConnectivityVerified": false,
+        "widgetGalleryControls": [
+          {
+            "elementType": 9,
+            "enabled": true,
+            "hittable": true,
+            "identifier": "com.apple.springboardhome.application-shortcut-item.rearrange-icons",
+            "label": "\u05e2\u05e8\u05d9\u05db\u05ea \u05de\u05e1\u05da \u05d4\u05d1\u05d9\u05ea",
+            "selected": false,
+            "stage": "11-widget-gallery-00-context-menu",
+            "value": ""
+          },
+          {
+            "elementType": 9,
+            "enabled": true,
+            "hittable": true,
+            "identifier": "",
+            "label": "\u05e2\u05e8\u05d9\u05db\u05d4",
+            "selected": false,
+            "stage": "11-widget-gallery-01-edit-mode",
+            "value": ""
+          },
+          {
+            "elementType": 9,
+            "enabled": true,
+            "hittable": true,
+            "identifier": "",
+            "label": "\u05d4\u05d5\u05e1\u05e4\u05ea \u05d5\u05d9\u05d3\u05d2\u05f3\u05d8",
+            "selected": false,
+            "stage": "11-widget-gallery-02-edit-menu",
+            "value": ""
+          },
+          {
+            "elementType": 45,
+            "enabled": true,
+            "hittable": true,
+            "identifier": "",
+            "label": "\u05d7\u05d9\u05e4\u05d5\u05e9 \u05d5\u05d9\u05d3\u05d2\u05f3\u05d8\u05d9\u05dd",
+            "selected": false,
+            "stage": "11-widget-gallery-03-search",
+            "value": "\u05d7\u05d9\u05e4\u05d5\u05e9 \u05d5\u05d9\u05d3\u05d2\u05f3\u05d8\u05d9\u05dd"
+          },
+          {
+            "elementType": 75,
+            "enabled": true,
+            "hittable": true,
+            "identifier": "",
+            "label": "GSD",
+            "selected": false,
+            "stage": "11-widget-gallery-04-gsd-results",
+            "value": ""
+          },
+          {
+            "elementType": 9,
+            "enabled": true,
+            "hittable": true,
+            "identifier": "",
+            "label": " \u05d4\u05d5\u05e1\u05e4\u05ea \u05d4\u05d5\u05d5\u05d9\u05d3\u05d2\u05f3\u05d8",
+            "selected": false,
+            "stage": "11-widget-gallery-05-install-ready",
+            "value": ""
+          }
+        ],
+        "widgetGalleryFamilyControls": [],
+        "widgetGalleryFamilySelectionMode": "native_default_preview",
+        "widgetGalleryInstallationRequested": true,
+        "widgetGalleryPreviewNames": [
+          "GSD",
+          "\u05d4\u05de\u05d9\u05e7\u05d5\u05d3 \u05dc\u05d4\u05d9\u05d5\u05dd"
+        ],
+        "widgetGallerySelectedFamily": "unknown/default"
+      },
+      "observationSHA256": "f55a48f36a516f008b4beec3aaff10516ee5a927ab248ab2d9eab8ced0387393",
+      "failure": "xctest_failed",
+      "finishedUTC": "2026-11-25T03:28:22.466310+00:00"
+    }
+  },
+  "wrapperPID": 4128,
+  "capacityPolicySHA256": "54d312bfd156eff91e84336c3527d08c96dd1d8865cb1c62ada29c057692ee96",
+  "capacityChecks": [
+    {
+      "at": "2026-11-25T03:21:23.084373+00:00",
+      "stage": "preflight",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 10125230080,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 277023293,
+      "swapChangeFromObservedBaselineBytes": 54326722,
+      "diskAvailableBytes": 15978315776,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 331910,
+        "Pages inactive": 266588,
+        "Pages speculative": 19497
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T03:21:25.069127+00:00",
+      "stage": "before_device",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 10176528384,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 277023293,
+      "swapChangeFromObservedBaselineBytes": 54326722,
+      "diskAvailableBytes": 15934083072,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 299858,
+        "Pages inactive": 301538,
+        "Pages speculative": 19730
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T03:22:14.697994+00:00",
+      "stage": "after_install",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8002404352,
+      "memoryBudgetBytes": 2147483648,
+      "additionalMemoryGiB": 1,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 277023293,
+      "swapChangeFromObservedBaselineBytes": 54326722,
+      "diskAvailableBytes": 14149447680,
+      "diskBudgetBytes": 5986872050,
+      "additionalDiskGiB": 1,
+      "concurrentDiskGrowthBytesPerSecond": 3841175.80301344,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 133074,
+        "Pages inactive": 296959,
+        "Pages speculative": 58395
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    }
+  ],
+  "driver": {
+    "developerDir": "/Applications/Xcode.app/Contents/Developer",
+    "version": "Xcode 27.0\nBuild version 27A266a",
+    "resolvedXcodebuild": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild"
+  },
+  "sourceAndFrozenProductsUnchanged": true,
+  "finishedUTC": "2026-11-25T03:28:28.945892+00:00"
+}

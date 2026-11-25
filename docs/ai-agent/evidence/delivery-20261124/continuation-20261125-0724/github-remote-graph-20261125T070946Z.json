@@ -1,0 +1,1142 @@
+{
+  "schemaVersion": 1,
+  "kind": "projection_of_retained_read_only_github_observations",
+  "repository": "davidpovarsky/gsd-iosapp",
+  "observedStartUTC": "2026-11-25T07:06:31.468538+00:00",
+  "observedEndUTC": "2026-11-25T07:09:46.274498+00:00",
+  "sourceMethod": "Authenticated Windows gh api GET responses retained from the completed audit; this export makes no new network request.",
+  "mutationsPerformed": false,
+  "refs": {
+    "main": {
+      "startedUTC": "2026-11-25T07:06:31.468538+00:00",
+      "finishedUTC": "2026-11-25T07:06:32.033921+00:00",
+      "returncode": 0,
+      "data": {
+        "ref": "refs/heads/main",
+        "sha": "fe35879146b7994f71b5d0a49289336315604192",
+        "type": "commit",
+        "url": "https://api.github.com/repos/davidpovarsky/gsd-iosapp/git/refs/heads/main"
+      },
+      "error": null
+    },
+    "canonical": {
+      "startedUTC": "2026-11-25T07:06:31.468538+00:00",
+      "finishedUTC": "2026-11-25T07:06:32.027335+00:00",
+      "returncode": 0,
+      "data": {
+        "ref": "refs/heads/fix/gsd-latest-sdk-completion-20261124",
+        "sha": "b5588f3f0c42df328dba34024d569be8605e51d0",
+        "type": "commit",
+        "url": "https://api.github.com/repos/davidpovarsky/gsd-iosapp/git/refs/heads/fix/gsd-latest-sdk-completion-20261124"
+      },
+      "error": null
+    },
+    "docs": {
+      "startedUTC": "2026-11-25T07:09:45.829737+00:00",
+      "finishedUTC": "2026-11-25T07:09:46.274498+00:00",
+      "returncode": 0,
+      "data": {
+        "ref": "refs/heads/docs/gsd-delivery-49-20261124",
+        "sha": "ad5e6641bf8fdcf6943c29c7ae179cdb89b59d2f"
+      },
+      "error": null
+    },
+    "final": {
+      "startedUTC": "2026-11-25T07:09:45.829737+00:00",
+      "finishedUTC": "2026-11-25T07:09:46.263741+00:00",
+      "returncode": 0,
+      "data": {
+        "ref": "refs/heads/fix/gsd-widget-final-20261125",
+        "sha": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61"
+      },
+      "error": null
+    }
+  },
+  "comparisons": {
+    "mainToFinal": {
+      "startedUTC": "2026-11-25T07:07:10.755154+00:00",
+      "finishedUTC": "2026-11-25T07:07:12.466956+00:00",
+      "returncode": 0,
+      "data": {
+        "status": "ahead",
+        "ahead_by": 148,
+        "behind_by": 0,
+        "total_commits": 148,
+        "base": "fe35879146b7994f71b5d0a49289336315604192",
+        "merge_base": "fe35879146b7994f71b5d0a49289336315604192",
+        "url": "https://github.com/davidpovarsky/gsd-iosapp/compare/fe35879146b7994f71b5d0a49289336315604192...fd6e2944a5a215d317fa5cc2a2802121e3ae3d61"
+      },
+      "error": null
+    },
+    "canonicalToFinal": {
+      "startedUTC": "2026-11-25T07:07:10.755154+00:00",
+      "finishedUTC": "2026-11-25T07:07:11.608372+00:00",
+      "returncode": 0,
+      "data": {
+        "ahead_by": 8,
+        "base": "b5588f3f0c42df328dba34024d569be8605e51d0",
+        "behind_by": 0,
+        "commits": [
+          {
+            "parents": [
+              "b5588f3f0c42df328dba34024d569be8605e51d0"
+            ],
+            "sha": "870cf76ff383b7b90368e952796f7c250d10e1d6",
+            "subject": "test(systems): use observed native controls"
+          },
+          {
+            "parents": [
+              "870cf76ff383b7b90368e952796f7c250d10e1d6"
+            ],
+            "sha": "41d2b422dd259cd4b04abef8911449c74a89c9e4",
+            "subject": "test(widget): follow the observed native gallery route"
+          },
+          {
+            "parents": [
+              "41d2b422dd259cd4b04abef8911449c74a89c9e4"
+            ],
+            "sha": "7098dcb9abdc2d7e8e20afa8d9ec95d7e69c34ef",
+            "subject": "test(shortcuts): submit the observed SpringBoard Task prompt"
+          },
+          {
+            "parents": [
+              "7098dcb9abdc2d7e8e20afa8d9ec95d7e69c34ef"
+            ],
+            "sha": "a2f1c09d6ef2b3ba9a281288bab985ebe44aa9ac",
+            "subject": "test(widget): select the observed gallery result cell"
+          },
+          {
+            "parents": [
+              "a2f1c09d6ef2b3ba9a281288bab985ebe44aa9ac"
+            ],
+            "sha": "791faede904ec32e4254c0346919515edd792626",
+            "subject": "test(widget): keep title lookup stable during editing"
+          },
+          {
+            "parents": [
+              "791faede904ec32e4254c0346919515edd792626"
+            ],
+            "sha": "3ca346ef595a6a7e062a2a2fc66cbe5b2a76ff2c",
+            "subject": "test(widget): wait for Home icon readiness"
+          },
+          {
+            "parents": [
+              "3ca346ef595a6a7e062a2a2fc66cbe5b2a76ff2c"
+            ],
+            "sha": "1d4033c54542b161da65ab34f083cac8aec0b1c4",
+            "subject": "fix(widget): hold database access while opening task links"
+          },
+          {
+            "parents": [
+              "1d4033c54542b161da65ab34f083cac8aec0b1c4"
+            ],
+            "sha": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+            "subject": "ci: add bound final Widget acceptance path"
+          }
+        ],
+        "files": [
+          {
+            "additions": 43,
+            "deletions": 1,
+            "path": ".github/workflows/gsd-hanlin-agent-ios.yml",
+            "status": "modified"
+          },
+          {
+            "additions": 11,
+            "deletions": 0,
+            "path": "App/ContentView.swift",
+            "status": "modified"
+          },
+          {
+            "additions": 144,
+            "deletions": 23,
+            "path": "ScreenshotTests/GSDNativeSystemAcceptanceUITests.swift",
+            "status": "modified"
+          },
+          {
+            "additions": 470,
+            "deletions": 0,
+            "path": "scripts/gsd_widget_actions_acceptance.py",
+            "status": "added"
+          },
+          {
+            "additions": 369,
+            "deletions": 0,
+            "path": "scripts/test_gsd_widget_actions_acceptance.py",
+            "status": "added"
+          }
+        ],
+        "merge_base": "b5588f3f0c42df328dba34024d569be8605e51d0",
+        "status": "ahead",
+        "total_commits": 8,
+        "url": "https://github.com/davidpovarsky/gsd-iosapp/compare/b5588f3f0c42df328dba34024d569be8605e51d0...fd6e2944a5a215d317fa5cc2a2802121e3ae3d61"
+      },
+      "error": null
+    },
+    "canonicalToDocs": {
+      "startedUTC": "2026-11-25T07:07:10.755154+00:00",
+      "finishedUTC": "2026-11-25T07:07:11.744320+00:00",
+      "returncode": 0,
+      "data": {
+        "status": "diverged",
+        "ahead_by": 6,
+        "behind_by": 4,
+        "total_commits": 6,
+        "base": "b5588f3f0c42df328dba34024d569be8605e51d0",
+        "merge_base": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+        "url": "https://github.com/davidpovarsky/gsd-iosapp/compare/b5588f3f0c42df328dba34024d569be8605e51d0...ad5e6641bf8fdcf6943c29c7ae179cdb89b59d2f"
+      },
+      "error": null
+    },
+    "finalToDocs": {
+      "startedUTC": "2026-11-25T07:08:08.965271+00:00",
+      "finishedUTC": "2026-11-25T07:08:10.121093+00:00",
+      "returncode": 0,
+      "data": {
+        "status": "diverged",
+        "ahead_by": 6,
+        "behind_by": 12,
+        "total_commits": 6,
+        "base": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+        "merge_base": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+        "url": "https://github.com/davidpovarsky/gsd-iosapp/compare/fd6e2944a5a215d317fa5cc2a2802121e3ae3d61...ad5e6641bf8fdcf6943c29c7ae179cdb89b59d2f"
+      },
+      "error": null
+    },
+    "commonAncestorToFinal": {
+      "startedUTC": "2026-11-25T07:08:08.965271+00:00",
+      "finishedUTC": "2026-11-25T07:08:09.768700+00:00",
+      "returncode": 0,
+      "data": {
+        "ahead_by": 12,
+        "behind_by": 0,
+        "files": [
+          {
+            "path": ".github/workflows/gsd-hanlin-agent-ios.yml",
+            "status": "modified"
+          },
+          {
+            "path": "App/ContentView.swift",
+            "status": "modified"
+          },
+          {
+            "path": "GSD.xcodeproj/project.pbxproj",
+            "status": "modified"
+          },
+          {
+            "path": "ScreenshotTests/GSDNativeSystemAcceptanceUITests.swift",
+            "status": "added"
+          },
+          {
+            "path": "ScreenshotTests/GSDSystemSurfaceUITests.swift",
+            "status": "modified"
+          },
+          {
+            "path": "docs/ai-agent/SYSTEM_SURFACE_ACCEPTANCE_PLAN_20261124.md",
+            "status": "added"
+          },
+          {
+            "path": "scripts/gsd_local_supplemental_validation.py",
+            "status": "modified"
+          },
+          {
+            "path": "scripts/gsd_widget_actions_acceptance.py",
+            "status": "added"
+          },
+          {
+            "path": "scripts/test_gsd_widget_actions_acceptance.py",
+            "status": "added"
+          }
+        ],
+        "merge_base": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+        "status": "ahead",
+        "url": "https://github.com/davidpovarsky/gsd-iosapp/compare/9f2736d3e071d2ceb4a6dfada1a2c3767c9906be...fd6e2944a5a215d317fa5cc2a2802121e3ae3d61"
+      },
+      "error": null
+    }
+  },
+  "pr3": {
+    "startedUTC": "2026-11-25T07:08:08.966779+00:00",
+    "finishedUTC": "2026-11-25T07:08:09.709654+00:00",
+    "returncode": 0,
+    "data": {
+      "base": {
+        "ref": "fix/gsd-latest-sdk-completion-20261124",
+        "sha": "0ae293b8f1d867a09be6d95cc7029a9442728bfc"
+      },
+      "changed_files": 97,
+      "draft": true,
+      "head": {
+        "ref": "docs/gsd-delivery-49-20261124",
+        "sha": "ad5e6641bf8fdcf6943c29c7ae179cdb89b59d2f"
+      },
+      "merge_commit_sha": "6476816a13e491e33a542d72a336650f25a68864",
+      "mergeable": true,
+      "mergeable_state": "clean",
+      "merged": false,
+      "merged_at": null,
+      "number": 3,
+      "state": "open",
+      "updated_at": "2026-11-25T03:46:30Z"
+    },
+    "error": null
+  },
+  "pr3TestMerge": {
+    "startedUTC": "2026-11-25T07:08:08.965271+00:00",
+    "finishedUTC": "2026-11-25T07:08:09.540885+00:00",
+    "returncode": 0,
+    "data": {
+      "parents": [
+        "b5588f3f0c42df328dba34024d569be8605e51d0",
+        "ad5e6641bf8fdcf6943c29c7ae179cdb89b59d2f"
+      ],
+      "sha": "6476816a13e491e33a542d72a336650f25a68864",
+      "subject": "Merge ad5e6641bf8fdcf6943c29c7ae179cdb89b59d2f into b5588f3f0c42df328dba34024d569be8605e51d0",
+      "tree": "3e4eea39e64922bb4277b68037411922062f6b8a"
+    },
+    "error": null
+  },
+  "pr3ChangedFiles": {
+    "startedUTC": "2026-11-25T07:07:10.756153+00:00",
+    "finishedUTC": "2026-11-25T07:07:11.656290+00:00",
+    "returncode": 0,
+    "data": [
+      {
+        "additions": 7,
+        "deletions": 5,
+        "path": "docs/ai-agent/GSD_COMPLETION_20261124.md",
+        "previous_filename": null,
+        "sha": "0d72bc232e76fb90bd5bf14ffc6a4cb2416bfeec",
+        "status": "modified"
+      },
+      {
+        "additions": 313,
+        "deletions": 0,
+        "path": "docs/ai-agent/GSD_DELIVERY_CURRENT_20261124.md",
+        "previous_filename": null,
+        "sha": "c07d49db31de8b02e47b927e94be90a8805ea0db",
+        "status": "added"
+      },
+      {
+        "additions": 2,
+        "deletions": 0,
+        "path": "docs/ai-agent/GSD_INTEGRATION_20261124.md",
+        "previous_filename": null,
+        "sha": "c3c4f9d0c5c5c06257d9a196e3fe1354fb1c1df6",
+        "status": "modified"
+      },
+      {
+        "additions": 3,
+        "deletions": 1,
+        "path": "docs/ai-agent/HEBREW_RTL_ACCEPTANCE.md",
+        "previous_filename": null,
+        "sha": "5d02ff3249a5d2ed80a1fb5af7bd5bcd5fc8c936",
+        "status": "modified"
+      },
+      {
+        "additions": 2,
+        "deletions": 0,
+        "path": "docs/ai-agent/SUPPLEMENTAL_LOCAL_VALIDATION_20261124.md",
+        "previous_filename": null,
+        "sha": "0ca7b0e7245648a662ae1d4270f3710edd8c8fdf",
+        "status": "modified"
+      },
+      {
+        "additions": 1,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/asc-readonly-20261124T225746Z.json",
+        "previous_filename": null,
+        "sha": "e78774181f8c51e2b6f17faa3df1acaa5824a89b",
+        "status": "added"
+      },
+      {
+        "additions": 48,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/asc49-train-readonly-20261125T021447Z.json",
+        "previous_filename": null,
+        "sha": "21d0fc4ee1710bd121e7f0987e6bfe34a74407d9",
+        "status": "added"
+      },
+      {
+        "additions": 220,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/completion-manifest.json",
+        "previous_filename": null,
+        "sha": "93a23ea637d9acd94254ec1f58200da880c6617a",
+        "status": "added"
+      },
+      {
+        "additions": 124,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0106-manifest.json",
+        "previous_filename": null,
+        "sha": "4cd8cc73d0b58b5d753d504ccc5fc23c0e12cbf1",
+        "status": "added"
+      },
+      {
+        "additions": 149,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0225-manifest.json",
+        "previous_filename": null,
+        "sha": "be705ea64a597d350c79aae1b74e73e3b6ede649",
+        "status": "added"
+      },
+      {
+        "additions": 103,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0254-manifest.json",
+        "previous_filename": null,
+        "sha": "1afa6a4a35e49e7aa4368d3e465c91be3c8ecce3",
+        "status": "added"
+      },
+      {
+        "additions": 191,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0324-manifest.json",
+        "previous_filename": null,
+        "sha": "406271f070ecf9b32ec5e02081ecc096d6b99164",
+        "status": "added"
+      },
+      {
+        "additions": 0,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/ipad-en-dashboard.png",
+        "previous_filename": null,
+        "sha": "491094d7fd962207926d9cfcf416e35bd3728f6b",
+        "status": "added"
+      },
+      {
+        "additions": 0,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/ipad-he-dashboard.png",
+        "previous_filename": null,
+        "sha": "2c33b95e623e562e80b8e272e9024af9954656ae",
+        "status": "added"
+      },
+      {
+        "additions": 0,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/iphone-en-matrix.png",
+        "previous_filename": null,
+        "sha": "80b38f08cecbcc4fe4242a3664b41d15f618f968",
+        "status": "added"
+      },
+      {
+        "additions": 0,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/iphone-he-matrix.png",
+        "previous_filename": null,
+        "sha": "5f90cb11389fb810ec6d135a09343acb335380b1",
+        "status": "added"
+      },
+      {
+        "additions": 42,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/native-build-671.json",
+        "previous_filename": null,
+        "sha": "298353a82eafea58bcfec75bf1c1b1681b4d2805",
+        "status": "added"
+      },
+      {
+        "additions": 97,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/native-ui-671.json",
+        "previous_filename": null,
+        "sha": "a99f4c303817c1268c68fab1a11a5a3efb6f12eb",
+        "status": "added"
+      },
+      {
+        "additions": 161,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/oracle-readonly-health-20261125T031134Z.json",
+        "previous_filename": null,
+        "sha": "b87397fd6577ee3a474b700cdfee33b3b78411c3",
+        "status": "added"
+      },
+      {
+        "additions": 69,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/oracle-release-readiness-20261124T235834Z.json",
+        "previous_filename": null,
+        "sha": "718ee4b591ac35f1a887d1c5ce42b3436fef56b3",
+        "status": "added"
+      },
+      {
+        "additions": 37,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/oracle-scheduled-backup-20261125T032340Z.json",
+        "previous_filename": null,
+        "sha": "3b4f851431539f0d6a46ef12859d0a1973686dbb",
+        "status": "added"
+      },
+      {
+        "additions": 46,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/packages-77c045-historical.json",
+        "previous_filename": null,
+        "sha": "f39a20b53e658859944c93cb8ca095a7b63c8be8",
+        "status": "added"
+      },
+      {
+        "additions": 43,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/packages-9d0faa-historical.json",
+        "previous_filename": null,
+        "sha": "764c6e8cdb95c69634ac6f568f89ddcc6776a3e4",
+        "status": "added"
+      },
+      {
+        "additions": 55,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/preconsent-f1-observation.json",
+        "previous_filename": null,
+        "sha": "2588f770fb1aa6934cd1ead85e607c3966963487",
+        "status": "added"
+      },
+      {
+        "additions": 76,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/release49-9f-archive-signatures.json",
+        "previous_filename": null,
+        "sha": "bef94345049f65eb81d2a72c98ea3b95592ca71a",
+        "status": "added"
+      },
+      {
+        "additions": 205,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/release49-9f-archive-terminal.json",
+        "previous_filename": null,
+        "sha": "bb219def21af1fbf8d3a317a61ab7f53d2c03862",
+        "status": "added"
+      },
+      {
+        "additions": 76,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/release49-9f-ipa-signatures.json",
+        "previous_filename": null,
+        "sha": "bef94345049f65eb81d2a72c98ea3b95592ca71a",
+        "status": "added"
+      },
+      {
+        "additions": 163,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/release49-9f-status.json",
+        "previous_filename": null,
+        "sha": "453106407860710a30c578eb01c5cc1616bea502",
+        "status": "added"
+      },
+      {
+        "additions": 31,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/release49-9f-transfer-manifest.json",
+        "previous_filename": null,
+        "sha": "464f2fc07bd4bfa8690d911cb0574e53ac99c79f",
+        "status": "added"
+      },
+      {
+        "additions": 0,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-0ae-after-cancel.png",
+        "previous_filename": null,
+        "sha": "981c96021bbdc7232063894a4ad71c766009423c",
+        "status": "added"
+      },
+      {
+        "additions": 19,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-0ae-observation-summary.json",
+        "previous_filename": null,
+        "sha": "28df8a9668247861240c9db1ca899137db53ec5f",
+        "status": "added"
+      },
+      {
+        "additions": 35,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-0ae-runtime-binding.json",
+        "previous_filename": null,
+        "sha": "f553ead3c63cee766c9d0fcae2e36b10d937c317",
+        "status": "added"
+      },
+      {
+        "additions": 21,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-0ae-summary.json",
+        "previous_filename": null,
+        "sha": "c90f89196491bdc695492937e278abe1719f94ab",
+        "status": "added"
+      },
+      {
+        "additions": 19,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-0ae-terminal.json",
+        "previous_filename": null,
+        "sha": "928239b1813984f03931b4855ad1a8d51a9d20ad",
+        "status": "added"
+      },
+      {
+        "additions": 8,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-0ae-test-counts.json",
+        "previous_filename": null,
+        "sha": "0caa5a606dcabc69d235d5f76c15adc902cf262d",
+        "status": "added"
+      },
+      {
+        "additions": 18,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-9190-observation-summary.json",
+        "previous_filename": null,
+        "sha": "9e498e8410c9d877f230d17e01efe3e75001fc3a",
+        "status": "added"
+      },
+      {
+        "additions": 0,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-9190-returned-activity-sheet.png",
+        "previous_filename": null,
+        "sha": "01a5c0af8d4a0a70f5c2c6da8bc3c5f1f4dec8e9",
+        "status": "added"
+      },
+      {
+        "additions": 33,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-9190-runtime-binding.json",
+        "previous_filename": null,
+        "sha": "6e77f760f6713482b174d0438f909ce0225926fd",
+        "status": "added"
+      },
+      {
+        "additions": 21,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-9190-summary.json",
+        "previous_filename": null,
+        "sha": "f174f9760b6bc9e2d2d06f9b29235d28cf053ed7",
+        "status": "added"
+      },
+      {
+        "additions": 17,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-9190-terminal.json",
+        "previous_filename": null,
+        "sha": "a157026fec3942f77398eea3608bc8efaa6b793c",
+        "status": "added"
+      },
+      {
+        "additions": 0,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-9f-post-add-failed.png",
+        "previous_filename": null,
+        "sha": "ed304c62e88f4e87ff4755d8fbedaac00396849d",
+        "status": "added"
+      },
+      {
+        "additions": 0,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-b558-after-dismissal.png",
+        "previous_filename": null,
+        "sha": "fdac648ea5a082f6bf9f2bf2819334f67e1e979c",
+        "status": "added"
+      },
+      {
+        "additions": 18,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-b558-observation-summary.json",
+        "previous_filename": null,
+        "sha": "ee5ee449060609160010f42d2723487180e81a73",
+        "status": "added"
+      },
+      {
+        "additions": 44,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-b558-root-review.json",
+        "previous_filename": null,
+        "sha": "4decc5625c0afa5648c2c858a6f93eb5595cad6e",
+        "status": "added"
+      },
+      {
+        "additions": 50,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-b558-runtime-binding.json",
+        "previous_filename": null,
+        "sha": "c1a6d8d0e8a08de067e3b99f0888d66c34466326",
+        "status": "added"
+      },
+      {
+        "additions": 37,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-b558-summary.json",
+        "previous_filename": null,
+        "sha": "ccaac2018c8e707b8af81cb09786819037861d0d",
+        "status": "added"
+      },
+      {
+        "additions": 17,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-b558-terminal.json",
+        "previous_filename": null,
+        "sha": "f7261ec16630b7c378d83815feec5b6b252de750",
+        "status": "added"
+      },
+      {
+        "additions": 7,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/share-b558-test-counts.json",
+        "previous_filename": null,
+        "sha": "b4777c9d4387a79f35bc4a3412898f20aa7fc0c6",
+        "status": "added"
+      },
+      {
+        "additions": 224,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/shortcut-7098-binding.json",
+        "previous_filename": null,
+        "sha": "240d00e32debbfde319fa9234c547ab3ef413d15",
+        "status": "added"
+      },
+      {
+        "additions": 34,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/shortcut-7098-observation.json",
+        "previous_filename": null,
+        "sha": "2676dc30a736ab90a3c42e49daec8e07b72b6ff9",
+        "status": "added"
+      },
+      {
+        "additions": 0,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/shortcut-7098-task-after-relaunch.png",
+        "previous_filename": null,
+        "sha": "450ad59646ae13d49694c65021e4b448dfac3e0e",
+        "status": "added"
+      },
+      {
+        "additions": 0,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/shortcuts-9190-registered-gsd.png",
+        "previous_filename": null,
+        "sha": "0d7af8dd86fa809c6a2611573d21aa006d4e18f2",
+        "status": "added"
+      },
+      {
+        "additions": 171,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/simulator-products-9f.json",
+        "previous_filename": null,
+        "sha": "4ede22b96a1d0c5ad6dac0a9818810dd747c13f6",
+        "status": "added"
+      },
+      {
+        "additions": 300,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/source-reuse-9f.json",
+        "previous_filename": null,
+        "sha": "7f22c6e763c4b02f458deac1aaf61bc8165aacbc",
+        "status": "added"
+      },
+      {
+        "additions": 96,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/source-root-review-9f.json",
+        "previous_filename": null,
+        "sha": "97a892f6661aa6289a132ae570fc7f5d2d743f73",
+        "status": "added"
+      },
+      {
+        "additions": 41,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/supplemental-f1-summary.json",
+        "previous_filename": null,
+        "sha": "4215e143aa08b64e31d4577719ba39f2a76db2c0",
+        "status": "added"
+      },
+      {
+        "additions": 39,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-7098-build-binding.json",
+        "previous_filename": null,
+        "sha": "8bdd36abc27e27f3f024330c54f5b99f092f32b7",
+        "status": "added"
+      },
+      {
+        "additions": 20,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-7098-build-terminal.json",
+        "previous_filename": null,
+        "sha": "009a59bbd3745eb28467dccf4c52abdf2b486572",
+        "status": "added"
+      },
+      {
+        "additions": 13,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-7098-cache-terminal.json",
+        "previous_filename": null,
+        "sha": "34500f7c42dd6dfa2bb8b45b66e45cb09de11de0",
+        "status": "added"
+      },
+      {
+        "additions": 171,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-7098-composed-products.json",
+        "previous_filename": null,
+        "sha": "c3563645ae3e86821bc1166a8f94cf531fdef3b7",
+        "status": "added"
+      },
+      {
+        "additions": 26,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-7098-composition.json",
+        "previous_filename": null,
+        "sha": "dd42130aa54103e5e636c7cfdfbafd28dbcb4cc5",
+        "status": "added"
+      },
+      {
+        "additions": 23,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-7098-source-closure.json",
+        "previous_filename": null,
+        "sha": "14774c8ba76ea237882a3557db648d20ea76e28a",
+        "status": "added"
+      },
+      {
+        "additions": 52,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-7098-terminal-transfer-manifest.json",
+        "previous_filename": null,
+        "sha": "86876b70444e2eba4284edd17d5cf9bfdd7b57cc",
+        "status": "added"
+      },
+      {
+        "additions": 427,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-7098-terminal.json",
+        "previous_filename": null,
+        "sha": "c430de4bdab921a1ddcc4e44a7dd2f44fb55dd07",
+        "status": "added"
+      },
+      {
+        "additions": 49,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-7098-transfer-manifest.json",
+        "previous_filename": null,
+        "sha": "989bbd6226a510dc77690d24dbb08d7f3cd38d78",
+        "status": "added"
+      },
+      {
+        "additions": 39,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-870-build-binding.json",
+        "previous_filename": null,
+        "sha": "0f9b225065a1a69034c0415ff730b61230ab7228",
+        "status": "added"
+      },
+      {
+        "additions": 18,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-870-build-terminal.json",
+        "previous_filename": null,
+        "sha": "fd43a0c47e102c7b0ff6e1842627657bc84df16a",
+        "status": "added"
+      },
+      {
+        "additions": 61,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-870-capacity-transition.json",
+        "previous_filename": null,
+        "sha": "ef65ac944e4b32a5312628382c8dc2cd99758163",
+        "status": "added"
+      },
+      {
+        "additions": 210,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-870-shortcut-binding.json",
+        "previous_filename": null,
+        "sha": "5715228ce94ca9def56fa76526cf2e08edbac829",
+        "status": "added"
+      },
+      {
+        "additions": 21,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-870-shortcut-observation.json",
+        "previous_filename": null,
+        "sha": "7b297b5eead93a81474d9c9d11beb1ccf52c4433",
+        "status": "added"
+      },
+      {
+        "additions": 204,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-870-widget-binding.json",
+        "previous_filename": null,
+        "sha": "65fbe3344e5c28a0255841fdb2ecbebbd90b9cde",
+        "status": "added"
+      },
+      {
+        "additions": 15,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-870-widget-observation.json",
+        "previous_filename": null,
+        "sha": "565600efd3c69ddf3da3c9129a7a059faa467489",
+        "status": "added"
+      },
+      {
+        "additions": 130,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-9190-shortcut-binding.json",
+        "previous_filename": null,
+        "sha": "e992ba017de721095c5b6caa33e9b7a50f335ad9",
+        "status": "added"
+      },
+      {
+        "additions": 19,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-9190-shortcut-observation.json",
+        "previous_filename": null,
+        "sha": "d6912ff2578c45cb899b2f6aba0ef2df420c22c0",
+        "status": "added"
+      },
+      {
+        "additions": 126,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-9190-widget-binding.json",
+        "previous_filename": null,
+        "sha": "470267dbc84d38d9899672596fc36e5749d7e677",
+        "status": "added"
+      },
+      {
+        "additions": 15,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/systems-9190-widget-observation.json",
+        "previous_filename": null,
+        "sha": "0c85e95898ff9b99602545673311a2f0337c9299",
+        "status": "added"
+      },
+      {
+        "additions": 618,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/visual-qa-671.json",
+        "previous_filename": null,
+        "sha": "43fcda1bbf5757e797b0fbc111cf225af4533aea",
+        "status": "added"
+      },
+      {
+        "additions": 22,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/watch-ee5-root-review.json",
+        "previous_filename": null,
+        "sha": "f3d3cc114cf8082f68d47e81212123d2601d2f98",
+        "status": "added"
+      },
+      {
+        "additions": 52,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/watch-ee5-summary.json",
+        "previous_filename": null,
+        "sha": "fe3f62652ca0008ce3a7af25ca71a02a2f646790",
+        "status": "added"
+      },
+      {
+        "additions": 27,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/watch-ee5-visual-review.json",
+        "previous_filename": null,
+        "sha": "1f1fe57924e72f74e89075ca4eb4ccb2cd1f9115",
+        "status": "added"
+      },
+      {
+        "additions": 0,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/watch-en.png",
+        "previous_filename": null,
+        "sha": "131bcc4041385b18aeed2a18a1d54a556352b404",
+        "status": "added"
+      },
+      {
+        "additions": 0,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/watch-he.png",
+        "previous_filename": null,
+        "sha": "c847cb863bf0c5af5bdbf42caa815ddbc6071e27",
+        "status": "added"
+      },
+      {
+        "additions": 246,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-7098-binding.json",
+        "previous_filename": null,
+        "sha": "4ce2387187422bebbdc3c40e19a6690438c5e764",
+        "status": "added"
+      },
+      {
+        "additions": 57,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-7098-observation.json",
+        "previous_filename": null,
+        "sha": "ad0e97db0b3c2f37e3c9af1b0279d089bf1cb603",
+        "status": "added"
+      },
+      {
+        "additions": 0,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-9190-menu-and-keyboard-introduction.png",
+        "previous_filename": null,
+        "sha": "465da28d2b336f6179493454ab468478567aa35d",
+        "status": "added"
+      },
+      {
+        "additions": 275,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-a2-binding.json",
+        "previous_filename": null,
+        "sha": "b57219d32a8fbae894bcd59a4543c3ead92662ff",
+        "status": "added"
+      },
+      {
+        "additions": 39,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-a2-build-binding.json",
+        "previous_filename": null,
+        "sha": "b1c1cbf71d18b325d243b5a3a096c8833bf04f38",
+        "status": "added"
+      },
+      {
+        "additions": 12,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-a2-build-continuation.json",
+        "previous_filename": null,
+        "sha": "b6bf1a5d753564e2ad072c762cabc0d8cbbb25cd",
+        "status": "added"
+      },
+      {
+        "additions": 25,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-a2-build-terminal.json",
+        "previous_filename": null,
+        "sha": "db7ba3571cd9637644cf20b621ef348c0efe3238",
+        "status": "added"
+      },
+      {
+        "additions": 49,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-a2-build-transfer-manifest.json",
+        "previous_filename": null,
+        "sha": "ef71f763b2a9a5df7516facfd38bea07c15790b8",
+        "status": "added"
+      },
+      {
+        "additions": 13,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-a2-cache-terminal.json",
+        "previous_filename": null,
+        "sha": "6d1e80f72868f5fa74fed839b1091a2cf0b057f7",
+        "status": "added"
+      },
+      {
+        "additions": 171,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-a2-composed-products.json",
+        "previous_filename": null,
+        "sha": "5cb9ed286adae8cd49153b074a318782b5f75ad7",
+        "status": "added"
+      },
+      {
+        "additions": 26,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-a2-composition.json",
+        "previous_filename": null,
+        "sha": "491a364c4bfc7b6312ce92cefb40e90996ff7865",
+        "status": "added"
+      },
+      {
+        "additions": 88,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-a2-observation.json",
+        "previous_filename": null,
+        "sha": "c9b99ed7adbaac55c66cba8c022cf8d0fae7fdd4",
+        "status": "added"
+      },
+      {
+        "additions": 27,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-a2-source-closure.json",
+        "previous_filename": null,
+        "sha": "1ea8b721c8ae559f139c0bcf4ab93a4b8f9e277f",
+        "status": "added"
+      },
+      {
+        "additions": 46,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-a2-terminal-transfer-manifest.json",
+        "previous_filename": null,
+        "sha": "85c3be6a4864ed23f81dfdd0f8f9a5b7c0ca0a46",
+        "status": "added"
+      },
+      {
+        "additions": 267,
+        "deletions": 0,
+        "path": "docs/ai-agent/evidence/delivery-20261124/widget-a2-terminal.json",
+        "previous_filename": null,
+        "sha": "9143bb191ff18f4a11c1a0c054efba5e6d19a760",
+        "status": "added"
+      }
+    ],
+    "error": null
+  },
+  "branchProtection": {
+    "main": {
+      "startedUTC": "2026-11-25T07:08:08.966779+00:00",
+      "finishedUTC": "2026-11-25T07:08:09.494700+00:00",
+      "returncode": 0,
+      "data": {
+        "name": "main",
+        "protected": false,
+        "protection": {
+          "enabled": false,
+          "required_status_checks": {
+            "checks": [],
+            "contexts": [],
+            "enforcement_level": "off"
+          }
+        },
+        "protection_url": "https://api.github.com/repos/davidpovarsky/gsd-iosapp/branches/main/protection",
+        "sha": "fe35879146b7994f71b5d0a49289336315604192"
+      },
+      "error": null
+    },
+    "canonical": {
+      "startedUTC": "2026-11-25T07:08:08.967789+00:00",
+      "finishedUTC": "2026-11-25T07:08:09.508169+00:00",
+      "returncode": 0,
+      "data": {
+        "name": "fix/gsd-latest-sdk-completion-20261124",
+        "protected": false,
+        "protection": {
+          "enabled": false,
+          "required_status_checks": {
+            "checks": [],
+            "contexts": [],
+            "enforcement_level": "off"
+          }
+        },
+        "protection_url": "https://api.github.com/repos/davidpovarsky/gsd-iosapp/branches/fix/gsd-latest-sdk-completion-20261124/protection",
+        "sha": "b5588f3f0c42df328dba34024d569be8605e51d0"
+      },
+      "error": null
+    }
+  },
+  "derivedChecks": {
+    "pr3FileCount": 97,
+    "allPR3PathsUnderDocsAiAgent": true,
+    "pr3PathCountByExtension": {
+      "md": 5,
+      "json": 79,
+      "png": 13
+    },
+    "pr3ChangedPathsEqualExplicitComparisons": true,
+    "sourceAndDocsChangedPathIntersectionSince9f": []
+  },
+  "limitations": [
+    "Snapshot only; refresh refs before any integration.",
+    "PR base.sha field reported0ae while independently inspected test-merge parents were current b558/ad5.",
+    "No local source, Mac state or unrelated build50 source inspected.",
+    "No runtime, signing, upload or personal authorization inferred."
+  ]
+}

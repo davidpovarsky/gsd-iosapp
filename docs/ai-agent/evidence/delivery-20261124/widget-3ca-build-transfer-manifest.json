@@ -1,0 +1,68 @@
+{
+  "completedUTC": "2026-11-25T04:20:10.121055+00:00",
+  "files": [
+    {
+      "name": "terminal-receipt.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/evidence/terminal-receipt.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-build-20261125\\terminal-receipt.json",
+      "bytes": 1183,
+      "sha256": "a151ffc2cb8e92749034e4dc880b27f4cf38ac50a215c499a51b069a227dfd4e"
+    },
+    {
+      "name": "build-binding.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/evidence/build-binding.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-build-20261125\\build-binding.json",
+      "bytes": 1283,
+      "sha256": "e529e11450f84eac9c0f8c3a627710c1990cfb83ecc40abd69e100f4a80bd1e6"
+    },
+    {
+      "name": "source-closure.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/evidence/source-closure.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-build-20261125\\source-closure.json",
+      "bytes": 1467,
+      "sha256": "35f7480fdf34cc25ce025aa7dfb83a76cea1d081bab13b676886668250d70b8b"
+    },
+    {
+      "name": "preservation-receipt.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/evidence/preservation-receipt.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-build-20261125\\preservation-receipt.json",
+      "bytes": 1223,
+      "sha256": "2151c4f97a66116d00ad1b5e734a01f4b1b51f91c13049fd6cc1e3f3e586bc2d"
+    },
+    {
+      "name": "composition-receipt.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/evidence/composition-receipt.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-build-20261125\\composition-receipt.json",
+      "bytes": 1156,
+      "sha256": "0cad8f724b71df3696e84c598aa093675b4ceca2ad0fb7198338141cb868a6ee"
+    },
+    {
+      "name": "composed-products.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/evidence/composed-products.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-build-20261125\\composed-products.json",
+      "bytes": 6006,
+      "sha256": "6a7d63dfa7b4c42970c056965679341d10338106d321ef8dbe360f9854e1402d"
+    },
+    {
+      "name": "cache-owner-terminal.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/evidence/cache-owner-terminal.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-build-20261125\\cache-owner-terminal.json",
+      "bytes": 481,
+      "sha256": "c56ebe4f63e654d18b26b6357dcd1c90ca2cde8f0269a251f8911d270c2905fe"
+    },
+    {
+      "name": "prior-widget-evidence-binding.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/evidence/prior-widget-evidence-binding.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-3ca-build-20261125\\prior-widget-evidence-binding.json",
+      "bytes": 697,
+      "sha256": "c2c265ee3a1ceb8c92db6e39f301ad4d0408b8c7affb592f6a1ca95ce3617f82"
+    }
+  ],
+  "allExactBytesVerified": true,
+  "originalsPreserved": true,
+  "testSourceSHA": "3ca346ef595a6a7e062a2a2fc66cbe5b2a76ff2c",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "passedBuildAndComposition": true,
+  "runtimeAcceptanceClaimed": false,
+  "newRuntimeExecuted": false
+}

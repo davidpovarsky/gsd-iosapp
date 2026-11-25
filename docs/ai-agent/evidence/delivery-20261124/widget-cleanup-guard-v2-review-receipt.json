@@ -1,0 +1,43 @@
+{
+  "createdUTC": "2026-11-25T04:42:29.064821+00:00",
+  "files": [
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-cleanup-guard-review-20261125\\mac-owned-cleanup-v1.py",
+      "bytes": 10953,
+      "sha256": "dc1495a6812675f550cbab2f22ed659b52007a6eebdcce5d74f1991901893384"
+    },
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-cleanup-guard-review-20261125\\mac-owned-cleanup-v2.py",
+      "bytes": 13437,
+      "sha256": "50e01e60e454cd82990d127684144f075d1abaf092b1103048f3877884c2b0a5"
+    },
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-cleanup-guard-review-20261125\\cleanup-lease-guard.diff",
+      "bytes": 4617,
+      "sha256": "3345fc1d42363fa659bf3d21057b8fc81ffea8e0df3ba403eb5be5941e1a6d29"
+    },
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-cleanup-guard-review-20261125\\archive-dispatch-terminal-proof.json",
+      "bytes": 9959,
+      "sha256": "c64d41c8604cc3729e9c6ada39379a01f577f03bc8e6f9fd5c20ee2f9e01e552"
+    }
+  ],
+  "ASTPassed": true,
+  "classificationExamples": {
+    "release49": false,
+    "run-signed-release.py": false,
+    "verify-post-share-release-inputs.py": false,
+    "job_claim.json": true,
+    "job.claim.json": true,
+    "job-claim.json": true,
+    "job_owner.json": true,
+    "lease.lock": true,
+    "release49-archive-dispatch.json": true,
+    "release49-archive-claim.json": true,
+    "release49-cache-owner-terminal.json": true
+  },
+  "exactApprovedDirectoryCount": 20,
+  "allOtherDeletionGuardsUnchanged": true,
+  "runtimeBudgetChanged": false,
+  "MacExecutionPerformed": false
+}

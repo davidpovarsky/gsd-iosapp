@@ -1,0 +1,466 @@
+{
+  "startedUTC": "2026-11-25T09:01:23.967473+00:00",
+  "operation": "normal fast-forward push of tested fd6 to canonical only",
+  "expectedSource": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "expectedPrevious": "b5588f3f0c42df328dba34024d569be8605e51d0",
+  "remoteAlias": "fork",
+  "sourceWorktree": "C:\\Users\\DAVID\\Code\\GSD-Widget-Final-20261125",
+  "pushAttempted": true,
+  "targetRemoteVerified": true,
+  "remoteBefore": {
+    "refs/heads/fix/gsd-latest-sdk-completion-20261124": "b5588f3f0c42df328dba34024d569be8605e51d0",
+    "refs/heads/fix/gsd-widget-final-20261125": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "refs/heads/main": "fe35879146b7994f71b5d0a49289336315604192"
+  },
+  "protectedBefore": [
+    {
+      "root": "C:\\Users\\DAVID\\Code\\GSD-Hanlin-AI-20261122",
+      "head": "b90d2a520978c00ee399c654472243b76c09b407",
+      "statusSHA256": "c6e9813b83ad55fb726b9154063f8460fa77b6bc78f88c04ecd20faf87caf0c2",
+      "files": [
+        {
+          "path": ".github/workflows/gsd-hanlin-agent-ios.yml.bak.20261123-032453-325590",
+          "bytes": 1893,
+          "mtimeNs": 1795375347000887400,
+          "sha256": "2c5247f308836a0cef93b956fee7662ce9de6ef2ae728f12080e9a7e6043a787"
+        },
+        {
+          "path": ".github/workflows/gsd-mcp-bridge-tests.yml.bak.20261123-032916-425539",
+          "bytes": 0,
+          "mtimeNs": 1795397356407930700,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "docs/ai-agent/GSD_REMOTE_MCP_HANDOFF_20261123.md.bak.20261123-032720-552916",
+          "bytes": 0,
+          "mtimeNs": 1795397240537110600,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "docs/ai-agent/job-45059134995-live-utf8.log",
+          "bytes": 4216586,
+          "mtimeNs": 1795375285576825900,
+          "sha256": "fb682e2d6a41ea116954d2ca7ee1f44d29db69a9cf1b1575785cc88a72415d3b"
+        },
+        {
+          "path": "docs/ai-agent/job-45059134995-live.log",
+          "bytes": 4239732,
+          "mtimeNs": 1795375179479297800,
+          "sha256": "4ff4d801a21df4ea8a6dd0b6fae8214d27ed465c0788d885980b0c9bf67601fb"
+        },
+        {
+          "path": "gsd_asc_probe.ps1",
+          "bytes": 1265,
+          "mtimeNs": 1795476849145743700,
+          "sha256": "61510a7c21c84efcf267a2d5f1447866ab571719b311870929390116bbb32edd"
+        },
+        {
+          "path": "gsd_asc_probe.ps1.bak.20261124-013306-508225",
+          "bytes": 0,
+          "mtimeNs": 1795476786484328400,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "gsd_asc_probe.ps1.bak.20261124-013409-145743",
+          "bytes": 1306,
+          "mtimeNs": 1795476786507671300,
+          "sha256": "6c3c4da41978ec84a3c5e4d2f5708e1ea205b70b7ceeb2002489c787511b1163"
+        },
+        {
+          "path": "gsd_portal_probe.ps1",
+          "bytes": 1399,
+          "mtimeNs": 1795476550691292200,
+          "sha256": "c6ddf0dc00119bd161a6894ad56305208367256bed471fea44648e4c76cb49ce"
+        },
+        {
+          "path": "gsd_portal_probe.ps1.bak.20261124-012910-691292",
+          "bytes": 0,
+          "mtimeNs": 1795476550670293200,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "scripts/__pycache__/package_gsd_sideload_ipa.cpython-312.pyc",
+          "bytes": 10820,
+          "mtimeNs": 1795397108365809300,
+          "sha256": "4816ebf5746e524a6d911976cd1b0864963107b2901a1efc699d8e7eed652429"
+        },
+        {
+          "path": "scripts/build_gsd_hanlin_ipad_ipa.sh.bak.20261123-032421-160052",
+          "bytes": 0,
+          "mtimeNs": 1795397061130698500,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\DAVID\\Code\\GSD-HE-RTL-20261123",
+      "head": "9fda3bae2f200e7b645b4f2b7ed8bcc39d896b3c",
+      "statusSHA256": "0cb4789e4d478a96760d7898dd1d481f7a720a169b6b715dfc381d791cd4f072",
+      "files": [
+        {
+          "path": "localization-codex.err",
+          "bytes": 453678,
+          "mtimeNs": 1795450888409301900,
+          "sha256": "7dbd8590809e1c2b6bbcd570af09f8303d55600e4de96cd3ea8ff8c17cb630c7"
+        },
+        {
+          "path": "localization-codex.log",
+          "bytes": 1183,
+          "mtimeNs": 1795450888409301900,
+          "sha256": "5a1fe80b577f7a1bdb9e85c766df4c7ad09d1e499dba8d59ff9bfd4ceaa8fbff"
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\DAVID\\Code\\GSD-Cloud-Release-20261123",
+      "head": "62d509d54ceb3756872b83ae6d8004b80f830515",
+      "statusSHA256": "f42a21ea6d1f23a2bdf64e5e8ef8d636c5a6557a7342c6ab992e9fe2d3ec8591",
+      "files": [
+        {
+          "path": "App/Auth/CloudAccountSignInView.swift.bak.20261123-183106-402037",
+          "bytes": 0,
+          "mtimeNs": 1795451466386277200,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "App/Auth/SessionStore.swift.bak.20261123-183036-605595",
+          "bytes": 10249,
+          "mtimeNs": 1795449799085441400,
+          "sha256": "f76e9f7cfa70e2633cd585804b916d1e590fea66bf41781f566318c8457db608"
+        },
+        {
+          "path": "App/Auth/SessionStore.swift.bak.20261123-183323-914647",
+          "bytes": 11488,
+          "mtimeNs": 1795451436604090000,
+          "sha256": "3e0b44e05f191f4626a95e6141bd879666152eb2124b5a3e286189129eb153c5"
+        },
+        {
+          "path": "App/Settings/SettingsView.swift.bak.20261123-183204-681283",
+          "bytes": 25460,
+          "mtimeNs": 1795449799149560100,
+          "sha256": "c35dc49aa3ac3a28de5f7dfe1c1d0e7a61b125d6471edc1dcc2813813147ed29"
+        },
+        {
+          "path": "App/Settings/SettingsView.swift.bak.20261123-183213-911563",
+          "bytes": 25514,
+          "mtimeNs": 1795451524681283200,
+          "sha256": "84ef8f956c920029512e624d29a05ac3d8f9cd82ea56c1760872553dacb09080"
+        },
+        {
+          "path": "App/Settings/SettingsView.swift.bak.20261123-183334-908040",
+          "bytes": 25630,
+          "mtimeNs": 1795451533911563600,
+          "sha256": "2f2775e4174a5a174bc5ab9254e94ebaf02f51ea9be1e4e1e04fdb8ea58d06b2"
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/AuthSeams.swift.bak.20261123-183021-976340",
+          "bytes": 1460,
+          "mtimeNs": 1795449799380804500,
+          "sha256": "45087ed6d31ae2050ee8f7e83c18606c79e17783987028d1201b73740bcb7f8f"
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/AuthSeams.swift.bak.20261123-183540-796376",
+          "bytes": 1489,
+          "mtimeNs": 1795451421976340600,
+          "sha256": "197f8303779907446fa0bbc3497a4f388c394c886b4b308bed8a966ace07408b"
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/AuthService.swift.bak.20261123-183009-549881",
+          "bytes": 6694,
+          "mtimeNs": 1795449799381805900,
+          "sha256": "773a81cf42282d06b842aa095b980907634a9c6859224912c221ac3326f25b41"
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/AuthService.swift.bak.20261123-183311-844305",
+          "bytes": 7850,
+          "mtimeNs": 1795451409549881100,
+          "sha256": "5066be68e5a0e8036256efdd9bfd924ba935a88d52d40b1a1f519bed0ed6e953"
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/PocketBaseClient+Auth.swift.bak.20261123-182955-184742",
+          "bytes": 1465,
+          "mtimeNs": 1795449799383314700,
+          "sha256": "9f36f68db54dbca43ffd866cb746ec614cd78b9e8d1622206ca7538a19e6f028"
+        },
+        {
+          "path": "GSDKit/Sources/GSDWire/PocketBaseEndpoint.swift.bak.20261123-183531-968648",
+          "bytes": 287,
+          "mtimeNs": 1795449799389838600,
+          "sha256": "3e112eeef741066f271de1217b94bb805bd651a4bce2ba59c6f9cc90e5453799"
+        },
+        {
+          "path": "cloud/__pycache__/backup.cpython-312.pyc",
+          "bytes": 9793,
+          "mtimeNs": 1795472805973981200,
+          "sha256": "208c3450f153ae81d240f295ba51b6cb3f5603b266c5222c67873526afaf6ee1"
+        },
+        {
+          "path": "cloud/__pycache__/test_cloud_e2e.cpython-312.pyc",
+          "bytes": 20184,
+          "mtimeNs": 1795474506967201400,
+          "sha256": "d72273f933948a609e03457f9c711550a45c5e7fb30469499c3d7594f6dba9df"
+        },
+        {
+          "path": "cloud/gateway/server.mjs.bak.20261123-182239-346013",
+          "bytes": 0,
+          "mtimeNs": 1795450959326249300,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "cloud/gateway/server.mjs.bak.20261123-183558-283297",
+          "bytes": 31544,
+          "mtimeNs": 1795450959346013400,
+          "sha256": "a388671bbf90e4f216edd61bc4c0a3df09d60a0a85e0680a167ee1dba585bfa0"
+        },
+        {
+          "path": "cloud/windows/__pycache__/install_offsite_backup.cpython-312.pyc",
+          "bytes": 14614,
+          "mtimeNs": 1795480282520677500,
+          "sha256": "2219968ee18af4b02009534a72e4474b22bdabbc9c786b106d18e4b4a0784d30"
+        },
+        {
+          "path": "cloud/windows/__pycache__/offsite_backup.cpython-312.pyc",
+          "bytes": 21599,
+          "mtimeNs": 1795479989522625100,
+          "sha256": "c843692aedcf99790fdc1e6124d5cc2e7ee5956980037e791a451e170a50cbc5"
+        }
+      ]
+    }
+  ],
+  "changedFiles": [
+    ".github/workflows/gsd-hanlin-agent-ios.yml",
+    "App/ContentView.swift",
+    "ScreenshotTests/GSDNativeSystemAcceptanceUITests.swift",
+    "scripts/gsd_widget_actions_acceptance.py",
+    "scripts/test_gsd_widget_actions_acceptance.py"
+  ],
+  "commitCount": 8,
+  "pushReturnCode": 0,
+  "pushStdout": "To https://github.com/davidpovarsky/gsd-iosapp.git\n \tfd6e2944a5a215d317fa5cc2a2802121e3ae3d61:refs/heads/fix/gsd-latest-sdk-completion-20261124\tb5588f3..fd6e294\nDone\n",
+  "pushStderr": "",
+  "remoteAfter": {
+    "refs/heads/fix/gsd-latest-sdk-completion-20261124": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "refs/heads/fix/gsd-widget-final-20261125": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "refs/heads/main": "fe35879146b7994f71b5d0a49289336315604192"
+  },
+  "protectedAfter": [
+    {
+      "root": "C:\\Users\\DAVID\\Code\\GSD-Hanlin-AI-20261122",
+      "head": "b90d2a520978c00ee399c654472243b76c09b407",
+      "statusSHA256": "c6e9813b83ad55fb726b9154063f8460fa77b6bc78f88c04ecd20faf87caf0c2",
+      "files": [
+        {
+          "path": ".github/workflows/gsd-hanlin-agent-ios.yml.bak.20261123-032453-325590",
+          "bytes": 1893,
+          "mtimeNs": 1795375347000887400,
+          "sha256": "2c5247f308836a0cef93b956fee7662ce9de6ef2ae728f12080e9a7e6043a787"
+        },
+        {
+          "path": ".github/workflows/gsd-mcp-bridge-tests.yml.bak.20261123-032916-425539",
+          "bytes": 0,
+          "mtimeNs": 1795397356407930700,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "docs/ai-agent/GSD_REMOTE_MCP_HANDOFF_20261123.md.bak.20261123-032720-552916",
+          "bytes": 0,
+          "mtimeNs": 1795397240537110600,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "docs/ai-agent/job-45059134995-live-utf8.log",
+          "bytes": 4216586,
+          "mtimeNs": 1795375285576825900,
+          "sha256": "fb682e2d6a41ea116954d2ca7ee1f44d29db69a9cf1b1575785cc88a72415d3b"
+        },
+        {
+          "path": "docs/ai-agent/job-45059134995-live.log",
+          "bytes": 4239732,
+          "mtimeNs": 1795375179479297800,
+          "sha256": "4ff4d801a21df4ea8a6dd0b6fae8214d27ed465c0788d885980b0c9bf67601fb"
+        },
+        {
+          "path": "gsd_asc_probe.ps1",
+          "bytes": 1265,
+          "mtimeNs": 1795476849145743700,
+          "sha256": "61510a7c21c84efcf267a2d5f1447866ab571719b311870929390116bbb32edd"
+        },
+        {
+          "path": "gsd_asc_probe.ps1.bak.20261124-013306-508225",
+          "bytes": 0,
+          "mtimeNs": 1795476786484328400,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "gsd_asc_probe.ps1.bak.20261124-013409-145743",
+          "bytes": 1306,
+          "mtimeNs": 1795476786507671300,
+          "sha256": "6c3c4da41978ec84a3c5e4d2f5708e1ea205b70b7ceeb2002489c787511b1163"
+        },
+        {
+          "path": "gsd_portal_probe.ps1",
+          "bytes": 1399,
+          "mtimeNs": 1795476550691292200,
+          "sha256": "c6ddf0dc00119bd161a6894ad56305208367256bed471fea44648e4c76cb49ce"
+        },
+        {
+          "path": "gsd_portal_probe.ps1.bak.20261124-012910-691292",
+          "bytes": 0,
+          "mtimeNs": 1795476550670293200,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "scripts/__pycache__/package_gsd_sideload_ipa.cpython-312.pyc",
+          "bytes": 10820,
+          "mtimeNs": 1795397108365809300,
+          "sha256": "4816ebf5746e524a6d911976cd1b0864963107b2901a1efc699d8e7eed652429"
+        },
+        {
+          "path": "scripts/build_gsd_hanlin_ipad_ipa.sh.bak.20261123-032421-160052",
+          "bytes": 0,
+          "mtimeNs": 1795397061130698500,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\DAVID\\Code\\GSD-HE-RTL-20261123",
+      "head": "9fda3bae2f200e7b645b4f2b7ed8bcc39d896b3c",
+      "statusSHA256": "0cb4789e4d478a96760d7898dd1d481f7a720a169b6b715dfc381d791cd4f072",
+      "files": [
+        {
+          "path": "localization-codex.err",
+          "bytes": 453678,
+          "mtimeNs": 1795450888409301900,
+          "sha256": "7dbd8590809e1c2b6bbcd570af09f8303d55600e4de96cd3ea8ff8c17cb630c7"
+        },
+        {
+          "path": "localization-codex.log",
+          "bytes": 1183,
+          "mtimeNs": 1795450888409301900,
+          "sha256": "5a1fe80b577f7a1bdb9e85c766df4c7ad09d1e499dba8d59ff9bfd4ceaa8fbff"
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\DAVID\\Code\\GSD-Cloud-Release-20261123",
+      "head": "62d509d54ceb3756872b83ae6d8004b80f830515",
+      "statusSHA256": "f42a21ea6d1f23a2bdf64e5e8ef8d636c5a6557a7342c6ab992e9fe2d3ec8591",
+      "files": [
+        {
+          "path": "App/Auth/CloudAccountSignInView.swift.bak.20261123-183106-402037",
+          "bytes": 0,
+          "mtimeNs": 1795451466386277200,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "App/Auth/SessionStore.swift.bak.20261123-183036-605595",
+          "bytes": 10249,
+          "mtimeNs": 1795449799085441400,
+          "sha256": "f76e9f7cfa70e2633cd585804b916d1e590fea66bf41781f566318c8457db608"
+        },
+        {
+          "path": "App/Auth/SessionStore.swift.bak.20261123-183323-914647",
+          "bytes": 11488,
+          "mtimeNs": 1795451436604090000,
+          "sha256": "3e0b44e05f191f4626a95e6141bd879666152eb2124b5a3e286189129eb153c5"
+        },
+        {
+          "path": "App/Settings/SettingsView.swift.bak.20261123-183204-681283",
+          "bytes": 25460,
+          "mtimeNs": 1795449799149560100,
+          "sha256": "c35dc49aa3ac3a28de5f7dfe1c1d0e7a61b125d6471edc1dcc2813813147ed29"
+        },
+        {
+          "path": "App/Settings/SettingsView.swift.bak.20261123-183213-911563",
+          "bytes": 25514,
+          "mtimeNs": 1795451524681283200,
+          "sha256": "84ef8f956c920029512e624d29a05ac3d8f9cd82ea56c1760872553dacb09080"
+        },
+        {
+          "path": "App/Settings/SettingsView.swift.bak.20261123-183334-908040",
+          "bytes": 25630,
+          "mtimeNs": 1795451533911563600,
+          "sha256": "2f2775e4174a5a174bc5ab9254e94ebaf02f51ea9be1e4e1e04fdb8ea58d06b2"
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/AuthSeams.swift.bak.20261123-183021-976340",
+          "bytes": 1460,
+          "mtimeNs": 1795449799380804500,
+          "sha256": "45087ed6d31ae2050ee8f7e83c18606c79e17783987028d1201b73740bcb7f8f"
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/AuthSeams.swift.bak.20261123-183540-796376",
+          "bytes": 1489,
+          "mtimeNs": 1795451421976340600,
+          "sha256": "197f8303779907446fa0bbc3497a4f388c394c886b4b308bed8a966ace07408b"
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/AuthService.swift.bak.20261123-183009-549881",
+          "bytes": 6694,
+          "mtimeNs": 1795449799381805900,
+          "sha256": "773a81cf42282d06b842aa095b980907634a9c6859224912c221ac3326f25b41"
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/AuthService.swift.bak.20261123-183311-844305",
+          "bytes": 7850,
+          "mtimeNs": 1795451409549881100,
+          "sha256": "5066be68e5a0e8036256efdd9bfd924ba935a88d52d40b1a1f519bed0ed6e953"
+        },
+        {
+          "path": "GSDKit/Sources/GSDSync/PocketBaseClient+Auth.swift.bak.20261123-182955-184742",
+          "bytes": 1465,
+          "mtimeNs": 1795449799383314700,
+          "sha256": "9f36f68db54dbca43ffd866cb746ec614cd78b9e8d1622206ca7538a19e6f028"
+        },
+        {
+          "path": "GSDKit/Sources/GSDWire/PocketBaseEndpoint.swift.bak.20261123-183531-968648",
+          "bytes": 287,
+          "mtimeNs": 1795449799389838600,
+          "sha256": "3e112eeef741066f271de1217b94bb805bd651a4bce2ba59c6f9cc90e5453799"
+        },
+        {
+          "path": "cloud/__pycache__/backup.cpython-312.pyc",
+          "bytes": 9793,
+          "mtimeNs": 1795472805973981200,
+          "sha256": "208c3450f153ae81d240f295ba51b6cb3f5603b266c5222c67873526afaf6ee1"
+        },
+        {
+          "path": "cloud/__pycache__/test_cloud_e2e.cpython-312.pyc",
+          "bytes": 20184,
+          "mtimeNs": 1795474506967201400,
+          "sha256": "d72273f933948a609e03457f9c711550a45c5e7fb30469499c3d7594f6dba9df"
+        },
+        {
+          "path": "cloud/gateway/server.mjs.bak.20261123-182239-346013",
+          "bytes": 0,
+          "mtimeNs": 1795450959326249300,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "cloud/gateway/server.mjs.bak.20261123-183558-283297",
+          "bytes": 31544,
+          "mtimeNs": 1795450959346013400,
+          "sha256": "a388671bbf90e4f216edd61bc4c0a3df09d60a0a85e0680a167ee1dba585bfa0"
+        },
+        {
+          "path": "cloud/windows/__pycache__/install_offsite_backup.cpython-312.pyc",
+          "bytes": 14614,
+          "mtimeNs": 1795480282520677500,
+          "sha256": "2219968ee18af4b02009534a72e4474b22bdabbc9c786b106d18e4b4a0784d30"
+        },
+        {
+          "path": "cloud/windows/__pycache__/offsite_backup.cpython-312.pyc",
+          "bytes": 21599,
+          "mtimeNs": 1795479989522625100,
+          "sha256": "c843692aedcf99790fdc1e6124d5cc2e7ee5956980037e791a451e170a50cbc5"
+        }
+      ]
+    }
+  ],
+  "protectedWorktreesUnchanged": true,
+  "finalWorktreeClean": true,
+  "mainUnchanged": true,
+  "passed": true,
+  "finishedUTC": "2026-11-25T09:01:29.794307+00:00"
+}

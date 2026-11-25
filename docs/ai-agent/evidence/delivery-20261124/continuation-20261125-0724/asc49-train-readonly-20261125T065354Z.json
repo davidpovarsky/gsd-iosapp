@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "operation": "GET-only-build-train",
+  "observedUTC": "2026-11-25T06:53:54.243730+00:00",
+  "appID": "6838520892",
+  "bundleID": "com.itorah.gsd",
+  "versionTrain": "4.1.0",
+  "allPagesRead": true,
+  "pages": [
+    {
+      "path": "builds?filter%5Bapp%5D=6838520892&include=preReleaseVersion&limit=200",
+      "count": 1
+    }
+  ],
+  "totalAppBuilds": 1,
+  "builds": [
+    {
+      "id": "04715dbf-3b05-4d01-ba3d-d0b0e580d257",
+      "build": "48",
+      "version": "4.1.0",
+      "platform": "IOS",
+      "processingState": "VALID",
+      "uploadedDate": "2026-11-24T05:27:20-08:00",
+      "expirationDate": "2027-02-22T05:27:20-08:00",
+      "expired": false
+    }
+  ],
+  "highestNumericBuild": 48,
+  "requestedBuild": "49",
+  "exactRequestedBuildPresent": false,
+  "requestedBuildAboveHighest": true,
+  "build49AvailableAboveHighest": true,
+  "helperSHA256": "5b50aac037b5aa58c3916ed18b7b40f8a12527ba20660f1e790a5e0abc2e50e2",
+  "credentialProvider": "existing protected apple-signing env.sh and ASC_KEY_PATH loader",
+  "keychainUnlocked": false,
+  "mutationsPerformed": false
+}

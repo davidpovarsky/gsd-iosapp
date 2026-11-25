@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "root",
+  "kind": "share-b558-independent-review",
+  "testSourceSHA": "b5588f3f0c42df328dba34024d569be8605e51d0",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "receiptsReadAndVerified": true,
+  "counts": {
+    "total": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "expectedFailures": 0
+  },
+  "allEightShareAssertions": true,
+  "completeMatrixTraversalBothCancelChecks": true,
+  "image": {
+    "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\share-b558-after-dismissal.png",
+    "bytes": 395765,
+    "sha256": "85afd910ad09ef4126a00db8975a58f5738df4611c0dd5ce6d21e76aa9d5085a",
+    "actuallyViewed": true,
+    "finding": "Hebrew RTL Matrix is visible after native popover dismissal; synthetic original task is visible; ActivityList/popover is no longer obscuring the app. This single frame is not substituted for full-Matrix negative/relaunch assertions."
+  },
+  "receipts": {
+    "terminal": "fdc1e006008e587b399a7c71b1d4316245848763999d68484ce9ffd24f3ee809",
+    "runtimeBinding": "acb4730ad1c9bbc6dbacbf69cecc5ec3129757045bdf31e6c5b0fac7ffc0f554",
+    "counts": "ac847d3170faf7f3d6f108a0a7b7698842420f6cf4387276556fd7aefd1289bd",
+    "fullMatrixTraversal": "44679f422b51101eca73e76e9e3b9fd5d1c5ce1e8fb532280207fcff03105a17"
+  },
+  "acceptance": {
+    "share": true,
+    "widget": false,
+    "shortcut": false,
+    "personalSIWCPostFixInference": false,
+    "personalPluginConnect": false,
+    "testFlight49": false
+  },
+  "canonicalLastVerified": "0ae293b8f1d867a09be6d95cc7029a9442728bfc",
+  "asana": {
+    "comment": "1220885800251309",
+    "projectStatus": "1220885715010643"
+  },
+  "recordedAtUTC": "2026-11-25T00:57:28.189889+00:00"
+}

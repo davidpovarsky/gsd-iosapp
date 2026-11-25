@@ -1,0 +1,363 @@
+{
+  "schemaVersion": 1,
+  "kind": "gsd-oracle-scoped-capacity-observation",
+  "sourceNature": "agent projection of previously captured read-only SentinelX outputs; not a separately emitted native receipt or a fresh server read",
+  "host": "torah-social",
+  "observationWindowsUTC": {
+    "servicesAndDf": "2026-11-25T07:51:33.551182+00:00",
+    "workingRootSizes": "2026-11-25T07:52:23.391139+00:00",
+    "fixtureArtifactHandlesAndLatestStatvfs": "2026-11-25T07:55:57.893808+00:00",
+    "lsblk": "2026-11-25T07:56:35.035472+00:00",
+    "ext4Geometry": "2026-11-25T07:57:50.676669+00:00"
+  },
+  "scope": {
+    "workingRoots": [
+      "/mnt/development/projects/gsd-cloud",
+      "/home/ubuntu/gsd-mcp-bridge"
+    ],
+    "fixtureParents": [
+      "/tmp",
+      "/var/tmp",
+      "/mnt/development/projects/gsd-cloud/backups"
+    ],
+    "devices": [
+      "/dev/sda",
+      "/dev/sda1",
+      "/dev/sdb"
+    ],
+    "method": "systemctl metadata, exact-root du/lstat, exact source-defined fixture prefixes, exact-file lsof, statvfs/df, lsblk and ext4 geometry; no account database, key, environment or backup-archive contents"
+  },
+  "services": [
+    {
+      "unit": "gsd-pocketbase.service",
+      "state": "active",
+      "substate": "running",
+      "mainPID": 3365518,
+      "workingDirectory": "/mnt/development/projects/gsd-cloud",
+      "user": "ubuntu",
+      "group": "ubuntu",
+      "declaredDirectories": {
+        "runtime": "",
+        "state": "",
+        "cache": "",
+        "logs": ""
+      }
+    },
+    {
+      "unit": "gsd-cloud-gateway.service",
+      "state": "active",
+      "substate": "running",
+      "mainPID": 3694501,
+      "workingDirectory": "/mnt/development/projects/gsd-cloud/gateway",
+      "user": "ubuntu",
+      "group": "ubuntu",
+      "declaredDirectories": {
+        "runtime": "",
+        "state": "",
+        "cache": "",
+        "logs": ""
+      }
+    },
+    {
+      "unit": "gsd-mcp-bridge.service",
+      "state": "active",
+      "substate": "running",
+      "mainPID": 2118307,
+      "workingDirectory": "/home/ubuntu/gsd-mcp-bridge",
+      "user": "ubuntu",
+      "group": "ubuntu",
+      "declaredDirectories": {
+        "runtime": "",
+        "state": "",
+        "cache": "",
+        "logs": ""
+      }
+    }
+  ],
+  "rootSizes": [
+    {
+      "path": "/mnt/development/projects/gsd-cloud",
+      "allocatedBytes": 34942976,
+      "immediateSubdirectoryAllocatedBytes": {
+        "/mnt/development/projects/gsd-cloud/releases": 98304,
+        "/mnt/development/projects/gsd-cloud/gateway-state": 12288,
+        "/mnt/development/projects/gsd-cloud/gateway": 69632,
+        "/mnt/development/projects/gsd-cloud/systemd": 12288,
+        "/mnt/development/projects/gsd-cloud/pb_migrations": 12288,
+        "/mnt/development/projects/gsd-cloud/backups": 430080,
+        "/mnt/development/projects/gsd-cloud/pb_data": 2367488,
+        "/mnt/development/projects/gsd-cloud/pb_hooks": 16384
+      },
+      "livePocketbaseExecutableAllocatedBytes": 31789056,
+      "disposition": "preserved; active source/data/state/backups and unproven rollback artifacts"
+    },
+    {
+      "path": "/home/ubuntu/gsd-mcp-bridge",
+      "allocatedBytes": 106496,
+      "immediateSubdirectoryAllocatedBytes": {},
+      "disposition": "preserved; active source/data/state/backups and unproven rollback artifacts"
+    }
+  ],
+  "temporaryFixtures": {
+    "sourcePrefixDeclarations": {
+      "cloud/backup.py:15": "gsd-restore-proof- in archive.parent",
+      "cloud/backup.py:43": "gsd-backup-stage- in destination",
+      "cloud/test_backup_acceptance.py:181": "gsd-populated-backup- in OS temp",
+      "cloud/gateway/gateway-security.test.mjs:11": "gsd-gateway-test- in OS temp",
+      "cloud/gateway/mcp-auth.test.mjs:12": "gsd-mcp-auth- in OS temp",
+      "cloud/gateway/oauth-localization.test.mjs:14": "gsd-oauth-locale- in OS temp",
+      "cloud/gateway/rate-limit.test.mjs:17": "gsd-rate-acceptance- in OS temp"
+    },
+    "checks": [
+      {
+        "parent": "/tmp",
+        "prefix": "gsd-populated-backup-",
+        "matches": 0
+      },
+      {
+        "parent": "/tmp",
+        "prefix": "gsd-gateway-test-",
+        "matches": 0
+      },
+      {
+        "parent": "/tmp",
+        "prefix": "gsd-mcp-auth-",
+        "matches": 0
+      },
+      {
+        "parent": "/tmp",
+        "prefix": "gsd-oauth-locale-",
+        "matches": 0
+      },
+      {
+        "parent": "/tmp",
+        "prefix": "gsd-rate-acceptance-",
+        "matches": 0
+      },
+      {
+        "parent": "/var/tmp",
+        "prefix": "gsd-populated-backup-",
+        "matches": 0
+      },
+      {
+        "parent": "/var/tmp",
+        "prefix": "gsd-gateway-test-",
+        "matches": 0
+      },
+      {
+        "parent": "/var/tmp",
+        "prefix": "gsd-mcp-auth-",
+        "matches": 0
+      },
+      {
+        "parent": "/var/tmp",
+        "prefix": "gsd-oauth-locale-",
+        "matches": 0
+      },
+      {
+        "parent": "/var/tmp",
+        "prefix": "gsd-rate-acceptance-",
+        "matches": 0
+      },
+      {
+        "parent": "/mnt/development/projects/gsd-cloud/backups",
+        "prefix": "gsd-restore-proof-",
+        "matches": 0
+      },
+      {
+        "parent": "/mnt/development/projects/gsd-cloud/backups",
+        "prefix": "gsd-backup-stage-",
+        "matches": 0
+      }
+    ],
+    "checksCount": 12,
+    "totalMatches": 0,
+    "detailsCapped": false,
+    "noFixturesExecuted": true
+  },
+  "protectedHistoricalArtifacts": {
+    "files": [
+      {
+        "path": "/mnt/development/projects/gsd-cloud/backend-candidate.tar.gz",
+        "kind": "file",
+        "logicalBytes": 27956,
+        "allocatedBytes": 28672,
+        "owner": "ubuntu",
+        "group": "ubuntu",
+        "mtimeUTC": "2026-11-23T23:41:58.843422+00:00",
+        "mode": "-rw-rw-r--"
+      },
+      {
+        "path": "/home/ubuntu/gsd-mcp-bridge/server.mjs.pre-result-budget-20261123-041532",
+        "kind": "file",
+        "logicalBytes": 21452,
+        "allocatedBytes": 24576,
+        "owner": "ubuntu",
+        "group": "ubuntu",
+        "mtimeUTC": "2026-11-23T02:27:25.001311+00:00",
+        "mode": "-rw-rw-r--"
+      },
+      {
+        "path": "/home/ubuntu/gsd-mcp-bridge/server.mjs.pre-subpath-fix",
+        "kind": "file",
+        "logicalBytes": 21377,
+        "allocatedBytes": 24576,
+        "owner": "ubuntu",
+        "group": "ubuntu",
+        "mtimeUTC": "2026-11-23T01:25:46.096755+00:00",
+        "mode": "-rw-rw-r--"
+      }
+    ],
+    "combinedAllocatedBytes": 77824,
+    "openHandleObservation": {
+      "available": true,
+      "queriedOnlyExactArtifactFiles": true,
+      "returncode": 1,
+      "output": "",
+      "error": "",
+      "meaning": "no handles reported for these exact files at the recorded time; does not establish future dependency or retention independence"
+    },
+    "reproducibilityOrRollbackIndependenceProved": false,
+    "approvedForDeletion": false,
+    "deleted": false
+  },
+  "latestObservedAvailableBytes": {
+    "observedUTC": "2026-11-25T07:55:57.893808+00:00",
+    "method": "statvfs.f_bavail times statvfs.f_frsize",
+    "mounts": {
+      "/": 1797406720,
+      "/mnt/development": 1360441344
+    },
+    "note": "point-in-time observation; not a claim about availability when this projected file is saved"
+  },
+  "earlierDf": {
+    "observedUTC": "2026-11-25T07:51:33.551182+00:00",
+    "mounts": [
+      {
+        "device": "/dev/sda1",
+        "mount": "/",
+        "filesystemBytes": 50884108288,
+        "usedBytes": 49059958784,
+        "availableBytes": 1807372288,
+        "usePercent": 97
+      },
+      {
+        "device": "/dev/sdb",
+        "mount": "/mnt/development",
+        "filesystemBytes": 108259958784,
+        "usedBytes": 106882498560,
+        "availableBytes": 1360683008,
+        "usePercent": 99
+      }
+    ]
+  },
+  "geometry": {
+    "lsblkCommand": [
+      "lsblk",
+      "-b",
+      "--json",
+      "-o",
+      "NAME,SIZE,FSTYPE,MOUNTPOINTS",
+      "/dev/sda",
+      "/dev/sdb"
+    ],
+    "devices": [
+      {
+        "name": "sda",
+        "size": 53687091200,
+        "fstype": null,
+        "mountpoints": [
+          null
+        ],
+        "children": [
+          {
+            "name": "sda1",
+            "size": 52612283904,
+            "fstype": "ext4",
+            "mountpoints": [
+              "/"
+            ]
+          },
+          {
+            "name": "sda15",
+            "size": 103809536,
+            "fstype": "vfat",
+            "mountpoints": [
+              "/boot/efi"
+            ]
+          },
+          {
+            "name": "sda16",
+            "size": 967836160,
+            "fstype": "ext4",
+            "mountpoints": [
+              "/boot"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "sdb",
+        "size": 110595407872,
+        "fstype": "ext4",
+        "mountpoints": [
+          "/mnt/development"
+        ]
+      }
+    ],
+    "ext4": [
+      {
+        "device": "/dev/sda1",
+        "blockCount": 12844795,
+        "blockSize": 4096,
+        "reservedBlockCount": 0,
+        "overheadClusters": 421917,
+        "filesystemSpanBytes": 52612280320,
+        "reservedBytes": 0
+      },
+      {
+        "device": "/dev/sdb",
+        "blockCount": 27000832,
+        "blockSize": 4096,
+        "reservedBlockCount": 0,
+        "overheadClusters": 570178,
+        "filesystemSpanBytes": 110595407872,
+        "reservedBytes": 0
+      }
+    ],
+    "derivedCalculations": {
+      "rootDeviceBytesOutsideListedPartitions": 3161600,
+      "rootPartitionMinusFilesystemSpanBytes": 3584,
+      "dataDeviceMinusFilesystemSpanBytes": 0,
+      "rootMetadataOverheadBytes": 1728172032,
+      "dataMetadataOverheadBytes": 2335449088
+    },
+    "interpretation": "sda remainder includes alignment/GPT areas; ext4 metadata overhead explains raw-span versus df-size differences. No meaningful provisioned expansion tail or reserved-block recovery was found."
+  },
+  "conclusions": {
+    "adequateGSDOnlyRecoveryCandidateIdentified": false,
+    "meaningfulAlreadyProvisionedExpansionHeadroomIdentified": false,
+    "capacityRiskRemains": true,
+    "otherProjectOrGlobalGrowthAttributed": false,
+    "accessBlocker": false
+  },
+  "noChanges": {
+    "serverMutation": false,
+    "deletion": false,
+    "serviceRestart": false,
+    "partitionOrFilesystemChange": false,
+    "purchaseOrCloudAPI": false,
+    "otherProjectTreeInventory": false,
+    "macAccess": false,
+    "acceptedReportEdit": false,
+    "oracleReadsRepeatedForThisFile": false
+  },
+  "limitations": [
+    "Small historical deployment/rollback files were not proved disposable or reproducible and were not recommended for deletion.",
+    "Absence of current lsof handles alone does not prove future dependency or retention independence.",
+    "Free-space values are separate point-in-time observations; no attribution to GSD or another project was made.",
+    "Ext4 geometry was read solely to distinguish df metadata overhead from an unexpanded filesystem; no partition/filesystem modification performed.",
+    "No docs content changed; accepted report remains frozen."
+  ],
+  "projectionSavedUTC": "2026-11-25T08:04:39.266651+00:00"
+}

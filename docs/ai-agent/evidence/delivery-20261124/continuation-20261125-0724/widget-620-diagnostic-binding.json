@@ -1,0 +1,879 @@
+{
+  "startedUTC": "2026-11-25T06:21:06.634751+00:00",
+  "phase": "complete",
+  "testSourceSHA": "620d66f2c0ef3368ec772b236450873a01e74b73",
+  "diagnosticSourceSHA": "620d66f2c0ef3368ec772b236450873a01e74b73",
+  "baseProductionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "diagnosticOnly": true,
+  "productionAcceptance": false,
+  "diagnosticCollectionComplete": true,
+  "composedManifestSHA256": "4eb68b5721742490b8dd33b391a6cb8265fbb49537041f765ddef544f612a506",
+  "compositionReceiptSHA256": "6a80542cc1487da8120a76a2f5c7b722e2092561b0db6b357626cbcb1442a90c",
+  "systemTestSHA256": "9a4b585b203526311f2976d6b8bdb951e8f6d44b6232f332ed15ede6f21f73f4",
+  "selectedKind": "widget-route-diagnostic",
+  "singleCaseOnly": true,
+  "passed": false,
+  "shortcutInvoked": false,
+  "widgetTimelineVerified": false,
+  "fullSystemSurfaceCoverage": false,
+  "accountGrantVerified": false,
+  "ownedSimulatorsRemoved": true,
+  "suites": {
+    "widget-route-diagnostic": {
+      "passed": false,
+      "startedUTC": "2026-11-25T06:25:53.936727+00:00",
+      "method": "test03DiagnoseInstalledWidgetTaskRoute",
+      "ownedDevicesRemoved": true,
+      "xctestPassed": false,
+      "diagnosticOnly": true,
+      "productionAcceptance": false,
+      "device": "4467FB8E-0161-4A9E-BF0E-8433A2396DDE",
+      "deviceType": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "command": [
+        "xcodebuild",
+        "test-without-building",
+        "-xctestrun",
+        "/Users/m1/builds/gsd-widget-route-diag-620d66f2-20261125/fresh-products-recovery/products/GSDScreenshots_iphonesimulator27.1-arm64.xctestrun",
+        "-destination",
+        "platform=iOS Simulator,id=4467FB8E-0161-4A9E-BF0E-8433A2396DDE",
+        "-destination-timeout",
+        "90",
+        "-parallel-testing-enabled",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "-resultBundlePath",
+        "/Users/m1/builds/gsd-widget-route-diag-620d66f2-20261125/diagnostic-runtime/runs/ui620d66f2-widget-route-diagnostic-im0yu1st/private/widget-route-diagnostic.xcresult",
+        "-testLanguage",
+        "he",
+        "-testRegion",
+        "IL",
+        "-only-testing:GSDScreenshotTests/GSDNativeSystemAcceptanceUITests/test03DiagnoseInstalledWidgetTaskRoute"
+      ],
+      "result": "/Users/m1/builds/gsd-widget-route-diag-620d66f2-20261125/diagnostic-runtime/runs/ui620d66f2-widget-route-diagnostic-im0yu1st/private/widget-route-diagnostic.xcresult",
+      "artifacts": "/Users/m1/builds/gsd-widget-route-diag-620d66f2-20261125/diagnostic-runtime/runs/ui620d66f2-widget-route-diagnostic-im0yu1st/private/widget-route-diagnostic-ui",
+      "xctestStartedUTC": "2026-11-25T06:26:37.491706+00:00",
+      "returncode": 65,
+      "xctestFinishedUTC": "2026-11-25T06:32:54.477355+00:00",
+      "testSummary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "4467FB8E-0161-4A9E-BF0E-8433A2396DDE",
+              "deviceName": "GSD-Supplemental-widget-route-diagnostic-0ed5f6c52f56450d821915637ed99885",
+              "modelName": "iPhone 17 Pro",
+              "osBuildNumber": "24B8117",
+              "osVersion": "27.2",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 1,
+            "passedTests": 0,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "GSDScreenshots \u00b7 Built with macOS 27.0",
+        "expectedFailures": 0,
+        "failedTests": 1,
+        "finishTime": 1795588374.315,
+        "passedTests": 0,
+        "result": "Failed",
+        "runtimeWarnings": [],
+        "skippedTests": 0,
+        "startTime": 1795587998.656,
+        "statistics": [],
+        "testFailures": [
+          {
+            "failureText": "failed: caught error: \"NativeSurfaceFailure(message: \"Widget row tap did not open the task editor.\")\"",
+            "targetName": "GSDScreenshotTests",
+            "testIdentifier": 1,
+            "testIdentifierString": "GSDNativeSystemAcceptanceUITests/test03DiagnoseInstalledWidgetTaskRoute()",
+            "testIdentifierURL": "test://com.apple.xcode/GSD/GSDScreenshotTests/GSDNativeSystemAcceptanceUITests/test03DiagnoseInstalledWidgetTaskRoute",
+            "testName": "test03DiagnoseInstalledWidgetTaskRoute()"
+          }
+        ],
+        "title": "Test - GSDScreenshots",
+        "topInsights": [],
+        "totalTestCount": 1
+      },
+      "observation": {
+        "baseProductionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+        "diagnosticActualWidgetTapCompleted": true,
+        "diagnosticAppForeground": true,
+        "diagnosticEditorOpened": false,
+        "diagnosticInstalledWidgetDisplayedTask": true,
+        "diagnosticNonce": "80ECC8BB",
+        "diagnosticOnly": true,
+        "diagnosticSourceSHA": "620d66f2c0ef3368ec772b236450873a01e74b73",
+        "diagnosticTapControl": {
+          "elementType": 9,
+          "enabled": true,
+          "hittable": true,
+          "identifier": "",
+          "label": "GSD-Widget-D-80ECC8BB",
+          "selected": false,
+          "value": ""
+        },
+        "lastCapture": "15-route-after-editor-wait",
+        "passed": false,
+        "personalAccountUsed": false,
+        "productionAcceptance": false,
+        "schemaVersion": 1,
+        "scope": "diagnostic_only_native_widget_row_route",
+        "shortcutInvoked": false,
+        "simulatorID": "4467FB8E-0161-4A9E-BF0E-8433A2396DDE",
+        "siriVerified": false,
+        "taskCardID": "task-card-aHomygN0Bfh2",
+        "voiceOverSpeechVerified": false,
+        "watchConnectivityVerified": false,
+        "widgetGalleryControls": [
+          {
+            "elementType": 9,
+            "enabled": true,
+            "hittable": true,
+            "identifier": "com.apple.springboardhome.application-shortcut-item.rearrange-icons",
+            "label": "\u05e2\u05e8\u05d9\u05db\u05ea \u05de\u05e1\u05da \u05d4\u05d1\u05d9\u05ea",
+            "selected": false,
+            "stage": "11-widget-gallery-00-context-menu",
+            "value": ""
+          },
+          {
+            "elementType": 9,
+            "enabled": true,
+            "hittable": true,
+            "identifier": "",
+            "label": "\u05e2\u05e8\u05d9\u05db\u05d4",
+            "selected": false,
+            "stage": "11-widget-gallery-01-edit-mode",
+            "value": ""
+          },
+          {
+            "elementType": 9,
+            "enabled": true,
+            "hittable": true,
+            "identifier": "",
+            "label": "\u05d4\u05d5\u05e1\u05e4\u05ea \u05d5\u05d9\u05d3\u05d2\u05f3\u05d8",
+            "selected": false,
+            "stage": "11-widget-gallery-02-edit-menu",
+            "value": ""
+          },
+          {
+            "elementType": 45,
+            "enabled": true,
+            "hittable": true,
+            "identifier": "",
+            "label": "\u05d7\u05d9\u05e4\u05d5\u05e9 \u05d5\u05d9\u05d3\u05d2\u05f3\u05d8\u05d9\u05dd",
+            "selected": false,
+            "stage": "11-widget-gallery-03-search",
+            "value": "\u05d7\u05d9\u05e4\u05d5\u05e9 \u05d5\u05d9\u05d3\u05d2\u05f3\u05d8\u05d9\u05dd"
+          },
+          {
+            "elementType": 75,
+            "enabled": true,
+            "hittable": true,
+            "identifier": "",
+            "label": "GSD",
+            "selected": false,
+            "stage": "11-widget-gallery-04-gsd-results",
+            "value": ""
+          },
+          {
+            "elementType": 9,
+            "enabled": true,
+            "hittable": true,
+            "identifier": "",
+            "label": " \u05d4\u05d5\u05e1\u05e4\u05ea \u05d4\u05d5\u05d5\u05d9\u05d3\u05d2\u05f3\u05d8",
+            "selected": false,
+            "stage": "11-widget-gallery-05-install-ready",
+            "value": ""
+          }
+        ],
+        "widgetGalleryFamilyControls": [],
+        "widgetGalleryFamilySelectionMode": "native_default_preview",
+        "widgetGalleryInstallationRequested": true,
+        "widgetGalleryPreviewNames": [
+          "GSD",
+          "\u05d4\u05de\u05d9\u05e7\u05d5\u05d3 \u05dc\u05d4\u05d9\u05d5\u05dd"
+        ],
+        "widgetGallerySelectedFamily": "unknown/default",
+        "widgetHomeIconExists": true,
+        "widgetHomeIconWaitSucceeded": true
+      },
+      "observationSHA256": "3a522120a4e11db8571f1c990df809346d643698bfbb44bbb8618a67622980c4",
+      "failure": "xctest_failed",
+      "finishedUTC": "2026-11-25T06:32:54.873638+00:00",
+      "diagnosticCollection": {
+        "schemaVersion": 1,
+        "diagnosticOnly": true,
+        "productionAcceptance": false,
+        "collectedUTC": "2026-11-25T06:32:54.873871+00:00",
+        "relativeReceipt": "Library/Application Support/GSDWidgetRouteDiagnostics/receipt.json",
+        "sourceSHA": "620d66f2c0ef3368ec772b236450873a01e74b73",
+        "simulatorID": "4467FB8E-0161-4A9E-BF0E-8433A2396DDE",
+        "status": "captured",
+        "instrumentationAvailable": true,
+        "runtimeOrSimulatorMutation": false,
+        "bytes": 2838,
+        "sha256": "c6a1a24f4f8bce4119e632dcaac94f9989f522b791f5bb8553d2690cc14d9f3d",
+        "path": "/Users/m1/builds/gsd-widget-route-diag-620d66f2-20261125/diagnostic-runtime/runs/ui620d66f2-widget-route-diagnostic-im0yu1st/private/route-diagnostic/receipt.json",
+        "facts": {
+          "eventCount": 13,
+          "startupArmed": true,
+          "nonce": "80ECC8BB",
+          "simulatorID": "4467FB8E-0161-4A9E-BF0E-8433A2396DDE",
+          "diagnosticSourceSHA": "620d66f2c0ef3368ec772b236450873a01e74b73",
+          "processID": 37155,
+          "truncated": false,
+          "expectedTaskIDSHA256": "8193a0e61e7c52c3053536fca0279a4be2895a8ae54f5a5945566f4384dfa6b8",
+          "incomingEventCount": 1,
+          "expectedTaskEventCount": 4,
+          "expectedTaskIncomingCount": 1,
+          "completeTraceEligibleForAbsenceAssessment": true,
+          "absenceProvesNoSystemDelivery": false,
+          "postTapApplication": {
+            "status": "bound",
+            "path": "/Users/m1/builds/gsd-widget-route-diag-620d66f2-20261125/diagnostic-runtime/runs/ui620d66f2-widget-route-diagnostic-im0yu1st/private/widget-route-diagnostic-ui/widget-route-diagnostic/15-route-after-editor-wait.hierarchy.txt",
+            "processID": 37155,
+            "bytes": 18448,
+            "sha256": "3fad0d6630bfaaebf0d48737ff5e152f32586ae5b99222a2363e62b6d28ccbe0",
+            "modifiedUTC": "2026-11-25T06:32:51.164761+00:00",
+            "currentTestWindow": true
+          },
+          "postTapProcessMatchesTrace": true,
+          "absenceAssessment": "eligible_for_same_process_trace_review",
+          "absenceAssessmentReason": "current_post_tap_process_bound"
+        }
+      }
+    }
+  },
+  "wrapperPID": 32438,
+  "capacityPolicySHA256": "54d312bfd156eff91e84336c3527d08c96dd1d8865cb1c62ada29c057692ee96",
+  "collectorSHA256": "7b7873bb8639c78fbe64420a419300a352705d5c4f9972fecafa46b710bca046",
+  "capacityChecks": [
+    {
+      "at": "2026-11-25T06:21:06.647121+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 7351140352,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 420392960,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 53947,
+        "Pages inactive": 393539,
+        "Pages speculative": 1192
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:21:21.691934+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 7335837696,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 419389440,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 52524,
+        "Pages inactive": 393975,
+        "Pages speculative": 1245
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:21:36.723241+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 7276707840,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 414306304,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 45819,
+        "Pages inactive": 396874,
+        "Pages speculative": 1442
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:21:51.760560+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 7260291072,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 413642752,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 37497,
+        "Pages inactive": 403280,
+        "Pages speculative": 2356
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:22:06.804769+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 7592558592,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 2230878208,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 61675,
+        "Pages inactive": 396598,
+        "Pages speculative": 5140
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:22:21.846501+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 7625244672,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 2230202368,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 63665,
+        "Pages inactive": 396527,
+        "Pages speculative": 5216
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:22:36.888882+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 7647461376,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 2230099968,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 64850,
+        "Pages inactive": 396634,
+        "Pages speculative": 5280
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:22:51.931336+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 7639678976,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 2229895168,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 64376,
+        "Pages inactive": 396632,
+        "Pages speculative": 5281
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:23:06.962289+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8686239744,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 2734309376,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 141406,
+        "Pages inactive": 384255,
+        "Pages speculative": 4505
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:23:21.990510+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8376254464,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 2733948928,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 4347,
+        "Pages inactive": 506239,
+        "Pages speculative": 660
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:23:37.030647+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8759721984,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 3748716544,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 24924,
+        "Pages inactive": 508508,
+        "Pages speculative": 1219
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:23:52.061220+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8757460992,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 3748560896,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 4182,
+        "Pages inactive": 529012,
+        "Pages speculative": 1319
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:24:07.099804+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8518385664,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 3730956288,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 4422,
+        "Pages inactive": 515475,
+        "Pages speculative": 24
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:24:22.135921+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 10607771648,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 3728134144,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 460962,
+        "Pages inactive": 186249,
+        "Pages speculative": 236
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:24:37.170746+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 10558832640,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 3730599936,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 454341,
+        "Pages inactive": 187033,
+        "Pages speculative": 3086
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:24:52.209856+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 10557931520,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 4882997248,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 453923,
+        "Pages inactive": 187384,
+        "Pages speculative": 3098
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:25:07.250153+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 10425401344,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 4882665472,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 453181,
+        "Pages inactive": 180036,
+        "Pages speculative": 3099
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:25:22.277701+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 10385620992,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 4934311936,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 425644,
+        "Pages inactive": 204931,
+        "Pages speculative": 3313
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:25:37.309076+00:00",
+      "stage": "preflight",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 9918578688,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 7700582400,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 220332,
+        "Pages inactive": 373241,
+        "Pages speculative": 11809
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:25:52.341431+00:00",
+      "stage": "preflight",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 10025697280,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 10320683008,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 47587,
+        "Pages inactive": 561579,
+        "Pages speculative": 2754
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:25:54.098809+00:00",
+      "stage": "before_device",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 9971564544,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 10320355328,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 3927,
+        "Pages inactive": 602078,
+        "Pages speculative": 2611
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T06:26:37.490403+00:00",
+      "stage": "after_install",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6327353344,
+      "memoryBudgetBytes": 2147483648,
+      "additionalMemoryGiB": 1,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 14092271616,
+      "diskBudgetBytes": 5917339419,
+      "additionalDiskGiB": 1,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 4033,
+        "Pages inactive": 362505,
+        "Pages speculative": 19653
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    }
+  ],
+  "driver": {
+    "developerDir": "/Applications/Xcode.app/Contents/Developer",
+    "version": "Xcode 27.0\nBuild version 27A266a",
+    "resolvedXcodebuild": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild"
+  },
+  "diagnosticAbsenceAssessment": "eligible_for_same_process_trace_review",
+  "sourceAndDiagnosticProductsUnchanged": true,
+  "originalFrozenProductsUnchanged": true,
+  "fullWidgetAcceptance": false,
+  "finishedUTC": "2026-11-25T06:33:01.556989+00:00"
+}

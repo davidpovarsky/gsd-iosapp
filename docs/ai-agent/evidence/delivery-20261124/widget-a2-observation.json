@@ -1,0 +1,88 @@
+{
+  "initialTitle" : "GSD-Widget-A-0ADEF83A",
+  "installedWidgetDisplayedInitialTask" : true,
+  "lastCapture" : "12-installed-widget-initial",
+  "passed" : false,
+  "personalAccountUsed" : false,
+  "productionSourceSHA" : "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "schemaVersion" : 1,
+  "shortcutInvoked" : false,
+  "simulatorID" : "4C85AC28-E47D-4AAD-A3EC-0000DF21B0DB",
+  "siriVerified" : false,
+  "taskCardID" : "task-card-PyJF4VC4HVvQ",
+  "updatedTitle" : "GSD-Widget-B-0ADEF83A",
+  "voiceOverSpeechVerified" : false,
+  "watchConnectivityVerified" : false,
+  "widgetGalleryControls" : [
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "com.apple.springboardhome.application-shortcut-item.rearrange-icons",
+      "label" : "עריכת מסך הבית",
+      "selected" : false,
+      "stage" : "11-widget-gallery-00-context-menu",
+      "value" : ""
+    },
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "עריכה",
+      "selected" : false,
+      "stage" : "11-widget-gallery-01-edit-mode",
+      "value" : ""
+    },
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "הוספת וידג׳ט",
+      "selected" : false,
+      "stage" : "11-widget-gallery-02-edit-menu",
+      "value" : ""
+    },
+    {
+      "elementType" : 45,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "חיפוש וידג׳טים",
+      "selected" : false,
+      "stage" : "11-widget-gallery-03-search",
+      "value" : "חיפוש וידג׳טים"
+    },
+    {
+      "elementType" : 75,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "GSD",
+      "selected" : false,
+      "stage" : "11-widget-gallery-04-gsd-results",
+      "value" : ""
+    },
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : " הוספת הווידג׳ט",
+      "selected" : false,
+      "stage" : "11-widget-gallery-05-install-ready",
+      "value" : ""
+    }
+  ],
+  "widgetGalleryFamilyControls" : [
+
+  ],
+  "widgetGalleryFamilySelectionMode" : "native_default_preview",
+  "widgetGalleryInstallationRequested" : true,
+  "widgetGalleryPreviewNames" : [
+    "GSD",
+    "המיקוד להיום"
+  ],
+  "widgetGallerySelectedFamily" : "unknown\/default"
+}

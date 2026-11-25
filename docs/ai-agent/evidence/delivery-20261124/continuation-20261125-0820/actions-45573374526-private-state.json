@@ -1,0 +1,160 @@
+{
+  "observedUTC": "2026-11-25T08:11:18.480467+00:00",
+  "runID": 45573374526,
+  "mac": {
+    "observedUTC": "2026-11-25T08:11:17.466719+00:00",
+    "resultRoot": "/Users/m1/builds/gsd-widget-actions-20261125/runs/gsd-widget-fd6e2944-final-v2-20261125",
+    "resultRootExists": true,
+    "files": [
+      {
+        "name": "actions-controller-private.log",
+        "isDir": false,
+        "isSymlink": false,
+        "bytes": 814,
+        "mtimeUTC": "2026-11-25T08:06:17.925063+00:00"
+      },
+      {
+        "name": "native-claim.json",
+        "isDir": false,
+        "isSymlink": false,
+        "bytes": 1373,
+        "mtimeUTC": "2026-11-25T08:06:17.924749+00:00",
+        "sha256": "12853a14e0753ee24c18a61bbb67abafcc69fc18035a18aed35ff38128345bcb"
+      },
+      {
+        "name": "native-start.lock",
+        "isDir": false,
+        "isSymlink": false,
+        "bytes": 407,
+        "mtimeUTC": "2026-11-25T08:06:17.726729+00:00"
+      },
+      {
+        "name": "terminal.json",
+        "isDir": false,
+        "isSymlink": false,
+        "bytes": 1373,
+        "mtimeUTC": "2026-11-25T08:06:17.924989+00:00",
+        "sha256": "12853a14e0753ee24c18a61bbb67abafcc69fc18035a18aed35ff38128345bcb"
+      }
+    ],
+    "records": {
+      "native-claim.json": {
+        "phase": "complete",
+        "passed": false,
+        "startedUTC": "2026-11-25T08:06:17.726304+00:00",
+        "controllerPID": 5569,
+        "testSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+        "productionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+        "actionsContext": {
+          "runID": "45573374526",
+          "runAttempt": "1",
+          "workflowSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+          "planSHA256": "259986c5fd19e47887b87d1c0af0f6e07f59acc37ef6275b3f6659ae3183bafa",
+          "invocationID": "0177469f27024e46b0a04ddd3555f237",
+          "startedUTC": "2026-11-25T08:06:17.322685+00:00"
+        },
+        "cases": {},
+        "diagnosticOnly": false,
+        "fullSystemSurfaceCoverage": false,
+        "compileExecuted": false,
+        "signingOrUploadExecuted": false,
+        "ownershipInventories": [
+          {
+            "observedUTC": "2026-11-25T08:06:17.900536+00:00",
+            "method": "names_then_scoped_writer_argv_cwd",
+            "globalArgumentsRead": false,
+            "budgetSeconds": 15,
+            "complete": false,
+            "processCount": 226,
+            "candidates": [
+              {
+                "pid": 416,
+                "parentPID": 1,
+                "executable": "Python",
+                "complete": false
+              }
+            ]
+          }
+        ],
+        "failure": {
+          "type": "GuardError",
+          "code": "writer_cwd_unavailable"
+        },
+        "ownedChildrenTerminal": true,
+        "ownedSourceUseClaimReleased": false,
+        "finishedUTC": "2026-11-25T08:06:17.924522+00:00"
+      },
+      "terminal.json": {
+        "phase": "complete",
+        "passed": false,
+        "startedUTC": "2026-11-25T08:06:17.726304+00:00",
+        "controllerPID": 5569,
+        "testSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+        "productionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+        "actionsContext": {
+          "runID": "45573374526",
+          "runAttempt": "1",
+          "workflowSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+          "planSHA256": "259986c5fd19e47887b87d1c0af0f6e07f59acc37ef6275b3f6659ae3183bafa",
+          "invocationID": "0177469f27024e46b0a04ddd3555f237",
+          "startedUTC": "2026-11-25T08:06:17.322685+00:00"
+        },
+        "cases": {},
+        "diagnosticOnly": false,
+        "fullSystemSurfaceCoverage": false,
+        "compileExecuted": false,
+        "signingOrUploadExecuted": false,
+        "ownershipInventories": [
+          {
+            "observedUTC": "2026-11-25T08:06:17.900536+00:00",
+            "method": "names_then_scoped_writer_argv_cwd",
+            "globalArgumentsRead": false,
+            "budgetSeconds": 15,
+            "complete": false,
+            "processCount": 226,
+            "candidates": [
+              {
+                "pid": 416,
+                "parentPID": 1,
+                "executable": "Python",
+                "complete": false
+              }
+            ]
+          }
+        ],
+        "failure": {
+          "type": "GuardError",
+          "code": "writer_cwd_unavailable"
+        },
+        "ownedChildrenTerminal": true,
+        "ownedSourceUseClaimReleased": false,
+        "finishedUTC": "2026-11-25T08:06:17.924522+00:00"
+      }
+    },
+    "runner": {
+      ".runner": {
+        "exists": false
+      },
+      ".credentials": {
+        "exists": false
+      },
+      ".credentials_rsaparams": {
+        "exists": false
+      },
+      "recordedListenerPID": {
+        "pid": 89184,
+        "exists": false,
+        "notIdentityProof": true
+      }
+    },
+    "sourceCacheClaim": {
+      "path": "/Users/m1/builds/gsd-system-invocation-6bd91d6a-20261124/native-runner-cache-writer.lock",
+      "exists": false
+    }
+  },
+  "githubRunners": {
+    "total_count": 0,
+    "runners": []
+  },
+  "readOnly": true
+}

@@ -1,0 +1,94 @@
+{
+  "createdUTC": "2026-11-25T07:17:52.799466+00:00",
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "testSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "productionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "workflowSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "parentSHA": "1d4033c54542b161da65ab34f083cac8aec0b1c4",
+  "treeSHA": "4a0fe7bd59ee868f8cca2c8c6d674a27b1eaf69d",
+  "baseSourceSHA": "3ca346ef595a6a7e062a2a2fc66cbe5b2a76ff2c",
+  "previousCacheSourceSHA": "620d66f2c0ef3368ec772b236450873a01e74b73",
+  "diagnostic620Excluded": true,
+  "diagnosticOnly": false,
+  "changedPathsFrom3ca": [
+    ".github/workflows/gsd-hanlin-agent-ios.yml",
+    "App/ContentView.swift",
+    "scripts/gsd_widget_actions_acceptance.py",
+    "scripts/test_gsd_widget_actions_acceptance.py"
+  ],
+  "numstatFrom3ca": [
+    "43\t1\t.github/workflows/gsd-hanlin-agent-ios.yml",
+    "11\t0\tApp/ContentView.swift",
+    "470\t0\tscripts/gsd_widget_actions_acceptance.py",
+    "369\t0\tscripts/test_gsd_widget_actions_acceptance.py"
+  ],
+  "filePins": {
+    ".github/workflows/gsd-hanlin-agent-ios.yml": {
+      "bytes": 30893,
+      "gitBlob": "7337e321c4f0aa5c30a5931403f03246960219f0",
+      "sha256": "a2cac6c926f490bbb51fc7102ec2e778de52dd34147fed3cc48f1eca7e569b5d"
+    },
+    "App/ContentView.swift": {
+      "bytes": 26291,
+      "gitBlob": "78e848f5284477a2bc41125975478fcd998dc168",
+      "sha256": "8c6f03cde4dca592fb92f8e4f2ba9c6cccf96b37a0472f27a08b1098819ed288"
+    },
+    "App/GSDApp.swift": {
+      "bytes": 17112,
+      "gitBlob": "85672b54beb80cfdda77d99d8451be2ce0b6a864",
+      "sha256": "e73a06dc07fd1512690699b3c45489aee611c878bdb51a588776b96d37f1d06d"
+    },
+    "App/Info.plist": {
+      "bytes": 3004,
+      "gitBlob": "980adb8c1ec9cab0ee85b1cc75c5e3d4e1af615e",
+      "sha256": "8cbed2b686160da6df62b40b170e5196e303d5b599027575448d4e289d704692"
+    },
+    "GSD.xcodeproj/project.pbxproj": {
+      "bytes": 114906,
+      "gitBlob": "1ef7b551c41c8e51909911827e39396de4bea26e",
+      "sha256": "a45fce7412159749fd1dcf3424151af0b198ca76a6fe799e3695f8776bb9a472"
+    },
+    "HanlinSDK.lock.json": {
+      "bytes": 306,
+      "gitBlob": "fa9eb1d526df1deb389e4555eb1ffa23f096c0bb",
+      "sha256": "547ff0ab3f548296079b4a5ecc0c5fbfdf513d621209197f498b1ae21c200ed9"
+    },
+    "ScreenshotTests/GSDNativeSystemAcceptanceUITests.swift": {
+      "bytes": 26872,
+      "gitBlob": "ff2e6164cc201053feff63230480948315dc3740",
+      "sha256": "2443a031bee63c546062de0f90192e793ac07f09bf84c46dddc2d9e0252efeba"
+    },
+    "ScreenshotTests/GSDSystemSurfaceUITests.swift": {
+      "bytes": 33960,
+      "gitBlob": "8e652a8cece32a9d0eddb2ea196d22d88be65259",
+      "sha256": "9a14a1d1c217a786d42c2c52580f82d28535f2c2b0da466571ddfed70224b6d9"
+    },
+    "scripts/gsd_widget_actions_acceptance.py": {
+      "bytes": 27244,
+      "gitBlob": "9e7683e5c62a54307c83638a113e7e4dce3e56cd",
+      "sha256": "02459ac20eb67e1da5c73b3969c632698444997a980d2260efb1217552399eb9"
+    },
+    "scripts/test_gsd_widget_actions_acceptance.py": {
+      "bytes": 19874,
+      "gitBlob": "ffc2e946363d7fa63d9daad8c536ee0ced65424a",
+      "sha256": "627dee020ebc11e3ae3ab3f599973918e7dda36a2e0cdcb9ae86840b4eb925d0"
+    }
+  },
+  "systemTestSHA256": "2443a031bee63c546062de0f90192e793ac07f09bf84c46dddc2d9e0252efeba",
+  "appInfoSHA256": "8cbed2b686160da6df62b40b170e5196e303d5b599027575448d4e289d704692",
+  "projectSHA256": "a45fce7412159749fd1dcf3424151af0b198ca76a6fe799e3695f8776bb9a472",
+  "sdkLockSHA256": "547ff0ab3f548296079b4a5ecc0c5fbfdf513d621209197f498b1ae21c200ed9",
+  "dependencyHashes": {
+    "HanlinSDK.lock.json": "547ff0ab3f548296079b4a5ecc0c5fbfdf513d621209197f498b1ae21c200ed9",
+    "GSD.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved": "806e7a7ca013eeb211f96cc506632058b17cc0ea36eaedba65e62499efddf1bf",
+    "GSDKit/Package.resolved": "eefdfbcd29981fbb8288a4268c7804d6e2cfefe17aa874a1fb968c8de336254b",
+    "Packages/GSDHanlinAgent/Package.resolved": "806e7a7ca013eeb211f96cc506632058b17cc0ea36eaedba65e62499efddf1bf"
+  },
+  "onlyProductionChange": "Reviewed11-line direct task-route database lease/resume in ContentView; no diagnostic instrumentation.",
+  "fullWidgetTest01Unchanged": true,
+  "shareExecutionTestSourceSHA": "b5588f3f0c42df328dba34024d569be8605e51d0",
+  "shortcutExecutionTestSourceSHA": "7098dcb9abdc2d7e8e20afa8d9ec95d7e69c34ef",
+  "historicalPassesNotRelabeled": true,
+  "ascBuildNumberReceiptSHA256": "0c03160609bf86fc74f5e7e32f1d23a34e27aebbf8eea6522143582a20515986",
+  "ascNumberObservedUTC": "2026-11-25T06:53:54.243730+00:00"
+}

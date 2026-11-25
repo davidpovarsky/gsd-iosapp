@@ -79,14 +79,28 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
 
         XCUIDevice.shared.press(.home)
         try require(home.wait(for: .runningForeground, timeout: 10), "SpringBoard is not foreground.")
+        try capture(home, "10b-widget-home-before-icon-wait")
         let icon = home.icons.matching(identifier: "GSD").firstMatch
-        for _ in 0..<2 where !icon.isHittable { home.swipeRight() }
-        try require(icon.exists && icon.isHittable, "Observed GSD Home icon is unavailable.")
+        let iconReady = icon.wait(for: \.isHittable, toEqual: true, timeout: 10)
+        proof["widgetHomeIconWaitSucceeded"] = iconReady
+        proof["widgetHomeIconExists"] = icon.exists
+        try capture(home, "10c-widget-home-after-icon-wait")
+        try require(iconReady && icon.exists && icon.isHittable, "Observed GSD Home icon is unavailable.")
         icon.press(forDuration: 1.2)
-        let medium = home.buttons["וידג׳ט בינוני"]
-        try require(medium.waitForExistence(timeout: 10) && medium.isHittable, "Observed medium WidgetKit control is unavailable.")
-        try capture(home, "11-widget-size-control")
-        medium.tap()
+        try capture(home, "11-before-keyboard-introduction-dismissal")
+        try dismissObservedKeyboardIntroduction()
+        try capture(home, "11-after-keyboard-introduction-dismissal")
+        let editHomeActions = home.buttons.matching(NSPredicate(
+            format: "identifier == %@ AND label == %@",
+            "com.apple.springboardhome.application-shortcut-item.rearrange-icons", "עריכת מסך הבית"))
+        if !editHomeActions.firstMatch.waitForExistence(timeout: 3) {
+            try require(icon.exists && icon.isHittable, "Observed GSD Home icon is unavailable after keyboard introduction.")
+            icon.press(forDuration: 1.2)
+            try capture(home, "11-restored-home-context-menu")
+        }
+        let editHome = try widgetGalleryControl(editHomeActions, stage: "11-widget-gallery-00-context-menu")
+        editHome.tap()
+        try addWidgetFromObservedGallery()
         XCUIDevice.shared.press(.home)
         try capture(home, "11b-after-widget-placement")
         let initialRow = label(initialTitle, in: home)
@@ -103,8 +117,12 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
         saved.tap()
         let editor = app.descendants(matching: .any).matching(identifier: "task-editor").firstMatch
         try require(editor.waitForExistence(timeout: 10), "Task editor did not open.")
-        let title = app.textFields.matching(NSPredicate(format: "value == %@", initialTitle)).firstMatch
-        try require(title.waitForExistence(timeout: 10) && title.isHittable, "The task title field is unavailable.")
+        let titles = editor.textFields.matching(NSPredicate(format: "placeholderValue == %@", "כותרת"))
+        try require(titles.firstMatch.waitForExistence(timeout: 10) && titles.count == 1,
+                    "The task title field is absent or ambiguous.")
+        let title = titles.element
+        try require(title.isEnabled && title.isHittable && title.value as? String == initialTitle,
+                    "The task title field is unavailable or does not contain the exact original value.")
         title.tap()
         title.typeKey("a", modifierFlags: .command)
         title.typeText(updatedTitle)
@@ -139,6 +157,88 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
         app.terminate()
     }
 
+
+    private func addWidgetFromObservedGallery() throws {
+        let edit = try widgetGalleryControl(home.buttons.matching(NSPredicate(
+            format: "label IN %@", argumentArray: [["עריכה", "Edit"]])),
+            stage: "11-widget-gallery-01-edit-mode")
+        edit.tap()
+
+        let addWidget = NSPredicate(format:
+            "(label CONTAINS[cd] 'widget' OR label CONTAINS 'וידג' OR label CONTAINS 'יישומו') "
+            + "AND (label CONTAINS[cd] 'add' OR label CONTAINS 'הוס')")
+        let openGallery = try widgetGalleryControl(home.buttons.matching(addWidget),
+                                                  stage: "11-widget-gallery-02-edit-menu")
+        openGallery.tap()
+
+        let search = try widgetGalleryControl(home.searchFields, stage: "11-widget-gallery-03-search")
+        search.tap()
+        try dismissObservedKeyboardIntroduction()
+        search.typeText("GSD")
+        try require(search.value as? String == "GSD", "Native widget gallery search did not retain GSD.")
+
+        let productNames = ["GSD", "GSD Widgets", "יישומוני GSD", "המיקוד להיום", "Today's Focus"]
+        let product = NSPredicate(format: "label IN %@ OR identifier IN %@",
+                                  argumentArray: [productNames, productNames])
+        let galleries = home.collectionViews.matching(identifier: "add-sheet-collection-view")
+        try require(galleries.count == 1, "Native widget gallery must expose one observed result collection.")
+        let result = try widgetGalleryControl(
+            galleries.element.cells.matching(NSPredicate(format: "label == %@", "GSD")),
+            stage: "11-widget-gallery-04-gsd-results")
+        result.tap()
+
+        let install = try widgetGalleryControl(home.buttons.matching(addWidget),
+                                               stage: "11-widget-gallery-05-install-ready")
+        let names = home.descendants(matching: .any).matching(product)
+        let previewExists = names.firstMatch.waitForExistence(timeout: 10)
+        try capture(home, "11-widget-gallery-06-gsd-preview")
+        let visibleNames = names.allElementsBoundByAccessibilityElement.filter { $0.exists && $0.isHittable }
+        try require(previewExists && !visibleNames.isEmpty, "Native widget preview does not identify GSD.")
+        proof["widgetGalleryPreviewNames"] = visibleNames.map { $0.label }
+
+        // Keep the native preview's family; never infer it from page order or position.
+        let family = NSPredicate(format: "label MATCHES[cd] %@ OR identifier MATCHES[cd] %@",
+                                 ".*(small|medium|large|קטן|קטנה|בינוני|גדול).*",
+                                 ".*system(small|medium|large).*")
+        let families = home.descendants(matching: .any).matching(family)
+            .allElementsBoundByAccessibilityElement.filter { $0.exists && $0.isHittable }
+        let selected = families.filter { $0.isSelected }
+        proof["widgetGalleryFamilyControls"] = families.map { widgetGalleryAttributes($0) }
+        proof["widgetGallerySelectedFamily"] = selected.count == 1
+            ? (selected[0].label.isEmpty ? selected[0].identifier : selected[0].label) : "unknown/default"
+        proof["widgetGalleryFamilySelectionMode"] = "native_default_preview"
+
+        install.tap()
+        proof["widgetGalleryInstallationRequested"] = true
+        try capture(home, "11-widget-gallery-07-install-requested")
+    }
+
+    private func widgetGalleryControl(_ query: XCUIElementQuery, stage: String) throws -> XCUIElement {
+        let exists = query.firstMatch.waitForExistence(timeout: 10)
+        let controls = query.allElementsBoundByAccessibilityElement.filter { $0.exists }
+        if controls.count == 1 {
+            _ = controls[0].wait(for: \.isHittable, toEqual: true, timeout: 10)
+        }
+        try capture(home, stage)
+        let visible = controls.filter { $0.exists && $0.isHittable }
+        try require(exists && visible.count == 1,
+                    "Widget gallery control is absent, ambiguous or obscured at \(stage); visible matches: \(visible.count).")
+        let control = visible[0]
+        try require(control.isEnabled, "Widget gallery control is disabled at \(stage).")
+        var observations = proof["widgetGalleryControls"] as? [[String: Any]] ?? []
+        var attributes = widgetGalleryAttributes(control)
+        attributes["stage"] = stage
+        observations.append(attributes)
+        proof["widgetGalleryControls"] = observations
+        try persist()
+        return control
+    }
+
+    private func widgetGalleryAttributes(_ control: XCUIElement) -> [String: Any] {
+        ["identifier": control.identifier, "label": control.label,
+         "elementType": control.elementType.rawValue, "value": control.value as? String ?? "",
+         "selected": control.isSelected, "enabled": control.isEnabled, "hittable": control.isHittable]
+    }
 
     func test02RunRegisteredCreateTaskShortcutAndVerifyPersistence() throws {
         try prepare("shortcut-invocation")
@@ -188,31 +288,41 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
                         "One native GSD App Shortcuts row is required.")
             appRows.firstMatch.tap()
             try capture(shortcuts, "33-registered-gsd-shortcuts")
-            let actions = shortcuts.buttons.matching(NSPredicate(
-                format: "label BEGINSWITH %@", "הוספת משימה"))
-            try require(actions.firstMatch.waitForExistence(timeout: 15),
-                        "Registered Add Task App Shortcut is absent.")
-            let visibleActions = actions.allElementsBoundByAccessibilityElement.filter { $0.exists && $0.isHittable }
-            try require(visibleActions.count == 1, "Registered Add Task control is not uniquely owned.")
-            let action = visibleActions[0]
+            let actionContainers = shortcuts.otherElements.matching(NSPredicate(
+                format: "label == %@", "הוספת משימה"))
+            try require(actionContainers.firstMatch.waitForExistence(timeout: 15)
+                        && actionContainers.count == 1,
+                        "Registered Add Task App Shortcut container is absent or ambiguous.")
+            let actions = actionContainers.firstMatch.buttons.matching(NSPredicate(
+                format: "identifier == %@ AND label == %@", "plus.circle", "הוספה"))
+            try require(actions.firstMatch.waitForExistence(timeout: 15) && actions.count == 1,
+                        "Registered Add Task App Shortcut button is absent or ambiguous.")
+            let action = actions.firstMatch
+            try require(action.wait(for: \.isHittable, toEqual: true, timeout: 10),
+                        "Registered Add Task control is obscured.")
             proof["registeredAppShortcutLabel"] = action.label
             proof["registeredAppShortcutIdentifier"] = action.identifier
             try requireAppOutsideForeground("GSD became foreground before the Shortcut ran.")
             action.tap()
-            try capture(shortcuts, "34-required-task-prompt")
+            try capture(home, "34-required-task-prompt")
 
-            // CreateTaskIntent has one required String parameter. Select the native field
-            // by its unique role in this prompt, never by the value that the test will enter.
-            let fields = shortcuts.textFields
+            // The observed required Task prompt is owned by SpringBoard. Retain its
+            // unique field by role so entering text cannot invalidate a placeholder query.
+            let fields = home.textFields
             try require(fields.firstMatch.waitForExistence(timeout: 15) && fields.count == 1,
                         "The required Task prompt must expose one native text field.")
+            try require(fields.matching(NSPredicate(format: "placeholderValue == %@", "Task")).count == 1,
+                        "The system-owned required Task prompt changed.")
             let taskField = fields.firstMatch
+            try dismissObservedKeyboardIntroduction()
+            try capture(home, "34-required-task-ready")
             try require(taskField.wait(for: \.isHittable, toEqual: true, timeout: 10),
                         "The required Task field is obscured.")
             proof["requiredTaskControl"] = [
                 "identifier": taskField.identifier,
                 "label": taskField.label,
-                "elementType": "textField"
+                "elementType": "textField",
+                "ownerBundleIdentifier": "com.apple.springboard"
             ]
             taskField.tap()
             try dismissObservedKeyboardIntroduction()
@@ -220,10 +330,21 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
             try require(taskField.value as? String == shorthand,
                         "The native required Task input does not contain the exact shorthand.")
             try requireAppOutsideForeground("GSD became foreground while entering the Task parameter.")
-            try capture(shortcuts, "35-required-task-entered")
-            taskField.typeText("\n")
+            try capture(home, "35-required-task-entered")
+            // Match the observed prompt label, not the keyboard's separate Done identifier.
+            let submitButtons = home.buttons.matching(NSPredicate(format: "label == %@", "Done"))
+            try require(submitButtons.firstMatch.waitForExistence(timeout: 15) && submitButtons.count == 1,
+                        "The system-owned Task prompt must expose one Done button.")
+            let submit = submitButtons.firstMatch
+            try require(submit.isEnabled && submit.wait(for: \.isHittable, toEqual: true, timeout: 10),
+                        "The system-owned Task submission is disabled or obscured.")
+            proof["requiredTaskSubmitControl"] = [
+                "identifier": submit.identifier, "label": submit.label,
+                "ownerBundleIdentifier": "com.apple.springboard"
+            ]
+            submit.tap()
             try require(taskField.waitForNonExistence(timeout: 30),
-                        "Native keyboard submission did not complete the required Task prompt.")
+                        "Native Done submission did not complete the required Task prompt.")
             try require(shortcuts.state == .runningForeground, "Shortcuts must own the completed invocation UI.")
             let invocationAppState = try requireAppOutsideForeground(
                 "CreateTask must execute with GSD in a known nonforeground state.")

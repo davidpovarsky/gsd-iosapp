@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "kind": "scheduled_backup_observed_completion",
+  "recordedUTC": "2026-11-25T03:23:40.664662+00:00",
+  "readOnly": true,
+  "manualBackupTriggered": false,
+  "gsd-cloud-backup.service": {
+    "returncode": 0,
+    "properties": {
+      "Type": "oneshot",
+      "Result": "success",
+      "ExecMainStartTimestamp": "Wed 2026-11-25 03:23:05 UTC",
+      "ExecMainExitTimestamp": "Wed 2026-11-25 03:23:05 UTC",
+      "ExecMainStatus": "0",
+      "ActiveState": "inactive"
+    }
+  },
+  "gsd-cloud-backup.timer": {
+    "returncode": 0,
+    "properties": {
+      "NextElapseUSecRealtime": "Thu 2026-11-26 03:22:58 UTC",
+      "LastTriggerUSec": "Wed 2026-11-25 03:23:05 UTC",
+      "ActiveState": "active",
+      "SubState": "waiting"
+    }
+  },
+  "dataAvailableBytes": 4707729408,
+  "interpretation": {
+    "scheduledRunCompletedUTC": "2026-11-25T03:23:05Z",
+    "serviceResultSuccess": true,
+    "execMainStatus": 0,
+    "automaticTriggerObserved": true,
+    "nextScheduledUTC": "2026-11-26T03:22:58Z",
+    "priorRestoreAcceptanceReused": true,
+    "noManualBackupOrServiceMutation": true
+  }
+}

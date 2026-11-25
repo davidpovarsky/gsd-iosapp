@@ -1,0 +1,91 @@
+{
+  "initialTitle" : "GSD-Widget-A-9696F15D",
+  "installedWidgetDisplayedInitialTask" : true,
+  "lastCapture" : "14-installed-widget-refreshed",
+  "passed" : false,
+  "personalAccountUsed" : false,
+  "productionSourceSHA" : "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "realWidgetTimelineRefreshObserved" : true,
+  "schemaVersion" : 1,
+  "shortcutInvoked" : false,
+  "simulatorID" : "739515F5-2431-44DD-A97D-F0A0D1C274E2",
+  "siriVerified" : false,
+  "taskCardID" : "task-card-WrSn-6jwqlVY",
+  "updatedTitle" : "GSD-Widget-B-9696F15D",
+  "voiceOverSpeechVerified" : false,
+  "watchConnectivityVerified" : false,
+  "widgetGalleryControls" : [
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "com.apple.springboardhome.application-shortcut-item.rearrange-icons",
+      "label" : "עריכת מסך הבית",
+      "selected" : false,
+      "stage" : "11-widget-gallery-00-context-menu",
+      "value" : ""
+    },
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "עריכה",
+      "selected" : false,
+      "stage" : "11-widget-gallery-01-edit-mode",
+      "value" : ""
+    },
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "הוספת וידג׳ט",
+      "selected" : false,
+      "stage" : "11-widget-gallery-02-edit-menu",
+      "value" : ""
+    },
+    {
+      "elementType" : 45,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "חיפוש וידג׳טים",
+      "selected" : false,
+      "stage" : "11-widget-gallery-03-search",
+      "value" : "חיפוש וידג׳טים"
+    },
+    {
+      "elementType" : 75,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "GSD",
+      "selected" : false,
+      "stage" : "11-widget-gallery-04-gsd-results",
+      "value" : ""
+    },
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : " הוספת הווידג׳ט",
+      "selected" : false,
+      "stage" : "11-widget-gallery-05-install-ready",
+      "value" : ""
+    }
+  ],
+  "widgetGalleryFamilyControls" : [
+
+  ],
+  "widgetGalleryFamilySelectionMode" : "native_default_preview",
+  "widgetGalleryInstallationRequested" : true,
+  "widgetGalleryPreviewNames" : [
+    "GSD",
+    "המיקוד להיום"
+  ],
+  "widgetGallerySelectedFamily" : "unknown\/default",
+  "widgetHomeIconExists" : true,
+  "widgetHomeIconWaitSucceeded" : true
+}

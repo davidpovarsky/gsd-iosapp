@@ -1,0 +1,88 @@
+{
+  "phase": "stopped_before_staging",
+  "admission": {
+    "schemaVersion": 1,
+    "kind": "gsd-upload-phase-admission",
+    "observedUTC": "2026-11-25T09:43:49.849851+00:00",
+    "owner": "/root/native_reconcile",
+    "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "build": "49",
+    "handoffSHA256": "4825814668809b40f62332259f48671f1be8a1834cbdbc214bd32f0de85256d4",
+    "stagingAllocationUpperBoundBytes": 77824,
+    "actualIPABytes": 27950550,
+    "spoolIPACopies": 2,
+    "logsAndMetadataAllowanceBytes": 67108864,
+    "additionalDiskBytes": 123087788,
+    "additionalMemoryGiB": 0.5,
+    "initialSample": {
+      "at": "2026-11-25T09:43:34.819198+00:00",
+      "stage": "upload_phase_initial_sample",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 7566753792,
+      "memoryBudgetBytes": 1610612736,
+      "additionalMemoryGiB": 0.5,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 2420862976,
+      "diskBudgetBytes": 4966685383,
+      "additionalDiskGiB": 0.1146344356238842,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 288975,
+        "Pages inactive": 171367,
+        "Pages speculative": 1496
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    "admission": {
+      "at": "2026-11-25T09:43:49.849752+00:00",
+      "stage": "upload_staging_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 7401848832,
+      "memoryBudgetBytes": 1610612736,
+      "additionalMemoryGiB": 0.5,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 0,
+      "diskAvailableBytes": 2415083520,
+      "diskBudgetBytes": 2547796127,
+      "additionalDiskGiB": 0.1146344356238842,
+      "concurrentDiskGrowthBytesPerSecond": 385034.2941464779,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 287810,
+        "Pages inactive": 162454,
+        "Pages speculative": 1509
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    "phaseLocalFreshGrowthBaseline": true,
+    "historicalGrowthFloorReused": false,
+    "unchangedMemoryTransientMarginGiB": 1,
+    "unchangedOSDiskMarginGiB": 2,
+    "unchangedGrowthHorizonSeconds": 720,
+    "capacityHelperSHA256": "54d312bfd156eff91e84336c3527d08c96dd1d8865cb1c62ada29c057692ee96",
+    "cpuOrJobCountGate": false,
+    "staged": false,
+    "uploadDispatched": false
+  },
+  "receipt": {
+    "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-upload-admission-stopped.json",
+    "bytes": 2655,
+    "sha256": "438bfc0db9a0e9cf3788738cb2aff2be8db944474c7df69e145f9856b3bd26ec"
+  }
+}

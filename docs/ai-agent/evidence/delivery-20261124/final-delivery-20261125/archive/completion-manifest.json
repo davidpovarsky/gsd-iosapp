@@ -1,0 +1,71 @@
+{
+  "kind": "terminal",
+  "observedUTC": "2026-11-25T09:26:38.182672+00:00",
+  "phase": "stopped",
+  "passed": false,
+  "failure": null,
+  "finishedUTC": "2026-11-25T09:26:36.140430+00:00",
+  "controllerPID": 40486,
+  "files": [
+    {
+      "name": "archive-terminal.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-release49-archive-terminal-attempt2.json",
+      "bytes": 40269,
+      "sha256": "02937196a4e3fbe56cc64e05e1f3470289edb9d55dcaf144a4c3ccb532033583",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\validated-release\\archive-terminal.json"
+    },
+    {
+      "name": "cache-owner-terminal.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-release49-cache-owner-terminal-attempt2.json",
+      "bytes": 410,
+      "sha256": "2d576773f35509fc3a5e3f578c1f80f133fdf41464f02f818d0b9b67b6f31cd3",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\validated-release\\cache-owner-terminal.json"
+    },
+    {
+      "name": "release-status.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/release-status.json",
+      "bytes": 4306,
+      "sha256": "7087b91a907f9ff12f537c202e4e3e51da300256ed7590f450296ce1137c0f2b",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\validated-release\\release-status.json"
+    },
+    {
+      "name": "prearchive-build-train.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/prearchive-build-train.json",
+      "bytes": 1082,
+      "sha256": "f052eb84a6968ca91603927b79469cdafa26a4c7a4a4d3384ddf9ec9fd434f4b",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\validated-release\\prearchive-build-train.json"
+    },
+    {
+      "name": "archive-signatures.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/archive-signatures.json",
+      "bytes": 1912,
+      "sha256": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\validated-release\\archive-signatures.json"
+    },
+    {
+      "name": "ipa-signatures.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/ipa-signatures.json",
+      "bytes": 1912,
+      "sha256": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\validated-release\\ipa-signatures.json"
+    }
+  ],
+  "sourceAndArchivePreservation": {
+    "productionSourceUnchanged": true,
+    "finalSimulatorInputsAndActualActionsEvidenceUnchanged": true,
+    "previousReleaseArtifactsUnchanged": true,
+    "prior9fReleaseArtifactsUnchanged": true,
+    "ownedCacheClaimReleased": null,
+    "ownedSourceClaimReleased": null,
+    "ownedProcessGroupTerminal": false,
+    "cleanupUncertain": true,
+    "uploadExecuted": false
+  },
+  "artifact": {
+    "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/export/GSD.ipa",
+    "fileName": "GSD-4.1.0-49.ipa",
+    "sizeBytes": 27950550,
+    "sha256": "9cb686f13cc4546580d272fa83fb26aa6b13715c5be366412b06efa71fb522f7"
+  },
+  "copiedUTC": "2026-11-25T09:26:38.415445+00:00"
+}

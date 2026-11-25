@@ -1,0 +1,191 @@
+{
+  "schema": "gsd-delivery-evidence-continuation-v1",
+  "preparedUTC": "2026-11-25T03:28:53.691309+00:00",
+  "snapshotCutoffUTC": "2026-11-25T03:34:47Z",
+  "baseCommit": "c9a505425665a85b62b6e0add5009cbfd043b8f4",
+  "scope": "retained_a2_build_runtime_and_oracle_operations_documentation_only",
+  "testSourceSHA": "a2f1c09d6ef2b3ba9a281288bab985ebe44aa9ac",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "nativeBuildPassed": true,
+  "nativeBuildAttempt": 1,
+  "widgetRuntimeAcceptance": "failed",
+  "shareAcceptanceReused": true,
+  "shortcutAcceptanceReused": true,
+  "runtimeExecutedByThisDocumentationChange": false,
+  "uploadExecutedByThisDocumentationChange": false,
+  "scheduledBackupCompletedUTC": "2026-11-25T03:23:05Z",
+  "manualBackupTriggered": false,
+  "files": [
+    {
+      "name": "widget-a2-build-terminal.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-build-20261125\\terminal-receipt.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/terminal-receipt.json",
+      "bytes": 1267,
+      "sha256": "59c6cec09b7f29efc47a8c75e6463108ebc53192fef62309371888287b2b7e32",
+      "classification": "technical_build_receipt_no_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-a2-build-terminal.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "name": "widget-a2-build-binding.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-build-20261125\\build-binding.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/build-binding.json",
+      "bytes": 1283,
+      "sha256": "ff26ebd760c60cac329fdf500f280eefcd672c027dab68850f6adb092478ef21",
+      "classification": "technical_build_receipt_no_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-a2-build-binding.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "name": "widget-a2-composition.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-build-20261125\\composition-receipt.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/composition-receipt.json",
+      "bytes": 1156,
+      "sha256": "75d406eb12fa0f6bf2672ac9b9b386a0a0b7414ecb869d7f57a2fd7acac931d0",
+      "classification": "technical_build_receipt_no_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-a2-composition.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "name": "widget-a2-composed-products.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-build-20261125\\composed-products.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/composed-products.json",
+      "bytes": 6012,
+      "sha256": "1ce5327d90029445753aba9ad329c1ed211541a15aa4574511e20f126411eba7",
+      "classification": "technical_build_receipt_no_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-a2-composed-products.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "name": "widget-a2-source-closure.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-build-20261125\\source-closure.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/source-closure.json",
+      "bytes": 1467,
+      "sha256": "090d094e565009680c0b56d292e3e1ff66f5b6160fbdccfe5f686d9ca65a04f1",
+      "classification": "technical_build_receipt_no_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-a2-source-closure.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "name": "widget-a2-cache-terminal.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-build-20261125\\cache-owner-terminal.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/cache-owner-terminal.json",
+      "bytes": 481,
+      "sha256": "0a21ff5b97e05098f01053678d27970d3ecf839223e08de8ac83ba69e26b9835",
+      "classification": "technical_build_receipt_no_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-a2-cache-terminal.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "name": "widget-a2-build-continuation.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-build-20261125\\continuation-binding.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/continuation-binding.json",
+      "bytes": 533,
+      "sha256": "95109f25341e5bc70bc18c9bb9a2ac5cd1861038054cff74a1e256b63eab0c9c",
+      "classification": "technical_build_receipt_no_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-a2-build-continuation.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "name": "widget-a2-build-transfer-manifest.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-build-20261125\\completion-manifest.json",
+      "bytes": 1968,
+      "sha256": "fe675d072b385582030c70a356f08df91ff58a0b8bdac625125023053559be6e",
+      "classification": "exact_windows_transfer_receipt_no_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-a2-build-transfer-manifest.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "name": "oracle-readonly-health-20261125T031134Z.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\oracle-readonly-health-20261125T031134Z.json",
+      "bytes": 4114,
+      "sha256": "53f7dba54349ce115f00fe58f38c5bb8bfa755c756d35ce44a4d4aabb20ba6d1",
+      "classification": "read_only_operational_receipt_no_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/oracle-readonly-health-20261125T031134Z.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "name": "oracle-scheduled-backup-20261125T032340Z.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\oracle-scheduled-backup-20261125T032340Z.json",
+      "bytes": 1107,
+      "sha256": "453cd5d62a49f0a2acc5843febe8462de2d1a63a422ce4ea0ca85387c0def373",
+      "classification": "read_only_operational_receipt_no_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/oracle-scheduled-backup-20261125T032340Z.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "name": "widget-a2-binding.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-terminal-20261125\\widget-a2-binding.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/runs/uia2f1c09d-widget-a3cijbv7/binding.json",
+      "bytes": 10512,
+      "sha256": "6c4fe7f129bd5ad5152a03eed15e84ee11104f439f9c3050647340c0da022f1d",
+      "classification": "technical and synthetic Widget acceptance evidence; no account credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-a2-binding.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "name": "widget-a2-observation.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-terminal-20261125\\widget-a2-observation.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/runs/uia2f1c09d-widget-a3cijbv7/private/widget-ui/widget/observation.json",
+      "bytes": 2468,
+      "sha256": "f55a48f36a516f008b4beec3aaff10516ee5a927ab248ab2d9eab8ced0387393",
+      "classification": "technical and synthetic Widget acceptance evidence; no account credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-a2-observation.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "name": "widget-a2-terminal.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-terminal-20261125\\widget-a2-terminal.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/widget-only-runtime-terminal.json",
+      "bytes": 11220,
+      "sha256": "7d2de4b7dbf40f3e88253b2b3cd57ef939417d3782dcf169de879ae9419d13de",
+      "classification": "technical and synthetic Widget acceptance evidence; no account credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-a2-terminal.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "name": "widget-a2-terminal-transfer-manifest.json",
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-terminal-20261125\\completion-manifest.json",
+      "bytes": 2171,
+      "sha256": "5968ddfbf4c6b1ee0785d9064122aaf61bfc6c9270d6c28106f5332f7750d5c6",
+      "classification": "exact_windows_transfer_receipt_no_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-a2-terminal-transfer-manifest.json",
+      "exactCopy": true,
+      "normalization": null
+    }
+  ],
+  "allExactBytesVerified": true,
+  "originalsPreserved": true,
+  "previousManifests": {
+    "completion-manifest.json": "962447560b2f51792430534676befb608527c09677c3b2feee2b2f7b56365060",
+    "continuation-20261125-0106-manifest.json": "d0f85c760aeac9b31c46b0e2d3a938c4a6198e98cd0bcb8e4a5094ed5108e76c",
+    "continuation-20261125-0225-manifest.json": "e1587bf6a1ba5be31e205de37e180f2c0ce924645dca9ac5db0257e053046d97",
+    "continuation-20261125-0254-manifest.json": "fd62dbe8db03283a5b1fb6a3fac35c7e908b2f64818e58d9d3c75dbdab182164"
+  },
+  "runtimeEvidenceAddedUTC": "2026-11-25T03:38:06.138239+00:00",
+  "widgetRuntimeCounts": {
+    "totalTestCount": 1,
+    "passedTests": 0,
+    "failedTests": 1,
+    "skippedTests": 0,
+    "expectedFailures": 0
+  },
+  "widgetGalleryInstallationRequested": true,
+  "installedWidgetDisplayedInitialTask": true,
+  "timelineAndExactTaskDeepLinkVerified": false,
+  "sourceAndFrozenProductsUnchanged": true,
+  "ownedSimulatorsRemoved": true
+}

@@ -1,0 +1,46 @@
+{
+  "completedUTC": "2026-11-25T03:30:29.086229+00:00",
+  "files": [
+    {
+      "name": "widget-a2-binding.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/runs/uia2f1c09d-widget-a3cijbv7/binding.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-terminal-20261125\\widget-a2-binding.json",
+      "bytes": 10512,
+      "sha256": "6c4fe7f129bd5ad5152a03eed15e84ee11104f439f9c3050647340c0da022f1d",
+      "classification": "technical and synthetic Widget acceptance evidence; no account credentials"
+    },
+    {
+      "name": "widget-a2-observation.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/runs/uia2f1c09d-widget-a3cijbv7/private/widget-ui/widget/observation.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-terminal-20261125\\widget-a2-observation.json",
+      "bytes": 2468,
+      "sha256": "f55a48f36a516f008b4beec3aaff10516ee5a927ab248ab2d9eab8ced0387393",
+      "classification": "technical and synthetic Widget acceptance evidence; no account credentials"
+    },
+    {
+      "name": "widget-a2-terminal.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/widget-only-runtime-terminal.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-a2-terminal-20261125\\widget-a2-terminal.json",
+      "bytes": 11220,
+      "sha256": "7d2de4b7dbf40f3e88253b2b3cd57ef939417d3782dcf169de879ae9419d13de",
+      "classification": "technical and synthetic Widget acceptance evidence; no account credentials"
+    }
+  ],
+  "allExactBytesVerified": true,
+  "originalsPreserved": true,
+  "testSourceSHA": "a2f1c09d6ef2b3ba9a281288bab985ebe44aa9ac",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "passed": false,
+  "counts": {
+    "totalTestCount": 1,
+    "passedTests": 0,
+    "failedTests": 1,
+    "skippedTests": 0,
+    "expectedFailures": 0
+  },
+  "installedWidgetDisplayedInitialTask": true,
+  "timelineAndDeepLinkNotVerified": true,
+  "ownedSimulatorsRemoved": true,
+  "sourceAndFrozenProductsUnchanged": true,
+  "newRuntimeExecuted": false
+}

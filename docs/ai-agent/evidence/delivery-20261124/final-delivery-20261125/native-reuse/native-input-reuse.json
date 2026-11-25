@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "kind": "gsd-final-native-input-reuse-comparison",
+  "observedUTC": "2026-11-25T09:16:57.650132+00:00",
+  "baseProductionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "finalProductionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "priorTestOnlySourceSHA": "3ca346ef595a6a7e062a2a2fc66cbe5b2a76ff2c",
+  "reviewedProductionFixSourceSHA": "1d4033c54542b161da65ab34f083cac8aec0b1c4",
+  "comparisonPassed": true,
+  "nativeBasePathCount": 501,
+  "nativeFinalPathCount": 501,
+  "unchangedNativePathCount": 499,
+  "nativeBaseTreeSHA256": "0a3c88014aa4bfd57c61592c3facb2bb4c8e2cb950a81b40f73dacfb9302022e",
+  "nativeFinalTreeSHA256": "95b9f96032d03cc8a46b723214a71a7c6c760c2edf1d4748461eaf5deda28ca2",
+  "changedNativeInputs": [
+    {
+      "path": "App/ContentView.swift",
+      "base": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "5df44b63918ef2b41dd17fd1ec38580f71208eb0"
+      },
+      "final": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "78e848f5284477a2bc41125975478fcd998dc168"
+      }
+    },
+    {
+      "path": "GSD.xcodeproj/project.pbxproj",
+      "base": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "42a047913844fbad57e84a843e3a8a785e3874d1"
+      },
+      "final": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "1ef7b551c41c8e51909911827e39396de4bea26e"
+      }
+    }
+  ],
+  "preFixContentViewEqual9fAnd3ca": true,
+  "finalContentViewExactlyReviewed11LineFix": true,
+  "originalFullWidgetTestSHA256": "2443a031bee63c546062de0f90192e793ac07f09bf84c46dddc2d9e0252efeba",
+  "actualAffectedBehaviorAcceptance": {
+    "workflowSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "testSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "productionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "actionsRunID": 45575270618,
+    "actionsReceiptSHA256": "2572bcb446e7a7e462f31757eba5604573d622d5931855ddb7bdc87fd8ffc7ec"
+  },
+  "historicalCasesRemainAtActualSources": {
+    "share": {
+      "testSourceSHA": "b5588f3f0c42df328dba34024d569be8605e51d0",
+      "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be"
+    },
+    "shortcut": {
+      "testSourceSHA": "7098dcb9abdc2d7e8e20afa8d9ec95d7e69c34ef",
+      "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be"
+    },
+    "preconsent": {
+      "testSourceSHA": "f1fc8676cd1cce5a275f246b0d7dedcfb73416db",
+      "productionSourceSHA": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f"
+    },
+    "mainUI": {
+      "testSourceSHA": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+      "productionSourceSHA": "6712921d1dc379c41c6919524e599ad7e0b9e5e0"
+    }
+  },
+  "nativeDelta": {
+    "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\final-native-input-reuse-9f-to-fd6-20261125\\native-input-delta.diff",
+    "bytes": 6978,
+    "sha256": "d1ac8ccc24fdc0e2d3a065ccb6cc8fe201656a19dd140d4e4881d70f80f854f8"
+  },
+  "testsRepeated": false,
+  "sourceModified": false,
+  "requiresRootSemanticReviewOfProjectRegistrationDelta": true
+}

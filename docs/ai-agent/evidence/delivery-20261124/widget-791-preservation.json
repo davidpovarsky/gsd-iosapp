@@ -1,0 +1,20 @@
+{
+  "createdUTC": "2026-11-25T03:46:24.290034+00:00",
+  "sourceSHA": "a2f1c09d6ef2b3ba9a281288bab985ebe44aa9ac",
+  "buildBindingSHA256": "ff26ebd760c60cac329fdf500f280eefcd672c027dab68850f6adb092478ef21",
+  "buildLogOriginal": "/Users/m1/builds/gsd-widget-a2f1c09d-20261125/compile-resume/incremental-widget-build.log",
+  "buildLogSHA256": "521c9d02173c0a255c0648aef543bd263a82f16fc45acdda499737c046e3d041",
+  "originalProducts": "/Users/m1/caches/DerivedData/gsd-system-6bd91d6a-20261124/Build/Products",
+  "preservedProducts": "/Users/m1/builds/gsd-widget-791faede-20261125/preserved-a2/products",
+  "productsTree": {
+    "sha256": "af185f06b4e0cd01a97577288585e8a2ca53121eb2efc96403c8ec686484bc5a",
+    "files": 421
+  },
+  "dependencyHashes": {
+    "HanlinSDK.lock.json": "547ff0ab3f548296079b4a5ecc0c5fbfdf513d621209197f498b1ae21c200ed9",
+    "GSD.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved": "806e7a7ca013eeb211f96cc506632058b17cc0ea36eaedba65e62499efddf1bf",
+    "GSDKit/Package.resolved": "eefdfbcd29981fbb8288a4268c7804d6e2cfefe17aa874a1fb968c8de336254b",
+    "Packages/GSDHanlinAgent/Package.resolved": "806e7a7ca013eeb211f96cc506632058b17cc0ea36eaedba65e62499efddf1bf"
+  },
+  "passed": true
+}

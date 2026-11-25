@@ -1,0 +1,49 @@
+{
+  "createdUTC": "2026-11-25T02:34:48.294692+00:00",
+  "testSourceSHA": "7098dcb9abdc2d7e8e20afa8d9ec95d7e69c34ef",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "files": [
+    {
+      "source": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/evidence/terminal-receipt.json",
+      "name": "terminal-receipt.json",
+      "sha256": "0a3b2ab3138c2943af97ba6164fdace2acece3c92dca4ae42e25581d19c14463",
+      "bytes": 984,
+      "destination": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-build-20261125\\terminal-receipt.json"
+    },
+    {
+      "source": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/evidence/build-binding.json",
+      "name": "build-binding.json",
+      "sha256": "ee84a7f469ab462384632fd9fe3a15274bf912456f011fdbe738557b41898d58",
+      "bytes": 1284,
+      "destination": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-build-20261125\\build-binding.json"
+    },
+    {
+      "source": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/evidence/source-closure.json",
+      "name": "source-closure.json",
+      "sha256": "ea332c93ba9206f4649664c6aff6c89008d0687920ec4ae9c4e03580759c2176",
+      "bytes": 1223,
+      "destination": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-build-20261125\\source-closure.json"
+    },
+    {
+      "source": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/evidence/composition-receipt.json",
+      "name": "composition-receipt.json",
+      "sha256": "17dce463e873e9511733fc6ae3fc7e95cc73ad04d0bd30aaf43e555d606ca466",
+      "bytes": 1157,
+      "destination": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-build-20261125\\composition-receipt.json"
+    },
+    {
+      "source": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/evidence/composed-products.json",
+      "name": "composed-products.json",
+      "sha256": "e6097dd7767e578561a81f2dab64d793c663014916c0a3213a3915c20dd59e15",
+      "bytes": 6006,
+      "destination": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-build-20261125\\composed-products.json"
+    },
+    {
+      "source": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/evidence/cache-owner-terminal.json",
+      "name": "cache-owner-terminal.json",
+      "sha256": "68c039421758444b6274f77285b3bf9af7116d1670cbc4301cdc5dd987a40d1a",
+      "bytes": 481,
+      "destination": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-build-20261125\\cache-owner-terminal.json"
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import CoreSpotlight
 import GSDModel
 import GSDStore
@@ -257,6 +258,16 @@ struct ContentView: View {
     /// the URL arrives, so a `store.tasks` lookup would silently miss every time.
     private func openTask(_ id: String) {
         _Concurrency.Task { @MainActor in
+            #if !targetEnvironment(macCatalyst)
+            // A task URL can arrive before the scene's foreground database resume.
+            let databaseLease = BackgroundDatabaseWindow(isBackgrounded: {
+                UIApplication.shared.applicationState != .active
+            }).begin()
+            defer { databaseLease.finish() }
+            if UIApplication.shared.applicationState == .active {
+                BackgroundDatabaseWindow.resumeAppDatabaseForForeground()
+            }
+            #endif
             if let task = try? await store.fetchTask(id: id) {
                 if task.isSaved { openSavedTask(task.id) }
                 else { palette.editor = .edit(task) }

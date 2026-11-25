@@ -1,0 +1,414 @@
+{
+  "phase": "complete",
+  "passed": true,
+  "startedUTC": "2026-11-25T08:19:40.519173+00:00",
+  "controllerPID": 16104,
+  "testSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "productionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "actionsContext": {
+    "runID": "45575270618",
+    "runAttempt": "1",
+    "workflowSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "planSHA256": "536d13fc5f390d4216ee26c565ec52fa2562a3667187ea9e8427cf16b17ff621",
+    "invocationID": "cef7368a861d4cfcaec3f5f0812b41a8",
+    "startedUTC": "2026-11-25T08:19:40.136864+00:00"
+  },
+  "cases": {
+    "widget": {
+      "startedUTC": "2026-11-25T08:19:40.971625+00:00",
+      "passed": true,
+      "commandKind": "one_original_widget_acceptance",
+      "pid": 16206,
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T08:51:28.780907+00:00",
+      "binding": "/Users/m1/builds/gsd-widget-actions-20261125/runs/gsd-widget-fd6e2944-final-v3-20261125/runs/uifd6e2944-widget-zybfpbn1/binding.json",
+      "bindingSHA256": "2bdb6bfac2c6e615e901a3868577669c74258a0f6010ed572ac01582a39dd9d0",
+      "case": {
+        "passed": true,
+        "startedUTC": "2026-11-25T08:44:00.995347+00:00",
+        "method": "test01RealWidgetTimelineRefreshAndTaskTap",
+        "ownedDevicesRemoved": true,
+        "device": "E2B29899-8DFC-4086-88C4-ADEE989C9801",
+        "deviceType": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "command": [
+          "xcodebuild",
+          "test-without-building",
+          "-xctestrun",
+          "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/products/GSDScreenshots_iphonesimulator27.1-arm64.xctestrun",
+          "-destination",
+          "platform=iOS Simulator,id=E2B29899-8DFC-4086-88C4-ADEE989C9801",
+          "-destination-timeout",
+          "90",
+          "-parallel-testing-enabled",
+          "NO",
+          "-collect-test-diagnostics",
+          "never",
+          "-resultBundlePath",
+          "/Users/m1/builds/gsd-widget-actions-20261125/runs/gsd-widget-fd6e2944-final-v3-20261125/runs/uifd6e2944-widget-zybfpbn1/private/widget.xcresult",
+          "-testLanguage",
+          "he",
+          "-testRegion",
+          "IL",
+          "-only-testing:GSDScreenshotTests/GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap"
+        ],
+        "result": "/Users/m1/builds/gsd-widget-actions-20261125/runs/gsd-widget-fd6e2944-final-v3-20261125/runs/uifd6e2944-widget-zybfpbn1/private/widget.xcresult",
+        "artifacts": "/Users/m1/builds/gsd-widget-actions-20261125/runs/gsd-widget-fd6e2944-final-v3-20261125/runs/uifd6e2944-widget-zybfpbn1/private/widget-ui",
+        "xctestStartedUTC": "2026-11-25T08:45:00.491718+00:00",
+        "returncode": 0,
+        "xctestFinishedUTC": "2026-11-25T08:51:21.870241+00:00",
+        "testSummary": {
+          "devicesAndConfigurations": [
+            {
+              "device": {
+                "architecture": "arm64",
+                "deviceId": "E2B29899-8DFC-4086-88C4-ADEE989C9801",
+                "deviceName": "GSD-Supplemental-widget-e8f4be3b870f45e9a7a00301d45469b0",
+                "modelName": "iPhone 17 Pro",
+                "osBuildNumber": "24B8117",
+                "osVersion": "27.2",
+                "platform": "iOS Simulator"
+              },
+              "expectedFailures": 0,
+              "failedTests": 0,
+              "passedTests": 1,
+              "skippedTests": 0,
+              "testPlanConfiguration": {
+                "configurationId": "1",
+                "configurationName": "Test Scheme Action"
+              }
+            }
+          ],
+          "environmentDescription": "GSDScreenshots \u00b7 Built with macOS 27.0",
+          "expectedFailures": 0,
+          "failedTests": 0,
+          "finishTime": 1795596681.707,
+          "passedTests": 1,
+          "result": "Passed",
+          "runtimeWarnings": [],
+          "skippedTests": 0,
+          "startTime": 1795596302.206,
+          "statistics": [],
+          "testFailures": [],
+          "title": "Test - GSDScreenshots",
+          "topInsights": [],
+          "totalTestCount": 1
+        },
+        "observation": {
+          "initialTitle": "GSD-Widget-A-2C89BA1D",
+          "installedWidgetDisplayedInitialTask": true,
+          "lastCapture": "15-widget-row-task-editor",
+          "passed": true,
+          "personalAccountUsed": false,
+          "productionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+          "realWidgetTimelineRefreshObserved": true,
+          "schemaVersion": 1,
+          "scope": "real_home_widget_timeline_refresh_and_row_deep_link",
+          "shortcutInvoked": false,
+          "simulatorID": "E2B29899-8DFC-4086-88C4-ADEE989C9801",
+          "siriVerified": false,
+          "taskCardID": "task-card-OEmaQAdINBVe",
+          "updatedTitle": "GSD-Widget-B-2C89BA1D",
+          "voiceOverSpeechVerified": false,
+          "watchConnectivityVerified": false,
+          "widgetGalleryControls": [
+            {
+              "elementType": 9,
+              "enabled": true,
+              "hittable": true,
+              "identifier": "com.apple.springboardhome.application-shortcut-item.rearrange-icons",
+              "label": "\u05e2\u05e8\u05d9\u05db\u05ea \u05de\u05e1\u05da \u05d4\u05d1\u05d9\u05ea",
+              "selected": false,
+              "stage": "11-widget-gallery-00-context-menu",
+              "value": ""
+            },
+            {
+              "elementType": 9,
+              "enabled": true,
+              "hittable": true,
+              "identifier": "",
+              "label": "\u05e2\u05e8\u05d9\u05db\u05d4",
+              "selected": false,
+              "stage": "11-widget-gallery-01-edit-mode",
+              "value": ""
+            },
+            {
+              "elementType": 9,
+              "enabled": true,
+              "hittable": true,
+              "identifier": "",
+              "label": "\u05d4\u05d5\u05e1\u05e4\u05ea \u05d5\u05d9\u05d3\u05d2\u05f3\u05d8",
+              "selected": false,
+              "stage": "11-widget-gallery-02-edit-menu",
+              "value": ""
+            },
+            {
+              "elementType": 45,
+              "enabled": true,
+              "hittable": true,
+              "identifier": "",
+              "label": "\u05d7\u05d9\u05e4\u05d5\u05e9 \u05d5\u05d9\u05d3\u05d2\u05f3\u05d8\u05d9\u05dd",
+              "selected": false,
+              "stage": "11-widget-gallery-03-search",
+              "value": "\u05d7\u05d9\u05e4\u05d5\u05e9 \u05d5\u05d9\u05d3\u05d2\u05f3\u05d8\u05d9\u05dd"
+            },
+            {
+              "elementType": 75,
+              "enabled": true,
+              "hittable": true,
+              "identifier": "",
+              "label": "GSD",
+              "selected": false,
+              "stage": "11-widget-gallery-04-gsd-results",
+              "value": ""
+            },
+            {
+              "elementType": 9,
+              "enabled": true,
+              "hittable": true,
+              "identifier": "",
+              "label": " \u05d4\u05d5\u05e1\u05e4\u05ea \u05d4\u05d5\u05d5\u05d9\u05d3\u05d2\u05f3\u05d8",
+              "selected": false,
+              "stage": "11-widget-gallery-05-install-ready",
+              "value": ""
+            }
+          ],
+          "widgetGalleryFamilyControls": [],
+          "widgetGalleryFamilySelectionMode": "native_default_preview",
+          "widgetGalleryInstallationRequested": true,
+          "widgetGalleryPreviewNames": [
+            "GSD",
+            "\u05d4\u05de\u05d9\u05e7\u05d5\u05d3 \u05dc\u05d4\u05d9\u05d5\u05dd"
+          ],
+          "widgetGallerySelectedFamily": "unknown/default",
+          "widgetHomeIconExists": true,
+          "widgetHomeIconWaitSucceeded": true,
+          "widgetRowOpenedExactTask": true
+        },
+        "observationSHA256": "c5cafe4079e2666f005624c108149ce6734ca61734f000438799a6e5797a7dd9",
+        "exactTests": {
+          "selectedTests": [
+            "GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap"
+          ],
+          "totalTestCount": 1,
+          "passedTests": 1,
+          "failedTests": 0,
+          "skippedTests": 0,
+          "expectedFailures": 0
+        },
+        "scope": "real_home_widget_timeline_refresh_and_row_deep_link",
+        "finishedUTC": "2026-11-25T08:51:22.259800+00:00"
+      }
+    }
+  },
+  "diagnosticOnly": false,
+  "fullSystemSurfaceCoverage": false,
+  "compileExecuted": false,
+  "signingOrUploadExecuted": false,
+  "ownershipInventories": [
+    {
+      "observedUTC": "2026-11-25T08:19:40.675843+00:00",
+      "method": "names_then_scoped_writer_argv_cwd",
+      "globalArgumentsRead": false,
+      "budgetSeconds": 15,
+      "complete": true,
+      "processCount": 211,
+      "candidates": [
+        {
+          "pid": 416,
+          "parentPID": 1,
+          "executable": "Python",
+          "complete": true,
+          "scopedNoninteractiveCwdRead": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 15838,
+          "parentPID": 1,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 15843,
+          "parentPID": 15838,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 15848,
+          "parentPID": 15843,
+          "executable": "Runner.Listener",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 15849,
+          "parentPID": 15848,
+          "executable": "Runner.Worker",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 16099,
+          "parentPID": 15849,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 16100,
+          "parentPID": 16099,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25383,
+          "parentPID": 1,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25388,
+          "parentPID": 25383,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25393,
+          "parentPID": 25388,
+          "executable": "Runner.Listener",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 65368,
+          "parentPID": 1,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        }
+      ],
+      "elapsedSeconds": 0.15
+    },
+    {
+      "observedUTC": "2026-11-25T08:19:40.827045+00:00",
+      "method": "names_then_scoped_writer_argv_cwd",
+      "globalArgumentsRead": false,
+      "budgetSeconds": 15,
+      "complete": true,
+      "processCount": 211,
+      "candidates": [
+        {
+          "pid": 416,
+          "parentPID": 1,
+          "executable": "Python",
+          "complete": true,
+          "scopedNoninteractiveCwdRead": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 15838,
+          "parentPID": 1,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 15843,
+          "parentPID": 15838,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 15848,
+          "parentPID": 15843,
+          "executable": "Runner.Listener",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 15849,
+          "parentPID": 15848,
+          "executable": "Runner.Worker",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 16099,
+          "parentPID": 15849,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 16100,
+          "parentPID": 16099,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25383,
+          "parentPID": 1,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25388,
+          "parentPID": 25383,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25393,
+          "parentPID": 25388,
+          "executable": "Runner.Listener",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 65368,
+          "parentPID": 1,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        }
+      ],
+      "elapsedSeconds": 0.144
+    }
+  ],
+  "sourceAndProductsUnchanged": true,
+  "ownedSimulatorsRemoved": true,
+  "ownedChildrenTerminal": true,
+  "ownedSourceUseClaimReleased": true,
+  "finishedUTC": "2026-11-25T08:51:29.030306+00:00"
+}

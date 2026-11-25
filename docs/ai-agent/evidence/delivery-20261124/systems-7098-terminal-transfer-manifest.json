@@ -1,0 +1,52 @@
+{
+  "schema": "gsd-retained-evidence-copy-v1",
+  "testSourceSHA": "7098dcb9abdc2d7e8e20afa8d9ec95d7e69c34ef",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "files": [
+    {
+      "name": "widget-7098-binding.json",
+      "sourcePath": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/runs/ui7098dcb9-widget-lau5_by9/binding.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-terminal-20261125\\widget-7098-binding.json",
+      "bytes": 9396,
+      "sha256": "924c33d8e01a0d33aa05be5f34b954e2f10e9794d06d8c94200344fff36f27e7",
+      "classification": "technical_receipt_with_synthetic_system_fixture_no_account_credentials"
+    },
+    {
+      "name": "widget-7098-observation.json",
+      "sourcePath": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/runs/ui7098dcb9-widget-lau5_by9/private/widget-ui/widget/observation.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-terminal-20261125\\widget-7098-observation.json",
+      "bytes": 1645,
+      "sha256": "a54a314b621c3c021de51590ed4591a4884822ac5a8591c3a29f0a023335778b",
+      "classification": "technical_receipt_with_synthetic_system_fixture_no_account_credentials"
+    },
+    {
+      "name": "shortcut-7098-binding.json",
+      "sourcePath": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/runs/ui7098dcb9-shortcut-nqczg3j2/binding.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-terminal-20261125\\shortcut-7098-binding.json",
+      "bytes": 8367,
+      "sha256": "58f244f6b7405c04bf2284e2a68563953140e4070b22301c07090df6cadee219",
+      "classification": "technical_receipt_with_synthetic_system_fixture_no_account_credentials"
+    },
+    {
+      "name": "shortcut-7098-observation.json",
+      "sourcePath": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/runs/ui7098dcb9-shortcut-nqczg3j2/private/shortcut-ui/shortcut-invocation/observation.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-terminal-20261125\\shortcut-7098-observation.json",
+      "bytes": 1195,
+      "sha256": "ea4b94c9d354a4b4e331dc0c27666d370842463f5597ef9d67fb2b968f37ee22",
+      "classification": "technical_receipt_with_synthetic_system_fixture_no_account_credentials"
+    },
+    {
+      "name": "systems-7098-terminal.json",
+      "sourcePath": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/systems-capacity-continuation-terminal.json",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-terminal-20261125\\systems-7098-terminal.json",
+      "bytes": 17735,
+      "sha256": "cfad039d2353b74827446157d0cf76262e17a705f5c02305455ebea7c2cbef74",
+      "classification": "technical_receipt_with_synthetic_system_fixture_no_account_credentials"
+    }
+  ],
+  "allExactBytesVerified": true,
+  "originalsPreserved": true,
+  "widgetPassed": false,
+  "shortcutPassed": true,
+  "newRuntimeExecuted": false
+}
