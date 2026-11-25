@@ -167,27 +167,30 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         origin.withOffset(CGVector(dx: start.x - app.frame.minX, dy: start.y - app.frame.minY))
             .press(forDuration: 0.05, thenDragTo:
                 origin.withOffset(CGVector(dx: end.x - app.frame.minX, dy: end.y - app.frame.minY)))
-        let moved = XCTNSPredicateExpectation(predicate: NSPredicate { element, _ in
-            guard let element = element as? XCUIElement, element.exists else { return false }
-            let frame = element.frame
-            let x = frame.midX - before.midX
-            let y = frame.midY - before.midY
-            return x * x + y * y > 24 * 24
-        }, object: node)
-        XCTAssertEqual(XCTWaiter.wait(for: [moved], timeout: 10), .completed,
-                       "A native network pan must move the rendered task control")
+        // Native gestures and taps wait for the application to idle. Read their
+        // completed layout directly; nested AX queries in a block-predicate wait
+        // can stall its polling loop before any physical frame is recorded.
+        let afterPan = node.frame
+        let panMeasurement = XCTAttachment(string: "before=\(before) afterPan=\(afterPan)")
+        panMeasurement.name = "native-network-after-pan-frame"
+        panMeasurement.lifetime = .keepAlways
+        add(panMeasurement)
+        let panX = afterPan.midX - before.midX
+        let panY = afterPan.midY - before.midY
+        XCTAssertGreaterThan(panX * panX + panY * panY, 24 * 24,
+                             "A native network pan must move the rendered task control")
         capture("04-network-after-native-pan")
         fit.tap()
-        let recovered = XCTNSPredicateExpectation(predicate: NSPredicate { element, _ in
-            guard let element = element as? XCUIElement, element.exists else { return false }
-            let frame = element.frame
-            let x = frame.midX - before.midX
-            let y = frame.midY - before.midY
-            return x * x + y * y < 24 * 24
-        }, object: node)
-        XCTAssertEqual(XCTWaiter.wait(for: [recovered], timeout: 10), .completed,
-                       "Fit must recover the task position after native panning")
-        XCTAssertTrue(node.isHittable && bounds.contains(node.frame))
+        let afterFit = node.frame
+        let fitMeasurement = XCTAttachment(string: "before=\(before) afterPan=\(afterPan) afterFit=\(afterFit)")
+        fitMeasurement.name = "native-network-after-fit-frame"
+        fitMeasurement.lifetime = .keepAlways
+        add(fitMeasurement)
+        let fitX = afterFit.midX - before.midX
+        let fitY = afterFit.midY - before.midY
+        XCTAssertLessThan(fitX * fitX + fitY * fitY, 24 * 24,
+                          "Fit must recover the task position after native panning")
+        XCTAssertTrue(node.isHittable && bounds.contains(afterFit))
         capture("04-network-after-fit")
     }
 
