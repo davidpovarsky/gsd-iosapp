@@ -641,7 +641,7 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 
 - Expanded existing native acceptance methods to exercise timeline date actions, real quadrant movement, dependency removal/re-addition and duplicate/cycle rejection, plus Hanlin-to-workspace-to-canonical-editor navigation.
 - New shared-kit AX controls must be pinned before running these UI methods. Four complete native-release/workspace configurations will be executed fresh; old iPhone/en native evidence is not reused for the changed Hanlin method.
-- Added one package regression for SQLite close/reopen, real task observation in all presentations, concurrent external-field preservation, and sync outbox payloads. Expected agent package total is 31 (18 XCTest plus 13 Swift Testing); result pending.
+- Added one package regression for SQLite close/reopen, real task observation in all presentations, concurrent external-field preservation, and sync outbox payloads. Agent package total 31 (18 XCTest plus 13 Swift Testing) passed on Mac, including a fresh exact-source execution at 7aaa0c66c91c72f9f4800fc58d9f075fcabf5ed9.
 
 ### 2026-11-25 shared workspace acceptance pin
 
@@ -649,3 +649,9 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 - [x] Regenerate the Xcode project with XcodeGen on Scaleway Mac and resolve the exact new revision without changing upstream library code.
 - [x] Execute GSDHanlinAgent 31 tests (18 XCTest + 13 Swift Testing), including real SQLite reopen and canonical outbox payload regression, at 93742878545d7eba9ee91c6b96256b2e4afc2902 with Xcode 27.1 / 27A9275.
 - [ ] Execute final source-bound iPhone/iPad English/Hebrew acceptance, including new timeline date, dependency and Hanlin entry actions.
+
+### Native interaction checkpoint — 2026-11-25 14:31 UTC
+
+- Exact-source 7aaa0c6 iPhone English run executed all four selected methods: navigation and widget cases passed; Hanlin workspace and graph action cases failed because SwiftUI propagated the root task-workspace identifier to child controls. The complete xcresult and failure hierarchy are retained in native-ui-7aaa0c6/iphone-en-attempt1.
+- Shared package owner is fixing the native accessibility containment boundary; no UI acceptance is claimed.
+- Added iPad-only actual native cross-column board drag, using observed control frames in either layout direction, with canonical table lane verification. This gesture coverage is pending native execution.

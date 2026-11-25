@@ -65,6 +65,9 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         let completedAgain = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "label == %@", reopenedLabel), object: completedOnBoard)
         XCTAssertEqual(XCTWaiter.wait(for: [completedAgain], timeout: 10), .completed)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            exerciseNativeBoardMove(in: app)
+        }
         capture("02-board-after-completion")
 
         tapMode("timeline", in: app)
@@ -97,6 +100,35 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         XCTAssertEqual(date.label, hebrew ? "קביעת תאריך" : "Set date")
         moveTaskToDelegate(in: app)
         exerciseDependencies(in: app)
+    }
+
+    private func exerciseNativeBoardMove(in app: XCUIApplication) {
+        _ = revealTaskCompletion("task-workspace.complete.demo-finance", in: app)
+        _ = revealTaskCompletion("task-workspace.complete.demo-physical", in: app)
+        let source = app.buttons["task-workspace.open.demo-finance"].firstMatch
+        let destination = app.buttons["task-workspace.open.demo-physical"].firstMatch
+        XCTAssertTrue(source.exists && source.isHittable)
+        XCTAssertTrue(destination.exists && destination.isHittable)
+        XCTAssertTrue(app.frame.contains(source.frame) && app.frame.contains(destination.frame))
+        let hierarchy = XCTAttachment(string: app.debugDescription)
+        hierarchy.name = "native-board-drag-observed-elements"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
+        capture("02-before-native-board-drop")
+        // AdvancedKanban uses its original DragGesture. Both endpoints are the
+        // currently visible native task controls, so this works in LTR and RTL.
+        source.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .press(forDuration: 0.05, thenDragTo:
+                destination.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)))
+        tapMode("table", in: app)
+        _ = revealTaskCompletion("task-workspace.complete.demo-finance", in: app)
+        let lane = app.buttons["task-workspace.lane.demo-finance"].firstMatch
+        let moved = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label == %@", hebrew ? "לתכנן" : "Schedule"), object: lane)
+        XCTAssertEqual(XCTWaiter.wait(for: [moved], timeout: 10), .completed,
+                       "A native cross-column drop must persist through the canonical task store")
+        capture("02-table-after-native-board-drop")
+        tapMode("board", in: app)
     }
 
     private func clearTimelineDate(for id: String, in app: XCUIApplication) {

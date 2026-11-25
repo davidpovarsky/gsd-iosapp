@@ -360,3 +360,6 @@ it, force one quadrant's `items` empty in a throwaway build, then launch with `-
 - GSD parentTaskId tracks recurrence lineage; it is not a dependency or task hierarchy.
 - Saved prerequisites remain real blockers even though Saved items are excluded from the matrix.
 - Keep the rich workspace a projection of TaskStore and resolve action IDs again before canonical mutations; a chart snapshot must not become a parallel database.
+
+- A SwiftUI container accessibilityIdentifier can replace child control identifiers in the actual iOS hierarchy. Give semantic containers an explicit containment boundary, and verify the descendant actions in the native app; a package build or AppKit probe does not prove iOS accessibility behavior.
+- Board completion and a lane menu exercise host mutations but do not cover the original Kanban drag callback. Use a real cross-column gesture and verify the canonical lane in a separate presentation.
