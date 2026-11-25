@@ -158,6 +158,103 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
     }
 
 
+    func test03DiagnoseInstalledWidgetTaskRoute() throws {
+        try prepare("widget-route-diagnostic")
+        let env = ProcessInfo.processInfo.environment
+        let base = "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be"
+        guard env["GSD_WIDGET_ROUTE_DIAGNOSTICS"] == "1",
+              let source = env["GSD_WIDGET_ROUTE_DIAGNOSTIC_SOURCE_SHA"],
+              source.range(of: "^[0-9a-f]{40}$", options: .regularExpression) != nil,
+              source == env["GSD_SYSTEM_ACCEPTANCE_APP_SOURCE"],
+              env["GSD_WIDGET_ROUTE_DIAGNOSTIC_BASE_SOURCE_SHA"] == base,
+              let simulatorID = env["GSD_SYSTEM_ACCEPTANCE_SIMULATOR_UDID"] else {
+            throw NativeSurfaceFailure(message: "Missing diagnostic-only Widget source contract.")
+        }
+        let nonce = String(UUID().uuidString.prefix(8))
+        let initialTitle = "GSD-Widget-D-" + nonce
+        app.launchEnvironment["GSD_WIDGET_ROUTE_DIAGNOSTICS"] = "1"
+        app.launchEnvironment["GSD_WIDGET_ROUTE_DIAGNOSTIC_NONCE"] = nonce
+        app.launchEnvironment["GSD_WIDGET_ROUTE_DIAGNOSTIC_SIMULATOR_ID"] = simulatorID
+        app.launchEnvironment["GSD_WIDGET_ROUTE_DIAGNOSTIC_SOURCE_SHA"] = source
+        proof.removeValue(forKey: "productionSourceSHA")
+        proof["diagnosticOnly"] = true
+        proof["productionAcceptance"] = false
+        proof["scope"] = "diagnostic_only_native_widget_row_route"
+        proof["diagnosticSourceSHA"] = source
+        proof["baseProductionSourceSHA"] = base
+        proof["diagnosticNonce"] = nonce
+        try persist()
+        app.launch()
+        try requireMatrix()
+        let input = app.textFields["capture-field"]
+        input.tap()
+        try dismissObservedKeyboardIntroduction()
+        input.typeText(initialTitle + " !!\n")
+        let card = try uniqueCard(initialTitle)
+        let cardID = card.identifier
+        try require(card.label.contains("לביצוע מיידי") && !card.label.contains("!!"), "Capture shorthand did not create a Do First task.")
+        proof["taskCardID"] = cardID
+        try capture(app, "10-widget-source-task")
+
+        XCUIDevice.shared.press(.home)
+        try require(home.wait(for: .runningForeground, timeout: 10), "SpringBoard is not foreground.")
+        try capture(home, "10b-widget-home-before-icon-wait")
+        let icon = home.icons.matching(identifier: "GSD").firstMatch
+        let iconReady = icon.wait(for: \.isHittable, toEqual: true, timeout: 10)
+        proof["widgetHomeIconWaitSucceeded"] = iconReady
+        proof["widgetHomeIconExists"] = icon.exists
+        try capture(home, "10c-widget-home-after-icon-wait")
+        try require(iconReady && icon.exists && icon.isHittable, "Observed GSD Home icon is unavailable.")
+        icon.press(forDuration: 1.2)
+        try capture(home, "11-before-keyboard-introduction-dismissal")
+        try dismissObservedKeyboardIntroduction()
+        try capture(home, "11-after-keyboard-introduction-dismissal")
+        let editHomeActions = home.buttons.matching(NSPredicate(
+            format: "identifier == %@ AND label == %@",
+            "com.apple.springboardhome.application-shortcut-item.rearrange-icons", "עריכת מסך הבית"))
+        if !editHomeActions.firstMatch.waitForExistence(timeout: 3) {
+            try require(icon.exists && icon.isHittable, "Observed GSD Home icon is unavailable after keyboard introduction.")
+            icon.press(forDuration: 1.2)
+            try capture(home, "11-restored-home-context-menu")
+        }
+        let editHome = try widgetGalleryControl(editHomeActions, stage: "11-widget-gallery-00-context-menu")
+        editHome.tap()
+        try addWidgetFromObservedGallery()
+        XCUIDevice.shared.press(.home)
+        try capture(home, "11b-after-widget-placement")
+        let initialRow = label(initialTitle, in: home)
+        try require(initialRow.waitForExistence(timeout: 90)
+                    && initialRow.wait(for: \.isHittable, toEqual: true, timeout: 10), "Installed Home widget did not display the real task.")
+        try capture(home, "12-installed-widget-initial")
+        proof["diagnosticInstalledWidgetDisplayedTask"] = true
+        try persist()
+
+        let rows = home.buttons.matching(NSPredicate(format: "label == %@", initialTitle))
+        try require(rows.count == 1 && rows.element.isEnabled && rows.element.isHittable,
+                    "Diagnostic Widget must expose one ready task Button.")
+        let row = rows.element
+        proof["diagnosticTapControl"] = widgetGalleryAttributes(row)
+        try capture(home, "14-route-before-row-tap")
+        row.tap()
+        proof["diagnosticActualWidgetTapCompleted"] = true
+        let foreground = app.wait(for: .runningForeground, timeout: 15)
+        proof["diagnosticAppForeground"] = foreground
+        try persist()
+        try require(foreground, "Widget tap did not open GSD.")
+        let editor = app.descendants(matching: .any).matching(identifier: "task-editor").firstMatch
+        let opened = editor.waitForExistence(timeout: 15)
+        proof["diagnosticEditorOpened"] = opened
+        try capture(app, "15-route-after-editor-wait")
+        try require(opened, "Widget row tap did not open the task editor.")
+        let destination = editor.textFields.matching(NSPredicate(format: "value == %@", initialTitle))
+        try require(destination.firstMatch.waitForExistence(timeout: 10) && destination.count == 1,
+                    "Widget tap opened a different destination.")
+        proof["diagnosticEditorContainsExpectedTitle"] = true
+        proof["diagnosticCompleted"] = true
+        try persist()
+        // 'passed' remains false: this shorter probe is never production acceptance.
+    }
+
     private func addWidgetFromObservedGallery() throws {
         let edit = try widgetGalleryControl(home.buttons.matching(NSPredicate(
             format: "label IN %@", argumentArray: [["עריכה", "Edit"]])),

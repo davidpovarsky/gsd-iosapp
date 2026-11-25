@@ -4,6 +4,147 @@ import GSDModel
 import GSDStore
 import GSDSnapshot
 import GSDHanlinAgent
+#if DEBUG && targetEnvironment(simulator)
+import Foundation
+import CryptoKit
+import Dispatch
+import UIKit
+#endif
+
+#if DEBUG && targetEnvironment(simulator)
+@MainActor
+enum WidgetRouteDiagnostics {
+    private struct Event: Encodable, Sendable {
+        let ordinal: Int
+        let uptimeSeconds: TimeInterval
+        let timestampUnixSeconds: TimeInterval
+        let point: String
+        let lifecyclePhase: String
+        let applicationState: Int
+        let routeKind: String?
+        let taskIDSHA256: String?
+        let outcome: String?
+        let errorDomain: String?
+        let errorCode: Int?
+    }
+
+    private struct Receipt: Encodable, Sendable {
+        let schema = "gsd.widget-route-diagnostics"
+        let version = 1
+        let diagnosticOnly = true
+        let armed = true
+        let nonce: String
+        let simulatorID: String
+        let diagnosticSourceSHA: String
+        let processID: Int32
+        let truncated: Bool
+        let events: [Event]
+    }
+
+    private static let writer = DispatchQueue(label: "gsd.widget-route-diagnostics", qos: .utility)
+    private static var session: (nonce: String, simulatorID: String, sourceSHA: String)?
+    private static var outputURL: URL?
+    private static var events: [Event] = []
+    private static var lifecyclePhase = "unobserved"
+    private static var truncated = false
+    static var isArmed: Bool { session != nil }
+
+    static func armAtStartup() {
+        let env = ProcessInfo.processInfo.environment
+        guard session == nil, env["GSD_WIDGET_ROUTE_DIAGNOSTICS"] == "1",
+              let nonce = env["GSD_WIDGET_ROUTE_DIAGNOSTIC_NONCE"],
+              nonce.range(of: "^[0-9A-F]{8}$", options: .regularExpression) != nil,
+              let simulatorID = env["GSD_WIDGET_ROUTE_DIAGNOSTIC_SIMULATOR_ID"],
+              UUID(uuidString: simulatorID) != nil,
+              let sourceSHA = env["GSD_WIDGET_ROUTE_DIAGNOSTIC_SOURCE_SHA"],
+              sourceSHA.range(of: "^[0-9a-f]{40}$", options: .regularExpression) != nil,
+              let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+        else { return }
+        outputURL = support.appendingPathComponent("GSDWidgetRouteDiagnostics", isDirectory: true)
+            .appendingPathComponent("receipt.json")
+        session = (nonce, simulatorID, sourceSHA)
+        event("startup-armed")
+    }
+
+    static func phaseChanged(_ phase: ScenePhase) {
+        guard isArmed else { return }
+        switch phase {
+        case .active: lifecyclePhase = "active"
+        case .inactive: lifecyclePhase = "inactive"
+        case .background: lifecyclePhase = "background"
+        @unknown default: lifecyclePhase = "unknown"
+        }
+        event("scene-phase")
+    }
+
+    static func incoming(_ url: URL) {
+        guard isArmed else { return }
+        guard let route = DeepLinkParser.route(from: url) else {
+            event("incoming-url", routeKind: "unrecognized")
+            return
+        }
+        switch route {
+        case .task(let id): event("incoming-url", taskID: id, routeKind: "task")
+        case .focus: event("incoming-url", routeKind: "focus")
+        case .capture: event("incoming-url", routeKind: "capture")
+        case .quadrant: event("incoming-url", routeKind: "quadrant")
+        case .smartView: event("incoming-url", routeKind: "smartView")
+        case .dashboard: event("incoming-url", routeKind: "dashboard")
+        case .settings: event("incoming-url", routeKind: "settings")
+        case .archive: event("incoming-url", routeKind: "archive")
+        }
+    }
+
+    static func event(_ point: String, taskID: String? = nil, routeKind: String? = nil,
+                      outcome: String? = nil, error: Error? = nil) {
+        guard isArmed else { return }
+        guard events.count < 64 else {
+            if !truncated { truncated = true; publish() }
+            return
+        }
+        let failure = error.map { $0 as NSError }
+        let allowedDomains = ["GRDB.DatabaseError", "NSCocoaErrorDomain", "NSPOSIXErrorDomain",
+                              "_Concurrency.CancellationError"]
+        events.append(Event(
+            ordinal: events.count, uptimeSeconds: ProcessInfo.processInfo.systemUptime,
+            timestampUnixSeconds: Date().timeIntervalSince1970, point: point,
+            lifecyclePhase: lifecyclePhase, applicationState: UIApplication.shared.applicationState.rawValue,
+            routeKind: routeKind, taskIDSHA256: taskID.flatMap { taskDigest($0) }, outcome: outcome,
+            errorDomain: failure.map { allowedDomains.contains($0.domain) ? $0.domain : "other" },
+            errorCode: failure?.code))
+        publish()
+    }
+
+    private static func taskDigest(_ id: String) -> String? {
+        let bytes = Array(id.utf8)
+        guard (1...64).contains(bytes.count),
+              bytes.allSatisfy({ (48...57).contains($0) || (65...90).contains($0)
+                  || (97...122).contains($0) || $0 == 45 || $0 == 95 }) else { return nil }
+        return SHA256.hash(data: Data(bytes)).map { String(format: "%02x", $0) }.joined()
+    }
+
+    private static func publish() {
+        guard let session, let outputURL else { return }
+        let receipt = Receipt(nonce: session.nonce, simulatorID: session.simulatorID,
+                              diagnosticSourceSHA: session.sourceSHA,
+                              processID: ProcessInfo.processInfo.processIdentifier,
+                              truncated: truncated, events: events)
+        // No encoding, file I/O, or await on the routing/main actor.
+        writer.async {
+            do {
+                try FileManager.default.createDirectory(at: outputURL.deletingLastPathComponent(),
+                                                        withIntermediateDirectories: true)
+                let bytes = try JSONEncoder().encode(receipt)
+                guard bytes.count <= 65_536 else { return }
+                try bytes.write(to: outputURL, options: .atomic)
+            } catch {
+                // Missing/invalid startup receipt makes collection inconclusive, never a pass.
+            }
+        }
+    }
+}
+#endif
+
 
 /// Adaptive root. Compact (iPhone): a TabView (Matrix · Browse · Dashboard). Regular (iPad):
 /// a NavigationSplitView (sidebar Matrix + Dashboard + Smart Views → detail grid / filtered list).
@@ -166,7 +307,12 @@ struct ContentView: View {
 
     private var routedContent: some View {
         presentedContent
-            .onOpenURL { handleDeepLink($0) }
+            .onOpenURL { url in
+                #if DEBUG && targetEnvironment(simulator)
+                WidgetRouteDiagnostics.incoming(url)
+                #endif
+                handleDeepLink(url)
+            }
             .onContinueUserActivity(CSSearchableItemActionType, perform: handleSpotlightActivity)
             .onReceive(NotificationCenter.default.publisher(for: .gsdOpenDeepLink)) { notification in
                 guard let url = notification.object as? URL else { return }
@@ -255,6 +401,32 @@ struct ContentView: View {
     /// the URL arrives, so a `store.tasks` lookup would silently miss every time.
     private func openTask(_ id: String) {
         _Concurrency.Task { @MainActor in
+            #if DEBUG && targetEnvironment(simulator)
+            if WidgetRouteDiagnostics.isArmed {
+                WidgetRouteDiagnostics.event("task-fetch-start", taskID: id)
+                do {
+                    if let task = try await store.fetchTask(id: id) {
+                        WidgetRouteDiagnostics.event("task-fetch-result", taskID: id, outcome: "found")
+                        if task.isSaved {
+                            openSavedTask(task.id)
+                            WidgetRouteDiagnostics.event("saved-task-requested", taskID: id)
+                        } else {
+                            palette.editor = .edit(task)
+                            WidgetRouteDiagnostics.event("task-editor-assigned", taskID: id)
+                        }
+                    } else {
+                        WidgetRouteDiagnostics.event("task-fetch-result", taskID: id, outcome: "missing")
+                        navigate(to: .matrix)
+                        WidgetRouteDiagnostics.event("matrix-fallback", taskID: id, outcome: "missing")
+                    }
+                } catch {
+                    WidgetRouteDiagnostics.event("task-fetch-result", taskID: id, outcome: "error", error: error)
+                    navigate(to: .matrix)
+                    WidgetRouteDiagnostics.event("matrix-fallback", taskID: id, outcome: "error")
+                }
+                return
+            }
+            #endif
             if let task = try? await store.fetchTask(id: id) {
                 if task.isSaved { openSavedTask(task.id) }
                 else { palette.editor = .edit(task) }

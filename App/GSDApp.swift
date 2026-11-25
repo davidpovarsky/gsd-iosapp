@@ -29,6 +29,9 @@ struct GSDApp: App {
     private let demoClock: Date?
 
     init() {
+        #if DEBUG && targetEnvironment(simulator)
+        WidgetRouteDiagnostics.armAtStartup()
+        #endif
         // Editorial chrome: serif nav titles + ink (not system-blue) bars. Must run before
         // any UINavigationBar/UITabBar is realized, so the App init is the right window.
         AppAppearance.configure()
@@ -221,9 +224,15 @@ struct GSDApp: App {
                     coordinator.start(trigger: .launch)
                 }
                 .onChange(of: scenePhase) { _, phase in
+                    #if DEBUG && targetEnvironment(simulator)
+                    WidgetRouteDiagnostics.phaseChanged(phase)
+                    #endif
                     switch phase {
                     case .active:
                         BackgroundDatabaseWindow.resumeAppDatabaseForForeground() // before foreground sync
+                        #if DEBUG && targetEnvironment(simulator)
+                        WidgetRouteDiagnostics.event("foreground-db-resumed")
+                        #endif
                         session.enteredForeground()
                         coordinator.enteredForeground()
                         _Concurrency.Task { await store.refreshBadge() }
@@ -241,6 +250,9 @@ struct GSDApp: App {
                         // here would suspend the DB under a still-live window and any Siri intent.
                         #if !targetEnvironment(macCatalyst)
                         BackgroundDatabaseWindow.suspendAppDatabaseWhenIdle() // active owners release on exit/expiry
+                        #if DEBUG && targetEnvironment(simulator)
+                        WidgetRouteDiagnostics.event("background-db-suspension-requested")
+                        #endif
                         #endif
                     default:
                         break
