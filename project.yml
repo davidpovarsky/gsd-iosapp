@@ -33,7 +33,7 @@ settings:
 packages:
   TaskVisualizationKit:
     url: https://github.com/davidpovarsky/task-visualization-kit.git
-    revision: efb3ac1076238a59a4f5ca21c06a24c7095929c0
+    revision: 0567ca4dde1164df0d8d54e0d86f3a7e99095ee5
   HanlinSDK:
     path: Vendor/HanlinSDK
   GSDKit:
