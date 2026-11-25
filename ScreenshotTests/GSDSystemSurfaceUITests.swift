@@ -203,6 +203,7 @@ final class GSDSystemSurfaceUITests: XCTestCase {
         try tapComposeAction("ביטול", in: cancelHost)
         app.activate()
         try captureRaw("09-after-cancel-before-query")
+        try dismissCancelledActivitySheet(app)
         try requireMatrix(app)
         _ = try requireNoCard(app, containing: cancelMarker, phase: "09-cancel-all-quadrants")
         try shareAssertion("cancelCreatedNone")
@@ -234,6 +235,27 @@ final class GSDSystemSurfaceUITests: XCTestCase {
         try require(field.isEnabled, "The Matrix capture field is disabled.")
         try require(field.wait(for: \.isHittable, toEqual: true, timeout: 10),
                     "The Matrix capture field is obscured.")
+    }
+
+    private func dismissCancelledActivitySheet(_ app: XCUIApplication) throws {
+        // Cancel returns to the observed native activity sheet on this runtime.
+        // Dismiss that sheet before checking the host Matrix and persisted tasks.
+        let sheets = app.otherElements.matching(identifier: "ActivityListView")
+        guard sheets.firstMatch.waitForExistence(timeout: 3) else { return }
+        try require(sheets.count == 1, "The returned native activity sheet is ambiguous.")
+        let sheet = sheets.firstMatch
+        try capture(app, "09-cancel-returned-activity-sheet")
+        let dismissRegions = app.otherElements.matching(identifier: "PopoverDismissRegion")
+        try require(dismissRegions.firstMatch.waitForExistence(timeout: 10),
+                    "The native activity popover dismissal region is missing.")
+        try require(dismissRegions.count == 1, "The native activity popover dismissal region is ambiguous.")
+        let dismissRegion = dismissRegions.firstMatch
+        try require(dismissRegion.wait(for: \.isHittable, toEqual: true, timeout: 10),
+                    "The native activity popover dismissal region is obscured.")
+        dismissRegion.tap()
+        try require(sheet.waitForNonExistence(timeout: 10),
+                    "The returned native activity sheet did not dismiss after tapping its dismissal region.")
+        try capture(app, "09-after-activity-sheet-dismissal")
     }
 
     private func cards(_ app: XCUIApplication, containing marker: String) -> XCUIElementQuery {
