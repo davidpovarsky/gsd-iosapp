@@ -230,6 +230,19 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [removed], timeout: 10), .completed)
         waitForConnectionWrite(in: app)
 
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            app.buttons["task-workspace.connection.done"].tap()
+            exerciseNativeFlowConnection(in: app)
+            app.buttons["task-workspace.options"].tap()
+            app.buttons["task-workspace.connections"].tap()
+            XCTAssertTrue(remove.waitForExistence(timeout: 10),
+                          "A native connector drag must persist the exact canonical prerequisite edge")
+            capture("08-flow-canonical-dependency-readback")
+            remove.tap()
+            XCTAssertEqual(XCTWaiter.wait(for: [removed], timeout: 10), .completed)
+            waitForConnectionWrite(in: app)
+        }
+
         chooseConnection("prerequisite", title: hebrew ? "לקבל אישור ממחלקת הכספים" : "Get finance sign-off", in: app)
         chooseConnection("dependent", title: hebrew ? "לסיים את המצגת לרבעון השלישי" : "Finish the Q3 board deck", in: app)
         let add = app.buttons["task-workspace.connection.add"]
@@ -244,6 +257,33 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         XCTAssertFalse(add.isEnabled, "The reverse edge must be rejected because it creates a dependency cycle")
         capture("08-dependencies-cycle-rejected")
         app.buttons["task-workspace.connection.done"].tap()
+    }
+
+    private func exerciseNativeFlowConnection(in app: XCUIApplication) {
+        tapMode("graph", in: app)
+        let fit = app.buttons["task-workspace.graph.fit"].firstMatch
+        XCTAssertTrue(fit.waitForExistence(timeout: 10))
+        fit.tap()
+        let source = app.descendants(matching: .any)
+            .matching(identifier: "task-workspace.graph.handle.out.demo-finance").firstMatch
+        let destination = app.descendants(matching: .any)
+            .matching(identifier: "task-workspace.graph.handle.in.demo-deck").firstMatch
+        XCTAssertTrue(source.waitForExistence(timeout: 10))
+        XCTAssertTrue(destination.waitForExistence(timeout: 10))
+        XCTAssertTrue(source.frame.width > 0 && source.frame.height > 0)
+        XCTAssertTrue(destination.frame.width > 0 && destination.frame.height > 0)
+        XCTAssertTrue(app.frame.contains(source.frame) && app.frame.contains(destination.frame))
+        let observation = XCTAttachment(string: app.debugDescription)
+        observation.name = "native-flow-connector-observed-elements"
+        observation.lifetime = .keepAlways
+        add(observation)
+        capture("08-flow-before-native-connection")
+        // These descriptors are measured from the original SwiftFlow Handles.
+        // Their centers hit its existing minimumDistance: 0 connection gesture.
+        source.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .press(forDuration: 0.05, thenDragTo:
+                destination.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)))
+        capture("08-flow-after-native-connection")
     }
 
     private func waitForConnectionWrite(in app: XCUIApplication) {
