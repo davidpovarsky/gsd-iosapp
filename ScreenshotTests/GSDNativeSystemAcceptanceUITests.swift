@@ -79,9 +79,13 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
 
         XCUIDevice.shared.press(.home)
         try require(home.wait(for: .runningForeground, timeout: 10), "SpringBoard is not foreground.")
+        try capture(home, "10b-widget-home-before-icon-wait")
         let icon = home.icons.matching(identifier: "GSD").firstMatch
-        for _ in 0..<2 where !icon.isHittable { home.swipeRight() }
-        try require(icon.exists && icon.isHittable, "Observed GSD Home icon is unavailable.")
+        let iconReady = icon.wait(for: \.isHittable, toEqual: true, timeout: 10)
+        proof["widgetHomeIconWaitSucceeded"] = iconReady
+        proof["widgetHomeIconExists"] = icon.exists
+        try capture(home, "10c-widget-home-after-icon-wait")
+        try require(iconReady && icon.exists && icon.isHittable, "Observed GSD Home icon is unavailable.")
         icon.press(forDuration: 1.2)
         try capture(home, "11-before-keyboard-introduction-dismissal")
         try dismissObservedKeyboardIntroduction()
