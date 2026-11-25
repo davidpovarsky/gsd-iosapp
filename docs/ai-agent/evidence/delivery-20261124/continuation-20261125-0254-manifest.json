@@ -1,0 +1,103 @@
+{
+  "schema": "gsd-delivery-evidence-continuation-v1",
+  "preparedUTC": "2026-11-25T03:03:11.324869+00:00",
+  "baseCommit": "9d338aa0f59445a42304ba497192514c9dbd41e8",
+  "scope": "retained_7098_runtime_outcomes_documentation_only",
+  "testSourceSHA": "7098dcb9abdc2d7e8e20afa8d9ec95d7e69c34ef",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "shortcutAccepted": true,
+  "widgetAccepted": false,
+  "aggregatePassed": false,
+  "runtimeExecutedByThisDocumentationChange": false,
+  "latestRetainedUploadAuthorized": false,
+  "files": [
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-terminal-20261125\\widget-7098-binding.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/runs/ui7098dcb9-widget-lau5_by9/binding.json",
+      "name": "widget-7098-binding.json",
+      "bytes": 9396,
+      "sha256": "924c33d8e01a0d33aa05be5f34b954e2f10e9794d06d8c94200344fff36f27e7",
+      "classification": "technical_receipt_with_synthetic_system_fixture_no_account_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-7098-binding.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-terminal-20261125\\widget-7098-observation.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/runs/ui7098dcb9-widget-lau5_by9/private/widget-ui/widget/observation.json",
+      "name": "widget-7098-observation.json",
+      "bytes": 1645,
+      "sha256": "a54a314b621c3c021de51590ed4591a4884822ac5a8591c3a29f0a023335778b",
+      "classification": "technical_receipt_with_synthetic_system_fixture_no_account_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/widget-7098-observation.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-terminal-20261125\\shortcut-7098-binding.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/runs/ui7098dcb9-shortcut-nqczg3j2/binding.json",
+      "name": "shortcut-7098-binding.json",
+      "bytes": 8367,
+      "sha256": "58f244f6b7405c04bf2284e2a68563953140e4070b22301c07090df6cadee219",
+      "classification": "technical_receipt_with_synthetic_system_fixture_no_account_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/shortcut-7098-binding.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-terminal-20261125\\shortcut-7098-observation.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/runs/ui7098dcb9-shortcut-nqczg3j2/private/shortcut-ui/shortcut-invocation/observation.json",
+      "name": "shortcut-7098-observation.json",
+      "bytes": 1195,
+      "sha256": "ea4b94c9d354a4b4e331dc0c27666d370842463f5597ef9d67fb2b968f37ee22",
+      "classification": "technical_receipt_with_synthetic_system_fixture_no_account_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/shortcut-7098-observation.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-terminal-20261125\\systems-7098-terminal.json",
+      "originalMacSourcePath": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/systems-capacity-continuation-terminal.json",
+      "name": "systems-7098-terminal.json",
+      "bytes": 17735,
+      "sha256": "cfad039d2353b74827446157d0cf76262e17a705f5c02305455ebea7c2cbef74",
+      "classification": "technical_receipt_with_synthetic_system_fixture_no_account_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/systems-7098-terminal.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-terminal-20261125\\completion-manifest.json",
+      "name": "systems-7098-terminal-transfer-manifest.json",
+      "bytes": 2987,
+      "sha256": "3247caace1cd385d83e695708071715c21dd2bf8e3c8264f69ffa35ee151ed97",
+      "classification": "exact_windows_transfer_receipt_no_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/systems-7098-terminal-transfer-manifest.json",
+      "exactCopy": true,
+      "normalization": null
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\shortcut-7098-task-after-relaunch.png",
+      "name": "shortcut-7098-task-after-relaunch.png",
+      "bytes": 371768,
+      "sha256": "c9ac4089e1753cc1a394c1179fbb07022fddf7eeea7d3b4ce68294573f708225",
+      "classification": "root_reviewed_synthetic_task_persistence_image_no_credentials",
+      "repositoryPath": "docs/ai-agent/evidence/delivery-20261124/shortcut-7098-task-after-relaunch.png",
+      "exactCopy": true,
+      "normalization": null,
+      "dimensions": [
+        1206,
+        2622
+      ]
+    }
+  ],
+  "allExactBytesVerified": true,
+  "originalsPreserved": true,
+  "previousManifests": {
+    "completion-manifest.json": "962447560b2f51792430534676befb608527c09677c3b2feee2b2f7b56365060",
+    "continuation-20261125-0106-manifest.json": "d0f85c760aeac9b31c46b0e2d3a938c4a6198e98cd0bcb8e4a5094ed5108e76c",
+    "continuation-20261125-0225-manifest.json": "e1587bf6a1ba5be31e205de37e180f2c0ce924645dca9ac5db0257e053046d97"
+  },
+  "updatedUTC": "2026-11-25T03:07:06.469287+00:00",
+  "rootReviewedSyntheticImageAdded": true
+}
