@@ -1,0 +1,53 @@
+{
+  "recordedUTC": "2026-11-25T08:55:53.418499+00:00",
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "actionsRunID": 45575270618,
+  "exactRetainedBytes": true,
+  "newCapture": false,
+  "pixelReviewPerformedByCopier": false,
+  "classification": "Fresh owned synthetic Hebrew Widget test images and matching AX; no personal account or browser",
+  "files": [
+    {
+      "path": "/Users/m1/builds/gsd-widget-actions-20261125/runs/gsd-widget-fd6e2944-final-v3-20261125/runs/uifd6e2944-widget-zybfpbn1/private/widget-ui/widget/12-installed-widget-initial.hierarchy.txt",
+      "name": "12-installed-widget-initial.hierarchy.txt",
+      "bytes": 29150,
+      "sha256": "2c737d9b840e789d45c4848d786f31fdcfc06ce53c26785dc92464a6c26d325c",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\visual\\12-installed-widget-initial.hierarchy.txt"
+    },
+    {
+      "path": "/Users/m1/builds/gsd-widget-actions-20261125/runs/gsd-widget-fd6e2944-final-v3-20261125/runs/uifd6e2944-widget-zybfpbn1/private/widget-ui/widget/12-installed-widget-initial.png",
+      "name": "12-installed-widget-initial.png",
+      "bytes": 3046486,
+      "sha256": "6333acb3693db529142299a236bbbf91ee828554ae18b4342ab630a7c794a30e",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\visual\\12-installed-widget-initial.png"
+    },
+    {
+      "path": "/Users/m1/builds/gsd-widget-actions-20261125/runs/gsd-widget-fd6e2944-final-v3-20261125/runs/uifd6e2944-widget-zybfpbn1/private/widget-ui/widget/14-installed-widget-refreshed.hierarchy.txt",
+      "name": "14-installed-widget-refreshed.hierarchy.txt",
+      "bytes": 20967,
+      "sha256": "61bb30d21a72bb136b281481f032c84e16f979b09b1b34722b6bca2bf11da2fd",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\visual\\14-installed-widget-refreshed.hierarchy.txt"
+    },
+    {
+      "path": "/Users/m1/builds/gsd-widget-actions-20261125/runs/gsd-widget-fd6e2944-final-v3-20261125/runs/uifd6e2944-widget-zybfpbn1/private/widget-ui/widget/14-installed-widget-refreshed.png",
+      "name": "14-installed-widget-refreshed.png",
+      "bytes": 3045969,
+      "sha256": "15dac9e4b162905d7ef57956dd74c30bd054b0623aaed557e0db3556404768e7",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\visual\\14-installed-widget-refreshed.png"
+    },
+    {
+      "path": "/Users/m1/builds/gsd-widget-actions-20261125/runs/gsd-widget-fd6e2944-final-v3-20261125/runs/uifd6e2944-widget-zybfpbn1/private/widget-ui/widget/15-widget-row-task-editor.hierarchy.txt",
+      "name": "15-widget-row-task-editor.hierarchy.txt",
+      "bytes": 26353,
+      "sha256": "cd72808d7c256fb4eba93ba4aaaaa75ad66f08c68686760185ae36e55221b64b",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\visual\\15-widget-row-task-editor.hierarchy.txt"
+    },
+    {
+      "path": "/Users/m1/builds/gsd-widget-actions-20261125/runs/gsd-widget-fd6e2944-final-v3-20261125/runs/uifd6e2944-widget-zybfpbn1/private/widget-ui/widget/15-widget-row-task-editor.png",
+      "name": "15-widget-row-task-editor.png",
+      "bytes": 472084,
+      "sha256": "3172d2bb5391a11feb75bbc732e945b8c1974abf5ea46cfa629cefed4d9ff5ac",
+      "destinationPath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\visual\\15-widget-row-task-editor.png"
+    }
+  ]
+}

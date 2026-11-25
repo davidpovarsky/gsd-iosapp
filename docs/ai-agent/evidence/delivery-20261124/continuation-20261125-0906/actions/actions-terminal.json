@@ -1,0 +1,126 @@
+{
+  "observedUTC": "2026-11-25T08:51:57.106962+00:00",
+  "watchStartedUTC": "2026-11-25T08:20:45.730179+00:00",
+  "watch": {
+    "returncode": 0,
+    "timedOut": false
+  },
+  "run": {
+    "id": 45575270618,
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1,
+    "created_at": "2026-11-25T08:19:30Z",
+    "updated_at": "2026-11-25T08:51:40Z",
+    "head_sha": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "head_branch": "fix/gsd-widget-final-20261125",
+    "html_url": "https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45575270618",
+    "workflow_id": 427066662
+  },
+  "jobs": [
+    {
+      "id": 139071555983,
+      "name": "widget-final",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-25T08:19:33Z",
+      "completed_at": "2026-11-25T08:51:39Z",
+      "runner_id": 26,
+      "runner_name": "gsd49-widget-final-fd6e-v3-20261125",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-25T08:19:34Z",
+          "completed_at": "2026-11-25T08:19:36Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-25T08:19:36Z",
+          "completed_at": "2026-11-25T08:19:40Z"
+        },
+        {
+          "name": "Run exactly one full Widget case through the Native-owned plan",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-25T08:19:40Z",
+          "completed_at": "2026-11-25T08:51:29Z"
+        },
+        {
+          "name": "Preserve only scoped Widget Actions evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-25T08:51:29Z",
+          "completed_at": "2026-11-25T08:51:31Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-25T08:51:31Z",
+          "completed_at": "2026-11-25T08:51:31Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-25T08:51:31Z",
+          "completed_at": "2026-11-25T08:51:37Z"
+        }
+      ]
+    },
+    {
+      "id": 139071558149,
+      "name": "signed-testflight",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-11-25T08:19:32Z",
+      "completed_at": "2026-11-25T08:19:32Z",
+      "runner_id": null,
+      "runner_name": null,
+      "steps": []
+    },
+    {
+      "id": 139071558373,
+      "name": "native-acceptance",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-11-25T08:19:32Z",
+      "completed_at": "2026-11-25T08:19:32Z",
+      "runner_id": null,
+      "runner_name": null,
+      "steps": []
+    },
+    {
+      "id": 139071558398,
+      "name": "native-startup-diagnostic",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-11-25T08:19:32Z",
+      "completed_at": "2026-11-25T08:19:32Z",
+      "runner_id": null,
+      "runner_name": null,
+      "steps": []
+    },
+    {
+      "id": 139071558612,
+      "name": "native-resume",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-11-25T08:19:32Z",
+      "completed_at": "2026-11-25T08:19:32Z",
+      "runner_id": null,
+      "runner_name": null,
+      "steps": []
+    }
+  ]
+}

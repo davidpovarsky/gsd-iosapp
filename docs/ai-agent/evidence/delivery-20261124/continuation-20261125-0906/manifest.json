@@ -1,0 +1,229 @@
+{
+  "schemaVersion": 1,
+  "kind": "held-delivery-evidence-copy-manifest",
+  "recordedUTC": "2026-11-25T09:14:50.880372+00:00",
+  "observationCutoffUTC": "2026-11-25T09:06:00Z",
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "actionsRunID": 45575270618,
+  "baselineDocumentationCommit": "655c5a3bcaf1024fa12002f41739f095444255cd",
+  "copiedExistingFileCount": 20,
+  "newNativeReceiptOrProjectionGenerated": false,
+  "copies": [
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\native-binding.json",
+      "destination": "native-binding.json",
+      "bytes": 97200,
+      "sha256": "2bdb6bfac2c6e615e901a3868577669c74258a0f6010ed572ac01582a39dd9d0",
+      "sourceNature": "original native runtime receipt",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/native-binding.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\native-observation.json",
+      "destination": "native-observation.json",
+      "bytes": 2688,
+      "sha256": "c5cafe4079e2666f005624c108149ce6734ca61734f000438799a6e5797a7dd9",
+      "sourceNature": "original native runtime receipt",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/native-observation.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\native-terminal.json",
+      "destination": "native-terminal.json",
+      "bytes": 14038,
+      "sha256": "2eb0ffba18d78afdf72237dc5a135e98982beb128cabdc0440dbdd0ebfec7952",
+      "sourceNature": "original native runtime receipt",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/native-terminal.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\visual\\12-installed-widget-initial.hierarchy.txt",
+      "destination": "visual/12-installed-widget-initial.hierarchy.txt",
+      "bytes": 29150,
+      "sha256": "2c737d9b840e789d45c4848d786f31fdcfc06ce53c26785dc92464a6c26d325c",
+      "sourceNature": "original native XCTest accessibility hierarchy, retained bytes, no new capture",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/12-installed-widget-initial.hierarchy.txt",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\visual\\12-installed-widget-initial.png",
+      "destination": "visual/12-installed-widget-initial.png",
+      "bytes": 3046486,
+      "sha256": "6333acb3693db529142299a236bbbf91ee828554ae18b4342ab630a7c794a30e",
+      "sourceNature": "original native XCTest screenshot, retained bytes, no new capture",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/12-installed-widget-initial.png",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\visual\\14-installed-widget-refreshed.hierarchy.txt",
+      "destination": "visual/14-installed-widget-refreshed.hierarchy.txt",
+      "bytes": 20967,
+      "sha256": "61bb30d21a72bb136b281481f032c84e16f979b09b1b34722b6bca2bf11da2fd",
+      "sourceNature": "original native XCTest accessibility hierarchy, retained bytes, no new capture",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/14-installed-widget-refreshed.hierarchy.txt",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\visual\\14-installed-widget-refreshed.png",
+      "destination": "visual/14-installed-widget-refreshed.png",
+      "bytes": 3045969,
+      "sha256": "15dac9e4b162905d7ef57956dd74c30bd054b0623aaed557e0db3556404768e7",
+      "sourceNature": "original native XCTest screenshot, retained bytes, no new capture",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/14-installed-widget-refreshed.png",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\visual\\15-widget-row-task-editor.hierarchy.txt",
+      "destination": "visual/15-widget-row-task-editor.hierarchy.txt",
+      "bytes": 26353,
+      "sha256": "cd72808d7c256fb4eba93ba4aaaaa75ad66f08c68686760185ae36e55221b64b",
+      "sourceNature": "original native XCTest accessibility hierarchy, retained bytes, no new capture",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/15-widget-row-task-editor.hierarchy.txt",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\visual\\15-widget-row-task-editor.png",
+      "destination": "visual/15-widget-row-task-editor.png",
+      "bytes": 472084,
+      "sha256": "3172d2bb5391a11feb75bbc732e945b8c1974abf5ea46cfa629cefed4d9ff5ac",
+      "sourceNature": "original native XCTest screenshot, retained bytes, no new capture",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/15-widget-row-task-editor.png",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-fd6-actions-native-evidence-20261125\\visual\\completion-manifest.json",
+      "destination": "visual/completion-manifest.json",
+      "bytes": 3669,
+      "sha256": "e6b8ffe8f89c7b3420a836d4dcf5dece19f39db33860bae70df5d1950f7b5650",
+      "sourceNature": "existing exact-transfer manifest for retained original PNG and accessibility hierarchy files",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/visual/completion-manifest.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-package-20261125\\accepted-actions\\actions-terminal.json",
+      "destination": "actions/actions-terminal.json",
+      "bytes": 3691,
+      "sha256": "20c908ec64c7a17b56f2015f875d4050ab033b20ce96655a93edfa3f79e6f05a",
+      "sourceNature": "existing captured GitHub run and jobs API observation",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/actions/actions-terminal.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-package-20261125\\accepted-actions\\artifact-transfer-manifest.json",
+      "destination": "actions/artifact-transfer-manifest.json",
+      "bytes": 1929,
+      "sha256": "ea828dc7505c71cac2f929b0650eabca2a4722a279a6189d2d839b091df48f82",
+      "sourceNature": "existing artifact ZIP download and extraction receipt",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/actions/artifact-transfer-manifest.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-package-20261125\\accepted-actions\\widget-actions-receipt.json",
+      "destination": "actions/widget-actions-receipt.json",
+      "bytes": 1694,
+      "sha256": "2572bcb446e7a7e462f31757eba5604573d622d5931855ddb7bdc87fd8ffc7ec",
+      "sourceNature": "original Actions adapter-emitted acceptance receipt downloaded from GitHub artifact",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/actions/widget-actions-receipt.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-package-20261125\\accepted-actions\\widget-binding-public.json",
+      "destination": "actions/widget-binding-public.json",
+      "bytes": 1217,
+      "sha256": "fe8bd9f7d776733cfdbf7c7f9f9d2e7fc31c11ced91cbf485b21ef5a29d24212",
+      "sourceNature": "existing adapter-generated public projection of original native evidence, copied without regeneration",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/actions/widget-binding-public.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-package-20261125\\accepted-actions\\widget-observation-public.json",
+      "destination": "actions/widget-observation-public.json",
+      "bytes": 650,
+      "sha256": "ef9338562cdba603b907023efe7e85196cc04e134186ee9b175caa6b56cd1f94",
+      "sourceNature": "existing adapter-generated public projection of original native evidence, copied without regeneration",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/actions/widget-observation-public.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-package-20261125\\accepted-actions\\widget-terminal-public.json",
+      "destination": "actions/widget-terminal-public.json",
+      "bytes": 643,
+      "sha256": "d5a1b02bcd8b4f9a6a7d44b3591efd55013e963c3d0c7b00ad8898d0ea6d15b4",
+      "sourceNature": "existing adapter-generated public projection of original native evidence, copied without regeneration",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/actions/widget-terminal-public.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\maintenance-approved-20-20261125T084648Z.json",
+      "destination": "maintenance-approved-20-envelope.json",
+      "bytes": 46702,
+      "sha256": "3467186e667c8f974468e505fefb89e59e02c041330158bfad31e045787c8ae4",
+      "sourceNature": "existing Windows transfer/capture envelope containing the native maintenance receipt; envelope bytes are copied exactly, raw native receipt is not reconstructed",
+      "embeddedNativeIdentity": {
+        "bytes": 43481,
+        "sha256": "ea8d3df46651d8f57d820a6715aae9ca50e5c67999a1e0ceed6b59059481a101"
+      },
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/maintenance-approved-20-envelope.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\canonical-ff-fd6-20261125T090123Z\\publication-receipt.json",
+      "destination": "canonical-fd6-publication.json",
+      "bytes": 19224,
+      "sha256": "e6a6ba0559c294e1cd9bb3e82af9c2f8b8cfe74e0f44903aebcc68994363e4b9",
+      "sourceNature": "original Windows canonical fast-forward publication receipt",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/canonical-fd6-publication.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\root-widget-actions-45575270618-acceptance-review.json",
+      "destination": "root-widget-acceptance-review.json",
+      "bytes": 4478,
+      "sha256": "bff69dfeb02181dc273319921e63f318a67eef81341f1650697abf67368f199d",
+      "sourceNature": "existing Root projection of retained GitHub connector observations and actual retained-image review; no new GitHub fetch or new image capture",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/root-widget-acceptance-review.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-20261125\\validated-release\\archive-terminal.json",
+      "destination": "archive-attempt1-admission-terminal.json",
+      "bytes": 8697,
+      "sha256": "96bbc7336c9468e4cd21f1da511e077ed6f004eb5a3bd1948cadb62c41bd1c85",
+      "sourceNature": "original native archive controller terminal, stopped at capacity admission before any archive child",
+      "path": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0906/archive-attempt1-admission-terminal.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    }
+  ],
+  "scope": {
+    "widgetOriginalTestAcceptance": true,
+    "fullNativeSuiteRerun": false,
+    "sourceCodeChanged": false,
+    "newMacOrCloudObservation": false,
+    "archiveOrSigningExecutedByThisLane": false,
+    "appleUploadOrTestFlight49Verified": false,
+    "personalAuthorizationVerified": false
+  },
+  "historicalFilesPreserved": true,
+  "aborted0458ContentReadOrHash": false,
+  "publicationHeldForRootReview": true
+}

@@ -1,0 +1,17 @@
+{
+  "phase": "complete",
+  "passed": true,
+  "actionsContext": {
+    "runID": "45575270618",
+    "runAttempt": "1",
+    "workflowSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "planSHA256": "536d13fc5f390d4216ee26c565ec52fa2562a3667187ea9e8427cf16b17ff621",
+    "invocationID": "cef7368a861d4cfcaec3f5f0812b41a8",
+    "startedUTC": "2026-11-25T08:19:40.136864+00:00"
+  },
+  "controllerPID": 16104,
+  "testSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "productionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "startedUTC": "2026-11-25T08:19:40.519173+00:00",
+  "finishedUTC": "2026-11-25T08:51:29.030306+00:00"
+}

@@ -1,0 +1,48 @@
+{
+  "recordedUTC": "2026-11-25T08:51:58.736171+00:00",
+  "run": {
+    "id": 45575270618,
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1,
+    "created_at": "2026-11-25T08:19:30Z",
+    "updated_at": "2026-11-25T08:51:40Z",
+    "head_sha": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "head_branch": "fix/gsd-widget-final-20261125",
+    "html_url": "https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45575270618",
+    "workflow_id": 427066662
+  },
+  "artifact": {
+    "id": 15006680376,
+    "name": "GSD-Widget-System-Acceptance-45575270618-1",
+    "zipBytes": 2784,
+    "zipSHA256": "b300d6388a6b4456dc49e2e30bf9c391f110b44086d004615d768fca598e4a7d"
+  },
+  "files": [
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-actions-45575270618-terminal\\widget-binding-public.json",
+      "name": "widget-binding-public.json",
+      "bytes": 1217,
+      "sha256": "fe8bd9f7d776733cfdbf7c7f9f9d2e7fc31c11ced91cbf485b21ef5a29d24212"
+    },
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-actions-45575270618-terminal\\widget-observation-public.json",
+      "name": "widget-observation-public.json",
+      "bytes": 650,
+      "sha256": "ef9338562cdba603b907023efe7e85196cc04e134186ee9b175caa6b56cd1f94"
+    },
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-actions-45575270618-terminal\\widget-terminal-public.json",
+      "name": "widget-terminal-public.json",
+      "bytes": 643,
+      "sha256": "d5a1b02bcd8b4f9a6a7d44b3591efd55013e963c3d0c7b00ad8898d0ea6d15b4"
+    },
+    {
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-actions-45575270618-terminal\\widget-actions-receipt.json",
+      "name": "widget-actions-receipt.json",
+      "bytes": 1694,
+      "sha256": "2572bcb446e7a7e462f31757eba5604573d622d5931855ddb7bdc87fd8ffc7ec"
+    }
+  ],
+  "exactPublicBytes": true
+}

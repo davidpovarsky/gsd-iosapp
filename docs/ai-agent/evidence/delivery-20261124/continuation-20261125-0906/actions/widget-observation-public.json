@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "productionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "simulatorID": "E2B29899-8DFC-4086-88C4-ADEE989C9801",
+  "passed": true,
+  "scope": "real_home_widget_timeline_refresh_and_row_deep_link",
+  "taskCardID": "task-card-OEmaQAdINBVe",
+  "initialTitle": "GSD-Widget-A-2C89BA1D",
+  "updatedTitle": "GSD-Widget-B-2C89BA1D",
+  "installedWidgetDisplayedInitialTask": true,
+  "realWidgetTimelineRefreshObserved": true,
+  "widgetRowOpenedExactTask": true,
+  "shortcutInvoked": false,
+  "personalAccountUsed": false,
+  "siriVerified": false,
+  "voiceOverSpeechVerified": false,
+  "watchConnectivityVerified": false
+}
