@@ -299,20 +299,25 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
             proof["registeredAppShortcutIdentifier"] = action.identifier
             try requireAppOutsideForeground("GSD became foreground before the Shortcut ran.")
             action.tap()
-            try capture(shortcuts, "34-required-task-prompt")
+            try capture(home, "34-required-task-prompt")
 
-            // CreateTaskIntent has one required String parameter. Select the native field
-            // by its unique role in this prompt, never by the value that the test will enter.
-            let fields = shortcuts.textFields
+            // The observed required Task prompt is owned by SpringBoard. Retain its
+            // unique field by role so entering text cannot invalidate a placeholder query.
+            let fields = home.textFields
             try require(fields.firstMatch.waitForExistence(timeout: 15) && fields.count == 1,
                         "The required Task prompt must expose one native text field.")
+            try require(fields.matching(NSPredicate(format: "placeholderValue == %@", "Task")).count == 1,
+                        "The system-owned required Task prompt changed.")
             let taskField = fields.firstMatch
+            try dismissObservedKeyboardIntroduction()
+            try capture(home, "34-required-task-ready")
             try require(taskField.wait(for: \.isHittable, toEqual: true, timeout: 10),
                         "The required Task field is obscured.")
             proof["requiredTaskControl"] = [
                 "identifier": taskField.identifier,
                 "label": taskField.label,
-                "elementType": "textField"
+                "elementType": "textField",
+                "ownerBundleIdentifier": "com.apple.springboard"
             ]
             taskField.tap()
             try dismissObservedKeyboardIntroduction()
@@ -320,10 +325,21 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
             try require(taskField.value as? String == shorthand,
                         "The native required Task input does not contain the exact shorthand.")
             try requireAppOutsideForeground("GSD became foreground while entering the Task parameter.")
-            try capture(shortcuts, "35-required-task-entered")
-            taskField.typeText("\n")
+            try capture(home, "35-required-task-entered")
+            // Match the observed prompt label, not the keyboard's separate Done identifier.
+            let submitButtons = home.buttons.matching(NSPredicate(format: "label == %@", "Done"))
+            try require(submitButtons.firstMatch.waitForExistence(timeout: 15) && submitButtons.count == 1,
+                        "The system-owned Task prompt must expose one Done button.")
+            let submit = submitButtons.firstMatch
+            try require(submit.isEnabled && submit.wait(for: \.isHittable, toEqual: true, timeout: 10),
+                        "The system-owned Task submission is disabled or obscured.")
+            proof["requiredTaskSubmitControl"] = [
+                "identifier": submit.identifier, "label": submit.label,
+                "ownerBundleIdentifier": "com.apple.springboard"
+            ]
+            submit.tap()
             try require(taskField.waitForNonExistence(timeout: 30),
-                        "Native keyboard submission did not complete the required Task prompt.")
+                        "Native Done submission did not complete the required Task prompt.")
             try require(shortcuts.state == .runningForeground, "Shortcuts must own the completed invocation UI.")
             let invocationAppState = try requireAppOutsideForeground(
                 "CreateTask must execute with GSD in a known nonforeground state.")
