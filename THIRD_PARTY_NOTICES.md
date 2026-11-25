@@ -740,9 +740,9 @@ for the full license text and attribution terms.
 ```
 
 
-## TaskVisualizationKit 2194705871da715eb996ecfeb10f280e1cb0a85e
+## TaskVisualizationKit 1dd5b25597cde45cf3d2ee8e30c5f12fc4babae2
 
-Source: https://github.com/davidpovarsky/task-visualization-kit/tree/2194705871da715eb996ecfeb10f280e1cb0a85e
+Source: https://github.com/davidpovarsky/task-visualization-kit/tree/1dd5b25597cde45cf3d2ee8e30c5f12fc4babae2
 
 License: MIT
 

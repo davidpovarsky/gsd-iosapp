@@ -2,9 +2,9 @@ import XCTest
 
 @MainActor
 extension XCTestCase {
-    /// Resolve a measured screen point through a real native element. Record the
-    /// actual coordinate basis before requiring agreement; frame.origin alone is
-    /// not evidence of the origin used by XCUICoordinate in every orientation.
+    /// Resolve a point measured in the element.frame display coordinate system.
+    /// In landscape, XCUICoordinate.screenPoint uses the rotated native/HID
+    /// coordinate system. Keep those domains distinct and record their mapping.
     func measuredNativeCoordinate(on element: XCUIElement, at target: CGPoint,
                                   observationName: String) -> XCUICoordinate? {
         let frame = element.frame
@@ -17,9 +17,9 @@ extension XCTestCase {
         let yx = unitY.x - origin.x
         let yy = unitY.y - origin.y
         let determinant = xx * yy - xy * yx
-        var observation = "element=\(element.identifier) frame=\(frame) "
-            + "origin=\(origin) unitX=\(unitX) unitY=\(unitY) "
-            + "determinant=\(determinant) target=\(target)"
+        var observation = "element=\(element.identifier) displayFrame=\(frame) "
+            + "nativeOrigin=\(origin) nativeUnitX=\(unitX) nativeUnitY=\(unitY) "
+            + "determinant=\(determinant) displayTarget=\(target)"
         func record() {
             let attachment = XCTAttachment(string: observation)
             attachment.name = observationName
@@ -27,24 +27,26 @@ extension XCTestCase {
             add(attachment)
         }
         guard [origin.x, origin.y, unitX.x, unitX.y, unitY.x, unitY.y,
-               target.x, target.y, determinant].allSatisfy({ $0.isFinite }),
+               frame.minX, frame.minY, target.x, target.y, determinant]
+                .allSatisfy({ $0.isFinite }),
               abs(determinant) > 0.000001 else {
             record()
             XCTFail("The observed native coordinate basis must be finite and invertible")
             return nil
         }
-        let dx = target.x - origin.x
-        let dy = target.y - origin.y
-        let offset = CGVector(dx: (dx * yy - dy * yx) / determinant,
-                              dy: (xx * dy - xy * dx) / determinant)
+        let offset = CGVector(dx: target.x - frame.minX, dy: target.y - frame.minY)
+        let expectedNative = CGPoint(x: origin.x + xx * offset.dx + yx * offset.dy,
+                                     y: origin.y + xy * offset.dx + yy * offset.dy)
         let coordinate = anchor.withOffset(offset)
         let resolved = coordinate.screenPoint
-        observation += " offset=\(offset) resolved=\(resolved)"
+        observation += " displayOffset=\(offset) expectedNative=\(expectedNative) "
+            + "resolvedNative=\(resolved)"
         record()
-        guard resolved.x.isFinite && resolved.y.isFinite
-                && abs(resolved.x - target.x) < 1
-                && abs(resolved.y - target.y) < 1 else {
-            XCTFail("Native coordinate disagrees with the measured screen target")
+        guard expectedNative.x.isFinite && expectedNative.y.isFinite
+                && resolved.x.isFinite && resolved.y.isFinite
+                && abs(resolved.x - expectedNative.x) < 1
+                && abs(resolved.y - expectedNative.y) < 1 else {
+            XCTFail("Native coordinate disagrees with the measured display-to-native mapping")
             return nil
         }
         return coordinate

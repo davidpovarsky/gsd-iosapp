@@ -279,6 +279,22 @@ final class GSDCloudReleaseUITests: XCTestCase {
             throw UIAcceptanceFailure(message: "Native context coordinate disagrees with measured backdrop",
                                       file: #fileID, line: #line)
         }
+        guard let windowCoordinate = measuredNativeCoordinate(
+            on: window, at: point,
+            observationName: "\(language)-03-context-backdrop-window-coordinate") else {
+            throw UIAcceptanceFailure(message: "Owning window coordinate could not be measured",
+                                      file: #fileID, line: #line)
+        }
+        let actionPoint = coordinate.screenPoint
+        let windowPoint = windowCoordinate.screenPoint
+        let agreement = XCTAttachment(string:
+            "displayTarget=\(point) actionNative=\(actionPoint) windowNative=\(windowPoint)")
+        agreement.name = "\(language)-03-context-backdrop-coordinate-agreement"
+        agreement.lifetime = .keepAlways
+        add(agreement)
+        try requireAcceptance(abs(actionPoint.x - windowPoint.x) < 1
+                              && abs(actionPoint.y - windowPoint.y) < 1,
+                              "Native action and owning window disagree on the backdrop target")
         coordinate.tap()
     }
 

@@ -690,3 +690,12 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 - Keep context backdrop geometry, one tap and five-second dismissal. Capture the native coordinate basis before the agreement guard instead of assuming frame.origin is its origin.
 - Pin shared TaskVisualizationKit 2194705871da715eb996ecfeb10f280e1cb0a85e after its unchanged 21 tests passed. The physical Network canvas and nodes share LTR coordinates while labels stay localized; final Hebrew screenshot and pan/Fit/open acceptance remain required.
 - Combined native qualification is pending. Original upstream sources remain untouched; no TestFlight completion is claimed.
+
+
+### Native touch Board and context qualification — 2026-11-25
+
+- Exact c9c4923 completed fresh 31 agent tests and the native build. The full Hebrew iPad workspace, cloud, widget and genuine Hanlin cases passed; the Hebrew phone Board reveal and iPad context dismissal remained failures. Original results, recordings and coordinate events are retained.
+- The phone's 14 measured gutter gestures reached their actual native points yet reordered cards without scrolling. Consume shared TaskVisualizationKit 1dd5b25597cde45cf3d2ee8e30c5f12fc4babae2 after 27/27 package tests: iOS uses native vertical scrolling and Transferable system lift/drop through the existing canonical callback; original macOS renderer and upstream packages remain unchanged.
+- Retain every original completion, dependency, date, five-view and Hanlin assertion. Exercise system lift/drop on phone and iPad with canonical lane readback; ordinary card-centered scrolling must move at least two physically visible cards together while preserving their order, position/lane values and canonical completion state. Grow real editor fixtures only until measured overflow is sufficient, bounded by 12. Verify collapse and visible/hittable expand in every configuration.
+- Correct the test coordinate-domain calculation: display-frame offsets are transformed through the measured native basis, with an independent owning-window witness for the context backdrop tap. The prior mapping error is established, but its role in the retained context menu is not proven; keep one tap and the original five-second disappearance gate.
+- Reuse the actual b1 1,333-case core execution only through identical complete GSDKit source/dependency/toolchain evidence. Run 31 fresh agent tests and all 13 native-release, four workspace and two Share cases on the next exact source. Native acceptance and TestFlight release remain pending.
