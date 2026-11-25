@@ -94,22 +94,9 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
             icon.press(forDuration: 1.2)
             try capture(home, "11-restored-home-context-menu")
         }
-        let medium = home.buttons["וידג׳ט בינוני"]
-        let mediumExists = medium.waitForExistence(timeout: 10)
-        try capture(home, "11-widget-size-control")
-        if !mediumExists {
-            try require(editHomeActions.firstMatch.waitForExistence(timeout: 10)
-                        && editHomeActions.count == 1,
-                        "Observed Edit Home control is absent or ambiguous for widget gallery discovery.")
-            let editHome = editHomeActions.firstMatch
-            try require(editHome.wait(for: \.isHittable, toEqual: true, timeout: 10),
-                        "Observed Edit Home control is obscured.")
-            editHome.tap()
-            try capture(home, "11-widget-gallery-discovery-needed")
-            throw NativeSurfaceFailure(message: "Medium WidgetKit control is unavailable; captured Edit Home UI for gallery discovery. Widget installation and timeline verification have not run.")
-        }
-        try require(medium.isHittable, "Observed medium WidgetKit control is unavailable.")
-        medium.tap()
+        let editHome = try widgetGalleryControl(editHomeActions, stage: "11-widget-gallery-00-context-menu")
+        editHome.tap()
+        try addWidgetFromObservedGallery()
         XCUIDevice.shared.press(.home)
         try capture(home, "11b-after-widget-placement")
         let initialRow = label(initialTitle, in: home)
@@ -162,6 +149,91 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
         app.terminate()
     }
 
+
+    private func addWidgetFromObservedGallery() throws {
+        let edit = try widgetGalleryControl(home.buttons.matching(NSPredicate(
+            format: "label IN %@", argumentArray: [["עריכה", "Edit"]])),
+            stage: "11-widget-gallery-01-edit-mode")
+        edit.tap()
+
+        let addWidget = NSPredicate(format:
+            "(label CONTAINS[cd] 'widget' OR label CONTAINS 'וידג' OR label CONTAINS 'יישומו') "
+            + "AND (label CONTAINS[cd] 'add' OR label CONTAINS 'הוס')")
+        let openGallery = try widgetGalleryControl(home.buttons.matching(addWidget),
+                                                  stage: "11-widget-gallery-02-edit-menu")
+        openGallery.tap()
+
+        let search = try widgetGalleryControl(home.searchFields, stage: "11-widget-gallery-03-search")
+        search.tap()
+        try dismissObservedKeyboardIntroduction()
+        search.typeText("GSD")
+        try require(search.value as? String == "GSD", "Native widget gallery search did not retain GSD.")
+
+        let productNames = ["GSD", "GSD Widgets", "יישומוני GSD", "המיקוד להיום", "Today's Focus"]
+        let product = NSPredicate(format: "label IN %@ OR identifier IN %@",
+                                  argumentArray: [productNames, productNames])
+        let buttons = home.buttons.matching(product)
+        let result: XCUIElement
+        if buttons.firstMatch.waitForExistence(timeout: 10) {
+            result = try widgetGalleryControl(buttons, stage: "11-widget-gallery-04-gsd-results")
+        } else {
+            result = try widgetGalleryControl(home.staticTexts.matching(product),
+                                              stage: "11-widget-gallery-04-gsd-results")
+        }
+        result.tap()
+
+        let install = try widgetGalleryControl(home.buttons.matching(addWidget),
+                                               stage: "11-widget-gallery-05-install-ready")
+        let names = home.descendants(matching: .any).matching(product)
+        let previewExists = names.firstMatch.waitForExistence(timeout: 10)
+        try capture(home, "11-widget-gallery-06-gsd-preview")
+        let visibleNames = names.allElementsBoundByAccessibilityElement.filter { $0.exists && $0.isHittable }
+        try require(previewExists && !visibleNames.isEmpty, "Native widget preview does not identify GSD.")
+        proof["widgetGalleryPreviewNames"] = visibleNames.map { $0.label }
+
+        // Keep the native preview's family; never infer it from page order or position.
+        let family = NSPredicate(format: "label MATCHES[cd] %@ OR identifier MATCHES[cd] %@",
+                                 ".*(small|medium|large|קטן|קטנה|בינוני|גדול).*",
+                                 ".*system(small|medium|large).*")
+        let families = home.descendants(matching: .any).matching(family)
+            .allElementsBoundByAccessibilityElement.filter { $0.exists && $0.isHittable }
+        let selected = families.filter { $0.isSelected }
+        proof["widgetGalleryFamilyControls"] = families.map { widgetGalleryAttributes($0) }
+        proof["widgetGallerySelectedFamily"] = selected.count == 1
+            ? (selected[0].label.isEmpty ? selected[0].identifier : selected[0].label) : "unknown/default"
+        proof["widgetGalleryFamilySelectionMode"] = "native_default_preview"
+
+        install.tap()
+        proof["widgetGalleryInstallationRequested"] = true
+        try capture(home, "11-widget-gallery-07-install-requested")
+    }
+
+    private func widgetGalleryControl(_ query: XCUIElementQuery, stage: String) throws -> XCUIElement {
+        let exists = query.firstMatch.waitForExistence(timeout: 10)
+        let controls = query.allElementsBoundByAccessibilityElement.filter { $0.exists }
+        if controls.count == 1 {
+            _ = controls[0].wait(for: \.isHittable, toEqual: true, timeout: 10)
+        }
+        try capture(home, stage)
+        let visible = controls.filter { $0.exists && $0.isHittable }
+        try require(exists && visible.count == 1,
+                    "Widget gallery control is absent, ambiguous or obscured at \(stage); visible matches: \(visible.count).")
+        let control = visible[0]
+        try require(control.isEnabled, "Widget gallery control is disabled at \(stage).")
+        var observations = proof["widgetGalleryControls"] as? [[String: Any]] ?? []
+        var attributes = widgetGalleryAttributes(control)
+        attributes["stage"] = stage
+        observations.append(attributes)
+        proof["widgetGalleryControls"] = observations
+        try persist()
+        return control
+    }
+
+    private func widgetGalleryAttributes(_ control: XCUIElement) -> [String: Any] {
+        ["identifier": control.identifier, "label": control.label,
+         "elementType": control.elementType.rawValue, "value": control.value as? String ?? "",
+         "selected": control.isSelected, "enabled": control.isEnabled, "hittable": control.isHittable]
+    }
 
     func test02RunRegisteredCreateTaskShortcutAndVerifyPersistence() throws {
         try prepare("shortcut-invocation")
