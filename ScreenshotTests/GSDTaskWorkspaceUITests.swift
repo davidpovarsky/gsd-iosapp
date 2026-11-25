@@ -204,8 +204,13 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         due.tap()
         let toggle = app.switches["task-workspace.date.toggle"].firstMatch
         XCTAssertTrue(toggle.waitForExistence(timeout: 10))
-        XCTAssertEqual(toggle.value as? String, "1")
-        toggle.tap()
+        // A SwiftUI Form can expose both the whole row and the nested UISwitch.
+        // Use the actual native switch when present, including in RTL layouts.
+        let nested = toggle.descendants(matching: .switch).firstMatch
+        let dateSwitch = nested.exists ? nested : toggle
+        XCTAssertEqual(dateSwitch.value as? String, "1")
+        dateSwitch.tap()
+        XCTAssertEqual(dateSwitch.value as? String, "0", "The date must be disabled before saving")
         app.buttons["task-workspace.date.save"].tap()
         XCTAssertTrue(due.waitForExistence(timeout: 10))
         app.buttons["task-workspace.timeline.close-actions"].tap()
