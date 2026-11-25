@@ -1,0 +1,115 @@
+{
+  "createdUTC": "2026-11-25T06:12:24.572007+00:00",
+  "kind": "complete_fresh_diagnostic_products",
+  "diagnosticOnly": true,
+  "productionAcceptance": false,
+  "testSourceSHA": "620d66f2c0ef3368ec772b236450873a01e74b73",
+  "diagnosticSourceSHA": "620d66f2c0ef3368ec772b236450873a01e74b73",
+  "baseProductionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "frozenManifestSHA256": "38aae93e3330893c26c1ce837a05af933b1d2115b69b01b0ea67f0e8fb2eb67f",
+  "originalProductsTree": {
+    "sha256": "034d71a7987a2834f61cd4aaa541e00b3c47f9d2aedf84b8dc0b69e09d20a068",
+    "files": 422
+  },
+  "productsRoot": "/Users/m1/builds/gsd-widget-route-diag-620d66f2-20261125/fresh-products-recovery/products",
+  "productsTree": {
+    "sha256": "11879ccd2b68974d346ce7b7c1f0833b163dbe02464237820e6309bd440fee4a",
+    "files": 421
+  },
+  "appRelativePath": "Debug-iphonesimulator/GSD.app",
+  "appTree": {
+    "sha256": "1a49ed94b4204820b3a7fbbf9adaa4c5d1d98588e165304a4b8e187d560e0067",
+    "files": 128
+  },
+  "appExecutableSHA256": "c07748106ada0b73fa48a6d6b1956fdcc296601c422554f6a6f1c88adc0ad62b",
+  "runnerRelativePath": "Debug-iphonesimulator/GSDScreenshotTests-Runner.app",
+  "runnerTree": {
+    "sha256": "3add8d6d677285f31e68f9e710de52b37a8906822e17427b20bfac7cc8aadedf",
+    "files": 7
+  },
+  "xctestrunSHA256": "8768188bbe98de68228c0fb8e791d5972f53516685069b2be00f0169fc3ffe4c",
+  "productionBundlesEqualOriginal": false,
+  "diagnosticAppChanged": true,
+  "companionBundlesEqualOriginal": false,
+  "companionSourceInputsUnchanged": true,
+  "diagnosticTargetCount": 5,
+  "diagnosticTargetAudits": {
+    "com.itorah.gsd": {
+      "tree": {
+        "sha256": "1a49ed94b4204820b3a7fbbf9adaa4c5d1d98588e165304a4b8e187d560e0067",
+        "files": 128
+      },
+      "executableSHA256": "c07748106ada0b73fa48a6d6b1956fdcc296601c422554f6a6f1c88adc0ad62b",
+      "runtimeEntitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    },
+    "com.itorah.gsd.widgets": {
+      "tree": {
+        "sha256": "07b8f58e16bcd3c8d0d26dabfb5437c2713864e0c79eb6b165196ee9661db09a",
+        "files": 15
+      },
+      "executableSHA256": "5d5fecfb0e9f38a7b2a61bc2604cf478af8439e884a0136759c2999e82d62214",
+      "runtimeEntitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd.widgets",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    },
+    "com.itorah.gsd.share": {
+      "tree": {
+        "sha256": "e4fb60c70716547ffe966a07a65da7d5499844993d5b0d8b530906868dd1978c",
+        "files": 14
+      },
+      "executableSHA256": "01d8b5c0147d2898b5bfa99425fdc091bb23cf7126fd41bf21b79e6b8ddb9636",
+      "runtimeEntitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd.share",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    },
+    "com.itorah.gsd.watchkitapp": {
+      "tree": {
+        "sha256": "c56b0c33329bcfcd57694d072af29166312ac163e8f3a6844d57604b973c4d5b",
+        "files": 36
+      },
+      "executableSHA256": "840de1e6c30c92c4a2663224f686987562b52187232b1d4fa0af2bbeb753c731",
+      "runtimeEntitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd.watchkitapp",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    },
+    "com.itorah.gsd.watchkitapp.widgets": {
+      "tree": {
+        "sha256": "635c202f3f4fe10547cdba19997e370c7cf35f2550648655264c5b0e9fa29f9b",
+        "files": 17
+      },
+      "executableSHA256": "f3eaee9df11cb8b07580306315ae43fcc2e766918aca908e7aae7f51e914afa0",
+      "runtimeEntitlements": {
+        "application-identifier": "NA6HPWARQ2.com.itorah.gsd.watchkitapp.widgets",
+        "com.apple.security.application-groups": [
+          "group.com.itorah.gsd"
+        ]
+      }
+    }
+  },
+  "completeProductsCopyMatchesCache": true,
+  "allTargetsFromSameCompletedBuild": true,
+  "testRunnerUnchangedByComposition": true,
+  "originalProductsUnchanged": true,
+  "completedBuildBindingSHA256": "5adc8273c4b67a23bb4bdd6cb352cb26ce6aa28a5187a1a8afe952e715f780e3",
+  "failedCompositionTerminalSHA256": "5622a95ddddf8fe9d9a3542fc290b54af1fb1660c028a07a5758f03c4036075b",
+  "sourceClosureSHA256": "22fa4fbfc06a348501bdc827b4450204bcc3b37c9c97e868266d920e288f3694",
+  "freshCompanionLineageSHA256": "3e1009d24539249d013f2f7449fce070af79571a7c78d497810f5ef3202e180d",
+  "copySizingReceiptSHA256": "696ce2aa0c23c8223187d91804c71afd03cd3d0b233d4a85c52fef8ca4851b92",
+  "compileRepeated": false,
+  "runtimeExecuted": false,
+  "signingOrUploadExecuted": false
+}

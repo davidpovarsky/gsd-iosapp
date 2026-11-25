@@ -1,0 +1,11 @@
+{
+  "owner": "/root/native_reconcile",
+  "controllerPID": 40486,
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "cache": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-device",
+  "createdUTC": "2026-11-25T09:21:06.996308+00:00",
+  "finishedUTC": "2026-11-25T09:26:37.807083+00:00",
+  "ownedProcessGroupTerminal": false,
+  "cleanupUncertain": true,
+  "forcedOwnedGroupTermination": false
+}

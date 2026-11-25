@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "kind": "gsd-widget-actions-acceptance",
+  "passed": false,
+  "workflow": ".github/workflows/gsd-hanlin-agent-ios.yml",
+  "workflowSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "testSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "productionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "build": "49",
+  "scope": "real_home_widget_timeline_refresh_and_row_deep_link",
+  "actionsContext": {
+    "runID": "45573374526",
+    "runAttempt": "1",
+    "workflowSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "planSHA256": "259986c5fd19e47887b87d1c0af0f6e07f59acc37ef6275b3f6659ae3183bafa",
+    "invocationID": "0177469f27024e46b0a04ddd3555f237",
+    "startedUTC": "2026-11-25T08:06:17.322685+00:00"
+  },
+  "selectedTests": [
+    "GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap"
+  ],
+  "nativeAcceptance": false,
+  "fullSystemSurfaceCoverage": false,
+  "accountGrantVerified": false,
+  "buildExecutedByAdapter": false,
+  "appleUploadExecuted": false,
+  "controllerPID": 5569,
+  "controllerExitCode": 1,
+  "failureCode": "controller_exit_failed",
+  "finishedUTC": "2026-11-25T08:06:17.942152+00:00"
+}

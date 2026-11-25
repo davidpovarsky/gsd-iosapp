@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "kind": "post-share-source-input-reuse",
+  "writtenUTC": "2026-11-24T21:53:56.034373+00:00",
+  "candidateProductionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "candidateTreeSHA": "1079979780cfcac4ef19ac2bef9731f9d1d75b6e",
+  "previousProductionSourceSHA": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+  "passed": true,
+  "sourceComparisonsPassed": true,
+  "acceptanceScope": "Source input equality and accepted historical evidence only; changed Share runtime is separately required.",
+  "aggregateNativeAcceptancePassed": false,
+  "releaseReady": false,
+  "digestAlgorithm": "SHA256 of exact UTF-8 git ls-tree -r <source> -- <listed paths> output (modes, Git blob IDs and paths).",
+  "allChangedFilesFromPrevious": [
+    "ScreenshotTests/GSDChatGPTPreConsentUITests.swift",
+    "ScreenshotTests/GSDSystemSurfaceUITests.swift",
+    "ShareExtension/ShareComposeView.swift",
+    "ShareExtension/ShareViewController.swift",
+    "cloud/gateway/rate-limit.test.mjs",
+    "cloud/gateway/server.mjs",
+    "cloud/test_backup_acceptance.py",
+    "docs/ai-agent/CLOUD_AUTH_BACKUP_ACCEPTANCE_20261124.md",
+    "docs/ai-agent/SHARE_INPUT_ACCEPTANCE_20261124.md",
+    "docs/ai-agent/evidence/cloud-auth-backup-20261124/acceptance.json",
+    "docs/ai-agent/evidence/cloud-auth-backup-20261124/operations-readback.json",
+    "docs/ai-agent/evidence/share-input-20261124/foundation-regressions.json",
+    "scripts/gsd_local_supplemental_validation.py",
+    "scripts/share_input_extraction_regressions.swift",
+    "scripts/test_share_input_extraction.py"
+  ],
+  "nativeProductionInputPaths": [
+    "App",
+    "GSDKit",
+    "Packages/GSDHanlinAgent",
+    "Widgets",
+    "WatchShared",
+    "WatchWidgets",
+    "project.yml",
+    "GSD.xcodeproj",
+    "HanlinSDK.lock.json",
+    "scripts/install_hanlin_sdk.py",
+    "Watch",
+    "ShareExtension"
+  ],
+  "productionChangedFilesFromPrevious": [
+    "ShareExtension/ShareComposeView.swift",
+    "ShareExtension/ShareViewController.swift"
+  ],
+  "immutablePriorProof": {
+    "artifact": "post-watch-core-input-reuse.json",
+    "sha256": "650aee09b0eb64351f06ed43e14f9be227ff0c16bbab2029d383b7996847ceee",
+    "unchanged": true,
+    "scope": "Historical post-Watch proof; its closure included ShareExtension and is not asserted equal after the Share correction."
+  },
+  "coreNativeAndVisual": {
+    "executedSourceSHA": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+    "inputPaths": [
+      "App",
+      "GSDKit",
+      "Packages/GSDHanlinAgent",
+      "Widgets",
+      "WatchShared",
+      "WatchWidgets",
+      "project.yml",
+      "GSD.xcodeproj",
+      "HanlinSDK.lock.json",
+      "scripts/install_hanlin_sdk.py",
+      "ScreenshotTests/GSDCloudReleaseUITests.swift"
+    ],
+    "excludedChangedProductionPath": "ShareExtension",
+    "exclusionReason": "The original13 tests and24 reviewed frames exercise the main app/widget-rendering paths; changed receiving Share behavior receives separate fresh acceptance.",
+    "comparedInputTreeSHA256": {
+      "6712921d1dc379c41c6919524e599ad7e0b9e5e0": "4f77c759cd57fd9d3c528323b53ee663000584c2d103873ee6972dbd9fbebb6c",
+      "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be": "4f77c759cd57fd9d3c528323b53ee663000584c2d103873ee6972dbd9fbebb6c"
+    },
+    "inputsEqual": true,
+    "nativeUITests": 13,
+    "visualFrames": 24,
+    "profileCount": 4,
+    "originalNativeReceiptSHA256": "8549f05885d1c611a7e60c1f6fe9282cac1147de1ef7719e2987dae81ad264f5",
+    "originalVisualReceiptSHA256": "20c7e138336cb103fbdf05a1c29f8040adb473af604df337bf94a3b454ca8901",
+    "originalNativeBindingSHA256": "2d7aaf24f709ba937b5fe2ec3e470bd7003f8f20c9b4540298f2261b9139e175",
+    "originalProductManifestSHA256": "d92f278855c3a37ad2b94e099db99e4df2203685e09b0d5fe2f6adc66ce147eb",
+    "newExecutionClaimed": false
+  },
+  "packageEvidence": {
+    "acceptedHistoricalTestCount": 183,
+    "packages": [
+      {
+        "name": "Hanlin",
+        "executedSourceSHA": "77c0455823cad90168106f2196d6e94d1ce03598",
+        "passedTests": 23,
+        "inputPaths": [
+          "Packages/GSDHanlinAgent",
+          "GSDKit/Sources",
+          "GSDKit/Package.swift",
+          "GSDKit/Package.resolved",
+          "HanlinSDK.lock.json",
+          "scripts/install_hanlin_sdk.py"
+        ],
+        "comparedInputTreeSHA256": {
+          "77c0455823cad90168106f2196d6e94d1ce03598": "287c64ed5f04d26d07f9f283f34f90d30f9cfc773ee2040f866b78d1c4a2b20d",
+          "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be": "287c64ed5f04d26d07f9f283f34f90d30f9cfc773ee2040f866b78d1c4a2b20d"
+        },
+        "inputsEqual": true,
+        "newExecutionClaimed": false
+      },
+      {
+        "name": "GSDKit",
+        "executedSourceSHA": "9d0faa061b0b41f7127fa40c265fef3e3fc3dd88",
+        "passedTests": 160,
+        "inputPaths": [
+          "GSDKit",
+          "HanlinSDK.lock.json",
+          "scripts/install_hanlin_sdk.py"
+        ],
+        "comparedInputTreeSHA256": {
+          "9d0faa061b0b41f7127fa40c265fef3e3fc3dd88": "c95faae27c17b7cd32e6b8f51464a9e6b25123c951b7710da82e1a53d8261359",
+          "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be": "c95faae27c17b7cd32e6b8f51464a9e6b25123c951b7710da82e1a53d8261359"
+        },
+        "inputsEqual": true,
+        "newExecutionClaimed": false
+      }
+    ],
+    "originalReuseReceiptSHA256": "6ab6698a7cd9ea95d9cb3d8001d91931117c3c842ab5bb9aa99839cf935dd8b0",
+    "newExecutionClaimed": false
+  },
+  "watch": {
+    "executedProductionSourceSHA": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+    "inputPaths": [
+      "Watch",
+      "WatchShared",
+      "WatchWidgets",
+      "GSDKit",
+      "Packages/GSDHanlinAgent",
+      "Widgets",
+      "project.yml",
+      "GSD.xcodeproj",
+      "HanlinSDK.lock.json",
+      "scripts/install_hanlin_sdk.py"
+    ],
+    "comparedInputTreeSHA256": {
+      "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f": "dcd2512d47a3bf457311ff99075c88cf47a792e699d874d5cdec5dcf074594d6",
+      "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be": "dcd2512d47a3bf457311ff99075c88cf47a792e699d874d5cdec5dcf074594d6"
+    },
+    "inputsEqual": true,
+    "originalRunReceiptSHA256": "4a7051190c9bd417778f88f86e4570f4d610cdfaab5d6767c1f57f988a6599c5",
+    "originalBindingSHA256": "26d9ad6050bc90ed7496f2b443643a63cc25d5f8dfbe689467cf7e612ae450eb",
+    "originalVisualReviewSHA256": "b84b8d128a0228751ff4364a31eec2dae87c31f0df5840af7de6cbec293f60e3",
+    "independentRootReviewSHA256": "06a09f6095af3fd09d8791814173edbc0a08cf2f7ff988c6585d80e6219f49e7",
+    "originalProductManifestSHA256": "3660604deb7073b61544ae068d5433346816bc4e433665b97d67b07cdd20435d",
+    "acceptedScope": "Actual native EN/HE process launch, visible localized Watch footer regression states and independent visual review.",
+    "images": {
+      "watch-en.png": "121a291a5b8955d14e58d73081850059c4d6a3505318d09b950ec41d66d79b59",
+      "watch-he.png": "9e9607b9060117e245ccb019ada751c968c6dc0e3adc6056aef35b5c256ed72c"
+    },
+    "newExecutionClaimed": false,
+    "watchConnectivityFunctionalTransferVerified": false,
+    "watchWidgetTimelineVerified": false,
+    "physicalDeviceVerified": false
+  },
+  "chatGPTPreConsent": {
+    "executedProductionSourceSHA": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+    "executedTestSourceSHA": "f1fc8676cd1cce5a275f246b0d7dedcfb73416db",
+    "candidateTestSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+    "productionInputPaths": [
+      "App",
+      "GSDKit",
+      "Packages/GSDHanlinAgent",
+      "Widgets",
+      "WatchShared",
+      "WatchWidgets",
+      "project.yml",
+      "GSD.xcodeproj",
+      "HanlinSDK.lock.json",
+      "scripts/install_hanlin_sdk.py",
+      "Watch"
+    ],
+    "comparedProductionInputTreeSHA256": {
+      "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f": "46062c5f163ef16b65885b7680273d09097896ad7318fe1d5ce266f58b54dae6",
+      "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be": "46062c5f163ef16b65885b7680273d09097896ad7318fe1d5ce266f58b54dae6"
+    },
+    "productionInputsEqual": true,
+    "testFile": "ScreenshotTests/GSDChatGPTPreConsentUITests.swift",
+    "testFileUnchanged": false,
+    "executedTestFileSHA256": "16bf4ed96b7b1873b78a3b58df6e09dfa68285bc82768e9c1831a65f17252225",
+    "candidateTestFileSHA256": "9683e7ba93b99ed1ab1560f8502a0054d103973f8988d0808c9e899beb64ebca",
+    "testDeltaSHA256": "dacd39351065939cf92df5051e5bcdceaf0c98ceddf34ff955bec7021846fb94",
+    "testDelta": "The later test-only else branch clears observedOrigin for visible_host_only. The original successful execution remains attributed to f1fc; no later test execution or identical test-file claim.",
+    "passedNativeTests": 1,
+    "observedCancelCycles": 2,
+    "acceptedScope": "native_preconsent_start_and_cancel_only",
+    "acceptedOriginalFlags": {
+      "continueActivated": true,
+      "officialBrowserObserved": true,
+      "ordinaryCancellationObserved": true,
+      "disconnectedAfterCancel": true,
+      "retryContinueActivated": true,
+      "retryOpeningObserved": true,
+      "officialBrowserObservedOnRetry": true,
+      "ordinaryRetryCancellationObserved": true,
+      "disconnectedAfterRetryCancel": true,
+      "disconnectedAfterRelaunch": true
+    },
+    "originEvidence": "visible_host_only",
+    "observedOfficialHost": "auth.openai.com",
+    "originalObservationSHA256": "881e8b78cbea7f0e55f6877cea49350c6f67a90a6d45c20694dc57b16f3b987f",
+    "originalWholeRunSummarySHA256": "484a4e677dc3c8313dc1dbe7e0096edba278fd907fe420ef80d08ff6fd754d55",
+    "originalWholeRunPassed": false,
+    "originalWholeRunFailure": "Share original-payload prefill",
+    "originalBindingSHA256": "e843e50a94e15696bcc08bc166b90c8797e910c97dd2f8c731b91f30cf9c42af",
+    "originalCompositionReceiptSHA256": "18b770f2a9e6de3a2d19b45a6b6fe4270073f230e4016badbe4298ca17dc54a6",
+    "independentRootReviewSHA256": "6c3b639c211c2ae9f54cf04b972a65dc11f323baafe03990d4faae1fe9ef6a56",
+    "grantVerified": false,
+    "inferenceVerified": false,
+    "entitlementVerified": false,
+    "browserPageClassified": false,
+    "newExecutionClaimed": false
+  },
+  "shareCorrection": {
+    "productionPath": "ShareExtension/ShareViewController.swift",
+    "productionFileSHA256": "1bab774a507cb01e9df3a5121fb01e76117a2cef2dca2597f6d7ee233d18b866",
+    "foundationReceiptArtifact": "docs/ai-agent/evidence/share-input-20261124/foundation-regressions.json",
+    "foundationReceiptSHA256": "7a12b248ef2506acaf94889ab22410814ed4ea3ec6add759502614f2ecc41e8c",
+    "actualFoundationPassedCases": 14,
+    "baselinePassedCases": 4,
+    "baselineTotalCases": 14,
+    "fixturePreconditionsProven": true,
+    "baselineBlankComposeImageSHA256": "153539119e57555f5b6430750c872152ef9226c89ded9ec7e158e4a63525b7dd",
+    "realShareRuntimeAccepted": false,
+    "freshNativeRequired": [
+      "Original shared source title is present before any editing",
+      "Real extension Add creates exactly one distinct task and preserves source",
+      "Normal relaunch preserves added task identity",
+      "Real extension Cancel creates no task before or after relaunch"
+    ],
+    "foundationProbeDoesNotProveLiveProviderCauseOrNativeShareAcceptance": true,
+    "foundationEvidenceReusedWithoutRerun": true,
+    "foundationAcceptedAtPublishedSourceSHA": "3c55235035560873d9263dcba6229d9e87919412",
+    "foundationInputByteComparisons": [
+      {
+        "path": "ShareExtension/ShareViewController.swift",
+        "sha256": "1bab774a507cb01e9df3a5121fb01e76117a2cef2dca2597f6d7ee233d18b866",
+        "byteIdentical": true
+      },
+      {
+        "path": "scripts/share_input_extraction_regressions.swift",
+        "sha256": "bf3a20ba25cac35a52ddb090a221b21b19ea5052385bb633e62c2ff418c24e72",
+        "byteIdentical": true
+      },
+      {
+        "path": "scripts/test_share_input_extraction.py",
+        "sha256": "e37151c93adf8a8bd722aa73faaaef56f51b144b529d33d8ce2a159aba67621b",
+        "byteIdentical": true
+      },
+      {
+        "path": "GSDKit/Sources/GSDModel/URLTitle.swift",
+        "sha256": "c0b7f2bfbac2114585c9cc30f42e40c5eec40400cf4a6914ec14114555614202",
+        "byteIdentical": true
+      }
+    ],
+    "titleIdentityCorrection": {
+      "path": "ShareExtension/ShareComposeView.swift",
+      "sha256": "9b1df0cc8b5e841acc11be40e7f32ffd27e0c806424cef5ef45c0182ccbbd768",
+      "change": "Adds share.title directly to the actual Title TextField; no Section identifier or value-based test matching.",
+      "onlyOneModifierChangedFromPriorCandidate": true,
+      "testPath": "ScreenshotTests/GSDSystemSurfaceUITests.swift",
+      "testFileSHA256": "19a021f1db9046a9ce8b70cb257a08538dda3aea6d5095a5adc5e0eccdb35a42",
+      "strictOriginalPayloadAddCancelPersistenceAssertionsPreserved": true
+    }
+  },
+  "remainingReleaseGates": [
+    "Fresh exact-source five-target build and product manifest",
+    "Strict real Share prefill/Add/Cancel/persistence acceptance",
+    "Archive/export/five-target audit and Apple validation of corrected candidate",
+    "Authorized upload and processing/tester verification"
+  ],
+  "scopeLimits": [
+    "No original execution is relabelled as a new run.",
+    "No personal authorization, inference, entitlement or physical-device acceptance is claimed.",
+    "Actual Shortcuts invocation and WidgetKit lifecycle acceptance remain separate."
+  ],
+  "immediatePriorCandidate": {
+    "productionSourceSHA": "3c55235035560873d9263dcba6229d9e87919412",
+    "sourceReuseProofArtifact": "post-share-input-reuse.json",
+    "sourceReuseProofSHA256": "e267bf9a0f447eafa2fb862189d8baedfd47b1ac81cacda2657889b3381ebfa0",
+    "independentRootReviewSHA256": "3f8c75505a872db0c13f6e8015fbbd20fe2245983e614159163884d03a7bb67e",
+    "historicalFilesUnmodified": true,
+    "settledPrefillImageSHA256": "35d40bc28cbf5cf6f3b9371abd93882dc220876bc6d80de773fe99ce539f4148",
+    "actualNativeSourceTitleAndQuadrantVisuallyPresent": true,
+    "independentImageReviewers": [
+      "cloud_plugins",
+      "lorvex",
+      "root"
+    ],
+    "fullShareWorkflowPassed": false,
+    "failure": "The nonempty Title no longer exposed the placeholder used by the test query. Add/Cancel/persistence did not complete; exact actual TextField identity is corrected on the new candidate.",
+    "signedArchiveProduced": false
+  }
+}

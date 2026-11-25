@@ -1,0 +1,11 @@
+{
+  "appId": "6838520892",
+  "buildId": "240ca2cd-4604-4c3c-9c63-87b807adc85d",
+  "createdUTC": "2026-11-25T09:58:25.807262+00:00",
+  "existingTesterId": "73170283-fec7-467a-8a27-77764393ec4a",
+  "groupId": "791ccd13-9b19-46c4-b1c6-380887f27edb",
+  "neverAutomaticallyReplay": true,
+  "owner": "/root/native_reconcile",
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "uploadTerminalSHA256": "9e00c2074c80d300826fae13de10674a1630f152abe4c557dd9e865ded2f674e"
+}

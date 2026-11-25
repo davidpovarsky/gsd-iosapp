@@ -1,0 +1,389 @@
+{
+  "client_source_sha256": "4ba76e32bd8fa4bd6679319b4232954cd142e3054ae5a51ca216683c1ce3816d",
+  "cloud_write_calls": 0,
+  "existing_configuration_changed": false,
+  "existing_configuration_unchanged": true,
+  "finished_at_utc": "2026-11-25T08:38:26.298040+00:00",
+  "installed_package_provenance": [
+    {
+      "download_url": "https://files.pythonhosted.org/packages/89/8d/17d8a87b0ceb9c4701abae3d841cc79721b331b43507d8c6d427594b36eb/oci-2.192.0-py3-none-any.whl",
+      "name": "oci",
+      "sha256": "0a2598eb1dce3ee4cf3474a240cdfe5e061a5e2fbc834cd035f30f2cad65c9ef",
+      "version": "2.192.0"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/bf/8e/2024de34399b2e401a37dcb54b224b56c747b0dc46de4966886827b4d370/crc32c-2.8-cp312-cp312-win_amd64.whl",
+      "name": "crc32c",
+      "sha256": "56b3b7d015247962cf58186e06d18c3d75a1a63d709d3233509e1c50a2d36aa2",
+      "version": "2.8"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/ea/36/e3652bbaa37fde1444ee861e82448d351f89bb8672577394bbe9c8a4cde6/python_pkcs11-0.9.4-cp312-cp312-win_amd64.whl",
+      "name": "python-pkcs11",
+      "sha256": "91fe4e11c7187e548293dc5c020f69665304ebdaa5724b7806251c6473d70004",
+      "version": "0.9.4"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/ae/ce/1f08114679d49655b30a6e0a29858375c94b82c1de1a0bd0a20c2fee8b02/aiohttp-3.14.5-cp312-cp312-win_amd64.whl",
+      "name": "aiohttp",
+      "sha256": "2cc38a4f2b516bef1714e690df87a0e043faf1a7693c82d860091684453d5111",
+      "version": "3.14.5"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/6d/39/5eec3296860b94ac20bb8ed807725b88f6adfab3f343df592afd975f5f86/certifi-2026.11.20-py3-none-any.whl",
+      "name": "certifi",
+      "sha256": "7422df25243767b9877031a2248cb14d09ddac9beee846f4cef3d5c9191d488f",
+      "version": "2026.11.20"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/ae/34/15f08edd4628f65217de1fc3c1a27c82e46fe357d60c217fc9881e12ebcc/circuitbreaker-2.1.3-py3-none-any.whl",
+      "name": "circuitbreaker",
+      "sha256": "87ba6a3ed03fdc7032bc175561c2b04d52ade9d5faf94ca2b035fbdc5e6b1dd1",
+      "version": "2.1.3"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/9a/4f/adfc442765721292fff86d314ce385d3249d22db42295c0dd057727b60f3/cryptography-50.0.2-cp311-abi3-win_amd64.whl",
+      "name": "cryptography",
+      "sha256": "7afa5a6602a9f29af1f3a2965f831bae7c9d5d597b7cbb716d41ab3b7d89879c",
+      "version": "50.0.2"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/50/ca/44de4e75f8aadc457f0634be3b542815078ded46dca30efb960edeecad6e/pyjwt-2.15.1-py3-none-any.whl",
+      "name": "PyJWT",
+      "sha256": "42d59d631f7768a1028a64c7ff581a9bf7519804daf91fc5b6c56e30eec5e193",
+      "version": "2.15.1"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/51/ad/2cf6d3fa2fae5c79e1ed9960c0d42badd0f94d81dd12b50604cdc839e648/pyopenssl-26.4.0-py3-none-any.whl",
+      "name": "pyOpenSSL",
+      "sha256": "f0eb0cb2d581d3ad2b9c489468485e7f2ab6727d08401bcf9d824c3caddf3c1c",
+      "version": "26.4.0"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/ec/57/56b9bcc3c9c6a792fcbaf139543cee77261f3651ca9da0c93f5c1221264b/python_dateutil-2.9.0.post0-py2.py3-none-any.whl",
+      "name": "python-dateutil",
+      "sha256": "a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427",
+      "version": "2.9.0.post0"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/b6/25/564f3fc5b70c1398d706c51f2b1470d0ea0b1b2f96fee67877b6f5bdf3b6/pytz-2026.6-py2.py3-none-any.whl",
+      "name": "pytz",
+      "sha256": "7fed3fee8fd6bd4a2b7b75a8d56021d0624127bf69bd5691f115db929ac570b3",
+      "version": "2026.6"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/92/9d/c4e665119135114480843e7ab388fa94d8480650450e6f8e26b70d323a4c/urllib3-2.8.0-py3-none-any.whl",
+      "name": "urllib3",
+      "sha256": "0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3",
+      "version": "2.8.0"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/71/43/1947f06babed6b3f1d7f38b0c767f52df66bfb2bc10b468c4a7de9eceff2/aiohappyeyeballs-2.7.1-py3-none-any.whl",
+      "name": "aiohappyeyeballs",
+      "sha256": "9243213661e29250eb41368e5daa826fc017156c3b8a11440826b2e3ed376472",
+      "version": "2.7.1"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/fb/76/641ae371508676492379f16e2fa48f4e2c11741bd63c48be4b12a6b09cba/aiosignal-1.4.0-py3-none-any.whl",
+      "name": "aiosignal",
+      "sha256": "053243f8b92b990551949e63930a839ff0cf0b0ebbe0597b0f3fb19e1a0fe82e",
+      "version": "1.4.0"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/c9/7f/09065fd9e27da0eda08b4d6897f1c13535066174cc023af248fc2a8d5e5a/asn1crypto-1.5.1-py2.py3-none-any.whl",
+      "name": "asn1crypto",
+      "sha256": "db4e40728b728508912cbb3d44f19ce188f218e9eba635821bb4b68564f8fd67",
+      "version": "1.5.1"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/64/b4/17d4b0b2a2dc85a6df63d1157e028ed19f90d4cd97c36717afef2bc2f395/attrs-26.1.0-py3-none-any.whl",
+      "name": "attrs",
+      "sha256": "c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309",
+      "version": "26.1.0"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/d9/79/615cc094e2fb508cade7de88d3b4f6c4ec2bab695c97bce9153dc65aadf5/cffi-2.1.1-cp312-cp312-win_amd64.whl",
+      "name": "cffi",
+      "sha256": "f53e442b08449d42821fa4a4fba000095af9f62742a500f978a9f557ec44339a",
+      "version": "2.1.1"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/b8/af/38e51a553dd66eb064cdf193841f16f077585d4d28394c2fa6235cb41765/frozenlist-1.8.0-cp312-cp312-win_amd64.whl",
+      "name": "frozenlist",
+      "sha256": "34187385b08f866104f0c0617404c8eb08165ab1272e884abc89c112e9c00746",
+      "version": "1.8.0"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/68/d5/64108a33c21bde81454b5a400d16baa1378a7d01599de64b131c3e3e3114/multidict-7.2.1-cp312-cp312-win_amd64.whl",
+      "name": "multidict",
+      "sha256": "781ca5dfc2f1d58e47f52216a0c1c7e1ba91ce8aa235459e20de2d402af77fb3",
+      "version": "7.2.1"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/58/7b/6e8ef26f6d510a7916064fec68d55fcbfbdf7eb01e377480d66a122152d8/propcache-0.5.4-cp312-cp312-win_amd64.whl",
+      "name": "propcache",
+      "sha256": "98914de2c4d7f0f9f4a8c6ea4bf05841f4175796941e3ef7d47eb718f22311fb",
+      "version": "0.5.4"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl",
+      "name": "six",
+      "sha256": "4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274",
+      "version": "1.17.0"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/49/d3/b8441a820a491ddfc024b0b0cf0393375b75ea13866d9c66727e54c2fc80/typing_extensions-4.16.0-py3-none-any.whl",
+      "name": "typing_extensions",
+      "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+      "version": "4.16.0"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/bb/cc/51a7b4abf4ac593b8e7eb3794b28e5a35ae26eed8bc04787628d215af82f/yarl-1.25.1-cp312-cp312-win_amd64.whl",
+      "name": "yarl",
+      "sha256": "7d575b54cb3863ef9bc290ea4b009999d55dc237326131e4853cf33e888fee03",
+      "version": "1.25.1"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/58/a2/bb081bab032533a855d44de1d56f8e8426114ff1ba5d1f07a438a0a654f8/idna-3.20-py3-none-any.whl",
+      "name": "idna",
+      "sha256": "ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c",
+      "version": "3.20"
+    },
+    {
+      "download_url": "https://files.pythonhosted.org/packages/b6/ae/315bbeee126a769cbde43cf4908acb4b40408d8bf8bbf334dd7368d8dadf/pycparser-3.12-py3-none-any.whl",
+      "name": "pycparser",
+      "sha256": "a076f3f489b39b43ed13563a1dafe42447445bec2e294154ec5c57fcdda4c85e",
+      "version": "3.12"
+    }
+  ],
+  "operation_directory": "C:\\Users\\DAVID\\AppData\\Local\\Temp\\gsd-oci-capacity-readonly-20261125-7hjhazai",
+  "oracle_install_or_service_changes": false,
+  "owned_sdk_env_removed": true,
+  "parent_readonly_source_sha256": "406e251cf2a20bdc04f0e0967e8b78fb3ec06516abf248eba2c0e348cc25900d",
+  "passed": true,
+  "provider_readback": {
+    "active_compartments_including_root": 1,
+    "assessment_completed": true,
+    "billing_entitlement_exposed_by_selected_apis": false,
+    "binding_sha256": "ec71e521ae5d5b130dbe6f5b825f1977f484c7e7521a45fa48e2c74c4d09dfd1",
+    "calls": [
+      {
+        "operation": "GetTenancy[existing DEFAULT only]",
+        "status": 200
+      },
+      {
+        "operation": "GetBoundVolume[boot]",
+        "status": 200
+      },
+      {
+        "operation": "GetBoundVolume[data]",
+        "status": 200
+      },
+      {
+        "operation": "ListCompartments[root subtree, ANY]",
+        "status": 200
+      },
+      {
+        "compartment_index": 0,
+        "operation": "ListBootVolumes",
+        "status": 200
+      },
+      {
+        "compartment_index": 0,
+        "operation": "ListVolumes",
+        "status": 200
+      },
+      {
+        "operation": "ListLimitValues[total-storage-gb]",
+        "status": 200
+      },
+      {
+        "operation": "GetResourceAvailability[total-storage-gb]",
+        "status": 200
+      }
+    ],
+    "cloud_writes": 0,
+    "combined_provisioned_gb": 200,
+    "compartment_discovery_complete": true,
+    "cost_is_verified_zero": false,
+    "derived_readonly_source_sha256": "406e251cf2a20bdc04f0e0967e8b78fb3ec06516abf248eba2c0e348cc25900d",
+    "documented_always_free_combined_gb": 200,
+    "duplicate_resource_rows": 0,
+    "elapsed_seconds": 18.422,
+    "exact_bound_volumes": [
+      {
+        "autotune_enabled": false,
+        "id_sha256": "16f63e72133ed38ec16e4431d617c0605d1a54ef309adbaf4b706d6b5313b004",
+        "identity_compartment_and_ad_match": true,
+        "matches_last_verified_size": true,
+        "role": "boot",
+        "size_in_gbs": 50,
+        "size_in_mbs": 51200,
+        "state": "AVAILABLE",
+        "vpus_per_gb": 10
+      },
+      {
+        "autotune_enabled": false,
+        "id_sha256": "37610e120e864c0110cd1657aaacc3decd96cbda0341ef209eb57090b8440ba9",
+        "identity_compartment_and_ad_match": true,
+        "matches_last_verified_size": true,
+        "role": "data",
+        "size_in_gbs": 103,
+        "size_in_mbs": 105472,
+        "state": "AVAILABLE",
+        "vpus_per_gb": 10
+      }
+    ],
+    "execution_authorized_by_this_receipt": false,
+    "finished_at_utc": "2026-11-25T08:38:20.497774+00:00",
+    "gaps": [],
+    "home_region_identifier": "il-jerusalem-1",
+    "home_region_key": "MTZ",
+    "home_region_matches_selected_region": true,
+    "limits_are_not_billing_entitlements": true,
+    "limits_complete": true,
+    "no_credential_values_or_other_resource_names_ids": true,
+    "observed_at_utc": "2026-11-25T08:38:02.078610+00:00",
+    "other_resource_identifiers_or_names_emitted": false,
+    "provider_billing_label_verified": false,
+    "quantity_headroom_under_documented_allowance_gb": 0,
+    "read_only": true,
+    "region": "il-jerusalem-1",
+    "regional_volume_lists_unfiltered_by_ad": true,
+    "resource_enumeration_complete": true,
+    "resources": {
+      "boot": {
+        "autotune_enabled_count": 0,
+        "missing_size_count": 0,
+        "nonterminated_count": 2,
+        "performance_counts": {
+          "10": 2
+        },
+        "returned_count": 2,
+        "states": {
+          "AVAILABLE": 2
+        },
+        "total_size_in_gbs": 97,
+        "unknown_performance_count": 0
+      },
+      "data": {
+        "autotune_enabled_count": 0,
+        "missing_size_count": 0,
+        "nonterminated_count": 1,
+        "performance_counts": {
+          "10": 1
+        },
+        "returned_count": 1,
+        "states": {
+          "AVAILABLE": 1
+        },
+        "total_size_in_gbs": 103,
+        "unknown_performance_count": 0
+      }
+    },
+    "scope": "Same existing DEFAULT tenancy and il-jerusalem-1; exact two bound volumes, regional aggregate and matching-AD storage limit only.",
+    "sdk_version": "2.192.0",
+    "selected_endpoint_hosts": [
+      {
+        "hostname": "identity.il-jerusalem-1.oci.oraclecloud.com",
+        "old_raw_template_guard_passed": true,
+        "raw_endpoint_contains_dualstack_option": false,
+        "scheme": "https",
+        "service": "identity"
+      },
+      {
+        "hostname": "iaas.il-jerusalem-1.oraclecloud.com",
+        "old_raw_template_guard_passed": false,
+        "raw_endpoint_contains_dualstack_option": true,
+        "scheme": "https",
+        "service": "blockstorage"
+      },
+      {
+        "hostname": "limits.il-jerusalem-1.oci.oraclecloud.com",
+        "old_raw_template_guard_passed": true,
+        "raw_endpoint_contains_dualstack_option": false,
+        "scheme": "https",
+        "service": "limits"
+      }
+    ],
+    "selected_profile_region_matches_authorized": true,
+    "service_limits": [
+      {
+        "matches_both_target_ad": true,
+        "name": "total-storage-gb",
+        "resource_availability": {
+          "available": 0,
+          "effective_quota_value": null,
+          "fractional_availability": 0.0,
+          "fractional_usage": 200.0,
+          "used": 200
+        },
+        "scope_type": "AD",
+        "value": 200
+      }
+    ],
+    "snapshot_not_atomic": true,
+    "target_ad_matches_both_volumes": true,
+    "target_volumes": [
+      {
+        "autotune_enabled": false,
+        "matches_prior_size": true,
+        "role": "boot",
+        "size_in_gbs": 50,
+        "state": "AVAILABLE",
+        "vpus_per_gb": 10
+      },
+      {
+        "autotune_enabled": false,
+        "matches_prior_size": true,
+        "role": "data",
+        "size_in_gbs": 103,
+        "state": "AVAILABLE",
+        "vpus_per_gb": 10
+      }
+    ],
+    "targets_found_and_unchanged": true,
+    "update_permission_verified": false,
+    "write_backup_resize_or_billing_changes": false
+  },
+  "provider_receipt_sha256": "baf7498471d210672c6cb24f5bd7641ce8d69c81fb20832a0359116343609ae0",
+  "python_version": "3.12.5",
+  "retained_binding_unchanged": true,
+  "retained_readonly_source_unchanged": true,
+  "scope": "Existing DEFAULT OCI identity; read-only same-tenancy same-region volume and capacity metadata. New isolated Windows client only.",
+  "sdk_requirement": "oci==2.192.0",
+  "source_adaptations": [
+    "retain_original_binding_read_only",
+    "compare_completed_expansion_sizes",
+    "scope_and_provenance",
+    "narrow_budgets",
+    "no_backup_inventory",
+    "exact_prior_tenancy_before_api",
+    "exact_two_gets_no_contents",
+    "omit_backup_calls",
+    "state_aggregate_scope",
+    "storage_limit_only",
+    "exact_target_ad_limit",
+    "single_limit_completeness",
+    "remove_stale_resize_proposal_and_keep_billing_limit",
+    "fail_stop_on_provider_service_error",
+    "new_result_only"
+  ],
+  "started_at_utc": "2026-11-25T08:37:06.730832+00:00",
+  "steps": [
+    {
+      "exit_code": 0,
+      "phase": "venv-create"
+    },
+    {
+      "exit_code": 0,
+      "phase": "sdk-install"
+    },
+    {
+      "exit_code": 0,
+      "phase": "provider-readonly"
+    }
+  ],
+  "windows_free_after_bytes": 3133087744,
+  "windows_free_before_bytes": 3149795328
+}

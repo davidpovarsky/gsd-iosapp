@@ -1,0 +1,57 @@
+{
+  "initialTitle" : "GSD-Widget-A-5EE33974",
+  "lastCapture" : "11-widget-gallery-04-gsd-results",
+  "passed" : false,
+  "personalAccountUsed" : false,
+  "productionSourceSHA" : "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "schemaVersion" : 1,
+  "shortcutInvoked" : false,
+  "simulatorID" : "E148B1CE-C570-41F4-8BDD-8DC03F600956",
+  "siriVerified" : false,
+  "taskCardID" : "task-card-SKQQuXv4Lei-",
+  "updatedTitle" : "GSD-Widget-B-5EE33974",
+  "voiceOverSpeechVerified" : false,
+  "watchConnectivityVerified" : false,
+  "widgetGalleryControls" : [
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "com.apple.springboardhome.application-shortcut-item.rearrange-icons",
+      "label" : "עריכת מסך הבית",
+      "selected" : false,
+      "stage" : "11-widget-gallery-00-context-menu",
+      "value" : ""
+    },
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "עריכה",
+      "selected" : false,
+      "stage" : "11-widget-gallery-01-edit-mode",
+      "value" : ""
+    },
+    {
+      "elementType" : 9,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "הוספת וידג׳ט",
+      "selected" : false,
+      "stage" : "11-widget-gallery-02-edit-menu",
+      "value" : ""
+    },
+    {
+      "elementType" : 45,
+      "enabled" : true,
+      "hittable" : true,
+      "identifier" : "",
+      "label" : "חיפוש וידג׳טים",
+      "selected" : false,
+      "stage" : "11-widget-gallery-03-search",
+      "value" : "חיפוש וידג׳טים"
+    }
+  ]
+}

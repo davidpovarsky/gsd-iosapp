@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "sourceSHA": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+  "manifestSHA256": "3660604deb7073b61544ae068d5433346816bc4e433665b97d67b07cdd20435d",
+  "watchRunReceiptSHA256": "4a7051190c9bd417778f88f86e4570f4d610cdfaab5d6767c1f57f988a6599c5",
+  "independentReviewer": "root",
+  "reviewedUTC": "2026-11-24T20:07:17.026064+00:00",
+  "passed": true,
+  "method": "Viewed the exact two original native416x496 PNGs via read_media after complete SHA256 verification",
+  "images": {
+    "watch-en.png": "121a291a5b8955d14e58d73081850059c4d6a3505318d09b950ec41d66d79b59",
+    "watch-he.png": "9e9607b9060117e245ccb019ada751c968c6dc0e3adc6056aef35b5c256ed72c"
+  },
+  "observations": {
+    "en": "Today, complete open-iPhone instruction and Add button are readable; no second blank card.",
+    "he": "Right-aligned Today and empty-task message are readable; second card contains updated-time text and is not blank; Add button visible."
+  },
+  "limits": [
+    "The languages show different snapshot states, not an identical-state language comparison.",
+    "No claim of WatchConnectivity functional transfer, Watch widget timeline or physical VoiceOver."
+  ]
+}

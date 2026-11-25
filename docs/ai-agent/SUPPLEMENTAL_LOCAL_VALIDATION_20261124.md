@@ -1,5 +1,7 @@
 # Supplemental validation of final local products
 
+Historical runner contract and pre-execution checkpoint. The later, separately scoped Watch/preconsent evidence and current Share/release status are recorded in [the current delivery report](GSD_DELIVERY_CURRENT_20261124.md). An accepted component does not make an entire supplemental run, personal consent or inference pass.
+
 ## Authorized scope and acceptance
 
 Use the final successful Mac build-for-testing products without downloading a

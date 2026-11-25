@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "kind": "local-final-build-products",
+  "sourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "repoRoot": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/source",
+  "build": "49",
+  "version": "4.1.0",
+  "buildExitCode": 0,
+  "buildForTestingCompleted": true,
+  "compiler": {
+    "developerDir": "/Users/m1/builds/xcode-27.1.Zoqh5zoP/Xcode.app/Contents/Developer",
+    "version": "Xcode 27.1\nBuild version 27A9275",
+    "resolvedXcodebuild": "/Users/m1/builds/xcode-27.1.Zoqh5zoP/Xcode.app/Contents/Developer/usr/bin/xcodebuild"
+  },
+  "sdkLockSHA256": "547ff0ab3f548296079b4a5ecc0c5fbfdf513d621209197f498b1ae21c200ed9",
+  "projectSHA256": "ad5502cde7ae689dab4f4d730fc9f19bbf7713b8fb5a04f9fa2b8d3656062a82",
+  "buildLog": {
+    "path": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/evidence/build-for-testing.log",
+    "sha256": "28fd7ef2fbe1d20fb5de8567327160a87c8bf4b0bb58421075a102d573b94b6d"
+  },
+  "productsRoot": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/derived-sim/Build/Products",
+  "productsTree": {
+    "sha256": "034d71a7987a2834f61cd4aaa541e00b3c47f9d2aedf84b8dc0b69e09d20a068",
+    "files": 422
+  },
+  "xctestrun": {
+    "relativePath": "GSDScreenshots_iphonesimulator27.1-arm64.xctestrun",
+    "sha256": "8768188bbe98de68228c0fb8e791d5972f53516685069b2be00f0169fc3ffe4c",
+    "targetPaths": {
+      "TestHostPath": "Debug-iphonesimulator/GSDScreenshotTests-Runner.app",
+      "TestBundlePath": "Debug-iphonesimulator/GSDScreenshotTests-Runner.app/PlugIns/GSDScreenshotTests.xctest",
+      "UITargetAppPath": "Debug-iphonesimulator/GSD.app"
+    }
+  },
+  "testSources": {
+    "ScreenshotTests/GSDSystemSurfaceUITests.swift": "19a021f1db9046a9ce8b70cb257a08538dda3aea6d5095a5adc5e0eccdb35a42",
+    "ScreenshotTests/GSDChatGPTPreConsentUITests.swift": "9683e7ba93b99ed1ab1560f8502a0054d103973f8988d0808c9e899beb64ebca"
+  },
+  "audit": {
+    "resources": [
+      {
+        "bundleId": "com.itorah.gsd",
+        "version": "4.1.0",
+        "build": "49",
+        "relativePath": ".",
+        "hebrewStringCount": 992,
+        "localizations": [
+          "en",
+          "he"
+        ],
+        "signatureVerified": false
+      },
+      {
+        "bundleId": "com.itorah.gsd.share",
+        "version": "4.1.0",
+        "build": "49",
+        "relativePath": "PlugIns/GSDShareExtension.appex",
+        "hebrewStringCount": 17,
+        "localizations": [
+          "en",
+          "he"
+        ],
+        "signatureVerified": false
+      },
+      {
+        "bundleId": "com.itorah.gsd.widgets",
+        "version": "4.1.0",
+        "build": "49",
+        "relativePath": "PlugIns/GSDWidgets.appex",
+        "hebrewStringCount": 10,
+        "localizations": [
+          "en",
+          "he"
+        ],
+        "signatureVerified": false
+      },
+      {
+        "bundleId": "com.itorah.gsd.watchkitapp.widgets",
+        "version": "4.1.0",
+        "build": "49",
+        "relativePath": "Watch/GSDWatch.app/PlugIns/GSDWatchWidgets.appex",
+        "hebrewStringCount": 20,
+        "localizations": [
+          "en",
+          "he"
+        ],
+        "signatureVerified": false
+      },
+      {
+        "bundleId": "com.itorah.gsd.watchkitapp",
+        "version": "4.1.0",
+        "build": "49",
+        "relativePath": "Watch/GSDWatch.app",
+        "hebrewStringCount": 44,
+        "localizations": [
+          "en",
+          "he"
+        ],
+        "signatureVerified": false
+      }
+    ],
+    "targets": {
+      "com.itorah.gsd": {
+        "tree": {
+          "sha256": "8e983842bcb28168b1f2d53a18bf4f40786733114d33aca47b8a98a1f00d1a2e",
+          "files": 129
+        },
+        "executableSHA256": "c46a2a36db2179d12f66673cbf40a23d01eb2d872581d0ea6ba5ff55d166318d",
+        "runtimeEntitlements": {
+          "application-identifier": "NA6HPWARQ2.com.itorah.gsd",
+          "com.apple.security.application-groups": [
+            "group.com.itorah.gsd"
+          ]
+        }
+      },
+      "com.itorah.gsd.widgets": {
+        "tree": {
+          "sha256": "04e0a97374bfd9cda181634c1c2152abbfb924483b3e14d7d7acc76391ab749b",
+          "files": 15
+        },
+        "executableSHA256": "9c66a27d69335cee1c6714dc161d9d13842106904939e0d6bb4fa8b6b6f34b66",
+        "runtimeEntitlements": {
+          "application-identifier": "NA6HPWARQ2.com.itorah.gsd.widgets",
+          "com.apple.security.application-groups": [
+            "group.com.itorah.gsd"
+          ]
+        }
+      },
+      "com.itorah.gsd.share": {
+        "tree": {
+          "sha256": "1fc386d47db14399d0c3db3ccec1b5731a5ee204b8a91cd3027efc9ca5ce3e96",
+          "files": 14
+        },
+        "executableSHA256": "4f3ce71744352cff960bbaa9cada0accce7b9b3ecd812ba4e2cec43e66d9a42d",
+        "runtimeEntitlements": {
+          "application-identifier": "NA6HPWARQ2.com.itorah.gsd.share",
+          "com.apple.security.application-groups": [
+            "group.com.itorah.gsd"
+          ]
+        }
+      },
+      "com.itorah.gsd.watchkitapp": {
+        "tree": {
+          "sha256": "2cb22dbb036f7003f29c5fecb8d93b567637d48a21b4afd31c59d23164692d3b",
+          "files": 36
+        },
+        "executableSHA256": "645aae7712a573b13e08d7e9624d5fd79cd563e76147995925e59ea818d635dc",
+        "runtimeEntitlements": {
+          "application-identifier": "NA6HPWARQ2.com.itorah.gsd.watchkitapp",
+          "com.apple.security.application-groups": [
+            "group.com.itorah.gsd"
+          ]
+        }
+      },
+      "com.itorah.gsd.watchkitapp.widgets": {
+        "tree": {
+          "sha256": "89e5cfb37062333baa3e9bcc2715d0d85ea08003199cb0a0c00a504d1ec93a95",
+          "files": 17
+        },
+        "executableSHA256": "1e1c4b8e1b1a35b6519972c700d1901349585bf08b9e18c3c52d4234bdf49289",
+        "runtimeEntitlements": {
+          "application-identifier": "NA6HPWARQ2.com.itorah.gsd.watchkitapp.widgets",
+          "com.apple.security.application-groups": [
+            "group.com.itorah.gsd"
+          ]
+        }
+      }
+    }
+  },
+  "capturedAt": "2026-11-24T21:55:42.566495+00:00"
+}

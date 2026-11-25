@@ -1,0 +1,34 @@
+{
+  "appNotRunningBeforeShortcut" : true,
+  "appStateAfterShortcut" : 2,
+  "createdTaskVisibleAfterInvocation" : true,
+  "expectedTitle" : "GSD-Shortcut-F4B1368C",
+  "lastCapture" : "38-shortcut-task-after-relaunch",
+  "passed" : true,
+  "persistedAfterRelaunch" : true,
+  "personalAccountUsed" : false,
+  "productionSourceSHA" : "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "registeredAppShortcutIdentifier" : "plus.circle",
+  "registeredAppShortcutLabel" : "הוספה",
+  "requiredTaskControl" : {
+    "elementType" : "textField",
+    "identifier" : "",
+    "label" : "",
+    "ownerBundleIdentifier" : "com.apple.springboard"
+  },
+  "requiredTaskSubmitControl" : {
+    "identifier" : "",
+    "label" : "Done",
+    "ownerBundleIdentifier" : "com.apple.springboard"
+  },
+  "requiredTaskSubmittedFromShortcuts" : true,
+  "schemaVersion" : 1,
+  "scope" : "registered_app_shortcut_background_create_and_persistence",
+  "shortcutInvoked" : true,
+  "simulatorID" : "70A7D3AE-DFAA-47D0-ACC1-1E2E0D8B1C50",
+  "siriVerified" : false,
+  "taskCardID" : "task-card-Pw9j-ScjR4J0",
+  "taskParameter" : "GSD-Shortcut-F4B1368C !!",
+  "voiceOverSpeechVerified" : false,
+  "watchConnectivityVerified" : false
+}

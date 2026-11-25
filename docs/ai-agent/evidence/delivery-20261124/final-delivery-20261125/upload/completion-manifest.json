@@ -1,0 +1,103 @@
+{
+  "completedUTC": "2026-11-25T09:56:10.619541+00:00",
+  "provenance": {
+    "startedUTC": "2026-11-25T09:56:09.369774+00:00",
+    "knownUploaderPID": 56551,
+    "readOnly": true,
+    "sourceSHA256": "9615cd6c0157230251e7796d58b67b75d51037b37a80a88637e60376cb76793d",
+    "singleObserver": true
+  },
+  "entries": [
+    {
+      "name": "final-upload-terminal.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-upload-terminal.json",
+      "bytes": 6274,
+      "sha256": "9e00c2074c80d300826fae13de10674a1630f152abe4c557dd9e865ded2f674e",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\final-upload-terminal.json"
+    },
+    {
+      "name": "final-upload-claim.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-upload-claim.json",
+      "bytes": 6274,
+      "sha256": "9e00c2074c80d300826fae13de10674a1630f152abe4c557dd9e865ded2f674e",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\final-upload-claim.json"
+    },
+    {
+      "name": "final-upload-dispatch.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-upload-dispatch.json",
+      "bytes": 1491,
+      "sha256": "7a8ec792068a55236a90e86e42c1691255351fe5ac4fbdcb4276ae9581df8066",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\final-upload-dispatch.json"
+    },
+    {
+      "name": "final-upload-admission.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-upload-admission.json",
+      "bytes": 10247,
+      "sha256": "30de4b76e9d381e014e30eda38788ea7627483e63f21a5d3d017e64999798dc4",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\final-upload-admission.json"
+    },
+    {
+      "name": "preupload-release-status.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/preupload-release-status.json",
+      "bytes": 4306,
+      "sha256": "7087b91a907f9ff12f537c202e4e3e51da300256ed7590f450296ce1137c0f2b",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\preupload-release-status.json"
+    },
+    {
+      "name": "release-status.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/release-status.json",
+      "bytes": 10594,
+      "sha256": "d74815c749b65bd781704b5236aa188630811f3bd5c277d0f6a138569ab6471b",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\release-status.json"
+    },
+    {
+      "name": "apple-preupload-train.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/apple-preupload-train.json",
+      "bytes": 1082,
+      "sha256": "431962aa22afae41b6b50b1f30a537a1c144f19a8ca93d78ed56d1d8aeae9ff5",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\apple-preupload-train.json"
+    },
+    {
+      "name": "apple-preupload-preflight.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/apple-preupload-preflight.json",
+      "bytes": 152,
+      "sha256": "d6f5ef10987f50379289e974a7639712671a528f75f71cdcd32b28baf333e339",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\apple-preupload-preflight.json"
+    },
+    {
+      "name": "testflight-processing.json",
+      "sourcePath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/testflight-processing.json",
+      "bytes": 353,
+      "sha256": "a9e6f50b1850dc36a007729238cf3ffb2964e7a84ac8809140ddeeb3582c9d91",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\testflight-processing.json"
+    },
+    {
+      "name": "capacity-observations.json",
+      "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\capacity-observations.json",
+      "bytes": 933,
+      "sha256": "be2f2361c41527f5e37b2e512f7767f16e8ff10925ede8379c9cad8bdeb0d3b2",
+      "source": "read-only observed upload phase measurements"
+    }
+  ],
+  "absent": [],
+  "allDestinationHashesVerified": true,
+  "noUploadReplay": true,
+  "terminalSummary": {
+    "phase": "complete",
+    "passed": true,
+    "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "version": "4.1.0",
+    "build": "49",
+    "controllerPID": 56551,
+    "uploadSubmitted": true,
+    "appleProcessingPassed": true,
+    "cleanupUncertain": false,
+    "ownedProcessGroupTerminal": true,
+    "forcedOwnedGroupTermination": false,
+    "ownedSourceClaimReleased": true,
+    "sourceAndAcceptedWidgetInputsUnchanged": true,
+    "signedIPAUnchanged": true,
+    "startedUTC": "2026-11-25T09:51:09.008440+00:00",
+    "finishedUTC": "2026-11-25T09:55:02.562557+00:00"
+  }
+}

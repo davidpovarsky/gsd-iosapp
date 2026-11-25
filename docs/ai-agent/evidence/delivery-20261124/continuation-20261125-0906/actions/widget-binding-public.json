@@ -1,0 +1,31 @@
+{
+  "phase": "complete",
+  "passed": true,
+  "actionsContext": {
+    "runID": "45575270618",
+    "runAttempt": "1",
+    "workflowSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "planSHA256": "536d13fc5f390d4216ee26c565ec52fa2562a3667187ea9e8427cf16b17ff621",
+    "invocationID": "cef7368a861d4cfcaec3f5f0812b41a8",
+    "startedUTC": "2026-11-25T08:19:40.136864+00:00"
+  },
+  "testSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "productionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "systemTestSHA256": "2443a031bee63c546062de0f90192e793ac07f09bf84c46dddc2d9e0252efeba",
+  "compositionReceiptSHA256": "45206c3820c269f657efcd743ac7adf8a1ea278cd307d7d910dc3003cf5624e8",
+  "composedManifestSHA256": "7588422c377bdc70c2b564c4c4acd2b11f0353c4ec1d54b7dbb58f63dba22815",
+  "sourceAndProductsUnchanged": true,
+  "ownedSimulatorsRemoved": true,
+  "startedUTC": "2026-11-25T08:19:41.054121+00:00",
+  "finishedUTC": "2026-11-25T08:51:28.762426+00:00",
+  "selectedTests": [
+    "GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap"
+  ],
+  "counts": {
+    "totalTestCount": 1,
+    "passedTests": 1,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "expectedFailures": 0
+  }
+}

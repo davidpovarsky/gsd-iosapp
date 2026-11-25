@@ -1,0 +1,124 @@
+{
+  "createdAtUTC": "2026-11-25T01:07:54.359918+00:00",
+  "files": [
+    {
+      "bytes": 952,
+      "name": "share-9190-terminal.json",
+      "sha256": "5172cdbe76b5222da5fb1fc400c2ddb1bf33b72fd5249e7a5ef2003ed0e6d61a",
+      "source": "/Users/m1/builds/gsd-share-cancel-9190c725-20261125/evidence/terminal-receipt.json"
+    },
+    {
+      "bytes": 1378,
+      "name": "share-9190-runtime-binding.json",
+      "sha256": "8b2bdcca74a4f7a72c0782c2a68ddd3047e246ff5c54b391632b48ff223f91b8",
+      "source": "/Users/m1/builds/gsd-share-cancel-9190c725-20261125/evidence/share-runtime-binding.json"
+    },
+    {
+      "bytes": 636,
+      "name": "share-9190-summary.json",
+      "sha256": "35e06231112c234f106f2e907e6a4971c2d568dcb05f7e2e3842b47cf8d3bfe1",
+      "source": "/Users/m1/builds/gsd-share-cancel-9190c725-20261125/evidence/share-supplemental/public/supplemental-summary.json"
+    },
+    {
+      "bytes": 561,
+      "name": "share-9190-observation-summary.json",
+      "sha256": "ccd48de8ea369afa85fe3d566f91116060ba9e5a2ecebd4a49e96dcc0d644e47",
+      "source": "/Users/m1/builds/gsd-share-cancel-9190c725-20261125/evidence/share-observation-summary.json"
+    },
+    {
+      "bytes": 951,
+      "name": "share-b558-terminal.json",
+      "sha256": "fdc1e006008e587b399a7c71b1d4316245848763999d68484ce9ffd24f3ee809",
+      "source": "/Users/m1/builds/gsd-share-popover-b5588f3f-20261125/evidence/terminal-receipt.json"
+    },
+    {
+      "bytes": 1997,
+      "name": "share-b558-runtime-binding.json",
+      "sha256": "acb4730ad1c9bbc6dbacbf69cecc5ec3129757045bdf31e6c5b0fac7ffc0f554",
+      "source": "/Users/m1/builds/gsd-share-popover-b5588f3f-20261125/evidence/share-runtime-binding.json"
+    },
+    {
+      "bytes": 1245,
+      "name": "share-b558-summary.json",
+      "sha256": "1893f1872cafce31ec6d3150df9b9e0fb6a4871c1c8a891d71e2a54b2c210df9",
+      "source": "/Users/m1/builds/gsd-share-popover-b5588f3f-20261125/evidence/share-supplemental/public/supplemental-summary.json"
+    },
+    {
+      "bytes": 555,
+      "name": "share-b558-observation-summary.json",
+      "sha256": "e535b5ecd2bbd0b158c8f6c24843241038e2f996965171343aa745f5b46f83a1",
+      "source": "/Users/m1/builds/gsd-share-popover-b5588f3f-20261125/evidence/share-observation-summary.json"
+    },
+    {
+      "bytes": 112,
+      "name": "share-b558-test-counts.json",
+      "sha256": "ac847d3170faf7f3d6f108a0a7b7698842420f6cf4387276556fd7aefd1289bd",
+      "source": "/Users/m1/builds/gsd-share-popover-b5588f3f-20261125/evidence/share-xctest-counts.json"
+    },
+    {
+      "bytes": 5264,
+      "name": "systems-9190-widget-binding.json",
+      "sha256": "fea71fbb021d15579a244041788a0d4cb9495361c67e8950abae953d447e64d3",
+      "source": "/Users/m1/builds/gsd-systems-9190c725-20261125/runs/ui9190-widget-9ovwkxc3/binding.json"
+    },
+    {
+      "bytes": 511,
+      "name": "systems-9190-widget-observation.json",
+      "sha256": "036f75ed9f5bae4ee58a9f53163cc88836940249ea2298fe3d6d03bd4a2dc047",
+      "source": "/Users/m1/builds/gsd-systems-9190c725-20261125/runs/ui9190-widget-9ovwkxc3/private/widget-ui/widget/observation.json"
+    },
+    {
+      "bytes": 5631,
+      "name": "systems-9190-shortcut-binding.json",
+      "sha256": "78a5c79108ae2220892490046abf458cf4c220262918a85512038e714b17296f",
+      "source": "/Users/m1/builds/gsd-systems-9190c725-20261125/runs/ui9190-shortcut-vo5axhkp/binding.json"
+    },
+    {
+      "bytes": 767,
+      "name": "systems-9190-shortcut-observation.json",
+      "sha256": "2b90fa65fce30d56a3ceb63e256c7ed66a71de7ca1e14b4b0fe1ab277627eda5",
+      "source": "/Users/m1/builds/gsd-systems-9190c725-20261125/runs/ui9190-shortcut-vo5axhkp/private/shortcut-ui/shortcut-invocation/observation.json"
+    },
+    {
+      "bytes": 1735,
+      "name": "share-b558-root-review.json",
+      "sha256": "e2facc2bfef8e1e0d1ba0ddf1da607fb88db76df25b3a402c7033dbd362957fe",
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\root-share-b558-review-20261125.json"
+    },
+    {
+      "bytes": 1952,
+      "name": "oracle-release-readiness-20261124T235834Z.json",
+      "sha256": "59153ece72ada26435802a689f1c2dc55d691b9b9234cc0cb0243873545b91ed",
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\oracle-release-readiness-20261124T235834Z.json"
+    },
+    {
+      "bytes": 844466,
+      "name": "share-9190-returned-activity-sheet.png",
+      "sha256": "191c93ff74ffc5bd10bc89e747c8ff9968b7ca6d4b856aee8985870c6fb33620",
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\share-9190-returned-activity-sheet.png"
+    },
+    {
+      "bytes": 395765,
+      "name": "share-b558-after-dismissal.png",
+      "sha256": "85afd910ad09ef4126a00db8975a58f5738df4611c0dd5ce6d21e76aa9d5085a",
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\share-b558-after-dismissal.png"
+    },
+    {
+      "bytes": 147401,
+      "name": "shortcuts-9190-registered-gsd.png",
+      "sha256": "141e6ff5533cb5701c81e19dce82f5d694089b9b1dd6a30e246fb52bfd32a667",
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\shortcuts-9190-registered-gsd.png"
+    },
+    {
+      "bytes": 1534329,
+      "name": "widget-9190-menu-and-keyboard-introduction.png",
+      "sha256": "7515676ab78a3f4baed16d16d75c83c6ce3c438afa605d7da6bee54eaa0ded3d",
+      "source": "C:\\ProgramData\\SentinelX\\uploads\\gsd-widget-retained-w97dt6k9\\widget-menu-final-sample.png"
+    }
+  ],
+  "kind": "GSD delivery continuation evidence, exact-byte copies",
+  "original19FileManifestUnchanged": true,
+  "personalAuthContentIncluded": false,
+  "schemaVersion": 1,
+  "sourceFixCommit": "870cf76ff383b7b90368e952796f7c250d10e1d6"
+}

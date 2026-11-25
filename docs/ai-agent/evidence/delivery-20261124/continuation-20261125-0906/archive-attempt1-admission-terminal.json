@@ -1,0 +1,259 @@
+{
+  "owner": "/root/native_reconcile",
+  "phase": "stopped",
+  "passed": false,
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "version": "4.1.0",
+  "build": "49",
+  "preparedUTC": "2026-11-25T09:01:54.205292+00:00",
+  "packageManifestSHA256": "e98263e2b492cccf9855103cf4473bf58058be53403989668130370fd852817d",
+  "releaseHandoffSHA256": "087cc7b9a7d23f734b0b651f16badcad3572ec981172d6c191b7ba9c1b0634ae",
+  "controllerSHA256": "8e9aaa01beae14c62f8696dca444cd04a8dc1e18c41d41844edc0d861b6db0d0",
+  "stagingSHA256": "0e941a3a38cf0931231efa6d09cfbf750211c336cdfdefd1c36dd98054f97b41",
+  "uploadExecuted": false,
+  "controllerPID": 33642,
+  "startedUTC": "2026-11-25T09:01:54.685459+00:00",
+  "acceptanceScope": {
+    "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "version": "4.1.0",
+    "build": "49",
+    "releaseHandoffSHA256": "087cc7b9a7d23f734b0b651f16badcad3572ec981172d6c191b7ba9c1b0634ae",
+    "planSHA256": "536d13fc5f390d4216ee26c565ec52fa2562a3667187ea9e8427cf16b17ff621",
+    "sourceClosureSHA256": "b660995515a5b539536fd7c3bdb4f65177aef82afc13af9a69c788e49cfbdadd",
+    "finalSimulatorManifestSHA256": "7588422c377bdc70c2b564c4c4acd2b11f0353c4ec1d54b7dbb58f63dba22815",
+    "finalSimulatorProductsTree": {
+      "sha256": "b0b6c65c2f9a820cff3d18562361639981931644388d5310ee870d1bde188716",
+      "files": 421
+    },
+    "widgetActionsRunID": 45575270618,
+    "widgetActionsURL": "https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45575270618",
+    "githubArtifactID": 15006680376,
+    "githubArtifactZipSHA256": "b300d6388a6b4456dc49e2e30bf9c391f110b44086d004615d768fca598e4a7d",
+    "artifactTransferManifestSHA256": "ea828dc7505c71cac2f929b0650eabca2a4722a279a6189d2d839b091df48f82",
+    "widgetExecutionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "originalWidgetTest": "GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap",
+    "originalEvidenceSHA256": {
+      "terminal": "2eb0ffba18d78afdf72237dc5a135e98982beb128cabdc0440dbdd0ebfec7952",
+      "binding": "2bdb6bfac2c6e615e901a3868577669c74258a0f6010ed572ac01582a39dd9d0",
+      "observation": "c5cafe4079e2666f005624c108149ce6734ca61734f000438799a6e5797a7dd9"
+    },
+    "actualWidgetAcceptanceVerified": true,
+    "newXCTestExecutedByVerifier": false,
+    "signingOrUploadExecutedByVerifier": false,
+    "historicalAcceptanceIsSeparateEvidence": true
+  },
+  "preservedPreviousReleaseTree": {
+    "sha256": "237d6565960a691dae3de2c96ea0fccd305b35ac641b9cd95b14f557833061d1",
+    "files": 151
+  },
+  "preserved9fReleaseTree": {
+    "sha256": "a9ba4ac519b8651737e8b3486258789837b678a4d1d24b607694e31b239afb56",
+    "files": 151
+  },
+  "preserved9fIPASHA256": "1a5f770ca236fe43d0091fe0d649f9a266a78dfb6106f8a3545a2cd99db93c69",
+  "preservedPreviousIPASHA256": "121e0e2c2d65d2b774c5897e9acd3071704ed55c7c117e246faae756ba6bd483",
+  "ownershipInventories": [
+    {
+      "observedUTC": "2026-11-25T09:01:55.600216+00:00",
+      "method": "names_then_scoped_writer_argv_cwd",
+      "globalArgumentsRead": false,
+      "budgetSeconds": 15,
+      "complete": true,
+      "processCount": 967,
+      "candidates": [
+        {
+          "pid": 416,
+          "parentPID": 1,
+          "executable": "Python",
+          "complete": true,
+          "scopedNoninteractiveCwdRead": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 19825,
+          "parentPID": 19824,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25383,
+          "parentPID": 1,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25388,
+          "parentPID": 25383,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25393,
+          "parentPID": 25388,
+          "executable": "Runner.Listener",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 26348,
+          "parentPID": 26347,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 26498,
+          "parentPID": 26348,
+          "executable": "xcodebuild",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 26661,
+          "parentPID": 26498,
+          "executable": "DTServiceHub",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 28458,
+          "parentPID": 26498,
+          "executable": "simctl",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 32961,
+          "parentPID": 1,
+          "executable": "DTServiceHub",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 33090,
+          "parentPID": 1,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 33588,
+          "parentPID": 33090,
+          "executable": "xcodebuild",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 33608,
+          "parentPID": 33149,
+          "executable": "PinkhaAnyNativeUITests-Runner",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 33613,
+          "parentPID": 33588,
+          "executable": "DTServiceHub",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 65368,
+          "parentPID": 1,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        }
+      ],
+      "elapsedSeconds": 0.586
+    }
+  ],
+  "cacheWriters": [],
+  "cacheOpenFileProbe": {
+    "returncode": 1,
+    "stdoutBytes": 0,
+    "stderrBytes": 0
+  },
+  "capacityAdmission": {
+    "at": "2026-11-25T09:02:10.152174+00:00",
+    "stage": "archive_admission",
+    "fits": false,
+    "riskReasons": [
+      "estimated_incremental_storage_does_not_fit",
+      "fresh_concurrent_storage_growth_does_not_fit"
+    ],
+    "kernelMemoryPressureLevel": 1,
+    "reclaimableMemoryBytes": 5474910208,
+    "memoryBudgetBytes": 5368709120,
+    "additionalMemoryGiB": 4,
+    "memoryTransientMarginGiB": 1,
+    "swapUsedBytes": 243468861,
+    "swapChangeFromObservedBaselineBytes": 20772290,
+    "diskAvailableBytes": 6917701632,
+    "diskBudgetBytes": 13839392837,
+    "additionalDiskGiB": 3,
+    "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+    "growthHorizonSeconds": 720,
+    "osDiskMarginGiB": 2,
+    "pages": {
+      "Pages free": 9363,
+      "Pages inactive": 323169,
+      "Pages speculative": 1630
+    },
+    "pageSize": 16384,
+    "cpuOrJobCountGate": false,
+    "freshIntervalGrowthBytesPerSecond": 11764838.497580629
+  },
+  "failure": "archive_measured_capacity_risk",
+  "ownedProcessGroupTerminal": true,
+  "cleanupUncertain": false,
+  "finishedUTC": "2026-11-25T09:02:10.159118+00:00",
+  "productionSourceUnchanged": true,
+  "previousReleaseArtifactsUnchanged": true,
+  "finalSimulatorInputsAndActualActionsEvidenceUnchanged": true,
+  "prior9fReleaseArtifactsUnchanged": true,
+  "capacityCompletion": {
+    "at": "2026-11-25T09:02:11.190932+00:00",
+    "stage": "archive_completion",
+    "fits": true,
+    "riskReasons": [],
+    "kernelMemoryPressureLevel": 1,
+    "reclaimableMemoryBytes": 5580587008,
+    "memoryBudgetBytes": 1073741824,
+    "additionalMemoryGiB": 0,
+    "memoryTransientMarginGiB": 1,
+    "swapUsedBytes": 243468861,
+    "swapChangeFromObservedBaselineBytes": 20772290,
+    "diskAvailableBytes": 6900813824,
+    "diskBudgetBytes": 4843597595,
+    "additionalDiskGiB": 0,
+    "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+    "growthHorizonSeconds": 720,
+    "osDiskMarginGiB": 2,
+    "pages": {
+      "Pages free": 4248,
+      "Pages inactive": 335630,
+      "Pages speculative": 734
+    },
+    "pageSize": 16384,
+    "cpuOrJobCountGate": false
+  }
+}

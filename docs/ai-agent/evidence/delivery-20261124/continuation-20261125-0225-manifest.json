@@ -1,0 +1,149 @@
+{
+  "createdAtUTC": "2026-11-25T02:33:05.862536+00:00",
+  "earlierManifestsUnchanged": {
+    "completion-manifest.json": "962447560b2f51792430534676befb608527c09677c3b2feee2b2f7b56365060",
+    "continuation-20261125-0106-manifest.json": "d0f85c760aeac9b31c46b0e2d3a938c4a6198e98cd0bcb8e4a5094ed5108e76c"
+  },
+  "encodingReconciledFromManifestSHA256": "d1c5cb8dd5e8eb22c2d5a180700dca1ca863318583ce31b55233a3b7057e419b",
+  "files": [
+    {
+      "bytes": 7873,
+      "name": "systems-870-widget-binding.json",
+      "sha256": "31c71c4da2df9ca0b860b86001c0c8f46656ee91e31b5da09a0b7de618475aa6",
+      "source": "/Users/m1/builds/gsd-systems-870cf76f-20261125/runs/ui870cf76f-widget-zz4vkacg/binding.json"
+    },
+    {
+      "bytes": 524,
+      "name": "systems-870-widget-observation.json",
+      "sha256": "1bc7627b45efef350cc316f8b98aa284e5bbc76eee6912da4b7a5a5488796b8d",
+      "source": "/Users/m1/builds/gsd-systems-870cf76f-20261125/runs/ui870cf76f-widget-zz4vkacg/private/widget-ui/widget/observation.json"
+    },
+    {
+      "bytes": 8294,
+      "name": "systems-870-shortcut-binding.json",
+      "sha256": "f319211bd0565a1a7636320a1edc69a7cf0f0b40805e9e6f6776bed0311aa108",
+      "source": "/Users/m1/builds/gsd-systems-870cf76f-20261125/runs/ui870cf76f-shortcut-u0htw4lb/binding.json"
+    },
+    {
+      "bytes": 883,
+      "name": "systems-870-shortcut-observation.json",
+      "sha256": "9f3ed1132d8633796b1a500e646f2969618e303aa2fd8cdce2fb52aa82e19005",
+      "source": "/Users/m1/builds/gsd-systems-870cf76f-20261125/runs/ui870cf76f-shortcut-u0htw4lb/private/shortcut-ui/shortcut-invocation/observation.json"
+    },
+    {
+      "bytes": 2151,
+      "name": "systems-870-capacity-transition.json",
+      "sha256": "194c19c22c224f5da7ec4c7cacf1ee19756821ec04f009adc6f337534a55945d",
+      "source": "/Users/m1/builds/gsd-systems-870cf76f-20261125/capacity-transition-20261125T013925861512Z/transition-receipt.json"
+    },
+    {
+      "bytes": 1283,
+      "name": "systems-870-build-binding.json",
+      "sha256": "ff6f2b39e2bde092a26f7d8bb49d3ebe9a71ef3a6d107168a04b175aa5179a9b",
+      "source": "/Users/m1/builds/gsd-systems-870cf76f-20261125/evidence/build-binding.json"
+    },
+    {
+      "bytes": 900,
+      "name": "systems-870-build-terminal.json",
+      "sha256": "b1787d0559def49acaf5ad8a5ebfb9d599dbfd6fa76e784dc3494c3b36fa7040",
+      "source": "/Users/m1/builds/gsd-systems-870cf76f-20261125/evidence/terminal-receipt.json"
+    },
+    {
+      "bytes": 1401,
+      "name": "asc49-train-readonly-20261125T021447Z.json",
+      "sha256": "02e19139ef24eba1c77dd8e7c367e85371e19ad47344d31e65b0578e37f76e33",
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\asc49-train-readonly-20261125T021447Z.json"
+    },
+    {
+      "bytes": 7415,
+      "name": "release49-9f-status.json",
+      "sha256": "e7f482c479881610515ec18c10bb13b8f63ad39603b7f3d61137cf0cb8a9b7ec",
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\archive-9f-validated-20261125\\release-status.json"
+    },
+    {
+      "bytes": 7214,
+      "name": "release49-9f-archive-terminal.json",
+      "sha256": "14add2ebd2dff4e6ee4a6762adad97fb0af30a1290b38aeb963aa3e604d9300f",
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\archive-9f-validated-20261125\\archive-terminal.json"
+    },
+    {
+      "bytes": 1912,
+      "name": "release49-9f-archive-signatures.json",
+      "sha256": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80",
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\archive-9f-validated-20261125\\archive-signatures.json"
+    },
+    {
+      "bytes": 1912,
+      "name": "release49-9f-ipa-signatures.json",
+      "sha256": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80",
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\archive-9f-validated-20261125\\ipa-signatures.json"
+    },
+    {
+      "bytes": 1192,
+      "name": "release49-9f-transfer-manifest.json",
+      "sha256": "cb0bef7603938391dc5599acea3a3eefd496a99197b689bf06d2c48c6373bc67",
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\archive-9f-validated-20261125\\completion-manifest.json"
+    },
+    {
+      "bytes": 984,
+      "name": "systems-7098-build-terminal.json",
+      "sha256": "0a3b2ab3138c2943af97ba6164fdace2acece3c92dca4ae42e25581d19c14463",
+      "source": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/evidence/terminal-receipt.json"
+    },
+    {
+      "bytes": 1284,
+      "name": "systems-7098-build-binding.json",
+      "sha256": "ee84a7f469ab462384632fd9fe3a15274bf912456f011fdbe738557b41898d58",
+      "source": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/evidence/build-binding.json"
+    },
+    {
+      "bytes": 1223,
+      "name": "systems-7098-source-closure.json",
+      "sha256": "ea332c93ba9206f4649664c6aff6c89008d0687920ec4ae9c4e03580759c2176",
+      "source": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/evidence/source-closure.json"
+    },
+    {
+      "bytes": 1157,
+      "name": "systems-7098-composition.json",
+      "sha256": "17dce463e873e9511733fc6ae3fc7e95cc73ad04d0bd30aaf43e555d606ca466",
+      "source": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/evidence/composition-receipt.json"
+    },
+    {
+      "bytes": 6006,
+      "name": "systems-7098-composed-products.json",
+      "sha256": "e6097dd7767e578561a81f2dab64d793c663014916c0a3213a3915c20dd59e15",
+      "source": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/evidence/composed-products.json"
+    },
+    {
+      "bytes": 481,
+      "name": "systems-7098-cache-terminal.json",
+      "sha256": "68c039421758444b6274f77285b3bf9af7116d1670cbc4301cdc5dd987a40d1a",
+      "source": "/Users/m1/builds/gsd-systems-7098dcb9-20261125/evidence/cache-owner-terminal.json"
+    },
+    {
+      "bytes": 2485,
+      "name": "systems-7098-transfer-manifest.json",
+      "normalization": "CRLF to LF only; parsed JSON unchanged",
+      "originalBytes": 2534,
+      "originalSHA256": "e24b8848c7f0a1b5ca17145594d3c8b79044883a5128897fb0febfb8da3441c5",
+      "sha256": "96a8bf18f15b2f289aabb3f54cfbb61a5f6476752498bbf6490abb4c42c80ddc",
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\system7098-build-20261125\\completion-manifest.json"
+    }
+  ],
+  "kind": "GSD actual 870 failures, published test fixes, and signed production 9f evidence",
+  "latestBuildTerminalSHA256": "0a3b2ab3138c2943af97ba6164fdace2acece3c92dca4ae42e25581d19c14463",
+  "latestBuildTestSourceSHA": "7098dcb9abdc2d7e8e20afa8d9ec95d7e69c34ef",
+  "newSourceBuildAccepted": true,
+  "newSourceRuntimeAccepted": false,
+  "personalAuthContentIncluded": false,
+  "previousReviewedManifestSHA256": "29a362535609d02a13eb27ae49580b08ea3d0c7a64b3d72adee048dd96af422a",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "reviewedReportBaseSHA256": "a73e308f5b9ebe834c14a951b6f8ef4fb78cc495b645f2431b9c3c0e98891fdc",
+  "schemaVersion": 1,
+  "sourceFixCommits": [
+    "41d2b422dd259cd4b04abef8911449c74a89c9e4",
+    "7098dcb9abdc2d7e8e20afa8d9ec95d7e69c34ef"
+  ],
+  "updatedAtUTC": "2026-11-25T02:51:57.592539+00:00",
+  "uploadExecuted": false
+}

@@ -1,0 +1,42 @@
+{
+  "source": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+  "startedUTC": "2026-11-24T18:05:47Z",
+  "steps": [
+    {
+      "name": "build-for-testing",
+      "startedUTC": "2026-11-24T18:05:47Z",
+      "log": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/logs/build-for-testing.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-24T18:05:57Z"
+    },
+    {
+      "name": "compiled-bundles",
+      "startedUTC": "2026-11-24T18:05:57Z",
+      "log": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/logs/compiled-bundles.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-24T18:05:57Z"
+    },
+    {
+      "name": "capture-products",
+      "startedUTC": "2026-11-24T18:05:57Z",
+      "log": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/logs/capture-products.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-24T18:05:58Z"
+    }
+  ],
+  "pid": 57864,
+  "reusedEvidence": {
+    "GSDKit": {
+      "source": "9d0faa061b0b41f7127fa40c265fef3e3fc3dd88",
+      "passedTests": 160,
+      "priorStatus": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/native-build-status-9d0faa06-packages-pass.json"
+    },
+    "Hanlin": {
+      "source": "77c0455823cad90168106f2196d6e94d1ce03598",
+      "passedTests": 23
+    },
+    "reason": "Only supplemental UI test actor isolation changed; all package and production source inputs unchanged"
+  },
+  "passed": true,
+  "finishedUTC": "2026-11-24T18:05:58Z"
+}

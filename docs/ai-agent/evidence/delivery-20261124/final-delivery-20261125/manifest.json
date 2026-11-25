@@ -1,0 +1,332 @@
+{
+  "schemaVersion": 1,
+  "kind": "held-final-delivery-evidence-copy-manifest",
+  "recordedUTC": "2026-11-25T10:05:07.538813+00:00",
+  "observationCutoffUTC": "2026-11-25T10:00:10.659Z",
+  "baselineDocumentationCommit": "f46401ccf63d6ebf12f043007156a02b09d5604b",
+  "productionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "copies": [
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\validated-release\\archive-signatures.json",
+      "destination": "archive/archive-signatures.json",
+      "bytes": 1912,
+      "sha256": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80",
+      "sourceNature": "original native signed archive audit or GET-only build-train receipt",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/archive/archive-signatures.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\validated-release\\archive-terminal.json",
+      "destination": "archive/archive-terminal.json",
+      "bytes": 40269,
+      "sha256": "02937196a4e3fbe56cc64e05e1f3470289edb9d55dcaf144a4c3ccb532033583",
+      "sourceNature": "original native attempt2 controller terminal; passed=false/stopped due to cleanup inventory timeout; copied unchanged",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/archive/archive-terminal.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\validated-release\\cache-owner-terminal.json",
+      "destination": "archive/cache-owner-terminal.json",
+      "bytes": 410,
+      "sha256": "2d576773f35509fc3a5e3f578c1f80f133fdf41464f02f818d0b9b67b6f31cd3",
+      "sourceNature": "original native cache-owner terminal with cleanup uncertainty; copied unchanged",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/archive/cache-owner-terminal.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\validated-release\\completion-manifest.json",
+      "destination": "archive/completion-manifest.json",
+      "bytes": 3623,
+      "sha256": "e2f918cfdd45f6655ce285baf348ae5f95389a5e2ad448b66cb43fe6d321f0a0",
+      "sourceNature": "existing transfer manifest for six original archive receipts, preserving the stopped controller state",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/archive/completion-manifest.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\validated-release\\ipa-signatures.json",
+      "destination": "archive/ipa-signatures.json",
+      "bytes": 1912,
+      "sha256": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80",
+      "sourceNature": "original native signed archive audit or GET-only build-train receipt",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/archive/ipa-signatures.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\validated-release\\prearchive-build-train.json",
+      "destination": "archive/prearchive-build-train.json",
+      "bytes": 1082,
+      "sha256": "f052eb84a6968ca91603927b79469cdafa26a4c7a4a4d3384ddf9ec9fd434f4b",
+      "sourceNature": "original native signed archive audit or GET-only build-train receipt",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/archive/prearchive-build-train.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\validated-release\\release-status.json",
+      "destination": "archive/release-status.json",
+      "bytes": 4306,
+      "sha256": "7087b91a907f9ff12f537c202e4e3e51da300256ed7590f450296ce1137c0f2b",
+      "sourceNature": "original signed preupload release-status receipt; all eight operations passed, no upload; retained snapshot copied unchanged",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/archive/release-status.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-execution-attempt2-20261125\\ownership-reconciliation.json",
+      "destination": "archive/ownership-reconciliation.json",
+      "bytes": 5231,
+      "sha256": "7762bb1bf773ef747510e6be83bd6bfaa74563869d5e81d6ac7f1b3d9448f860",
+      "sourceNature": "original separate native ownership reconciliation receipt; exact original stopped terminal remains immutable",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/archive/ownership-reconciliation.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\oracle-cloud-final-operations-20261125T093515Z.json",
+      "destination": "cloud/final-operations.json",
+      "bytes": 7140,
+      "sha256": "39e11c4162ed9f550a60ab4e8e9df62142a9f0e898e675471c95ae726c5ef810",
+      "sourceNature": "existing combined read-only operational receipt from retained Oracle and Windows SentinelX job observations; no new functional, backup, restore or decryption test",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/cloud/final-operations.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\final-native-input-reuse-9f-to-fd6-20261125\\native-input-delta.diff",
+      "destination": "native-reuse/native-input-delta.diff",
+      "bytes": 6978,
+      "sha256": "d1ac8ccc24fdc0e2d3a065ccb6cc8fe201656a19dd140d4e4881d70f80f854f8",
+      "sourceNature": "existing exact Git native-input delta; no test execution",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/native-reuse/native-input-delta.diff",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\final-native-input-reuse-9f-to-fd6-20261125\\native-input-reuse.json",
+      "destination": "native-reuse/native-input-reuse.json",
+      "bytes": 3075,
+      "sha256": "f2474972b394143ee5e693bf70f6f7fd612d63f34def87c66c21d3fddc24d04b",
+      "sourceNature": "existing Windows native-input comparison receipt, semantically accepted by Root; historical tests retain actual execution sources",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/native-reuse/native-input-reuse.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\root-merge-preparation-20261125T093229Z\\merge-tree-receipt.json",
+      "destination": "integration/merge-tree-preparation-f464.json",
+      "bytes": 26007,
+      "sha256": "9ea5bb5e49d4944a32cf3ae871705542a5a08d3e0a3364308b271298e356783e",
+      "sourceNature": "original Root Windows normal merge-tree preparation receipt for fd6 plus f464; no commit, branch update or push; dated preparation only",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/integration/merge-tree-preparation-f464.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-execution-20261125\\upload-dispatch.json",
+      "destination": "upload/initial-admission-stopped-envelope.json",
+      "bytes": 3115,
+      "sha256": "61c9737299b29af3654e9958a6f89a90902a421a857e436103e26b8bad4778ec",
+      "sourceNature": "existing Windows capture envelope of the original native stopped-before-staging upload admission; no staging, credentials or uploader action occurred",
+      "embeddedNativeIdentity": {
+        "bytes": 2655,
+        "sha256": "438bfc0db9a0e9cf3788738cb2aff2be8db944474c7df69e145f9856b3bd26ec"
+      },
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/upload/initial-admission-stopped-envelope.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\apple-preupload-preflight.json",
+      "destination": "upload/apple-preupload-preflight.json",
+      "bytes": 152,
+      "sha256": "d6f5ef10987f50379289e974a7639712671a528f75f71cdcd32b28baf333e339",
+      "sourceNature": "original GET-only preupload ASC build-train or collision check receipt",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/upload/apple-preupload-preflight.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\apple-preupload-train.json",
+      "destination": "upload/apple-preupload-train.json",
+      "bytes": 1082,
+      "sha256": "431962aa22afae41b6b50b1f30a537a1c144f19a8ca93d78ed56d1d8aeae9ff5",
+      "sourceNature": "original GET-only preupload ASC build-train or collision check receipt",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/upload/apple-preupload-train.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\capacity-observations.json",
+      "destination": "upload/capacity-observations.json",
+      "bytes": 933,
+      "sha256": "be2f2361c41527f5e37b2e512f7767f16e8ff10925ede8379c9cad8bdeb0d3b2",
+      "sourceNature": "existing read-only observer measurement collected after the upload terminal; explicitly not retroactive and not an intermediate-phase observation",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/upload/capacity-observations.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\completion-manifest.json",
+      "destination": "upload/completion-manifest.json",
+      "bytes": 5124,
+      "sha256": "d50748e9ebada8b114854a74ddf7a02d4c43baf80e8657ecd30459c9a9b558f6",
+      "sourceNature": "existing observer transfer manifest of exact retained uploader and ASC receipts",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/upload/completion-manifest.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\final-upload-admission.json",
+      "destination": "upload/final-upload-admission.json",
+      "bytes": 10247,
+      "sha256": "30de4b76e9d381e014e30eda38788ea7627483e63f21a5d3d017e64999798dc4",
+      "sourceNature": "original native successful admission snapshot before uploader dispatch; its uploadDispatched=false field is preserved",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/upload/final-upload-admission.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\final-upload-claim.json",
+      "destination": "upload/final-upload-claim.json",
+      "bytes": 6274,
+      "sha256": "9e00c2074c80d300826fae13de10674a1630f152abe4c557dd9e865ded2f674e",
+      "sourceNature": "original native uploader terminal, claim snapshot or updated postupload release status; copied unchanged",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/upload/final-upload-claim.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\final-upload-dispatch.json",
+      "destination": "upload/final-upload-dispatch.json",
+      "bytes": 1491,
+      "sha256": "7a8ec792068a55236a90e86e42c1691255351fe5ac4fbdcb4276ae9581df8066",
+      "sourceNature": "original native single-uploader dispatch receipt; success is established separately by later terminal",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/upload/final-upload-dispatch.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\final-upload-terminal.json",
+      "destination": "upload/final-upload-terminal.json",
+      "bytes": 6274,
+      "sha256": "9e00c2074c80d300826fae13de10674a1630f152abe4c557dd9e865ded2f674e",
+      "sourceNature": "original native uploader terminal, claim snapshot or updated postupload release status; copied unchanged",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/upload/final-upload-terminal.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\preupload-release-status.json",
+      "destination": "upload/preupload-release-status.json",
+      "bytes": 4306,
+      "sha256": "7087b91a907f9ff12f537c202e4e3e51da300256ed7590f450296ce1137c0f2b",
+      "sourceNature": "original raw preupload signed-release status backup, identical to archive/release-status.json; retained unchanged",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/upload/preupload-release-status.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\release-status.json",
+      "destination": "upload/release-status.json",
+      "bytes": 10594,
+      "sha256": "d74815c749b65bd781704b5236aa188630811f3bd5c277d0f6a138569ab6471b",
+      "sourceNature": "original native uploader terminal, claim snapshot or updated postupload release status; copied unchanged",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/upload/release-status.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-upload-terminal-20261125\\testflight-processing.json",
+      "destination": "upload/testflight-processing.json",
+      "bytes": 353,
+      "sha256": "a9e6f50b1850dc36a007729238cf3ffb2964e7a84ac8809140ddeeb3582c9d91",
+      "sourceNature": "original ASC processing verification receipt for exact build49; pre-owner-group snapshot",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/upload/testflight-processing.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-owner-testflight-20261125\\completion-manifest.json",
+      "destination": "testflight/completion-manifest.json",
+      "bytes": 2053,
+      "sha256": "ceb3f481f379e94940e72c94ff6ce5cdc9ee5c444c2ae3e3d59728cbe73009c7",
+      "sourceNature": "existing exact-transfer manifest for four owner-group association and readback receipts",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/testflight/completion-manifest.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-owner-testflight-20261125\\owner-group-after-20261125.json",
+      "destination": "testflight/owner-group-after-20261125.json",
+      "bytes": 1741,
+      "sha256": "cb430671e07bbd1dc59db6bab9447dd1d61a0f7505b2014fcada10e2346be53c",
+      "sourceNature": "original sanitized ASC before/after readback of exact build, group and sole existing owner membership",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/testflight/owner-group-after-20261125.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-owner-testflight-20261125\\owner-group-before-20261125.json",
+      "destination": "testflight/owner-group-before-20261125.json",
+      "bytes": 1455,
+      "sha256": "16e76153702e784ce80a58497857dfa76ec771fd4c8697221ebc0e78453ac9b2",
+      "sourceNature": "original sanitized ASC before/after readback of exact build, group and sole existing owner membership",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/testflight/owner-group-before-20261125.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-owner-testflight-20261125\\owner-group-build49-association-once.json",
+      "destination": "testflight/owner-group-build49-association-once.json",
+      "bytes": 474,
+      "sha256": "c59b52a3d927e7c8fa0c1227e97a2133bd75e51eb9c09bdbfbcebb9c90494bc0",
+      "sourceNature": "original persistent one-association claim; no new tester, invitation or public link",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/testflight/owner-group-build49-association-once.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    },
+    {
+      "source": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\release49-fd6-owner-testflight-20261125\\owner-testflight-availability-20261125.json",
+      "destination": "testflight/owner-testflight-availability-20261125.json",
+      "bytes": 5501,
+      "sha256": "b0f21357e09b55ccb3f7173bcc33c482dd8a818bae2e88f454b067f68ca8a6e5",
+      "sourceNature": "original native existing-owner TestFlight availability receipt, with before/after ASC readbacks and one authorized association",
+      "path": "docs/ai-agent/evidence/delivery-20261124/final-delivery-20261125/testflight/owner-testflight-availability-20261125.json",
+      "exactExistingBytesCopied": true,
+      "newRemoteObservation": false
+    }
+  ],
+  "copiedExistingFileCount": 29,
+  "newNativeReceiptOrProjectionGenerated": false,
+  "scope": {
+    "signedFD6ArchiveOperationsPassed": true,
+    "originalOuterArchiveTerminalPassed": false,
+    "separateOwnershipReconciliationPassed": true,
+    "newNativeTestExecution": false,
+    "physicalDeviceOrPersonalGrantVerified": false,
+    "mergeTreeIsPreparationOnly": true,
+    "uploadSubmittedVerified": true,
+    "appleProcessingVALIDVerified": true,
+    "existingOwnerGroupBuildAvailabilityVerified": true,
+    "minimumOSVersion": "27.0",
+    "testerInstalledStateProvesBuild49Installation": false,
+    "intermediateUploadPhaseCapacityObservationClaimed": false
+  },
+  "publicationHeldForRootReview": true,
+  "historicalEvidenceBytesUnchanged": true,
+  "aborted0458ContentReadHashOrCatFile": false,
+  "actualUpload": {
+    "buildID": "240ca2cd-4604-4c3c-9c63-87b807adc85d",
+    "nativeTerminalSHA256": "9e00c2074c80d300826fae13de10674a1630f152abe4c557dd9e865ded2f674e",
+    "processingSHA256": "a9e6f50b1850dc36a007729238cf3ffb2964e7a84ac8809140ddeeb3582c9d91",
+    "ownerAvailabilitySHA256": "b0f21357e09b55ccb3f7173bcc33c482dd8a818bae2e88f454b067f68ca8a6e5",
+    "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "version": "4.1.0",
+    "build": "49"
+  }
+}

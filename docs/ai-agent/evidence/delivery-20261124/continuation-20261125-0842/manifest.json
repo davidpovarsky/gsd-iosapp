@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "kind": "reviewed-draft-publication-capacity-addendum",
+  "createdUTC": "2026-11-25T08:49:29.860490+00:00",
+  "scope": "exact completed OCI-client readback/operation plus dated read-only Mac inventory; no new provider or native operation",
+  "rootReviewedReportBefore": {
+    "path": "docs/ai-agent/GSD_DELIVERY_CURRENT_20261124.md",
+    "bytes": 110206,
+    "sha256": "b1f9d2543d88c1345e518799c92b03c62ce2ac6b2170929b9d5dc1223228a00b"
+  },
+  "reportAfter": {
+    "path": "docs/ai-agent/GSD_DELIVERY_CURRENT_20261124.md",
+    "bytes": 113278,
+    "sha256": "144587784402a80b6030d8c91affb0afa5757b3e8ffbbb188127f66b0ede4457"
+  },
+  "exactExistingEvidenceCopies": 3,
+  "files": [
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\oci-capacity-readonly-20261125T083802Z\\provider-readback-20261125.json",
+      "destination": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0842/oci-provider-readback.json",
+      "bytes": 5496,
+      "sha256": "baf7498471d210672c6cb24f5bd7641ce8d69c81fb20832a0359116343609ae0",
+      "byteForByteCopy": true,
+      "sourceNature": "native OCI-client provider readback receipt copied byte-for-byte from the completed Windows operation; no new OCI read",
+      "lineEndingNormalization": false
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\oci-capacity-readonly-20261125T083802Z\\operation-receipt.json",
+      "destination": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0842/oci-operation-receipt.json",
+      "bytes": 15941,
+      "sha256": "2536778a9d733dae46535ca5708ed6e59c987d0af09554078c5952265d9250b0",
+      "byteForByteCopy": true,
+      "sourceNature": "native OCI-client operation receipt copied byte-for-byte, including SDK provenance, cleanup and unchanged-configuration results; no new operation",
+      "lineEndingNormalization": false
+    },
+    {
+      "sourcePath": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-old-runner-cache-inventory-20261125T084258Z.json",
+      "destination": "docs/ai-agent/evidence/delivery-20261124/continuation-20261125-0842/mac-old-runner-cache-inventory.json",
+      "bytes": 9649,
+      "sha256": "e49ccdb542f876ab7aa1c705bef8611bbc90ee7e6c4fee645aa46ec0159a0b77",
+      "byteForByteCopy": true,
+      "sourceNature": "existing Native read-only Mac inventory receipt copied byte-for-byte; candidate classification is not a deletion or actual-use clearance receipt",
+      "lineEndingNormalization": false
+    }
+  ],
+  "observationBoundaries": {
+    "ociAPIWindowUTC": [
+      "2026-11-25T08:38:02.078610+00:00",
+      "2026-11-25T08:38:20.497774+00:00"
+    ],
+    "ociOperationFinishedUTC": "2026-11-25T08:38:26.298040+00:00",
+    "macInventoryUTC": "2026-11-25T08:42:57.770552+00:00",
+    "actionsCapacityWaitAsReportedByRootUTC": "2026-11-25T08:22:56Z",
+    "actionsRuntimeAfterThatObservationNotAsserted": true,
+    "oracleResizeOrCleanupExecuted": false,
+    "macInventoryProvesCleanup": false,
+    "billingEntitlementVerified": false
+  },
+  "derivedMacCandidateSummary": {
+    "basis": "sum of the nine cacheCandidates allocatedBytes in the unchanged inventory",
+    "count": 9,
+    "allocatedBytes": 1242959872,
+    "notProvenReclaimableBytes": true
+  },
+  "publicationScope": {
+    "branch": "docs/gsd-delivery-49-20261124",
+    "pullRequest": 3,
+    "draftRemains": true,
+    "mergePerformed": false,
+    "commitOrPushPerformedByThisUpdate": false
+  },
+  "asanaReferencesProvidedByRoot": {
+    "appleCapacityComment": "1220892415973235",
+    "capacityProjectStatus": "1220892352697562",
+    "coordinationComment": "1220892190769174",
+    "coordinationTask": "1220883442886052"
+  },
+  "officialDocumentationURLs": [
+    "https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm",
+    "https://docs.oracle.com/en-us/iaas/Content/Quotas/Concepts/resourcequotas_topic-Block_Volume_Quotas.htm",
+    "https://docs.oracle.com/en-us/iaas/Content/Block/Tasks/resizingavolume.htm"
+  ],
+  "preservation": {
+    "oldHeldPaths": 64,
+    "originalWorktreeFiles": 32,
+    "aborted0458ContentRead": false,
+    "priorValidationReceiptsChanged": false
+  },
+  "newSourceMacAuthOrTestAction": false
+}

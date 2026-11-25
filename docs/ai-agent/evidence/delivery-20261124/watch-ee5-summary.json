@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "sourceSHA": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+  "manifestSHA256": "3660604deb7073b61544ae068d5433346816bc4e433665b97d67b07cdd20435d",
+  "build": "49",
+  "compiler": "Xcode 27.1\nBuild version 27A9275",
+  "driver": "Xcode 27.0\nBuild version 27A266a",
+  "passed": true,
+  "accountGrantVerified": false,
+  "fullSystemSurfaceCoverage": false,
+  "suites": {
+    "watch": {
+      "passed": true,
+      "phoneID": "CB7848A9-6DF8-44D9-A545-4F22A0C10023",
+      "watchID": "86154E06-36F6-4D87-A957-38F7FCCCC845",
+      "pairID": "4A4BC461-D641-459F-BB6A-48C63726C7F8",
+      "watchRuntimeBuild": "24R362",
+      "languages": [
+        {
+          "language": "en",
+          "locale": "en_US",
+          "processID": 37584,
+          "aliveAfterSeconds": 5,
+          "picture": "watch-en.png",
+          "sha256": "121a291a5b8955d14e58d73081850059c4d6a3505318d09b950ec41d66d79b59",
+          "bytes": 26299,
+          "pixelWidth": 416,
+          "pixelHeight": 496,
+          "visualReview": "pending"
+        },
+        {
+          "language": "he",
+          "locale": "he_IL",
+          "processID": 37689,
+          "aliveAfterSeconds": 5,
+          "picture": "watch-he.png",
+          "sha256": "9e9607b9060117e245ccb019ada751c968c6dc0e3adc6056aef35b5c256ed72c",
+          "bytes": 22028,
+          "pixelWidth": 416,
+          "pixelHeight": 496,
+          "visualReview": "pending"
+        }
+      ],
+      "scope": "watch_process_launch_liveness_and_raw_screenshots",
+      "watchConnectivityVerified": false,
+      "ownedDevicesRemoved": true
+    }
+  },
+  "productsUnchanged": true,
+  "ownedSimulatorsRemoved": true,
+  "completedAt": "2026-11-24T20:02:06.761536+00:00"
+}

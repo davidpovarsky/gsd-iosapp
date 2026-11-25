@@ -1,0 +1,33 @@
+{
+  "startedUTC": "2026-11-25T00:09:49.008762+00:00",
+  "phase": "complete",
+  "testSourceSHA": "9190c72587cea69d1fd4b186051eef70d73d7500",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "productionManifestSHA256": "38aae93e3330893c26c1ce837a05af933b1d2115b69b01b0ea67f0e8fb2eb67f",
+  "composedManifestSHA256": "a37ab4e9a6d4985984c937a4a55df0f9eb9b3d28ac2397a7dda30f44de6e4cfc",
+  "composedProductsTree": {
+    "sha256": "3bcd780f1084fbeeeeba1b5b45cbadf9cfa3e45f1d4f51f541df52e1abe2c4c6",
+    "files": 422
+  },
+  "wrapperPID": 62815,
+  "selectedTests": [
+    "GSDSystemSurfaceUITests/test00RecordSystemSurfaceDiscovery",
+    "GSDSystemSurfaceUITests/test01TextShareExtensionRoundTripAndCancellation"
+  ],
+  "passed": false,
+  "accountGrantVerified": false,
+  "fullSystemSurfaceCoverage": false,
+  "previous0aeProductsUnchanged": true,
+  "finishedUTC": "2026-11-25T00:13:18.428634+00:00",
+  "returncode": 1,
+  "publicSummaryPath": "/Users/m1/builds/gsd-share-cancel-9190c725-20261125/evidence/share-supplemental/public/supplemental-summary.json",
+  "publicSummarySHA256": "35e06231112c234f106f2e907e6a4971c2d568dcb05f7e2e3842b47cf8d3bfe1",
+  "originalProductsUnchanged": true,
+  "productsUnchanged": true,
+  "ownedSimulatorsRemoved": true,
+  "share": {
+    "passed": false,
+    "failureCode": "share_assertion_keys",
+    "ownedDevicesRemoved": true
+  }
+}

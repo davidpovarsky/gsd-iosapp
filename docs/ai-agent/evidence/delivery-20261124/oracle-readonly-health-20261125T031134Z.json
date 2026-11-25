@@ -1,0 +1,161 @@
+{
+  "schema": 1,
+  "kind": "read_only_cloud_operations_refresh",
+  "health": {
+    "backupTimers": [
+      "Wed 2026-11-25 03:23:05 UTC         12min Tue 2026-11-24 03:18:35 UTC      23h ago gsd-cloud-backup.timer                           gsd-cloud-backup.service"
+    ],
+    "filesystems": [
+      {
+        "availableBytes": 7462522880,
+        "bytes": 50884108288,
+        "mount": "/",
+        "usePercent": "86%",
+        "usedBytes": 43404808192
+      },
+      {
+        "availableBytes": 677531648,
+        "bytes": 933457920,
+        "mount": "/boot",
+        "usePercent": "22%",
+        "usedBytes": 190758912
+      },
+      {
+        "availableBytes": 95547904,
+        "bytes": 102185984,
+        "mount": "/boot/efi",
+        "usePercent": "7%",
+        "usedBytes": 6638080
+      },
+      {
+        "availableBytes": 5122420736,
+        "bytes": 108259958784,
+        "mount": "/mnt/development",
+        "usePercent": "96%",
+        "usedBytes": 103120760832
+      }
+    ],
+    "health": {
+      "gateway": {
+        "httpStatus": 200,
+        "publicFields": {
+          "ok": true
+        }
+      },
+      "pocketbase": {
+        "httpStatus": 200,
+        "publicFields": {
+          "code": 200,
+          "message": "API is healthy."
+        }
+      },
+      "publicGateway": {
+        "httpStatus": 200,
+        "publicFields": {
+          "ok": true
+        }
+      }
+    },
+    "readOnly": true,
+    "recordedUTC": "2026-11-25T03:10:54.817411+00:00",
+    "serviceQueryReturncode": 0,
+    "services": [
+      {
+        "active": "inactive",
+        "load": "loaded",
+        "sub": "dead",
+        "unit": "gsd-cloud-backup.service"
+      },
+      {
+        "active": "active",
+        "load": "loaded",
+        "sub": "running",
+        "unit": "gsd-cloud-gateway.service"
+      },
+      {
+        "active": "active",
+        "load": "loaded",
+        "sub": "running",
+        "unit": "gsd-mcp-bridge.service"
+      },
+      {
+        "active": "active",
+        "load": "loaded",
+        "sub": "running",
+        "unit": "gsd-pocketbase.service"
+      },
+      {
+        "active": "active",
+        "load": "loaded",
+        "sub": "running",
+        "unit": "lorvex-cf-quick.service"
+      },
+      {
+        "active": "inactive",
+        "load": "loaded",
+        "sub": "dead",
+        "unit": "lorvex-cloud-backup.service"
+      },
+      {
+        "active": "active",
+        "load": "loaded",
+        "sub": "running",
+        "unit": "lorvex-cloud.service"
+      },
+      {
+        "active": "active",
+        "load": "loaded",
+        "sub": "running",
+        "unit": "lorvex-mcp-bridge.service"
+      }
+    ],
+    "timerQueryReturncode": 0
+  },
+  "backup": {
+    "recordedUTC": "2026-11-25T03:11:34.255650+00:00",
+    "readOnly": true,
+    "gsd-cloud-backup.service": {
+      "returncode": 0,
+      "properties": {
+        "Type": "oneshot",
+        "Result": "success",
+        "ExecMainStartTimestamp": "Tue 2026-11-24 03:18:35 UTC",
+        "ExecMainExitTimestamp": "Tue 2026-11-24 03:18:35 UTC",
+        "ExecMainStatus": "0",
+        "ActiveState": "inactive"
+      }
+    },
+    "gsd-cloud-backup.timer": {
+      "returncode": 0,
+      "properties": {
+        "NextElapseUSecRealtime": "Wed 2026-11-25 03:23:05 UTC",
+        "LastTriggerUSec": "Tue 2026-11-24 03:18:35 UTC",
+        "ActiveState": "active",
+        "SubState": "waiting"
+      }
+    },
+    "gsd-pocketbase.service": {
+      "returncode": 0,
+      "properties": {
+        "WorkingDirectory": "/mnt/development/projects/gsd-cloud"
+      }
+    },
+    "gsd-cloud-gateway.service": {
+      "returncode": 0,
+      "properties": {
+        "WorkingDirectory": "/mnt/development/projects/gsd-cloud/gateway"
+      }
+    }
+  },
+  "interpretation": {
+    "publicAndInternalHealth200": true,
+    "gsdAndLorvexRuntimeServicesActive": true,
+    "backupIsSuccessfulCompletedOneshot": true,
+    "backupTimerActive": true,
+    "gsdDataMount": "/mnt/development",
+    "availableDataBytes": 5122420736,
+    "availableRootBytes": 7462522880,
+    "noCleanupOrServiceMutation": true,
+    "noAcceptanceSuiteRepeated": true
+  }
+}

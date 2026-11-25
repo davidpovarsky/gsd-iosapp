@@ -1,5 +1,7 @@
 # Hebrew and RTL acceptance
 
+Historical localization/source checkpoint. Later native visual acceptance and the remaining system-surface gates are tracked in [the current delivery report](GSD_DELIVERY_CURRENT_20261124.md).
+
 The implementation is in the isolated worktree for `feat/gsd-he-rtl-20261123`, based on `d44649ed9bb0cc0eab9fb0d12c9ec63a71cd41ca`. The source and catalog checks passed on Windows. Apple build, packaging, and visual acceptance are pending.
 
 ## Coverage
@@ -25,7 +27,7 @@ The system supplies the default reading direction. The Appearance picker overrid
 
 - `py -3 -X utf8 scripts/audit_hebrew_localization.py` passed. It checks direct UI literals, common plain-string assignments, catalog values, format arguments, shortcut phrases, quick actions and bundled release notes. An in-memory negative control detected a removed Settings key, a missing interpolation and a new untranslated error assignment.
 - Windows `swiftc -frontend -parse` passed on the 29 modified Swift sources. `git diff --check` passed.
-- A source scan cannot exercise every computed string. The external AI package can supply the English fallback targets “several tasks” and “current selection” inside an approval description. Provider responses and unrecognized server error detail appear as received. User-entered titles, notes, tags, and prompts are preserved.
+- The former English fallback-target gap is resolved: `Packages/GSDHanlinAgent/Sources/GSDHanlinAgent/GSDHanlinHost.swift` localizes “several tasks” and “current selection” before creating the approval request; the App catalog supplies “כמה משימות” and “הבחירה הנוכחית”. This path was verified in frozen ee5 source. A source scan cannot exercise every other computed string. Provider responses and unrecognized server error detail appear as received. User-entered titles, notes, tags, and prompts are preserved.
 - Apple SDK type checking, catalog compilation, Siri phrase registration, VoiceOver speech, notification delivery, long-text fitting, chart rendering and RTL gestures on iPhone and iPad await Apple-side verification. The watch and share surfaces also await runtime checks.
 
 ## Coordinator integration

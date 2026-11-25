@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 1,
+  "kind": "gsd-upload-phase-admission",
+  "observedUTC": "2026-11-25T09:51:08.361486+00:00",
+  "owner": "/root/native_reconcile",
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "build": "49",
+  "handoffSHA256": "4825814668809b40f62332259f48671f1be8a1834cbdbc214bd32f0de85256d4",
+  "stagingAllocationUpperBoundBytes": 77824,
+  "actualIPABytes": 27950550,
+  "spoolIPACopies": 2,
+  "logsAndMetadataAllowanceBytes": 67108864,
+  "additionalDiskBytes": 123087788,
+  "additionalMemoryGiB": 0.5,
+  "initialSample": {
+    "at": "2026-11-25T09:50:53.331929+00:00",
+    "stage": "deferred_upload_initial_sample",
+    "fits": false,
+    "riskReasons": [
+      "estimated_incremental_storage_does_not_fit"
+    ],
+    "kernelMemoryPressureLevel": 1,
+    "reclaimableMemoryBytes": 10231627776,
+    "memoryBudgetBytes": 1610612736,
+    "additionalMemoryGiB": 0.5,
+    "memoryTransientMarginGiB": 1,
+    "swapUsedBytes": 235080253,
+    "swapChangeFromObservedBaselineBytes": 12383682,
+    "diskAvailableBytes": 2920218624,
+    "diskBudgetBytes": 4966685383,
+    "additionalDiskGiB": 0.1146344356238842,
+    "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+    "growthHorizonSeconds": 720,
+    "osDiskMarginGiB": 2,
+    "pages": {
+      "Pages free": 358927,
+      "Pages inactive": 254605,
+      "Pages speculative": 10957
+    },
+    "pageSize": 16384,
+    "cpuOrJobCountGate": false
+  },
+  "admission": {
+    "at": "2026-11-25T09:51:08.361383+00:00",
+    "stage": "deferred_upload_admission",
+    "fits": true,
+    "riskReasons": [],
+    "kernelMemoryPressureLevel": 1,
+    "reclaimableMemoryBytes": 10043654144,
+    "memoryBudgetBytes": 1610612736,
+    "additionalMemoryGiB": 0.5,
+    "memoryTransientMarginGiB": 1,
+    "swapUsedBytes": 235080253,
+    "swapChangeFromObservedBaselineBytes": 0,
+    "diskAvailableBytes": 4030119936,
+    "diskBudgetBytes": 2270571436,
+    "additionalDiskGiB": 0.1146344356238842,
+    "concurrentDiskGrowthBytesPerSecond": 0.0,
+    "growthHorizonSeconds": 720,
+    "osDiskMarginGiB": 2,
+    "pages": {
+      "Pages free": 425739,
+      "Pages inactive": 176320,
+      "Pages speculative": 10957
+    },
+    "pageSize": 16384,
+    "cpuOrJobCountGate": false
+  },
+  "phaseLocalFreshGrowthBaseline": true,
+  "historicalGrowthFloorReused": false,
+  "unchangedMemoryTransientMarginGiB": 1,
+  "unchangedOSDiskMarginGiB": 2,
+  "unchangedGrowthHorizonSeconds": 720,
+  "capacityHelperSHA256": "54d312bfd156eff91e84336c3527d08c96dd1d8865cb1c62ada29c057692ee96",
+  "cpuOrJobCountGate": false,
+  "staged": true,
+  "uploadDispatched": false,
+  "originalStoppedAdmissionSHA256": "438bfc0db9a0e9cf3788738cb2aff2be8db944474c7df69e145f9856b3bd26ec",
+  "deferredAdmissionOwnerPID": 56478,
+  "boundedWaitSeconds": 15.040062000000034,
+  "stagedFiles": [
+    {
+      "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/verify-final-upload-inputs.py",
+      "bytes": 18549,
+      "sha256": "a5bf76160ba45f65aa84502589e4d7624f2213248fc40211811a4667163f7481"
+    },
+    {
+      "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/run-final-signed-upload.py",
+      "bytes": 10365,
+      "sha256": "a97de4e7abef3043da13d2ba132a45007e21b3ade3acef6d0cf1bc5d2e99d23e"
+    },
+    {
+      "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/upload-inputs/upload-handoff.json",
+      "bytes": 2107,
+      "sha256": "4825814668809b40f62332259f48671f1be8a1834cbdbc214bd32f0de85256d4"
+    },
+    {
+      "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/upload-inputs/historical-acceptance.json",
+      "bytes": 15283,
+      "sha256": "73b76a2b06a598f013b56a19dcd060f4ff6c39cdf5b9fc2888cfc604856af85f"
+    },
+    {
+      "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/upload-inputs/native-input-reuse.json",
+      "bytes": 3075,
+      "sha256": "f2474972b394143ee5e693bf70f6f7fd612d63f34def87c66c21d3fddc24d04b"
+    },
+    {
+      "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/upload-inputs/native-input-delta.diff",
+      "bytes": 6978,
+      "sha256": "d1ac8ccc24fdc0e2d3a065ccb6cc8fe201656a19dd140d4e4881d70f80f854f8"
+    },
+    {
+      "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/upload-inputs/oracle-release-readiness-20261124T235834Z.json",
+      "bytes": 1952,
+      "sha256": "59153ece72ada26435802a689f1c2dc55d691b9b9234cc0cb0243873545b91ed"
+    }
+  ],
+  "acceptance": {
+    "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "version": "4.1.0",
+    "build": "49",
+    "ipa": {
+      "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/export/GSD.ipa",
+      "sizeBytes": 27950550,
+      "sha256": "9cb686f13cc4546580d272fa83fb26aa6b13715c5be366412b06efa71fb522f7"
+    },
+    "uploadHandoffSHA256": "4825814668809b40f62332259f48671f1be8a1834cbdbc214bd32f0de85256d4",
+    "widgetAcceptance": {
+      "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+      "version": "4.1.0",
+      "build": "49",
+      "releaseHandoffSHA256": "087cc7b9a7d23f734b0b651f16badcad3572ec981172d6c191b7ba9c1b0634ae",
+      "planSHA256": "536d13fc5f390d4216ee26c565ec52fa2562a3667187ea9e8427cf16b17ff621",
+      "sourceClosureSHA256": "b660995515a5b539536fd7c3bdb4f65177aef82afc13af9a69c788e49cfbdadd",
+      "finalSimulatorManifestSHA256": "7588422c377bdc70c2b564c4c4acd2b11f0353c4ec1d54b7dbb58f63dba22815",
+      "finalSimulatorProductsTree": {
+        "sha256": "b0b6c65c2f9a820cff3d18562361639981931644388d5310ee870d1bde188716",
+        "files": 421
+      },
+      "widgetActionsRunID": 45575270618,
+      "widgetActionsURL": "https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45575270618",
+      "githubArtifactID": 15006680376,
+      "githubArtifactZipSHA256": "b300d6388a6b4456dc49e2e30bf9c391f110b44086d004615d768fca598e4a7d",
+      "artifactTransferManifestSHA256": "ea828dc7505c71cac2f929b0650eabca2a4722a279a6189d2d839b091df48f82",
+      "widgetExecutionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+      "originalWidgetTest": "GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap",
+      "originalEvidenceSHA256": {
+        "terminal": "2eb0ffba18d78afdf72237dc5a135e98982beb128cabdc0440dbdd0ebfec7952",
+        "binding": "2bdb6bfac2c6e615e901a3868577669c74258a0f6010ed572ac01582a39dd9d0",
+        "observation": "c5cafe4079e2666f005624c108149ce6734ca61734f000438799a6e5797a7dd9"
+      },
+      "actualWidgetAcceptanceVerified": true,
+      "newXCTestExecutedByVerifier": false,
+      "signingOrUploadExecutedByVerifier": false,
+      "historicalAcceptanceIsSeparateEvidence": true
+    },
+    "historicalAcceptance": {
+      "historicalAcceptanceSHA256": "73b76a2b06a598f013b56a19dcd060f4ff6c39cdf5b9fc2888cfc604856af85f",
+      "actualCaseSources": {
+        "share": "b5588f3f0c42df328dba34024d569be8605e51d0",
+        "shortcut": "7098dcb9abdc2d7e8e20afa8d9ec95d7e69c34ef"
+      },
+      "caseProductionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+      "packageTestsReused": 183,
+      "mainUITestsReused": 13,
+      "preconsentTestSourceSHA": "f1fc8676cd1cce5a275f246b0d7dedcfb73416db",
+      "preconsentProductionSourceSHA": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+      "fixtureRowsObservedAtUTC": "2026-11-24T23:58:34.189761+00:00",
+      "newHistoricalTestExecution": false,
+      "historicalOverallDraftRemainsPassedFalse": true,
+      "unverifiedClaims": {
+        "personalChatGPTGrant": false,
+        "ChatGPTEntitlement": false,
+        "ChatGPTInference": false,
+        "physicalDevice": false,
+        "VoiceOverSpeech": false,
+        "SiriVoiceInvocation": false,
+        "WatchConnectivityTransfer": false,
+        "watchWidgetTimeline": false,
+        "HebrewSystemConfirmationLocale": false
+      }
+    },
+    "nativeInputReuseSHA256": "f2474972b394143ee5e693bf70f6f7fd612d63f34def87c66c21d3fddc24d04b",
+    "nativeInputDeltaSHA256": "d1ac8ccc24fdc0e2d3a065ccb6cc8fe201656a19dd140d4e4881d70f80f854f8",
+    "archiveEvidence": {
+      "archiveTerminal": {
+        "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-release49-archive-terminal-attempt2.json",
+        "sha256": "02937196a4e3fbe56cc64e05e1f3470289edb9d55dcaf144a4c3ccb532033583"
+      },
+      "releaseStatus": {
+        "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/release-status.json",
+        "sha256": "7087b91a907f9ff12f537c202e4e3e51da300256ed7590f450296ce1137c0f2b"
+      },
+      "archiveSignatures": {
+        "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/archive-signatures.json",
+        "sha256": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80"
+      },
+      "ipaSignatures": {
+        "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/ipa-signatures.json",
+        "sha256": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80"
+      },
+      "ownershipReconciliation": {
+        "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-release49-ownership-reconciliation.json",
+        "sha256": "7762bb1bf773ef747510e6be83bd6bfaa74563869d5e81d6ac7f1b3d9448f860"
+      }
+    },
+    "newTestsExecuted": false,
+    "personalGrantOrInferenceVerified": false
+  },
+  "finalAdmission": {
+    "at": "2026-11-25T09:51:08.747235+00:00",
+    "stage": "upload_immediate_dispatch",
+    "fits": true,
+    "riskReasons": [],
+    "kernelMemoryPressureLevel": 1,
+    "reclaimableMemoryBytes": 10037100544,
+    "memoryBudgetBytes": 1610612736,
+    "additionalMemoryGiB": 0.5,
+    "memoryTransientMarginGiB": 1,
+    "swapUsedBytes": 235080253,
+    "swapChangeFromObservedBaselineBytes": 0,
+    "diskAvailableBytes": 4030009344,
+    "diskBudgetBytes": 2270571436,
+    "additionalDiskGiB": 0.1146344356238842,
+    "concurrentDiskGrowthBytesPerSecond": 0.0,
+    "growthHorizonSeconds": 720,
+    "osDiskMarginGiB": 2,
+    "pages": {
+      "Pages free": 410724,
+      "Pages inactive": 190934,
+      "Pages speculative": 10958
+    },
+    "pageSize": 16384,
+    "cpuOrJobCountGate": false
+  },
+  "phase": "ready_for_single_upload"
+}

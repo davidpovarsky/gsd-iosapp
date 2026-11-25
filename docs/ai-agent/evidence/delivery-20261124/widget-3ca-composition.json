@@ -1,0 +1,26 @@
+{
+  "createdUTC": "2026-11-25T04:15:35.058207+00:00",
+  "testSourceSHA": "3ca346ef595a6a7e062a2a2fc66cbe5b2a76ff2c",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "frozenManifestSHA256": "38aae93e3330893c26c1ce837a05af933b1d2115b69b01b0ea67f0e8fb2eb67f",
+  "originalProductsTree": {
+    "sha256": "034d71a7987a2834f61cd4aaa541e00b3c47f9d2aedf84b8dc0b69e09d20a068",
+    "files": 422
+  },
+  "productsRoot": "/Users/m1/builds/gsd-widget-3ca346ef-20261125/composed-products",
+  "productsTree": {
+    "sha256": "3ab29d804205d29e2ddcaa515c12a2cfd1b2398e00b61bda770ed514e9795e25",
+    "files": 422
+  },
+  "runnerRelativePath": "Debug-iphonesimulator/GSDScreenshotTests-Runner.app",
+  "runnerTree": {
+    "sha256": "bff1ae711d71c1875da1b3a6625ba393c02af9386e879433b6c58b14efaf51a6",
+    "files": 7
+  },
+  "xctestrunSHA256": "8768188bbe98de68228c0fb8e791d5972f53516685069b2be00f0169fc3ffe4c",
+  "productionBundlesEqualOriginal": true,
+  "productionTargetCount": 5,
+  "testRunnerUnchangedByComposition": true,
+  "originalProductsUnchanged": true,
+  "sourceClosureSHA256": "35f7480fdf34cc25ce025aa7dfb83a76cea1d081bab13b676886668250d70b8b"
+}

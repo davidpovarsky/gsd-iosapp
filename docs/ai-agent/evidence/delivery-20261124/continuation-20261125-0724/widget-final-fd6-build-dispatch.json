@@ -1,0 +1,44 @@
+{
+  "recordedUTC": "2026-11-25T07:16:35.717331+00:00",
+  "returncode": 0,
+  "remoteRoot": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125",
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "builderSHA256": "e97a52bb5af0f23aebf34d1cca91bb99529135754a692a21d5905259b9db1820",
+  "dispatch": {
+    "kind": "one_final_build_dispatch",
+    "dispatchedUTC": "2026-11-25T07:16:35.662973+00:00",
+    "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "builderSHA256": "e97a52bb5af0f23aebf34d1cca91bb99529135754a692a21d5905259b9db1820",
+    "controllerPID": 70210,
+    "root": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125",
+    "claim": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/ownership-claim.json",
+    "terminal": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/evidence/terminal-receipt.json",
+    "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/build-controller-private.log",
+    "runtimeAuthorized": false,
+    "files": [
+      {
+        "name": "build-final-fresh-products.py",
+        "bytes": 32007,
+        "sha256": "e97a52bb5af0f23aebf34d1cca91bb99529135754a692a21d5905259b9db1820"
+      },
+      {
+        "name": "source.bundle",
+        "bytes": 15034,
+        "sha256": "ff77643a9be2465758febc6690e3c8ea43dd644a1a8b3444946acbf79f0cd16a"
+      },
+      {
+        "name": "source-handoff.json",
+        "bytes": 5847,
+        "sha256": "80230440951ff25ffc5d3b7d24766df927a605f786da18f38d831ecf424344d3"
+      },
+      {
+        "name": "asc-build-train.json",
+        "bytes": 1107,
+        "sha256": "0c03160609bf86fc74f5e7e32f1d23a34e27aebbf8eea6522143582a20515986"
+      }
+    ]
+  },
+  "dispatchReceiptPath": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/dispatch-receipt.json",
+  "dispatchReceiptBytes": 1283,
+  "dispatchReceiptSHA256": "ed4c98fc611f5c85056862b5fb78d540ccb1aa290d9cb398480fa86f8d1cc8f4"
+}

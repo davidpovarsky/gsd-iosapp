@@ -1,0 +1,1212 @@
+{
+  "owner": "/root/native_reconcile",
+  "phase": "stopped",
+  "passed": false,
+  "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "version": "4.1.0",
+  "build": "49",
+  "preparedUTC": "2026-11-25T09:15:50.335573+00:00",
+  "releaseHandoffSHA256": "087cc7b9a7d23f734b0b651f16badcad3572ec981172d6c191b7ba9c1b0634ae",
+  "controllerSHA256": "9ae0418e1c6a48a85e77df57e6ba9e4e54b37c2106809b8fe027e94e637c8d3e",
+  "previousUnstartedTerminalSHA256": "96bbc7336c9468e4cd21f1da511e077ed6f004eb5a3bd1948cadb62c41bd1c85",
+  "previousAttemptPreserved": {
+    "final-release49-archive-claim.json": {
+      "bytes": 8697,
+      "sha256": "96bbc7336c9468e4cd21f1da511e077ed6f004eb5a3bd1948cadb62c41bd1c85"
+    },
+    "final-release49-archive-terminal.json": {
+      "bytes": 8697,
+      "sha256": "96bbc7336c9468e4cd21f1da511e077ed6f004eb5a3bd1948cadb62c41bd1c85"
+    },
+    "final-release49-archive-dispatch.json": {
+      "bytes": 1492,
+      "sha256": "1b8d265654da5f08a13e8b05bfec7d9cf08595c2aa89992d84f346101d458988"
+    },
+    "final-release49-owner.log": {
+      "bytes": 753,
+      "sha256": "ea35cc1b20a07750f1f141535131c8816f42c74e3e80ab299309815a9910fae3"
+    },
+    "archive-start.lock": {
+      "bytes": 380,
+      "sha256": "7de4107d21c6692c8c6c2eaf79e036dc8f892d290cdfce96e7aa896e0f9328b8"
+    }
+  },
+  "uploadExecuted": false,
+  "controllerPID": 40486,
+  "startedUTC": "2026-11-25T09:15:50.557504+00:00",
+  "acceptanceScope": {
+    "sourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "version": "4.1.0",
+    "build": "49",
+    "releaseHandoffSHA256": "087cc7b9a7d23f734b0b651f16badcad3572ec981172d6c191b7ba9c1b0634ae",
+    "planSHA256": "536d13fc5f390d4216ee26c565ec52fa2562a3667187ea9e8427cf16b17ff621",
+    "sourceClosureSHA256": "b660995515a5b539536fd7c3bdb4f65177aef82afc13af9a69c788e49cfbdadd",
+    "finalSimulatorManifestSHA256": "7588422c377bdc70c2b564c4c4acd2b11f0353c4ec1d54b7dbb58f63dba22815",
+    "finalSimulatorProductsTree": {
+      "sha256": "b0b6c65c2f9a820cff3d18562361639981931644388d5310ee870d1bde188716",
+      "files": 421
+    },
+    "widgetActionsRunID": 45575270618,
+    "widgetActionsURL": "https://github.com/davidpovarsky/gsd-iosapp/actions/runs/45575270618",
+    "githubArtifactID": 15006680376,
+    "githubArtifactZipSHA256": "b300d6388a6b4456dc49e2e30bf9c391f110b44086d004615d768fca598e4a7d",
+    "artifactTransferManifestSHA256": "ea828dc7505c71cac2f929b0650eabca2a4722a279a6189d2d839b091df48f82",
+    "widgetExecutionSourceSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+    "originalWidgetTest": "GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap",
+    "originalEvidenceSHA256": {
+      "terminal": "2eb0ffba18d78afdf72237dc5a135e98982beb128cabdc0440dbdd0ebfec7952",
+      "binding": "2bdb6bfac2c6e615e901a3868577669c74258a0f6010ed572ac01582a39dd9d0",
+      "observation": "c5cafe4079e2666f005624c108149ce6734ca61734f000438799a6e5797a7dd9"
+    },
+    "actualWidgetAcceptanceVerified": true,
+    "newXCTestExecutedByVerifier": false,
+    "signingOrUploadExecutedByVerifier": false,
+    "historicalAcceptanceIsSeparateEvidence": true
+  },
+  "previousNativeArchiveExecuted": false,
+  "preservedPreviousReleaseTree": {
+    "sha256": "237d6565960a691dae3de2c96ea0fccd305b35ac641b9cd95b14f557833061d1",
+    "files": 151
+  },
+  "preserved9fReleaseTree": {
+    "sha256": "a9ba4ac519b8651737e8b3486258789837b678a4d1d24b607694e31b239afb56",
+    "files": 151
+  },
+  "preserved9fIPASHA256": "1a5f770ca236fe43d0091fe0d649f9a266a78dfb6106f8a3545a2cd99db93c69",
+  "preservedPreviousIPASHA256": "121e0e2c2d65d2b774c5897e9acd3071704ed55c7c117e246faae756ba6bd483",
+  "ownershipInventories": [
+    {
+      "observedUTC": "2026-11-25T09:15:51.087060+00:00",
+      "method": "names_then_scoped_writer_argv_cwd",
+      "globalArgumentsRead": false,
+      "budgetSeconds": 15,
+      "complete": true,
+      "processCount": 757,
+      "candidates": [
+        {
+          "pid": 416,
+          "parentPID": 1,
+          "executable": "Python",
+          "complete": true,
+          "scopedNoninteractiveCwdRead": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 19825,
+          "parentPID": 19824,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25383,
+          "parentPID": 1,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25388,
+          "parentPID": 25383,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25393,
+          "parentPID": 25388,
+          "executable": "Runner.Listener",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 26661,
+          "parentPID": 1,
+          "executable": "DTServiceHub",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 38072,
+          "parentPID": 1,
+          "executable": "DTServiceHub",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 65368,
+          "parentPID": 1,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        }
+      ],
+      "elapsedSeconds": 0.135
+    },
+    {
+      "observedUTC": "2026-11-25T09:21:06.767332+00:00",
+      "method": "names_then_scoped_writer_argv_cwd",
+      "globalArgumentsRead": false,
+      "budgetSeconds": 15,
+      "complete": true,
+      "processCount": 522,
+      "candidates": [
+        {
+          "pid": 416,
+          "parentPID": 1,
+          "executable": "Python",
+          "complete": true,
+          "scopedNoninteractiveCwdRead": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 19825,
+          "parentPID": 19824,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25383,
+          "parentPID": 1,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25388,
+          "parentPID": 25383,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25393,
+          "parentPID": 25388,
+          "executable": "Runner.Listener",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 26661,
+          "parentPID": 1,
+          "executable": "DTServiceHub",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 41255,
+          "parentPID": 41254,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 65368,
+          "parentPID": 1,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        }
+      ],
+      "elapsedSeconds": 0.119
+    },
+    {
+      "observedUTC": "2026-11-25T09:21:06.887605+00:00",
+      "method": "names_then_scoped_writer_argv_cwd",
+      "globalArgumentsRead": false,
+      "budgetSeconds": 15,
+      "complete": true,
+      "processCount": 523,
+      "candidates": [
+        {
+          "pid": 416,
+          "parentPID": 1,
+          "executable": "Python",
+          "complete": true,
+          "scopedNoninteractiveCwdRead": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 19825,
+          "parentPID": 19824,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25383,
+          "parentPID": 1,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25388,
+          "parentPID": 25383,
+          "executable": "bash",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 25393,
+          "parentPID": 25388,
+          "executable": "Runner.Listener",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 26661,
+          "parentPID": 1,
+          "executable": "DTServiceHub",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 41255,
+          "parentPID": 41254,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        },
+        {
+          "pid": 65368,
+          "parentPID": 1,
+          "executable": "Python",
+          "complete": true,
+          "stableExecutable": true,
+          "sourceOrCacheMatch": false
+        }
+      ],
+      "elapsedSeconds": 0.109
+    }
+  ],
+  "cacheWriters": [],
+  "cacheOpenFileProbe": {
+    "returncode": 1,
+    "stdoutBytes": 0,
+    "stderrBytes": 0
+  },
+  "capacityAdmission": {
+    "at": "2026-11-25T09:21:06.309197+00:00",
+    "stage": "archive_admission",
+    "fits": true,
+    "riskReasons": [],
+    "kernelMemoryPressureLevel": 1,
+    "reclaimableMemoryBytes": 8649703424,
+    "memoryBudgetBytes": 5368709120,
+    "additionalMemoryGiB": 4,
+    "memoryTransientMarginGiB": 1,
+    "swapUsedBytes": 235080253,
+    "swapChangeFromObservedBaselineBytes": 12383682,
+    "diskAvailableBytes": 9675632640,
+    "diskBudgetBytes": 8064823067,
+    "additionalDiskGiB": 3,
+    "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+    "growthHorizonSeconds": 720,
+    "osDiskMarginGiB": 2,
+    "pages": {
+      "Pages free": 216399,
+      "Pages inactive": 309864,
+      "Pages speculative": 1673
+    },
+    "pageSize": 16384,
+    "cpuOrJobCountGate": false,
+    "freshIntervalGrowthBytesPerSecond": 0.0
+  },
+  "capacityAdmissionHistory": [
+    {
+      "at": "2026-11-25T09:16:05.766395+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 7419297792,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 243468861,
+      "swapChangeFromObservedBaselineBytes": 20772290,
+      "diskAvailableBytes": 3726807040,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 25872,
+        "Pages inactive": 426035,
+        "Pages speculative": 931
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 6540.569294267961
+    },
+    {
+      "at": "2026-11-25T09:16:20.789058+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8341209088,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3726454784,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 4056,
+        "Pages inactive": 503789,
+        "Pages speculative": 1262
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 23450.40568114005
+    },
+    {
+      "at": "2026-11-25T09:16:35.813152+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6701498368,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3725733888,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 4440,
+        "Pages inactive": 403747,
+        "Pages speculative": 840
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 47986.98847048467
+    },
+    {
+      "at": "2026-11-25T09:16:50.843479+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6644973568,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3723448320,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 6675,
+        "Pages inactive": 398559,
+        "Pages speculative": 343
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 152077.77474079473
+    },
+    {
+      "at": "2026-11-25T09:17:05.868030+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6464880640,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3723513856,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 4253,
+        "Pages inactive": 390296,
+        "Pages speculative": 36
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 0.0
+    },
+    {
+      "at": "2026-11-25T09:17:20.900174+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6641811456,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3723493376,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 15650,
+        "Pages inactive": 389696,
+        "Pages speculative": 38
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 1362.5556408749944
+    },
+    {
+      "at": "2026-11-25T09:17:35.923523+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6696566784,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3723317248,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 18931,
+        "Pages inactive": 389710,
+        "Pages speculative": 85
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 11724.778355926725
+    },
+    {
+      "at": "2026-11-25T09:17:50.954712+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6830768128,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3723161600,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 26291,
+        "Pages inactive": 390330,
+        "Pages speculative": 296
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 10356.108209369031
+    },
+    {
+      "at": "2026-11-25T09:18:05.980046+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6812139520,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3733458944,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 36105,
+        "Pages inactive": 379284,
+        "Pages speculative": 391
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 0.0
+    },
+    {
+      "at": "2026-11-25T09:18:21.010277+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6833291264,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3733352448,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 37394,
+        "Pages inactive": 379286,
+        "Pages speculative": 391
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 7086.223179496806
+    },
+    {
+      "at": "2026-11-25T09:18:36.034396+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6834176000,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3733295104,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 37433,
+        "Pages inactive": 379301,
+        "Pages speculative": 391
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 3817.212661834615
+    },
+    {
+      "at": "2026-11-25T09:18:51.063244+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6797524992,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3732815872,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 35787,
+        "Pages inactive": 378620,
+        "Pages speculative": 481
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 31891.36978793361
+    },
+    {
+      "at": "2026-11-25T09:19:06.093136+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6772867072,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3732406272,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 34181,
+        "Pages inactive": 378678,
+        "Pages speculative": 524
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 27255.478946663858
+    },
+    {
+      "at": "2026-11-25T09:19:21.122316+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6795902976,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3732369408,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 35585,
+        "Pages inactive": 378680,
+        "Pages speculative": 524
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 2453.131537892437
+    },
+    {
+      "at": "2026-11-25T09:19:36.144316+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6787072000,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3732238336,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 35034,
+        "Pages inactive": 378690,
+        "Pages speculative": 526
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 8726.399250631266
+    },
+    {
+      "at": "2026-11-25T09:19:51.174763+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6774030336,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3732008960,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 34227,
+        "Pages inactive": 378700,
+        "Pages speculative": 527
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 15262.71589704207
+    },
+    {
+      "at": "2026-11-25T09:20:06.196919+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8627486720,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 3997769728,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 219829,
+        "Pages inactive": 304965,
+        "Pages speculative": 1786
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 0.0
+    },
+    {
+      "at": "2026-11-25T09:20:21.225496+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8564883456,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 4733599744,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 163702,
+        "Pages inactive": 357566,
+        "Pages speculative": 1491
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 0.0
+    },
+    {
+      "at": "2026-11-25T09:20:36.248771+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8604565504,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 4725407744,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 165580,
+        "Pages inactive": 358087,
+        "Pages speculative": 1514
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 545355.1468799727
+    },
+    {
+      "at": "2026-11-25T09:20:51.282307+00:00",
+      "stage": "archive_admission",
+      "fits": false,
+      "riskReasons": [
+        "estimated_incremental_storage_does_not_fit",
+        "fresh_concurrent_storage_growth_does_not_fit"
+      ],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8668004352,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 5709430784,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 169983,
+        "Pages inactive": 357400,
+        "Pages speculative": 1670
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 0.0
+    },
+    {
+      "at": "2026-11-25T09:21:06.309197+00:00",
+      "stage": "archive_admission",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8649703424,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 9675632640,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 216399,
+        "Pages inactive": 309864,
+        "Pages speculative": 1673
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false,
+      "freshIntervalGrowthBytesPerSecond": 0.0
+    }
+  ],
+  "postWaitCacheOpenFileProbe": {
+    "observedUTC": "2026-11-25T09:21:06.767289+00:00",
+    "returncode": 1,
+    "stdoutBytes": 0,
+    "stderrBytes": 0
+  },
+  "cacheClaimPath": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-device/gsd-release49-fd6-writer.lock",
+  "cacheClaimSHA256": "a8f8dcf78b9d44b7afc4eee8057cbb223f55039c8b9cef08354bca223f007645",
+  "cacheReusePath": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/derived-device",
+  "childPID": 41505,
+  "archiveStartedUTC": "2026-11-25T09:21:06.998847+00:00",
+  "log": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/final-release-evidence/final-release49-archive-controller-attempt2.log",
+  "phaseCapacityObservations": [
+    {
+      "at": "2026-11-25T09:21:08.029590+00:00",
+      "stage": "observed_appstore-build-train",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8597880832,
+      "memoryBudgetBytes": 2147483648,
+      "additionalMemoryGiB": 1,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 9675567104,
+      "diskBudgetBytes": 5917339419,
+      "additionalDiskGiB": 1,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 201878,
+        "Pages inactive": 321036,
+        "Pages speculative": 1859
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T09:21:09.047851+00:00",
+      "stage": "observed_apple-preflight",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8602501120,
+      "memoryBudgetBytes": 2147483648,
+      "additionalMemoryGiB": 1,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 9675554816,
+      "diskBudgetBytes": 5917339419,
+      "additionalDiskGiB": 1,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 202158,
+        "Pages inactive": 321039,
+        "Pages speculative": 1858
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T09:21:11.069812+00:00",
+      "stage": "observed_archive",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8534671360,
+      "memoryBudgetBytes": 5368709120,
+      "additionalMemoryGiB": 4,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 9675542528,
+      "diskBudgetBytes": 8064823067,
+      "additionalDiskGiB": 3,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 192661,
+        "Pages inactive": 323163,
+        "Pages speculative": 5091
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T09:25:07.470911+00:00",
+      "stage": "observed_archive-signatures",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 7216840704,
+      "memoryBudgetBytes": 2147483648,
+      "additionalMemoryGiB": 1,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 7920791552,
+      "diskBudgetBytes": 5917339419,
+      "additionalDiskGiB": 1,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 174317,
+        "Pages inactive": 256930,
+        "Pages speculative": 9234
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T09:25:08.500252+00:00",
+      "stage": "observed_export",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 7098744832,
+      "memoryBudgetBytes": 2147483648,
+      "additionalMemoryGiB": 1,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 7918612480,
+      "diskBudgetBytes": 5917339419,
+      "additionalDiskGiB": 1,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 160888,
+        "Pages inactive": 263258,
+        "Pages speculative": 9127
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T09:25:13.570340+00:00",
+      "stage": "observed_ipa-signatures",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6498222080,
+      "memoryBudgetBytes": 2147483648,
+      "additionalMemoryGiB": 1,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 7880814592,
+      "diskBudgetBytes": 5917339419,
+      "additionalDiskGiB": 1,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 77891,
+        "Pages inactive": 307003,
+        "Pages speculative": 11726
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T09:25:15.598711+00:00",
+      "stage": "observed_apple-validate",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6568542208,
+      "memoryBudgetBytes": 2147483648,
+      "additionalMemoryGiB": 1,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 235080253,
+      "swapChangeFromObservedBaselineBytes": 12383682,
+      "diskAvailableBytes": 7864930304,
+      "diskBudgetBytes": 5917339419,
+      "additionalDiskGiB": 1,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 78399,
+        "Pages inactive": 310527,
+        "Pages speculative": 11986
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    }
+  ],
+  "currentArchiveStep": "apple-validate",
+  "returncode": 0,
+  "logSHA256": "9c8fb7d522b54fb2b50a85aea00072fc50db59103261ff0075c7718d2e04b0e0",
+  "artifact": {
+    "path": "/Users/m1/builds/gsd-widget-final-fd6e2944-20261125/release49/export/GSD.ipa",
+    "fileName": "GSD-4.1.0-49.ipa",
+    "sizeBytes": 27950550,
+    "sha256": "9cb686f13cc4546580d272fa83fb26aa6b13715c5be366412b06efa71fb522f7"
+  },
+  "releaseStatusSHA256": "7087b91a907f9ff12f537c202e4e3e51da300256ed7590f450296ce1137c0f2b",
+  "ownedProcessGroupTerminal": false,
+  "cleanupUncertain": true,
+  "ownedProcessGroup": 41505,
+  "ownedGroupCleanupFailure": "Command '['/bin/ps', '-axo', 'pid=,pgid=,comm=']' timed out after 5 seconds",
+  "finishedUTC": "2026-11-25T09:26:36.140430+00:00",
+  "productionSourceUnchanged": true,
+  "previousReleaseArtifactsUnchanged": true,
+  "finalSimulatorInputsAndActualActionsEvidenceUnchanged": true,
+  "prior9fReleaseArtifactsUnchanged": true,
+  "capacityCompletion": {
+    "at": "2026-11-25T09:26:37.806427+00:00",
+    "stage": "archive_completion",
+    "fits": true,
+    "riskReasons": [],
+    "kernelMemoryPressureLevel": 1,
+    "reclaimableMemoryBytes": 5055086592,
+    "memoryBudgetBytes": 1073741824,
+    "additionalMemoryGiB": 0,
+    "memoryTransientMarginGiB": 1,
+    "swapUsedBytes": 235080253,
+    "swapChangeFromObservedBaselineBytes": 12383682,
+    "diskAvailableBytes": 7757385728,
+    "diskBudgetBytes": 4843597595,
+    "additionalDiskGiB": 0,
+    "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+    "growthHorizonSeconds": 720,
+    "osDiskMarginGiB": 2,
+    "pages": {
+      "Pages free": 4300,
+      "Pages inactive": 302761,
+      "Pages speculative": 1477
+    },
+    "pageSize": 16384,
+    "cpuOrJobCountGate": false
+  },
+  "cacheReleaseFailure": "cache_group_cleanup_unproven",
+  "sourceReleaseFailure": "source_group_cleanup_unproven"
+}

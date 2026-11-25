@@ -1,0 +1,69 @@
+{
+  "createdUTC": "2026-11-25T06:56:05.023718+00:00",
+  "owner": "/root",
+  "branch": "fix/gsd-widget-final-20261125",
+  "worktree": "C:\\Users\\DAVID\\Code\\GSD-Widget-Final-20261125",
+  "commit": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "tree": "4a0fe7bd59ee868f8cca2c8c6d674a27b1eaf69d",
+  "parent": "1d4033c54542b161da65ab34f083cac8aec0b1c4",
+  "baseline": "3ca346ef595a6a7e062a2a2fc66cbe5b2a76ff2c",
+  "cherryPickedCICommit": "f56a8acea008336d26ed832ab5fee0525b126023",
+  "changedPathCount": 4,
+  "files": [
+    {
+      "path": "App/ContentView.swift",
+      "gitBlob": "78e848f5284477a2bc41125975478fcd998dc168",
+      "bytes": 26291,
+      "sha256": "8c6f03cde4dca592fb92f8e4f2ba9c6cccf96b37a0472f27a08b1098819ed288"
+    },
+    {
+      "path": ".github/workflows/gsd-hanlin-agent-ios.yml",
+      "gitBlob": "7337e321c4f0aa5c30a5931403f03246960219f0",
+      "bytes": 30893,
+      "sha256": "a2cac6c926f490bbb51fc7102ec2e778de52dd34147fed3cc48f1eca7e569b5d"
+    },
+    {
+      "path": "scripts/gsd_widget_actions_acceptance.py",
+      "gitBlob": "9e7683e5c62a54307c83638a113e7e4dce3e56cd",
+      "bytes": 27244,
+      "sha256": "02459ac20eb67e1da5c73b3969c632698444997a980d2260efb1217552399eb9"
+    },
+    {
+      "path": "scripts/test_gsd_widget_actions_acceptance.py",
+      "gitBlob": "ffc2e946363d7fa63d9daad8c536ee0ced65424a",
+      "bytes": 19874,
+      "sha256": "627dee020ebc11e3ae3ab3f599973918e7dda36a2e0cdcb9ae86840b4eb925d0"
+    }
+  ],
+  "systemTestGitBlob": "ff2e6164cc201053feff63230480948315dc3740",
+  "diagnostic620NotAncestor": true,
+  "diagnosticInstrumentationAbsent": true,
+  "originalTest01Unchanged": true,
+  "ciPythonBytesExactlyMatch25PassingTests": true,
+  "protectedBefore": {
+    "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-integration-20261125T065601Z\\protected-before.json",
+    "bytes": 16852,
+    "sha256": "4ca05829c2382bc93945d7ddc98c9cb030062a51a751e0832eb83242512135dd"
+  },
+  "protectedAfter": {
+    "path": "C:\\Users\\DAVID\\Code\\GSD-Apple-Evidence-20261124\\widget-final-integration-20261125T065601Z\\protected-after.json",
+    "bytes": 16852,
+    "sha256": "4ca05829c2382bc93945d7ddc98c9cb030062a51a751e0832eb83242512135dd"
+  },
+  "allProtectedSnapshotsEqual": true,
+  "originalLocalFilesPreserved": 32,
+  "heldDocPathsPreservedMetadataOnly": 35,
+  "abortedDocsContentsReread": false,
+  "canonicalBefore": null,
+  "canonicalUnchanged": true,
+  "mainMerged": false,
+  "worktreeClean": true,
+  "nativeBuildPerformed": false,
+  "runtimePerformed": false,
+  "pushPerformed": true,
+  "publishedUTC": "2026-11-25T06:56:08.327775+00:00",
+  "pushMode": "normal new branch; no force",
+  "remoteVerified": "https://github.com/davidpovarsky/gsd-iosapp.git",
+  "remoteSHA": "fd6e2944a5a215d317fa5cc2a2802121e3ae3d61",
+  "commitURL": "https://github.com/davidpovarsky/gsd-iosapp/commit/fd6e2944a5a215d317fa5cc2a2802121e3ae3d61"
+}

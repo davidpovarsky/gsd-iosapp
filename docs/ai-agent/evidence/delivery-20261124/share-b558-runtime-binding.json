@@ -1,0 +1,50 @@
+{
+  "startedUTC": "2026-11-25T00:40:14.194720+00:00",
+  "phase": "complete",
+  "testSourceSHA": "b5588f3f0c42df328dba34024d569be8605e51d0",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "productionManifestSHA256": "38aae93e3330893c26c1ce837a05af933b1d2115b69b01b0ea67f0e8fb2eb67f",
+  "composedManifestSHA256": "605a5631510c1632d690dac26a2b71132237065fbfb7a9b54c081dbe412d2a8a",
+  "composedProductsTree": {
+    "sha256": "500a5277f338083aaab31010c00ce6f86f28cdf6bc871a8a987f20bd9321e9c7",
+    "files": 422
+  },
+  "wrapperPID": 81557,
+  "selectedTests": [
+    "GSDSystemSurfaceUITests/test00RecordSystemSurfaceDiscovery",
+    "GSDSystemSurfaceUITests/test01TextShareExtensionRoundTripAndCancellation"
+  ],
+  "passed": true,
+  "accountGrantVerified": false,
+  "fullSystemSurfaceCoverage": false,
+  "previous9190ProductsUnchanged": true,
+  "priorSystemReceiptsUnchanged": true,
+  "finishedUTC": "2026-11-25T00:44:38.370081+00:00",
+  "returncode": 0,
+  "publicSummaryPath": "/Users/m1/builds/gsd-share-popover-b5588f3f-20261125/evidence/share-supplemental/public/supplemental-summary.json",
+  "publicSummarySHA256": "1893f1872cafce31ec6d3150df9b9e0fb6a4871c1c8a891d71e2a54b2c210df9",
+  "originalProductsUnchanged": true,
+  "productsUnchanged": true,
+  "ownedSimulatorsRemoved": true,
+  "share": {
+    "passed": true,
+    "simulatorID": "9C36F613-2EAD-4A89-926B-AC9A6ECEC95E",
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-2",
+    "runtimeBuild": "24B8117",
+    "test": {
+      "selectedTests": [
+        "GSDSystemSurfaceUITests/test00RecordSystemSurfaceDiscovery",
+        "GSDSystemSurfaceUITests/test01TextShareExtensionRoundTripAndCancellation"
+      ],
+      "totalTestCount": 2,
+      "passedTests": 2,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "expectedFailures": 0
+    },
+    "scope": "real_text_share_add_cancel_and_persistence",
+    "fullSystemSurfaceCoverage": false,
+    "accountGrantVerified": false,
+    "ownedDevicesRemoved": true
+  }
+}
