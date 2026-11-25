@@ -202,11 +202,14 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         // Reveal the real row using its scroll container before asking for a hit point.
         for _ in 0..<14 {
             var candidates: [XCUIElement] = []
-            let table = app.scrollViews["task-workspace.table"].firstMatch
-            if table.exists {
+            let tableID = "task-workspace.table"
+            let nativeTables = app.scrollViews.matching(identifier: tableID).allElementsBoundByIndex
+                + app.tables.matching(identifier: tableID).allElementsBoundByIndex
+                + app.collectionViews.matching(identifier: tableID).allElementsBoundByIndex
+            if !nativeTables.isEmpty {
                 // The live row can disappear between exists and the ancestor query.
-                // Bind the table by its own stable ID, independent of lazy row lifetime.
-                candidates = [table]
+                // Bind compact/regular tables by their own ID, independent of row lifetime.
+                candidates = nativeTables
             } else if button.exists {
                 candidates = app.scrollViews.containing(.button, identifier: identifier).allElementsBoundByIndex
                     + app.tables.containing(.button, identifier: identifier).allElementsBoundByIndex
