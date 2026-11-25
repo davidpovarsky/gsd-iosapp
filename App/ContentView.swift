@@ -75,8 +75,10 @@ struct ContentView: View {
                     .environment(session)
             }
             .overlay(alignment: .bottomTrailing) {
-                if (sizeClass == .compact && palette.compactTab != 1 && palette.compactTab != 3)
-                    || (sizeClass != .compact && palette.regularSelection != .dashboard) {
+                if (sizeClass == .compact && palette.compactTab != 1 && palette.compactTab != 3
+                    && palette.compactTab != 4)
+                    || (sizeClass != .compact && palette.regularSelection != .dashboard
+                        && palette.regularSelection != .workspace) {
                     hanlinAssistantButton
                         .padding(.trailing, 18)
                         .padding(.bottom, sizeClass == .compact ? 100 : 24)
@@ -281,7 +283,10 @@ struct ContentView: View {
                     .overlay(alignment: .bottom) { UndoTaskToast(undo: undo).padding(.bottom, 72) }
             }
         } else {
-            RegularRootView { assistantInset }
+            RegularRootView(
+                dashboardAssistant: { assistantInset },
+                workspaceAssistant: { hanlinAssistantButton }
+            )
         }
     }
 
@@ -304,6 +309,11 @@ struct ContentView: View {
                 GSDTaskWorkspaceView(store: store)
                     .navigationTitle(String(localized: "Task workspace"))
                     .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            hanlinAssistantButton
+                        }
+                    }
             }
             .tabItem { Label(String(localized: "Workspace"), systemImage: "point.3.connected.trianglepath.dotted") }
             .tag(4)
@@ -402,8 +412,9 @@ struct ContentView: View {
 }
 
 /// iPad split view. Sidebar selection drives the detail column.
-private struct RegularRootView<DashboardAssistant: View>: View {
+private struct RegularRootView<DashboardAssistant: View, WorkspaceAssistant: View>: View {
     let dashboardAssistant: () -> DashboardAssistant
+    let workspaceAssistant: () -> WorkspaceAssistant
     @Environment(TaskStore.self) private var store
     @Environment(PaletteController.self) private var palette
     @Environment(SyncCoordinator.self) private var sync
@@ -490,6 +501,11 @@ private struct RegularRootView<DashboardAssistant: View>: View {
                     GSDTaskWorkspaceView(store: store)
                         .navigationTitle(String(localized: "Task workspace"))
                         .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                workspaceAssistant()
+                            }
+                        }
                 }
             case .settings:
                 SettingsView()
