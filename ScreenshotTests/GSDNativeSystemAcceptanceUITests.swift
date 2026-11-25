@@ -172,14 +172,11 @@ final class GSDNativeSystemAcceptanceUITests: XCTestCase {
         let productNames = ["GSD", "GSD Widgets", "יישומוני GSD", "המיקוד להיום", "Today's Focus"]
         let product = NSPredicate(format: "label IN %@ OR identifier IN %@",
                                   argumentArray: [productNames, productNames])
-        let buttons = home.buttons.matching(product)
-        let result: XCUIElement
-        if buttons.firstMatch.waitForExistence(timeout: 10) {
-            result = try widgetGalleryControl(buttons, stage: "11-widget-gallery-04-gsd-results")
-        } else {
-            result = try widgetGalleryControl(home.staticTexts.matching(product),
-                                              stage: "11-widget-gallery-04-gsd-results")
-        }
+        let galleries = home.collectionViews.matching(identifier: "add-sheet-collection-view")
+        try require(galleries.count == 1, "Native widget gallery must expose one observed result collection.")
+        let result = try widgetGalleryControl(
+            galleries.element.cells.matching(NSPredicate(format: "label == %@", "GSD")),
+            stage: "11-widget-gallery-04-gsd-results")
         result.tap()
 
         let install = try widgetGalleryControl(home.buttons.matching(addWidget),
