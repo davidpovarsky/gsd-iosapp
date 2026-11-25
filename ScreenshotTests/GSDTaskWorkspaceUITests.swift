@@ -80,9 +80,11 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         let network = app.descendants(matching: .any).matching(identifier: "task-workspace.network.canvas").firstMatch
         XCTAssertTrue(network.waitForExistence(timeout: 10))
         capture("04-network")
-        let taskTitle = hebrew ? "לקבל אישור ממחלקת הכספים" : "Get finance sign-off"
-        let open = app.buttons[taskTitle].firstMatch
+        let open = app.buttons["task-workspace.open.demo-finance"].firstMatch
         XCTAssertTrue(open.waitForExistence(timeout: 10))
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            exerciseNativeNetworkPanAndFit(node: open, canvas: network, in: app)
+        }
         open.tap()
         let editor = app.descendants(matching: .any).matching(identifier: "task-editor").firstMatch
         XCTAssertTrue(editor.waitForExistence(timeout: 10))
@@ -129,6 +131,64 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
                        "A native cross-column drop must persist through the canonical task store")
         capture("02-table-after-native-board-drop")
         tapMode("board", in: app)
+    }
+
+    private func exerciseNativeNetworkPanAndFit(node: XCUIElement, canvas: XCUIElement,
+                                                in app: XCUIApplication) {
+        let fit = app.buttons["task-workspace.network.fit"].firstMatch
+        XCTAssertTrue(fit.waitForExistence(timeout: 10))
+        fit.tap()
+        let bounds = canvas.frame.intersection(app.frame)
+        let occupied = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@",
+                                                        "task-workspace.open."))
+            .allElementsBoundByIndex.map { $0.frame } + [fit.frame]
+        let before = node.frame
+        XCTAssertTrue(node.isHittable && bounds.contains(before))
+        let dx: CGFloat = before.midX < bounds.midX ? 80 : -80
+        let dy: CGFloat = before.midY < bounds.midY ? 56 : -56
+        let fractions: [CGFloat] = [0.15, 0.5, 0.85]
+        let points = fractions.flatMap { x in
+            fractions.map { y in CGPoint(x: bounds.minX + bounds.width * x,
+                                        y: bounds.minY + bounds.height * y) }
+        }
+        guard let start = points.first(where: { point in
+            bounds.contains(CGPoint(x: point.x + dx, y: point.y + dy)) &&
+                !occupied.contains(where: { $0.insetBy(dx: -8, dy: -8).contains(point) })
+        }) else {
+            XCTFail("The visible network must expose background space for panning")
+            return
+        }
+        let end = CGPoint(x: start.x + dx, y: start.y + dy)
+        let observation = XCTAttachment(string: "canvas=\(bounds) node=\(before) pan=\(start)->\(end)\n" + app.debugDescription)
+        observation.name = "native-network-pan-observed-elements"
+        observation.lifetime = .keepAlways
+        add(observation)
+        let origin = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
+        origin.withOffset(CGVector(dx: start.x - app.frame.minX, dy: start.y - app.frame.minY))
+            .press(forDuration: 0.05, thenDragTo:
+                origin.withOffset(CGVector(dx: end.x - app.frame.minX, dy: end.y - app.frame.minY)))
+        let moved = XCTNSPredicateExpectation(predicate: NSPredicate { element, _ in
+            guard let element = element as? XCUIElement, element.exists else { return false }
+            let frame = element.frame
+            let x = frame.midX - before.midX
+            let y = frame.midY - before.midY
+            return x * x + y * y > 24 * 24
+        }, object: node)
+        XCTAssertEqual(XCTWaiter.wait(for: [moved], timeout: 10), .completed,
+                       "A native network pan must move the rendered task control")
+        capture("04-network-after-native-pan")
+        fit.tap()
+        let recovered = XCTNSPredicateExpectation(predicate: NSPredicate { element, _ in
+            guard let element = element as? XCUIElement, element.exists else { return false }
+            let frame = element.frame
+            let x = frame.midX - before.midX
+            let y = frame.midY - before.midY
+            return x * x + y * y < 24 * 24
+        }, object: node)
+        XCTAssertEqual(XCTWaiter.wait(for: [recovered], timeout: 10), .completed,
+                       "Fit must recover the task position after native panning")
+        XCTAssertTrue(node.isHittable && bounds.contains(node.frame))
+        capture("04-network-after-fit")
     }
 
     private func clearTimelineDate(for id: String, in app: XCUIApplication) {
