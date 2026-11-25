@@ -245,11 +245,16 @@ final class GSDSystemSurfaceUITests: XCTestCase {
         try require(sheets.count == 1, "The returned native activity sheet is ambiguous.")
         let sheet = sheets.firstMatch
         try capture(app, "09-cancel-returned-activity-sheet")
-        try require(sheet.wait(for: \.isHittable, toEqual: true, timeout: 10),
-                    "The returned native activity sheet is obscured.")
-        sheet.swipeDown()
+        let dismissRegions = app.otherElements.matching(identifier: "PopoverDismissRegion")
+        try require(dismissRegions.firstMatch.waitForExistence(timeout: 10),
+                    "The native activity popover dismissal region is missing.")
+        try require(dismissRegions.count == 1, "The native activity popover dismissal region is ambiguous.")
+        let dismissRegion = dismissRegions.firstMatch
+        try require(dismissRegion.wait(for: \.isHittable, toEqual: true, timeout: 10),
+                    "The native activity popover dismissal region is obscured.")
+        dismissRegion.tap()
         try require(sheet.waitForNonExistence(timeout: 10),
-                    "The returned native activity sheet did not dismiss after the downward gesture.")
+                    "The returned native activity sheet did not dismiss after tapping its dismissal region.")
         try capture(app, "09-after-activity-sheet-dismissal")
     }
 
