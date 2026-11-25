@@ -29,6 +29,11 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         capture("01-live-graph")
         let graphTask = app.buttons["task-workspace.open.demo-finance"].firstMatch
         XCTAssertTrue(graphTask.waitForExistence(timeout: 10))
+        let graphObservation = XCTAttachment(string:
+            "Finance native control frame: \(graphTask.frame)\n\(app.debugDescription)")
+        graphObservation.name = "native-graph-open-observed-elements"
+        graphObservation.lifetime = .keepAlways
+        add(graphObservation)
         graphTask.tap()
         XCTAssertTrue(app.textFields["editor-title"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.textFields["editor-title"].value as? String,
@@ -285,8 +290,9 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         observation.lifetime = .keepAlways
         add(observation)
         capture("08-flow-before-native-connection")
-        // These descriptors are measured from the original SwiftFlow Handles.
-        // Their centers hit its existing minimumDistance: 0 connection gesture.
+        // These descriptors are measured from the rendered SwiftFlow handles.
+        // Their centers hit the adapter's native connector layer; the caller
+        // verifies the resulting edge through the canonical connection editor.
         source.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
             .press(forDuration: 0.05, thenDragTo:
                 destination.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)))
@@ -358,18 +364,70 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
                 } else if frame.maxX > viewport.maxX {
                     container.swipeLeft()
                 } else if frame.minY < viewport.minY {
-                    container.swipeDown()
+                    scrollTaskContainer(container, swipingUp: false, in: app)
                 } else {
-                    container.swipeUp()
+                    scrollTaskContainer(container, swipingUp: true, in: app)
                 }
             } else if searchingUpward {
-                container.swipeDown()
+                scrollTaskContainer(container, swipingUp: false, in: app)
             } else {
-                container.swipeUp()
+                scrollTaskContainer(container, swipingUp: true, in: app)
             }
         }
+        let failure = XCTAttachment(string: app.debugDescription)
+        failure.name = "native-task-reveal-failure"
+        failure.lifetime = .keepAlways
+        add(failure)
+        capture("task-reveal-failure")
         XCTFail("The canonical task completion control must be visible after bounded scrolling: \(identifier)")
         return button
+    }
+
+    private func scrollTaskContainer(_ container: XCUIElement, swipingUp: Bool,
+                                     in app: XCUIApplication) {
+        let board = app.scrollViews["task-workspace.board"].firstMatch
+        guard board.exists else {
+            if swipingUp { container.swipeUp() } else { container.swipeDown() }
+            return
+        }
+        XCTAssertNotEqual(container.identifier, "task-workspace.board",
+                          "Board scrolling must target its actual vertical task column")
+        let column = container.frame
+        let viewport = taskViewport(container, in: app).insetBy(dx: 1, dy: 8)
+        let cardElements = container.otherElements.matching(
+            NSPredicate(format: "identifier BEGINSWITH %@", "task-workspace.card."))
+            .allElementsBoundByIndex
+        let cardFrames = cardElements.map(\.frame).filter { !$0.isEmpty }
+        XCTAssertFalse(cardFrames.isEmpty, "The native Board card geometry must be observable")
+        // AdvancedKanban's untouched vertical card list has 12pt outer padding.
+        // Each draggable wrapper adds another 12pt around our identified card.
+        // A center swipe hits that wrapper's DragGesture and reorders cards;
+        // scroll through the measured column's outer gutter instead.
+        let chrome = cardFrames.map { $0.insetBy(dx: -12, dy: -12) }
+        let controls = container.buttons.allElementsBoundByIndex.map(\.frame).filter { !$0.isEmpty }
+        let startY = viewport.minY + viewport.height * (swipingUp ? 0.8 : 0.2)
+        let endY = viewport.minY + viewport.height * (swipingUp ? 0.2 : 0.8)
+        let candidateX = [column.minX + 6, column.maxX - 6]
+        guard let x = candidateX.first(where: { x in
+            let start = CGPoint(x: x, y: startY)
+            let end = CGPoint(x: x, y: endY)
+            let path = CGRect(x: x - 1, y: min(startY, endY), width: 2, height: abs(endY - startY))
+            return viewport.contains(start) && viewport.contains(end)
+                && !(chrome + controls).contains { $0.intersects(path) }
+        }) else {
+            XCTFail("A visible Board gutter outside the measured draggable cards is required")
+            return
+        }
+        let observation = XCTAttachment(string:
+            "column=\(column) viewport=\(viewport) cards=\(cardFrames) "
+            + "draggableChrome=\(chrome) scroll=(\(x),\(startY))->(\(x),\(endY))")
+        observation.name = "native-board-scroll-gutter"
+        observation.lifetime = .keepAlways
+        add(observation)
+        let origin = app.coordinate(withNormalizedOffset: .zero)
+        origin.withOffset(CGVector(dx: x - app.frame.minX, dy: startY - app.frame.minY))
+            .press(forDuration: 0.05, thenDragTo:
+                origin.withOffset(CGVector(dx: x - app.frame.minX, dy: endY - app.frame.minY)))
     }
 
     private func taskViewport(_ container: XCUIElement, in app: XCUIApplication) -> CGRect {

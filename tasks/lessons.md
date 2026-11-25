@@ -367,3 +367,8 @@ it, force one quadrant's `items` empty in a throwaway build, then launch with `-
 - Native accessibility presence and correct node frames do not prove connector dispatch. A drag between visible handles can pan the whole canvas; require the saved canonical edge and retain before/after screenshots.
 - Read physical network frames immediately after native gestures have waited for idle. Reentrant accessibility queries inside a custom predicate can stall polling and leave movement unmeasured.
 - A Hanlin toolbar entry does not exercise a tool-generated card. Inject only provider HTTP at the original SDK fetch seam, then require real consent, canonical tool execution/results and native card expansion. Keep demo UI evidence distinct from on-disk and live-backend evidence.
+
+- On a draggable Kanban board, a center swipe is a card gesture. Scroll the observed native vertical column through its real outer padding and verify the path is outside the full draggable chrome; keep drag and canonical lane acceptance separate.
+- Physical geometry used by a virtual accessibility tree must use a physical LTR coordinate root even when visible content is RTL. A stable identifier and hittability do not prove the intended task was activated; read back the canonical task identity.
+- SwiftUI identifiers can be inherited by decorative sidebar Images. Query the unique owning native Cell, not the first descendant carrying the ID.
+- A successful paste gesture does not prove a fresh simulator accepted the clipboard write. Verify clipboard readiness and secure-field nonplaceholder length without embedding generated credentials in XCTest predicate descriptions.

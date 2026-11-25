@@ -368,10 +368,18 @@ final class GSDSystemSurfaceUITests: XCTestCase {
     }
 
     private func scrollMatrixToTop(_ app: XCUIApplication) throws -> XCUIElement {
-        let lists = app.collectionViews.allElementsBoundByAccessibilityElement
-            .filter { $0.exists && $0.isHittable }
-        guard lists.count == 1, let list = lists.first else {
-            throw SystemSurfaceFailure(message: "The observed Matrix CollectionView is not uniquely hittable.")
+        // The app reloads its canonical store after the extension returns.
+        // Keep a resolving query while that update replaces native list elements,
+        // instead of holding an accessibility-identity snapshot across the update.
+        let lists = app.collectionViews
+        let list = lists.firstMatch
+        guard list.waitForExistence(timeout: 15), lists.count == 1 else {
+            try capture(app, "matrix-list-identity-failure")
+            throw SystemSurfaceFailure(message: "The observed Matrix CollectionView is not unique.")
+        }
+        guard list.wait(for: \.isHittable, toEqual: true, timeout: 15) else {
+            try capture(app, "matrix-list-hittability-failure")
+            throw SystemSurfaceFailure(message: "The observed Matrix CollectionView is not hittable.")
         }
         for step in 0...6 {
             let today = list.staticTexts.matching(NSPredicate(format: "label == %@", "היום, 0 מתוך 3"))

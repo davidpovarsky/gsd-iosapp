@@ -670,3 +670,14 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 - The native screenshot showed the composer keyboard hiding much of the embedded workspace. Release focus when sending, and strengthen the existing case to require both the actual inline task and Expand to be physically hittable with the keyboard absent. This presentation correction still needs final native verification.
 - Pin the root-reviewed shared connector adapter79d44b68bb3e3ee49a93414487e8c0d1ba4ff0a1 after21/21 package qualification; original upstream libraries remain untouched. Project generated and exact dependencies resolved on Mac.
 - Next: unchanged strict iPad physicalconnector→canonicaledge assertion; if successful and visually reviewed, execute all final13 native-release,4 workspace and2 share cases. Keep new31 evidence bound via complete package closure; no reuse of the earlier pre-factory unit execution.
+
+
+### Full native matrix diagnosis — 2026-11-25 18:40 UTC
+
+- Exact23e4080 native matrix executed17 invocations:13 passed,4 failed,0 skipped. Genuine Hanlin04 passed all4 configurations; both English workspace action flows passed, including real iPad Board/Flow gestures. No final release acceptance is claimed.
+- Hebrew phone Board reveal swiped a draggable card instead of the column gutter; the recording showed card reorder without vertical scrolling. Use the observed vertical column's original12pt outer gutter, outside measured draggable chrome, while retaining all visibility and canonical mutation assertions.
+- Hebrew iPad Flow's virtual accessibility geometry inherited RTL and opened the wrong canonical task. Pin shared3a1837f7c80c5c4210bf35dd5dfa9afeeff76ea3 after its unchanged21 tests passed; it makes only the physical AX coordinate root LTR and removes the duplicate Board count. Visible card localization and upstream code remain unchanged.
+- Native iPad navigation selected an inherited-ID Image instead of the sidebar Cell. Select the unique owning native row, retaining existence and hittability requirements.
+- Native signup recorded pasteboard IPC failure and an empty password field. Verify generated-password clipboard delivery and actual secure input length before continuing, with bounded replacement attempts and no credential-bearing predicate text.
+- Share post-extension refresh had an immediate identity-bound list hittability failure. Retain a resolving CollectionView query with bounded unique/existence/hittability checks; all8 Add/Cancel/cold-persistence assertions remain mandatory. Native rerun decides this hypothesis.
+- Next source-bound gate: full Hebrew iPhone/iPad native/workspace plus Share, then both full English configurations. All13 native,4 workspace and2 Share invocations remain required; no old native credit is reused. Fresh31 package execution remains explicitly anchored to d7fca3c only through complete unchanged target/toolchain/SDK closure.

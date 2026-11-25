@@ -67,8 +67,13 @@ final class GSDCloudReleaseUITests: XCTestCase {
             label("Settings", "הגדרות"): "gsd.sidebar.settings"
         ]
         let identifier = try requireAcceptanceValue(sidebarIDs[title], "Unknown sidebar destination: \(title)")
-        // Select the actual sidebar row, never the identically named detail title.
-        return app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+        // SwiftUI propagates a row identifier to its decorative children. Resolve
+        // the owning native Cell; the first matching descendant can be an Image.
+        let rows = app.cells.containing(.any, identifier: identifier)
+        try requireAcceptance(rows.firstMatch.waitForExistence(timeout: 15),
+                              "Missing sidebar row: \(title)")
+        try requireAcceptance(rows.count == 1, "Ambiguous sidebar row: \(title)")
+        return rows.firstMatch
     }
 
     private func navigate(_ app: XCUIApplication, _ title: String, test: String = #function) throws {
@@ -519,19 +524,37 @@ final class GSDCloudReleaseUITests: XCTestCase {
         app.terminate()
     }
 
-    private func pasteCloudPassword(_ value: String, into field: XCUIElement) {
-        // Use the standard iPad paste gesture for the generated fixture password.
-        // Synthesized per-character input into the new-password fields can lose characters.
-        field.tap()
-        if let content = field.value as? String, !content.isEmpty {
-            field.typeKey("a", modifierFlags: .command)
-        }
+    private func pasteCloudPassword(_ value: String, into field: XCUIElement) throws {
+        // A fresh simulator's pasteboard service can reject its first write.
+        // Verify delivery on both sides of the standard paste gesture before
+        // proceeding; do not mistake a secure field's placeholder for input.
         let pasteboard = UIPasteboard.general
-        pasteboard.setItems([["public.utf8-plain-text": value]], options: [
-            .localOnly: true, .expirationDate: Date().addingTimeInterval(300)
-        ])
         defer { pasteboard.items = [] }
-        field.typeKey("v", modifierFlags: .command)
+        for _ in 0..<3 {
+            pasteboard.setItems([["public.utf8-plain-text": value]], options: [
+                .localOnly: true, .expirationDate: Date().addingTimeInterval(300)
+            ])
+            let clipboardReady = XCTNSPredicateExpectation(
+                predicate: NSPredicate { object, _ in
+                    (object as? UIPasteboard)?.string == value
+                }, object: pasteboard)
+            guard XCTWaiter.wait(for: [clipboardReady], timeout: 5) == .completed else { continue }
+            try requireAcceptance(field.waitForExistence(timeout: 5),
+                                  "Native secure input disappeared before paste")
+            try requireAcceptance(field.wait(for: \.isHittable, toEqual: true, timeout: 5),
+                                  "Native secure input is obscured before paste")
+            field.tap()
+            field.typeKey("a", modifierFlags: .command)
+            field.typeKey("v", modifierFlags: .command)
+            let inputReady = XCTNSPredicateExpectation(
+                predicate: NSPredicate { object, _ in
+                    guard let input = object as? XCUIElement,
+                          let entered = input.value as? String else { return false }
+                    return entered != input.placeholderValue && entered.count == value.count
+                }, object: field)
+            if XCTWaiter.wait(for: [inputReady], timeout: 8) == .completed { return }
+        }
+        try requireAcceptance(false, "Generated fixture password did not reach the native secure input")
     }
 
     func test02CloudChangesArriveAfterClosedAppAndLocalChangesUpload() async throws {
@@ -561,10 +584,10 @@ final class GSDCloudReleaseUITests: XCTestCase {
         email.tap()
         email.typeText(fixture.email)
         let password = app.secureTextFields["gsd.cloud.password"]
-        pasteCloudPassword(fixture.password, into: password)
+        try pasteCloudPassword(fixture.password, into: password)
         let confirmation = app.secureTextFields["gsd.cloud.confirmation"]
         try requireAcceptance(confirmation.waitForExistence(timeout: 5), "Native signup confirmation is missing")
-        pasteCloudPassword(fixture.password, into: confirmation)
+        try pasteCloudPassword(fixture.password, into: confirmation)
         let submit = app.buttons["gsd.cloud.submit"]
         try requireAcceptance(submit.label == label("Create GSD account", "יצירת חשבון GSD"), "Native signup action label is not localized")
         if !submit.wait(for: \.isEnabled, toEqual: true, timeout: 8) {
@@ -598,7 +621,7 @@ final class GSDCloudReleaseUITests: XCTestCase {
         try requireAcceptance(!confirmation.exists, "Ordinary sign-in must not require signup confirmation")
         email.tap()
         email.typeText(fixture.email)
-        pasteCloudPassword(fixture.password, into: password)
+        try pasteCloudPassword(fixture.password, into: password)
         try requireAcceptance(submit.label == label("Sign in to GSD Cloud", "התחברות ל־GSD Cloud"), "Native sign-in action label is not localized")
         try requireAcceptance(submit.isEnabled, "Valid native sign-in must enable submission")
         for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
