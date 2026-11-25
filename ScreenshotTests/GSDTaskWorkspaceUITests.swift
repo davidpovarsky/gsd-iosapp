@@ -454,10 +454,18 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         observation.name = "native-board-scroll-gutter"
         observation.lifetime = .keepAlways
         add(observation)
-        let origin = app.coordinate(withNormalizedOffset: .zero)
-        origin.withOffset(CGVector(dx: x - app.frame.minX, dy: startY - app.frame.minY))
-            .press(forDuration: 0.05, thenDragTo:
-                origin.withOffset(CGVector(dx: x - app.frame.minX, dy: endY - app.frame.minY)))
+        guard let start = measuredNativeCoordinate(
+            on: container, at: CGPoint(x: x, y: startY),
+            observationName: "native-board-scroll-start-coordinate"),
+              let end = measuredNativeCoordinate(
+                on: container, at: CGPoint(x: x, y: endY),
+                observationName: "native-board-scroll-end-coordinate") else { return }
+        start.press(forDuration: 0.05, thenDragTo: end)
+        let after = XCTAttachment(string: "column=\(container.frame) controls="
+            + "\(container.buttons.allElementsBoundByIndex.map(\.frame))")
+        after.name = "native-board-scroll-after"
+        after.lifetime = .keepAlways
+        add(after)
     }
 
     private func taskViewport(_ container: XCUIElement, in app: XCUIApplication) -> CGRect {

@@ -681,3 +681,12 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 - Native signup recorded pasteboard IPC failure and an empty password field. Verify generated-password clipboard delivery and actual secure input length before continuing, with bounded replacement attempts and no credential-bearing predicate text.
 - Share post-extension refresh had an immediate identity-bound list hittability failure. Retain a resolving CollectionView query with bounded unique/existence/hittability checks; all8 Add/Cancel/cold-persistence assertions remain mandatory. Native rerun decides this hypothesis.
 - Next source-bound gate: full Hebrew iPhone/iPad native/workspace plus Share, then both full English configurations. All13 native,4 workspace and2 Share invocations remain required; no old native credit is reused. Fresh31 package execution remains explicitly anchored to d7fca3c only through complete unchanged target/toolchain/SDK closure.
+
+
+### GSD final native coordinate qualification and Network RTL (2026-11-25 20:54 UTC)
+
+- Source 593ff0a passed all eight real Share extension assertions and the full Hebrew iPad workspace scenario; final release remains blocked by the Hebrew phone Board reveal and iPad context-coordinate gates.
+- Keep the same physical Board gutter, 14-scroll bound and canonical completion visibility. Resolve gestures through the actual native column with measured origin and unit axes, retaining requested/resolved points before strict agreement. Prior event metadata alone did not establish a root cause.
+- Keep context backdrop geometry, one tap and five-second dismissal. Capture the native coordinate basis before the agreement guard instead of assuming frame.origin is its origin.
+- Pin shared TaskVisualizationKit 2194705871da715eb996ecfeb10f280e1cb0a85e after its unchanged 21 tests passed. The physical Network canvas and nodes share LTR coordinates while labels stay localized; final Hebrew screenshot and pan/Fit/open acceptance remain required.
+- Combined native qualification is pending. Original upstream sources remain untouched; no TestFlight completion is claimed.

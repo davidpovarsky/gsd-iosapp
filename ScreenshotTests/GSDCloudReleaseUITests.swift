@@ -260,25 +260,25 @@ final class GSDCloudReleaseUITests: XCTestCase {
                             y: backdrop.midY)
         try requireAcceptance(viewport.contains(point) && !excluded.contains(point),
                               "Context backdrop point overlaps menu/preview or leaves the window")
-        let coordinate = menuAction.coordinate(withNormalizedOffset: .zero)
-            .withOffset(CGVector(dx: point.x - actionFrame.minX, dy: point.y - actionFrame.minY))
-        let resolved = coordinate.screenPoint
-        try requireAcceptance(abs(resolved.x - point.x) < 1 && abs(resolved.y - point.y) < 1,
-                              "Native context coordinate disagrees with measured backdrop")
         let geometry: [String: Any] = [
             "schemaVersion": 1, "language": language,
             "anchorIdentifier": menuAction.identifier, "anchorLabel": menuAction.label,
             "windowFrame": captureFrame(windowFrame), "previewFrame": captureFrame(previewFrame),
             "menuFrame": captureFrame(menuFrame), "actionFrame": captureFrame(actionFrame),
             "backdropFrame": captureFrame(backdrop), "excludedFrame": captureFrame(excluded),
-            "point": ["x": Double(point.x), "y": Double(point.y)],
-            "resolvedPoint": ["x": Double(resolved.x), "y": Double(resolved.y)]
+            "point": ["x": Double(point.x), "y": Double(point.y)]
         ]
         let data = try JSONSerialization.data(withJSONObject: geometry, options: [.prettyPrinted, .sortedKeys])
         let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
         attachment.name = "\(language)-03-context-backdrop-observed-elements"
         attachment.lifetime = .keepAlways
         add(attachment)
+        guard let coordinate = measuredNativeCoordinate(
+            on: menuAction, at: point,
+            observationName: "\(language)-03-context-backdrop-native-coordinate") else {
+            throw UIAcceptanceFailure(message: "Native context coordinate disagrees with measured backdrop",
+                                      file: #fileID, line: #line)
+        }
         coordinate.tap()
     }
 
