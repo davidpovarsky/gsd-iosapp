@@ -30,7 +30,7 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
 
         tapMode("table", in: app)
         let completionID = "task-workspace.complete.demo-finance"
-        let completion = app.buttons[completionID].firstMatch
+        let completion = revealTaskCompletion(completionID, in: app)
         XCTAssertTrue(completion.waitForExistence(timeout: 10))
         XCTAssertEqual(completion.label, hebrew ? "השלמת משימה" : "Complete task")
         completion.tap()
@@ -40,7 +40,7 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [persisted], timeout: 10), .completed)
 
         tapMode("board", in: app)
-        let boardCompletion = app.buttons[completionID].firstMatch
+        let boardCompletion = revealTaskCompletion(completionID, in: app)
         XCTAssertTrue(boardCompletion.waitForExistence(timeout: 10))
         XCTAssertEqual(boardCompletion.label, reopenedLabel)
         capture("02-board-after-completion")
@@ -68,8 +68,67 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         app.buttons["editor-cancel"].tap()
         XCTAssertTrue(workspace.waitForExistence(timeout: 10))
         tapMode("table", in: app)
-        XCTAssertEqual(app.buttons[completionID].firstMatch.label, reopenedLabel)
+        XCTAssertEqual(revealTaskCompletion(completionID, in: app).label, reopenedLabel)
         capture("06-table-persisted-state")
+    }
+
+    private func revealTaskCompletion(_ identifier: String, in app: XCUIApplication) -> XCUIElement {
+        let button = app.buttons[identifier].firstMatch
+        let title = app.buttons[identifier.replacingOccurrences(of: ".complete.", with: ".open.")].firstMatch
+        let taskButtons = NSPredicate(format: "identifier BEGINSWITH %@", "task-workspace.complete.")
+        // Compact tables and Kanban columns materialize their rows lazily.
+        // Reveal the real row using its scroll container before asking for a hit point.
+        for _ in 0..<14 {
+            let candidates: [XCUIElement]
+            if button.exists {
+                candidates = app.scrollViews.containing(.button, identifier: identifier).allElementsBoundByIndex
+                    + app.tables.containing(.button, identifier: identifier).allElementsBoundByIndex
+                    + app.collectionViews.containing(.button, identifier: identifier).allElementsBoundByIndex
+            } else {
+                candidates = app.scrollViews.containing(taskButtons).allElementsBoundByIndex
+                    + app.tables.containing(taskButtons).allElementsBoundByIndex
+                    + app.collectionViews.containing(taskButtons).allElementsBoundByIndex
+            }
+            let visible = candidates.filter {
+                let viewport = taskViewport($0, in: app)
+                return viewport.height > 100 && viewport.width > 40
+            }
+            // Prefer the actual vertical task column over its horizontal ancestor.
+            guard let container = visible.min(by: {
+                let a = taskViewport($0, in: app), b = taskViewport($1, in: app)
+                return a.width * a.height < b.width * b.height
+            }) else {
+                XCTFail("A visible task scroll container is required.")
+                return button
+            }
+            let viewport = taskViewport(container, in: app).insetBy(dx: 2, dy: 6)
+            if button.exists && !button.frame.isEmpty {
+                let frame = title.exists && !title.frame.isEmpty ? button.frame.union(title.frame) : button.frame
+                if viewport.contains(frame) && button.isHittable { return button }
+                if frame.minX < viewport.minX {
+                    container.swipeRight()
+                } else if frame.maxX > viewport.maxX {
+                    container.swipeLeft()
+                } else if frame.minY < viewport.minY {
+                    container.swipeDown()
+                } else {
+                    container.swipeUp()
+                }
+            } else {
+                container.swipeUp()
+            }
+        }
+        XCTFail("The canonical task completion control must be visible after bounded scrolling: \(identifier)")
+        return button
+    }
+
+    private func taskViewport(_ container: XCUIElement, in app: XCUIApplication) -> CGRect {
+        var viewport = container.frame.intersection(app.frame)
+        // The floating native compact tab bar can cover the bottom of a scroll view.
+        for tabBar in app.tabBars.allElementsBoundByIndex where tabBar.frame.intersects(viewport) {
+            viewport.size.height = max(0, min(viewport.maxY, tabBar.frame.minY) - viewport.minY)
+        }
+        return viewport
     }
 
     private func tapMode(_ mode: String, in app: XCUIApplication) {
