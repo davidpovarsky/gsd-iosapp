@@ -52,6 +52,7 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         let chart = app.descendants(matching: .any).matching(identifier: "task-workspace.timeline.chart").firstMatch
         XCTAssertTrue(chart.waitForExistence(timeout: 10))
         capture("03-timeline")
+        clearTimelineDate(for: "demo-finance", in: app)
 
         tapMode("network", in: app)
         let network = app.descendants(matching: .any).matching(identifier: "task-workspace.network.canvas").firstMatch
@@ -73,6 +74,72 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         tapMode("table", in: app)
         XCTAssertEqual(revealTaskCompletion(completionID, in: app).label, reopenedLabel)
         capture("06-table-persisted-state")
+        let date = app.buttons["task-workspace.date.demo-finance"].firstMatch
+        XCTAssertEqual(date.label, hebrew ? "קביעת תאריך" : "Set date")
+        moveTaskToDelegate(in: app)
+        exerciseDependencies(in: app)
+    }
+
+    private func clearTimelineDate(for id: String, in app: XCUIApplication) {
+        let inspect = app.buttons["task-workspace.timeline.inspect.\(id)"].firstMatch
+        XCTAssertTrue(inspect.waitForExistence(timeout: 10))
+        inspect.tap()
+        let due = app.buttons["task-workspace.timeline.due.\(id)"].firstMatch
+        XCTAssertTrue(due.waitForExistence(timeout: 10))
+        XCTAssertTrue(due.isHittable, "Timeline task actions must appear in the visible viewport")
+        due.tap()
+        let toggle = app.switches["task-workspace.date.toggle"].firstMatch
+        XCTAssertTrue(toggle.waitForExistence(timeout: 10))
+        XCTAssertEqual(toggle.value as? String, "1")
+        toggle.tap()
+        app.buttons["task-workspace.date.save"].tap()
+        XCTAssertTrue(due.waitForExistence(timeout: 10))
+        app.buttons["task-workspace.timeline.close-actions"].tap()
+    }
+
+    private func moveTaskToDelegate(in app: XCUIApplication) {
+        let lane = app.buttons["task-workspace.lane.demo-finance"].firstMatch
+        let destination = hebrew ? "להעביר לאחרים" : "Delegate"
+        XCTAssertTrue(lane.waitForExistence(timeout: 10))
+        lane.tap()
+        app.buttons["task-workspace.lane-choice.demo-finance.urgent-not-important"].firstMatch.tap()
+        let moved = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label == %@", destination), object: lane)
+        XCTAssertEqual(XCTWaiter.wait(for: [moved], timeout: 10), .completed)
+        capture("07-real-quadrant-change")
+    }
+
+    private func exerciseDependencies(in app: XCUIApplication) {
+        app.buttons["task-workspace.options"].tap()
+        app.buttons["task-workspace.connections"].tap()
+        let remove = app.buttons["task-workspace.connection.remove.demo-finance.demo-deck"].firstMatch
+        XCTAssertTrue(remove.waitForExistence(timeout: 10))
+        remove.tap()
+        let removed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: remove)
+        XCTAssertEqual(XCTWaiter.wait(for: [removed], timeout: 10), .completed)
+
+        chooseConnection("prerequisite", title: hebrew ? "לקבל אישור ממחלקת הכספים" : "Get finance sign-off", in: app)
+        chooseConnection("dependent", title: hebrew ? "לסיים את המצגת לרבעון השלישי" : "Finish the Q3 board deck", in: app)
+        let add = app.buttons["task-workspace.connection.add"]
+        XCTAssertTrue(add.isEnabled)
+        add.tap()
+        XCTAssertTrue(remove.waitForExistence(timeout: 10))
+        XCTAssertFalse(add.isEnabled, "An existing connection must not be added twice")
+
+        chooseConnection("prerequisite", title: hebrew ? "לסיים את המצגת לרבעון השלישי" : "Finish the Q3 board deck", in: app)
+        chooseConnection("dependent", title: hebrew ? "לקבל אישור ממחלקת הכספים" : "Get finance sign-off", in: app)
+        XCTAssertFalse(add.isEnabled, "The reverse edge must be rejected because it creates a dependency cycle")
+        capture("08-dependencies-cycle-rejected")
+        app.buttons["task-workspace.connection.done"].tap()
+    }
+
+    private func chooseConnection(_ field: String, title: String, in app: XCUIApplication) {
+        let picker = app.buttons["task-workspace.connection.\(field)"].firstMatch
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        picker.tap()
+        let choice = app.buttons[title].firstMatch
+        XCTAssertTrue(choice.waitForExistence(timeout: 10))
+        choice.tap()
     }
 
     private func revealTaskCompletion(_ identifier: String, in app: XCUIApplication,

@@ -638,3 +638,7 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 - Root cause confirmed from 1470da6 xcresult: canonical completion stamps updatedAt, the GRDB observer moves the task to the top, and LazyVStack removes its offscreen control. Waiting on its previous position times out.
 - The UI test now reacquires and reveals the same stable task ID after reorder, keeping the actual completion assertion and cross-view verification.
 - Next: exact-source incremental simulator build and iPhone/iPad × English/Hebrew workspace acceptance on the owned Scaleway workspaces. No successful run or release is claimed yet.
+
+- Expanded existing native acceptance methods to exercise timeline date actions, real quadrant movement, dependency removal/re-addition and duplicate/cycle rejection, plus Hanlin-to-workspace-to-canonical-editor navigation.
+- New shared-kit AX controls must be pinned before running these UI methods. Four complete native-release/workspace configurations will be executed fresh; old iPhone/en native evidence is not reused for the changed Hanlin method.
+- Added one package regression for SQLite close/reopen, real task observation in all presentations, concurrent external-field preservation, and sync outbox payloads. Expected agent package total is 31 (18 XCTest plus 13 Swift Testing); result pending.

@@ -438,6 +438,19 @@ final class GSDCloudReleaseUITests: XCTestCase {
         XCTAssertTrue(plugin.exists || pluginButton.exists, "Cloud plugin connection entry is missing")
         try capture(app, "16-cloud-plugin-connection")
         app.buttons[label("Done", "סיום")].firstMatch.tap()
+
+        let workspaceEntry = app.buttons["gsd.assistant.workspace"]
+        XCTAssertTrue(workspaceEntry.waitForExistence(timeout: 10))
+        workspaceEntry.tap()
+        let workspace = app.descendants(matching: .any).matching(identifier: "task-workspace").firstMatch
+        XCTAssertTrue(workspace.waitForExistence(timeout: 10))
+        try capture(app, "17-hanlin-live-workspace")
+        app.buttons["task-workspace.create"].tap()
+        XCTAssertTrue(app.textFields["editor-title"].waitForExistence(timeout: 10))
+        app.buttons["editor-cancel"].tap()
+        XCTAssertTrue(workspace.waitForExistence(timeout: 10))
+        app.buttons[label("Close", "סגירה")].firstMatch.tap()
+        XCTAssertTrue(workspaceEntry.waitForExistence(timeout: 10))
         app.buttons[label("Close", "סגירה")].firstMatch.tap()
         app.terminate()
     }
