@@ -168,6 +168,7 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         remove.tap()
         let removed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: remove)
         XCTAssertEqual(XCTWaiter.wait(for: [removed], timeout: 10), .completed)
+        waitForConnectionWrite(in: app)
 
         chooseConnection("prerequisite", title: hebrew ? "לקבל אישור ממחלקת הכספים" : "Get finance sign-off", in: app)
         chooseConnection("dependent", title: hebrew ? "לסיים את המצגת לרבעון השלישי" : "Finish the Q3 board deck", in: app)
@@ -175,6 +176,7 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         XCTAssertTrue(add.isEnabled)
         add.tap()
         XCTAssertTrue(remove.waitForExistence(timeout: 10))
+        waitForConnectionWrite(in: app)
         XCTAssertFalse(add.isEnabled, "An existing connection must not be added twice")
 
         chooseConnection("prerequisite", title: hebrew ? "לסיים את המצגת לרבעון השלישי" : "Finish the Q3 board deck", in: app)
@@ -182,6 +184,14 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         XCTAssertFalse(add.isEnabled, "The reverse edge must be rejected because it creates a dependency cycle")
         capture("08-dependencies-cycle-rejected")
         app.buttons["task-workspace.connection.done"].tap()
+    }
+
+    private func waitForConnectionWrite(in app: XCUIApplication) {
+        let done = app.buttons["task-workspace.connection.done"].firstMatch
+        XCTAssertTrue(done.waitForExistence(timeout: 10))
+        let settled = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isEnabled == true"), object: done)
+        XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 10), .completed,
+                       "Dependency validation must run after the canonical write has finished")
     }
 
     private func chooseConnection(_ field: String, title: String, in app: XCUIApplication) {
