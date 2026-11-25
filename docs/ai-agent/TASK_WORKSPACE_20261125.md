@@ -9,7 +9,7 @@
 
 ## Behavior
 
-Workspace is reachable as the fifth compact tab and an iPad sidebar destination. The command palette and compact/regular navigation handoff recognize the destination. Graph, quadrant board, due-date timeline, dependency network and task table use the same TaskStore snapshot.
+Workspace is reachable as the Workspace compact tab and an iPad sidebar destination. The command palette and compact/regular navigation handoff recognize the destination. Graph, quadrant board, due-date timeline, dependency network and task table use the same TaskStore snapshot.
 
 Open and create present the normal task editor. A Saved reference opens the existing return-to-matrix editor. Completion, quadrant movement, due dates and dependency links call canonical TaskStore methods through a small ID-resolving bridge. The view displays action errors from the shared kit.
 
