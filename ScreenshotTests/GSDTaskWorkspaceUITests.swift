@@ -27,6 +27,14 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         let workspace = app.descendants(matching: .any).matching(identifier: "task-workspace").firstMatch
         XCTAssertTrue(workspace.waitForExistence(timeout: 15))
         capture("01-live-graph")
+        let graphTask = app.buttons["task-workspace.open.demo-finance"].firstMatch
+        XCTAssertTrue(graphTask.waitForExistence(timeout: 10))
+        graphTask.tap()
+        XCTAssertTrue(app.textFields["editor-title"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.textFields["editor-title"].value as? String,
+                       hebrew ? "לקבל אישור ממחלקת הכספים" : "Get finance sign-off")
+        app.buttons["editor-cancel"].tap()
+        XCTAssertTrue(workspace.waitForExistence(timeout: 10))
 
         tapMode("table", in: app)
         let completionID = "task-workspace.complete.demo-finance"
@@ -46,6 +54,17 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         let boardCompletion = revealTaskCompletion(completionID, in: app)
         XCTAssertTrue(boardCompletion.waitForExistence(timeout: 10))
         XCTAssertEqual(boardCompletion.label, reopenedLabel)
+        boardCompletion.tap()
+        let reopenedOnBoard = revealTaskCompletion(completionID, in: app, searchingUpward: true)
+        let completeLabel = hebrew ? "השלמת משימה" : "Complete task"
+        let reopened = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label == %@", completeLabel), object: reopenedOnBoard)
+        XCTAssertEqual(XCTWaiter.wait(for: [reopened], timeout: 10), .completed)
+        reopenedOnBoard.tap()
+        let completedOnBoard = revealTaskCompletion(completionID, in: app, searchingUpward: true)
+        let completedAgain = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label == %@", reopenedLabel), object: completedOnBoard)
+        XCTAssertEqual(XCTWaiter.wait(for: [completedAgain], timeout: 10), .completed)
         capture("02-board-after-completion")
 
         tapMode("timeline", in: app)
