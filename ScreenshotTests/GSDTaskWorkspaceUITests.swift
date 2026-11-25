@@ -34,9 +34,12 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         XCTAssertTrue(completion.waitForExistence(timeout: 10))
         XCTAssertEqual(completion.label, hebrew ? "השלמת משימה" : "Complete task")
         completion.tap()
+        // Canonical writes update updatedAt, moving this row to the top of the live table.
+        // Reacquire its control after the lazy row has moved before asserting the new state.
+        let updatedCompletion = revealTaskCompletion(completionID, in: app, searchingUpward: true)
         let reopenedLabel = hebrew ? "פתיחת המשימה מחדש" : "Reopen task"
         let persisted = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "label == %@", reopenedLabel), object: completion)
+            predicate: NSPredicate(format: "label == %@", reopenedLabel), object: updatedCompletion)
         XCTAssertEqual(XCTWaiter.wait(for: [persisted], timeout: 10), .completed)
 
         tapMode("board", in: app)
@@ -72,7 +75,8 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         capture("06-table-persisted-state")
     }
 
-    private func revealTaskCompletion(_ identifier: String, in app: XCUIApplication) -> XCUIElement {
+    private func revealTaskCompletion(_ identifier: String, in app: XCUIApplication,
+                                      searchingUpward: Bool = false) -> XCUIElement {
         let button = app.buttons[identifier].firstMatch
         let title = app.buttons[identifier.replacingOccurrences(of: ".complete.", with: ".open.")].firstMatch
         let taskButtons = NSPredicate(format: "identifier BEGINSWITH %@", "task-workspace.complete.")
@@ -114,6 +118,8 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
                 } else {
                     container.swipeUp()
                 }
+            } else if searchingUpward {
+                container.swipeDown()
             } else {
                 container.swipeUp()
             }

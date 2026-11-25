@@ -631,3 +631,10 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 - Canonical source064b050: all17 GSDHanlinAgent XCTest cases and13 Swift Testing contract cases passed on the owned Mac runner, including7 workspace mutation/selection/tool cases.
 - The app build exposed an inherited iOS27.1-only toolbar environment reference in the installed iOS27.0 SDK. Added an SDK-specific compilation condition; newer SDK behavior remains intact.
 - Resuming from here: regenerate the project on Mac, commit the exact generated output, restage the new source SHA, then run the focused EN/HE iPhone/iPad workspace UI matrix. Archive/upload remains owned by the release coordinator.
+
+### GSD visualization acceptance resumption — 2026-11-25
+
+- Scope: fix the failing UI acceptance harness and verify the existing app contract; source owner /root/gsd_acceptance.
+- Root cause confirmed from 1470da6 xcresult: canonical completion stamps updatedAt, the GRDB observer moves the task to the top, and LazyVStack removes its offscreen control. Waiting on its previous position times out.
+- The UI test now reacquires and reveals the same stable task ID after reorder, keeping the actual completion assertion and cross-view verification.
+- Next: exact-source incremental simulator build and iPhone/iPad × English/Hebrew workspace acceptance on the owned Scaleway workspaces. No successful run or release is claimed yet.
