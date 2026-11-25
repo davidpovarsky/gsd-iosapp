@@ -73,21 +73,32 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
     }
 
     private func tapMode(_ mode: String, in app: XCUIApplication) {
-        let button = app.buttons["task-workspace.tab.\(mode)"].firstMatch
+        let identifier = "task-workspace.tab.\(mode)"
+        let button = app.buttons[identifier].firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 10))
-        if !button.isHittable {
-            // The native mode strip scrolls horizontally. XCTest does not auto-scroll
-            // its offscreen buttons; use their current frames to work in both LTR and RTL.
-            let strip = app.scrollViews.containing(.button, identifier: "task-workspace.tab.\(mode)").firstMatch
-            XCTAssertTrue(strip.exists)
-            for _ in 0..<4 {
-                if button.isHittable { break }
-                if button.frame.midX > strip.frame.midX {
-                    strip.swipeLeft()
-                } else {
-                    strip.swipeRight()
-                }
+        // XCTest can throw while asking isHittable for a wholly clipped button.
+        // The actual horizontal strip is the shortest visible scroll ancestor;
+        // use its current geometry before asking XCTest for an activation point.
+        let strips = app.scrollViews.containing(.button, identifier: identifier)
+            .allElementsBoundByIndex.filter { !$0.frame.isEmpty }
+        guard let strip = strips.min(by: { $0.frame.height < $1.frame.height }) else {
+            XCTFail("The task presentation strip is missing.")
+            return
+        }
+        for _ in 0..<4 {
+            let viewport = strip.frame.intersection(app.frame)
+            let frame = button.frame
+            if !frame.isEmpty && viewport.contains(frame) { break }
+            if frame.midX > viewport.midX {
+                strip.swipeLeft()
+            } else {
+                strip.swipeRight()
             }
+        }
+        let viewport = strip.frame.intersection(app.frame)
+        guard !button.frame.isEmpty && viewport.contains(button.frame) else {
+            XCTFail("Mode must be inside the visible strip before hit-testing: \(mode)")
+            return
         }
         XCTAssertTrue(button.isHittable, "Mode must be visible before tapping: \(mode)")
         button.tap()
