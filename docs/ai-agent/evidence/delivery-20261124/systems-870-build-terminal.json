@@ -1,0 +1,18 @@
+{
+  "completedAt": "2026-11-25T01:13:32.156716+00:00",
+  "kind": "system_runner_build_and_composition_only",
+  "passed": true,
+  "testSourceSHA": "870cf76ff383b7b90368e952796f7c250d10e1d6",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "sourceClosureSHA256": "a06d9cfe3c2454bceb8a041b7b12f732888fa8adc308831a63ad2cf9c9ab47b6",
+  "buildBindingSHA256": "ff6f2b39e2bde092a26f7d8bb49d3ebe9a71ef3a6d107168a04b175aa5179a9b",
+  "compositionReceiptSHA256": "c3ea662d59fab790d04c18ee0ddc43ddee6f90dd5b1cf1c029e644dacfd3bdf8",
+  "composedManifestSHA256": "91334a990923bd9003000389f13d1136797e08b6b06e8177867ce58e4587624c",
+  "originalProductsUnchanged": true,
+  "previousShareProductsUnchanged": true,
+  "priorSystemReceiptsUnchanged": true,
+  "shareAcceptanceReused": true,
+  "runtimeExecuted": false,
+  "signingOrUploadExecuted": false,
+  "acceptedHistoricalSuitesRepeated": false
+}

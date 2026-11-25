@@ -1,0 +1,17 @@
+{
+  "completedAt": "2026-11-25T00:44:38.370522+00:00",
+  "passed": true,
+  "testSourceSHA": "b5588f3f0c42df328dba34024d569be8605e51d0",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "sourceClosureSHA256": "e84a6bc299a3ef880076c2823b649d573d1f74dc1f19f868fca2929d24728bb7",
+  "buildBindingSHA256": "7e9a3503e388b316c7c14badc6f848a35486a4d44e128527031627a4a7c4ecd1",
+  "compositionReceiptSHA256": "2e923ae1e9343f39542ed4e7ab7fb1c5a31a242775708a8fab1f6169512aff7a",
+  "composedManifestSHA256": "605a5631510c1632d690dac26a2b71132237065fbfb7a9b54c081dbe412d2a8a",
+  "runtimeBindingSHA256": "acb4730ad1c9bbc6dbacbf69cecc5ec3129757045bdf31e6c5b0fac7ffc0f554",
+  "publicSummarySHA256": "1893f1872cafce31ec6d3150df9b9e0fb6a4871c1c8a891d71e2a54b2c210df9",
+  "originalProductsUnchanged": true,
+  "ownedSimulatorsRemoved": true,
+  "runtimeExecuted": true,
+  "signingOrUploadExecuted": false,
+  "acceptedHistoricalSuitesRepeated": false
+}

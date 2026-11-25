@@ -1,0 +1,31 @@
+{
+  "copiedUTC": "2026-11-25T02:30:22.319779+00:00",
+  "source": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "copyOnly": true,
+  "files": [
+    {
+      "file": "release-status.json",
+      "originalPath": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/release49/release-status.json",
+      "bytes": 7415,
+      "sha256": "e7f482c479881610515ec18c10bb13b8f63ad39603b7f3d61137cf0cb8a9b7ec"
+    },
+    {
+      "file": "archive-terminal.json",
+      "originalPath": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/evidence/release49-archive-terminal.json",
+      "bytes": 7214,
+      "sha256": "14add2ebd2dff4e6ee4a6762adad97fb0af30a1290b38aeb963aa3e604d9300f"
+    },
+    {
+      "file": "archive-signatures.json",
+      "originalPath": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/release49/archive-signatures.json",
+      "bytes": 1912,
+      "sha256": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80"
+    },
+    {
+      "file": "ipa-signatures.json",
+      "originalPath": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/release49/ipa-signatures.json",
+      "bytes": 1912,
+      "sha256": "5ea9234a945a06bfa0d587a258e1444737ae9dcd9564579fe009e21d24d02f80"
+    }
+  ]
+}

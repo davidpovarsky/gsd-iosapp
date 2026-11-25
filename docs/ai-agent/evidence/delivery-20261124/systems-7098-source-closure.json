@@ -1,0 +1,23 @@
+{
+  "createdUTC": "2026-11-25T02:30:32.756929+00:00",
+  "testSourceSHA": "7098dcb9abdc2d7e8e20afa8d9ec95d7e69c34ef",
+  "testSourceParent": "41d2b422dd259cd4b04abef8911449c74a89c9e4",
+  "previousTestSourceSHA": "870cf76ff383b7b90368e952796f7c250d10e1d6",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "previousNativeInputClosure": "Root-accepted 497 identical native files for 9f→6bd; four pbx additions belong only to GSDScreenshotTests",
+  "incrementalChangedPaths": [
+    "ScreenshotTests/GSDNativeSystemAcceptanceUITests.swift"
+  ],
+  "incrementalNumstat": "112 additions, 24 deletions",
+  "testSourceBlob": "e615904645eb55685a03ce20798baa686ba9d082",
+  "testSourceSHA256": "46d2bca77d3cd0a8b0dede074d9569755765c4b46270cb917aec31f2400a3ae8",
+  "dependencyHashesUnchanged": true,
+  "visualCheckoutPreserved": true,
+  "productionNativeInputsUnchanged": true,
+  "sourceClean": true,
+  "changedTestPath": "ScreenshotTests/GSDNativeSystemAcceptanceUITests.swift",
+  "shareExecutionTestSourceSHA": "b5588f3f0c42df328dba34024d569be8605e51d0",
+  "shareTestUnchanged": true,
+  "shareAcceptanceReused": true,
+  "shareTerminalSHA256": "fdc1e006008e587b399a7c71b1d4316245848763999d68484ce9ffd24f3ee809"
+}

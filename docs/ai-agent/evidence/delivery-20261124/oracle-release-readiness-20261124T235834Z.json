@@ -1,0 +1,69 @@
+{
+  "backupTimer": {
+    "active": "active",
+    "description": "Daily GSD account backup",
+    "load": "loaded",
+    "sub": "waiting",
+    "unit": "gsd-cloud-backup.timer"
+  },
+  "diskFreeBytes": {
+    "development": 25712934912,
+    "root": 7613882368
+  },
+  "fixture": {
+    "checkedAtUTC": "2026-11-24T23:58:34.189761+00:00",
+    "database": "/mnt/development/projects/gsd-cloud/pb_data/data.db",
+    "fixtureAbsent": true,
+    "fixtureOwner": "hbc2vr0fg12smzq",
+    "fixtureRows": {
+      "gsd_library": 0,
+      "tasks": 0,
+      "users": 0
+    },
+    "queryOnlyPragma": true,
+    "readOnly": true,
+    "relationColumns": {
+      "gsd_library": [
+        "id",
+        "owner"
+      ],
+      "tasks": [
+        "id",
+        "owner"
+      ],
+      "users": [
+        "id"
+      ]
+    }
+  },
+  "health": {
+    "pocketbase": {
+      "code": 200,
+      "message": "API is healthy.",
+      "url": "http://127.0.0.1:8095/api/health"
+    },
+    "publicCloud": {
+      "code": 200,
+      "message": "API is healthy.",
+      "url": "https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud/api/health"
+    }
+  },
+  "healthCheckedByUTC": "2026-11-24T23:57:45Z",
+  "kind": "GSD Oracle release readiness read-only observations",
+  "method": "SentinelX direct read-only systemctl, curl and df; SQLite URI mode=ro and PRAGMA query_only=ON, parameterized exact synthetic owner counts. Initial temporary script request returned internal error; successful direct commands provide these observations.",
+  "recordedAtUTC": "2026-11-24T23:59:27.118244+00:00",
+  "schemaVersion": 1,
+  "scope": {
+    "backupRestoreRepeated": false,
+    "filesDeleted": false,
+    "functionalTestsRepeated": false,
+    "personalUserRowsRead": false,
+    "serviceRestartOrConfigurationChange": false
+  },
+  "services": {
+    "gsd-cloud-gateway.service": "active",
+    "gsd-mcp-bridge.service": "active",
+    "gsd-pocketbase.service": "active",
+    "lorvex-cloud.service": "active"
+  }
+}

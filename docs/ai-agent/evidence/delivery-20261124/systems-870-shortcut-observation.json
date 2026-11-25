@@ -1,0 +1,21 @@
+{
+  "appNotRunningBeforeShortcut" : true,
+  "createdTaskVisibleAfterInvocation" : false,
+  "expectedTitle" : "GSD-Shortcut-026C23DA",
+  "failure" : "NativeSurfaceFailure(message: \"The required Task prompt must expose one native text field.\")",
+  "lastCapture" : "99-system-owner-failure",
+  "passed" : false,
+  "persistedAfterRelaunch" : false,
+  "personalAccountUsed" : false,
+  "productionSourceSHA" : "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "registeredAppShortcutIdentifier" : "plus.circle",
+  "registeredAppShortcutLabel" : "הוספה",
+  "schemaVersion" : 1,
+  "scope" : "registered_app_shortcut_background_create_and_persistence",
+  "shortcutInvoked" : false,
+  "simulatorID" : "02D194C8-945E-40FF-8351-88C1BFF0DCE2",
+  "siriVerified" : false,
+  "taskParameter" : "GSD-Shortcut-026C23DA !!",
+  "voiceOverSpeechVerified" : false,
+  "watchConnectivityVerified" : false
+}

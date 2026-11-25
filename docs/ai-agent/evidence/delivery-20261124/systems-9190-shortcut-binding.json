@@ -1,0 +1,130 @@
+{
+  "startedUTC": "2026-11-25T00:30:34.011438+00:00",
+  "phase": "complete",
+  "testSourceSHA": "9190c72587cea69d1fd4b186051eef70d73d7500",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "composedManifestSHA256": "a37ab4e9a6d4985984c937a4a55df0f9eb9b3d28ac2397a7dda30f44de6e4cfc",
+  "compositionReceiptSHA256": "45841bd84eed03120a0a297dcee83b12ea35892edc383f75b916d5173e12e800",
+  "systemTestSHA256": "5acc89e5a7740343d7f9dd5b72c4d8878954df70ba4bb2d7be7ff1a999dec34d",
+  "selectedKind": "shortcut",
+  "singleCaseOnly": true,
+  "passed": false,
+  "shortcutInvoked": false,
+  "widgetTimelineVerified": false,
+  "fullSystemSurfaceCoverage": false,
+  "accountGrantVerified": false,
+  "ownedSimulatorsRemoved": true,
+  "suites": {
+    "shortcut": {
+      "passed": false,
+      "startedUTC": "2026-11-25T00:30:35.045297+00:00",
+      "method": "test02RunRegisteredCreateTaskShortcutAndVerifyPersistence",
+      "ownedDevicesRemoved": true,
+      "beforeCreateFreeMemoryPercent": 86,
+      "device": "C9E80D4F-6278-4C56-B9AD-2768A5B329DB",
+      "deviceType": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "afterInstallFreeMemoryPercent": 82,
+      "command": [
+        "xcodebuild",
+        "test-without-building",
+        "-xctestrun",
+        "/Users/m1/builds/gsd-share-cancel-9190c725-20261125/composed-products/GSDScreenshots_iphonesimulator27.1-arm64.xctestrun",
+        "-destination",
+        "platform=iOS Simulator,id=C9E80D4F-6278-4C56-B9AD-2768A5B329DB",
+        "-destination-timeout",
+        "90",
+        "-parallel-testing-enabled",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "-resultBundlePath",
+        "/Users/m1/builds/gsd-systems-9190c725-20261125/runs/ui9190-shortcut-vo5axhkp/private/shortcut.xcresult",
+        "-testLanguage",
+        "he",
+        "-testRegion",
+        "IL",
+        "-only-testing:GSDScreenshotTests/GSDNativeSystemAcceptanceUITests/test02RunRegisteredCreateTaskShortcutAndVerifyPersistence"
+      ],
+      "result": "/Users/m1/builds/gsd-systems-9190c725-20261125/runs/ui9190-shortcut-vo5axhkp/private/shortcut.xcresult",
+      "artifacts": "/Users/m1/builds/gsd-systems-9190c725-20261125/runs/ui9190-shortcut-vo5axhkp/private/shortcut-ui",
+      "returncode": 65,
+      "testSummary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "C9E80D4F-6278-4C56-B9AD-2768A5B329DB",
+              "deviceName": "GSD-Supplemental-shortcut-1fe3a18a34de4783866c81d3f7545629",
+              "modelName": "iPhone 17 Pro",
+              "osBuildNumber": "24B8117",
+              "osVersion": "27.2",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 1,
+            "passedTests": 0,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "GSDScreenshots \u00b7 Built with macOS 27.0",
+        "expectedFailures": 0,
+        "failedTests": 1,
+        "finishTime": 1795566723.62,
+        "passedTests": 0,
+        "result": "Failed",
+        "runtimeWarnings": [],
+        "skippedTests": 0,
+        "startTime": 1795566670.757,
+        "statistics": [],
+        "testFailures": [
+          {
+            "failureText": "failed: caught error: \"NativeSurfaceFailure(message: \"Registered Add Task App Shortcut is absent.\")\"",
+            "targetName": "GSDScreenshotTests",
+            "testIdentifier": 1,
+            "testIdentifierString": "GSDNativeSystemAcceptanceUITests/test02RunRegisteredCreateTaskShortcutAndVerifyPersistence()",
+            "testIdentifierURL": "test://com.apple.xcode/GSD/GSDScreenshotTests/GSDNativeSystemAcceptanceUITests/test02RunRegisteredCreateTaskShortcutAndVerifyPersistence",
+            "testName": "test02RunRegisteredCreateTaskShortcutAndVerifyPersistence()"
+          }
+        ],
+        "title": "Test - GSDScreenshots",
+        "topInsights": [],
+        "totalTestCount": 1
+      },
+      "observation": {
+        "appNotRunningBeforeShortcut": true,
+        "createdTaskVisibleAfterInvocation": false,
+        "expectedTitle": "GSD-Shortcut-ABCFAB5A",
+        "failure": "NativeSurfaceFailure(message: \"Registered Add Task App Shortcut is absent.\")",
+        "lastCapture": "99-system-owner-failure",
+        "passed": false,
+        "persistedAfterRelaunch": false,
+        "personalAccountUsed": false,
+        "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+        "schemaVersion": 1,
+        "scope": "registered_app_shortcut_background_create_and_persistence",
+        "shortcutInvoked": false,
+        "simulatorID": "C9E80D4F-6278-4C56-B9AD-2768A5B329DB",
+        "siriVerified": false,
+        "taskParameter": "GSD-Shortcut-ABCFAB5A !!",
+        "voiceOverSpeechVerified": false,
+        "watchConnectivityVerified": false
+      },
+      "observationSHA256": "2b90fa65fce30d56a3ceb63e256c7ed66a71de7ca1e14b4b0fe1ab277627eda5",
+      "failure": "xctest_failed",
+      "finishedUTC": "2026-11-25T00:32:03.834486+00:00"
+    }
+  },
+  "wrapperPID": 76667,
+  "preflightFreeMemoryPercent": 86,
+  "driver": {
+    "developerDir": "/Applications/Xcode.app/Contents/Developer",
+    "version": "Xcode 27.0\nBuild version 27A266a",
+    "resolvedXcodebuild": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild"
+  },
+  "sourceAndFrozenProductsUnchanged": true,
+  "finishedUTC": "2026-11-25T00:32:08.910935+00:00"
+}

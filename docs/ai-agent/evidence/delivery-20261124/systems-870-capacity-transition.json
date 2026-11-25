@@ -1,0 +1,61 @@
+{
+  "transitionUTC": "2026-11-25T01:39:25.908160+00:00",
+  "priorControllerPID": 5865,
+  "priorIdentity": {
+    "row": "Wed Nov 25 02:15:00 2026     /opt/homebrew/Cellar/python@3.12/3.12.16/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python",
+    "ownedCommand": true
+  },
+  "onlyOwnedWaitingCoordinatorSignaled": true,
+  "signals": [
+    "SIGINT"
+  ],
+  "priorCoordinatorExited": true,
+  "priorCaseCount": 0,
+  "priorRunDirectories": 0,
+  "atomicStartReservationUsed": true,
+  "reservationArchived": true,
+  "oldEvidencePreserved": "/Users/m1/builds/gsd-systems-870cf76f-20261125/capacity-transition-20261125T013925861512Z",
+  "capacity": {
+    "at": "2026-11-25T01:39:25.880917+00:00",
+    "stage": "transition",
+    "fits": true,
+    "riskReasons": [],
+    "kernelMemoryPressureLevel": 1,
+    "reclaimableMemoryBytes": 8273772544,
+    "memoryBudgetBytes": 4294967296,
+    "additionalMemoryGiB": 3,
+    "memoryTransientMarginGiB": 1,
+    "swapUsedBytes": 214307962,
+    "swapChangeFromObservedBaselineBytes": -8388608,
+    "diskAvailableBytes": 38454022144,
+    "diskBudgetBytes": 9138564891,
+    "additionalDiskGiB": 4,
+    "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+    "growthHorizonSeconds": 720,
+    "osDiskMarginGiB": 2,
+    "pages": {
+      "Pages free": 234345,
+      "Pages inactive": 258349,
+      "Pages speculative": 12297
+    },
+    "pageSize": 16384,
+    "cpuOrJobCountGate": false
+  },
+  "capacityHelperSHA256": "54d312bfd156eff91e84336c3527d08c96dd1d8865cb1c62ada29c057692ee96",
+  "runtimeWrapperSHA256": "86575f91c669bdda55e5be944b7becf2904c453a1e51e154a590352bcaabdff8",
+  "coordinatorSHA256": "1ad3e3c70b4bcaabeca8c03c0e259ca1f4ed313ad60bdd649163c4555964fe3f",
+  "pythonASTParsePassed": true,
+  "newControllerPID": 24935,
+  "sourceAndProductsModified": false,
+  "acceptedTestsRepeated": false,
+  "files": {
+    "coordinator.diff": {
+      "bytes": 7537,
+      "sha256": "9220db8de87b2d779bf70c73086dc76479fa250849442fa138478ae04a92ccc3"
+    },
+    "wrapper.diff": {
+      "bytes": 3343,
+      "sha256": "1f12242274e5665bd18d88b65fa75aa5348c8ad31a32a18860e74cfd38123835"
+    }
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "startedUTC": "2026-11-25T01:39:26.181430+00:00",
+  "phase": "complete",
+  "testSourceSHA": "870cf76ff383b7b90368e952796f7c250d10e1d6",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "composedManifestSHA256": "91334a990923bd9003000389f13d1136797e08b6b06e8177867ce58e4587624c",
+  "compositionReceiptSHA256": "c3ea662d59fab790d04c18ee0ddc43ddee6f90dd5b1cf1c029e644dacfd3bdf8",
+  "systemTestSHA256": "8af32d387ec5409330dd1c06f14536aab9fbc89a817000949c4807f73a770704",
+  "selectedKind": "widget",
+  "singleCaseOnly": true,
+  "passed": false,
+  "shortcutInvoked": false,
+  "widgetTimelineVerified": false,
+  "fullSystemSurfaceCoverage": false,
+  "accountGrantVerified": false,
+  "ownedSimulatorsRemoved": true,
+  "suites": {
+    "widget": {
+      "passed": false,
+      "startedUTC": "2026-11-25T01:39:27.737756+00:00",
+      "method": "test01RealWidgetTimelineRefreshAndTaskTap",
+      "ownedDevicesRemoved": true,
+      "device": "A62E3049-D158-46FC-9792-690227988690",
+      "deviceType": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "command": [
+        "xcodebuild",
+        "test-without-building",
+        "-xctestrun",
+        "/Users/m1/builds/gsd-systems-870cf76f-20261125/composed-products/GSDScreenshots_iphonesimulator27.1-arm64.xctestrun",
+        "-destination",
+        "platform=iOS Simulator,id=A62E3049-D158-46FC-9792-690227988690",
+        "-destination-timeout",
+        "90",
+        "-parallel-testing-enabled",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "-resultBundlePath",
+        "/Users/m1/builds/gsd-systems-870cf76f-20261125/runs/ui870cf76f-widget-zz4vkacg/private/widget.xcresult",
+        "-testLanguage",
+        "he",
+        "-testRegion",
+        "IL",
+        "-only-testing:GSDScreenshotTests/GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap"
+      ],
+      "result": "/Users/m1/builds/gsd-systems-870cf76f-20261125/runs/ui870cf76f-widget-zz4vkacg/private/widget.xcresult",
+      "artifacts": "/Users/m1/builds/gsd-systems-870cf76f-20261125/runs/ui870cf76f-widget-zz4vkacg/private/widget-ui",
+      "returncode": 65,
+      "testSummary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "A62E3049-D158-46FC-9792-690227988690",
+              "deviceName": "GSD-Supplemental-widget-8144ad16675e4948aa72d993f128290d",
+              "modelName": "iPhone 17 Pro",
+              "osBuildNumber": "24B8117",
+              "osVersion": "27.2",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 1,
+            "passedTests": 0,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "GSDScreenshots \u00b7 Built with macOS 27.0",
+        "expectedFailures": 0,
+        "failedTests": 1,
+        "finishTime": 1795571127.609,
+        "passedTests": 0,
+        "result": "Failed",
+        "runtimeWarnings": [],
+        "skippedTests": 0,
+        "startTime": 1795570816.405,
+        "statistics": [],
+        "testFailures": [
+          {
+            "failureText": "failed: caught error: \"NativeSurfaceFailure(message: \"Medium WidgetKit control is unavailable; captured Edit Home UI for gallery discovery. Widget installation and timeline verification have not run.\")\"",
+            "targetName": "GSDScreenshotTests",
+            "testIdentifier": 1,
+            "testIdentifierString": "GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap()",
+            "testIdentifierURL": "test://com.apple.xcode/GSD/GSDScreenshotTests/GSDNativeSystemAcceptanceUITests/test01RealWidgetTimelineRefreshAndTaskTap",
+            "testName": "test01RealWidgetTimelineRefreshAndTaskTap()"
+          }
+        ],
+        "title": "Test - GSDScreenshots",
+        "topInsights": [],
+        "totalTestCount": 1
+      },
+      "observation": {
+        "initialTitle": "GSD-Widget-A-970FB591",
+        "lastCapture": "11-widget-gallery-discovery-needed",
+        "passed": false,
+        "personalAccountUsed": false,
+        "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+        "schemaVersion": 1,
+        "shortcutInvoked": false,
+        "simulatorID": "A62E3049-D158-46FC-9792-690227988690",
+        "siriVerified": false,
+        "taskCardID": "task-card-IAGuWrpHmCLC",
+        "updatedTitle": "GSD-Widget-B-970FB591",
+        "voiceOverSpeechVerified": false,
+        "watchConnectivityVerified": false
+      },
+      "observationSHA256": "1bc7627b45efef350cc316f8b98aa284e5bbc76eee6912da4b7a5a5488796b8d",
+      "failure": "xctest_failed",
+      "finishedUTC": "2026-11-25T01:45:28.073786+00:00"
+    }
+  },
+  "wrapperPID": 24944,
+  "capacityPolicySHA256": "54d312bfd156eff91e84336c3527d08c96dd1d8865cb1c62ada29c057692ee96",
+  "capacityChecks": [
+    {
+      "at": "2026-11-25T01:39:26.192290+00:00",
+      "stage": "preflight",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8154923008,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 214307962,
+      "swapChangeFromObservedBaselineBytes": -8388608,
+      "diskAvailableBytes": 38446985216,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 225801,
+        "Pages inactive": 259751,
+        "Pages speculative": 12185
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T01:39:27.889331+00:00",
+      "stage": "before_device",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 8167489536,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 214307962,
+      "swapChangeFromObservedBaselineBytes": -8388608,
+      "diskAvailableBytes": 38381797376,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 201412,
+        "Pages inactive": 285459,
+        "Pages speculative": 11633
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T01:40:15.063703+00:00",
+      "stage": "after_install",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 5597249536,
+      "memoryBudgetBytes": 2147483648,
+      "additionalMemoryGiB": 1,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 214307962,
+      "swapChangeFromObservedBaselineBytes": -8388608,
+      "diskAvailableBytes": 37653975040,
+      "diskBudgetBytes": 5989396426,
+      "additionalDiskGiB": 1,
+      "concurrentDiskGrowthBytesPerSecond": 3844681.881395059,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 3922,
+        "Pages inactive": 333013,
+        "Pages speculative": 4694
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    }
+  ],
+  "driver": {
+    "developerDir": "/Applications/Xcode.app/Contents/Developer",
+    "version": "Xcode 27.0\nBuild version 27A266a",
+    "resolvedXcodebuild": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild"
+  },
+  "sourceAndFrozenProductsUnchanged": true,
+  "finishedUTC": "2026-11-25T01:45:33.820279+00:00"
+}

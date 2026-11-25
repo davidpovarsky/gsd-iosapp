@@ -1,0 +1,19 @@
+{
+  "appNotRunningBeforeShortcut" : true,
+  "createdTaskVisibleAfterInvocation" : false,
+  "expectedTitle" : "GSD-Shortcut-ABCFAB5A",
+  "failure" : "NativeSurfaceFailure(message: \"Registered Add Task App Shortcut is absent.\")",
+  "lastCapture" : "99-system-owner-failure",
+  "passed" : false,
+  "persistedAfterRelaunch" : false,
+  "personalAccountUsed" : false,
+  "productionSourceSHA" : "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "schemaVersion" : 1,
+  "scope" : "registered_app_shortcut_background_create_and_persistence",
+  "shortcutInvoked" : false,
+  "simulatorID" : "C9E80D4F-6278-4C56-B9AD-2768A5B329DB",
+  "siriVerified" : false,
+  "taskParameter" : "GSD-Shortcut-ABCFAB5A !!",
+  "voiceOverSpeechVerified" : false,
+  "watchConnectivityVerified" : false
+}

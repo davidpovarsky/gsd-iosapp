@@ -1,0 +1,163 @@
+{
+  "source": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "version": "4.1.0",
+  "build": "49",
+  "startedUTC": "2026-11-25T02:19:31Z",
+  "steps": [
+    {
+      "name": "apple-preflight",
+      "startedUTC": "2026-11-25T02:19:31Z",
+      "log": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/release49/logs/apple-preflight.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T02:19:33Z"
+    },
+    {
+      "name": "archive",
+      "startedUTC": "2026-11-25T02:19:33Z",
+      "log": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/release49/logs/archive.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T02:23:30Z"
+    },
+    {
+      "name": "archive-signatures",
+      "startedUTC": "2026-11-25T02:23:30Z",
+      "log": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/release49/logs/archive-signatures.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T02:23:30Z"
+    },
+    {
+      "name": "export-options",
+      "startedUTC": "2026-11-25T02:23:30Z",
+      "log": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/release49/logs/export-options.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T02:23:31Z"
+    },
+    {
+      "name": "export",
+      "startedUTC": "2026-11-25T02:23:31Z",
+      "log": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/release49/logs/export.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T02:23:35Z"
+    },
+    {
+      "name": "ipa-signatures",
+      "startedUTC": "2026-11-25T02:23:35Z",
+      "log": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/release49/logs/ipa-signatures.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T02:23:36Z"
+    },
+    {
+      "name": "apple-validate",
+      "startedUTC": "2026-11-25T02:23:36Z",
+      "log": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/release49/logs/apple-validate.log",
+      "returncode": 0,
+      "finishedUTC": "2026-11-25T02:24:42Z"
+    }
+  ],
+  "pid": 48121,
+  "acceptanceScope": {
+    "schemaVersion": 1,
+    "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+    "treeSHA": "1079979780cfcac4ef19ac2bef9731f9d1d75b6e",
+    "sourceReuseReceiptSHA256": "7ebf4dbe4967dda431fde6d849e33e5f91ad0f74bf0d5370aaf1c7af93362eb1",
+    "freshFiveTargetManifestSHA256": "38aae93e3330893c26c1ce837a05af933b1d2115b69b01b0ea67f0e8fb2eb67f",
+    "originalNativeExecutionSourceSHA": "6712921d1dc379c41c6919524e599ad7e0b9e5e0",
+    "nativeUITestsReused": 13,
+    "visualFramesReused": 24,
+    "packageTestsReused": 183,
+    "reusedWatchProductionSourceSHA": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+    "reusedPreconsentProductionSourceSHA": "ee5e95f536c375cfdbfa13cb6c812dcef8987a5f",
+    "reusedPreconsentTestSourceSHA": "f1fc8676cd1cce5a275f246b0d7dedcfb73416db",
+    "preconsentCancelCycles": 2,
+    "productionChangedFilesFromPrevious": [
+      "ShareExtension/ShareComposeView.swift",
+      "ShareExtension/ShareViewController.swift"
+    ],
+    "freshFoundationCases": 14,
+    "historicalEvidenceVerified": [
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/native-ui/native-ui-receipt.json",
+        "sha256": "8549f05885d1c611a7e60c1f6fe9282cac1147de1ef7719e2987dae81ad264f5"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/native-ui-binding.json",
+        "sha256": "2d7aaf24f709ba937b5fe2ec3e470bd7003f8f20c9b4540298f2261b9139e175"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/local-products.json",
+        "sha256": "d92f278855c3a37ad2b94e099db99e4df2203685e09b0d5fe2f6adc66ce147eb"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/evidence/GSD_VISUAL_QA_20261124.json",
+        "sha256": "20c7e138336cb103fbdf05a1c29f8040adb473af604df337bf94a3b454ca8901"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence/post-watch-core-input-reuse.json",
+        "sha256": "650aee09b0eb64351f06ed43e14f9be227ff0c16bbab2029d383b7996847ceee"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence/root-core-reuse-verification.json",
+        "sha256": "2ebffa1e9564686763479b07e89bb9e72c20733da5db37ac1dc1919d62805965"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence/local-products.json",
+        "sha256": "3660604deb7073b61544ae068d5433346816bc4e433665b97d67b07cdd20435d"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence/watch-supplemental/public/supplemental-summary.json",
+        "sha256": "4a7051190c9bd417778f88f86e4570f4d610cdfaab5d6767c1f57f988a6599c5"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence/watch-binding.json",
+        "sha256": "26d9ad6050bc90ed7496f2b443643a63cc25d5f8dfbe689467cf7e612ae450eb"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence/watch-visual-review.json",
+        "sha256": "b84b8d128a0228751ff4364a31eec2dae87c31f0df5840af7de6cbec293f60e3"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-watch-ee5e95-20261124/evidence/watch-root-review.json",
+        "sha256": "06a09f6095af3fd09d8791814173edbc0a08cf2f7ff988c6585d80e6219f49e7"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/supplemental-retest-b746/evidence-core-f1fc/supplemental/public/supplemental-summary.json",
+        "sha256": "484a4e677dc3c8313dc1dbe7e0096edba278fd907fe420ef80d08ff6fd754d55"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/supplemental-retest-b746/evidence-core-f1fc/supplemental/public/siwc-preconsent-observation.json",
+        "sha256": "881e8b78cbea7f0e55f6877cea49350c6f67a90a6d45c20694dc57b16f3b987f"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/supplemental-retest-b746/evidence-core-f1fc/supplemental-binding.json",
+        "sha256": "e843e50a94e15696bcc08bc166b90c8797e910c97dd2f8c731b91f30cf9c42af"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/supplemental-retest-b746/evidence-core-f1fc/composition-receipt.json",
+        "sha256": "18b770f2a9e6de3a2d19b45a6b6fe4270073f230e4016badbe4298ca17dc54a6"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/supplemental-retest-b746/evidence-core-f1fc/local-products-composed.json",
+        "sha256": "9be24cb3165b114df586104a90ee3119ddc4fe8f61f7ca37982b5d50bb13458c"
+      },
+      {
+        "path": "/Users/m1/builds/gsd49-final-20261124-l6pyrt5r/supplemental-retest-b746/evidence-core-f1fc/root-preconsent-verification.json",
+        "sha256": "6c3b639c211c2ae9f54cf04b972a65dc11f323baafe03990d4faae1fe9ef6a56"
+      }
+    ],
+    "sourceAndAcceptedPriorEvidenceVerified": true,
+    "freshShareAcceptanceRequiredBeforeUpload": true,
+    "grantVerified": false,
+    "inferenceVerified": false,
+    "newExecutionOfHistoricalTestsClaimed": false,
+    "rootSourceVerificationSHA256": "7155fc11aae63d6a04d51fa19406c4475a59b378f520e7a8351443aa3042176d"
+  },
+  "artifact": {
+    "path": "/Users/m1/builds/gsd49-share-9f2736d3-20261124/release49/export/GSD.ipa",
+    "fileName": "GSD-4.1.0-49.ipa",
+    "sizeBytes": 27949024,
+    "sha256": "1a5f770ca236fe43d0091fe0d649f9a266a78dfb6106f8a3545a2cd99db93c69"
+  },
+  "archiveAndAppleValidationPassed": true,
+  "awaitingSupplementalAcceptance": true,
+  "finishedUTC": "2026-11-25T02:24:42Z"
+}

@@ -1,0 +1,210 @@
+{
+  "startedUTC": "2026-11-25T02:07:17.406931+00:00",
+  "phase": "complete",
+  "testSourceSHA": "870cf76ff383b7b90368e952796f7c250d10e1d6",
+  "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+  "composedManifestSHA256": "91334a990923bd9003000389f13d1136797e08b6b06e8177867ce58e4587624c",
+  "compositionReceiptSHA256": "c3ea662d59fab790d04c18ee0ddc43ddee6f90dd5b1cf1c029e644dacfd3bdf8",
+  "systemTestSHA256": "8af32d387ec5409330dd1c06f14536aab9fbc89a817000949c4807f73a770704",
+  "selectedKind": "shortcut",
+  "singleCaseOnly": true,
+  "passed": false,
+  "shortcutInvoked": false,
+  "widgetTimelineVerified": false,
+  "fullSystemSurfaceCoverage": false,
+  "accountGrantVerified": false,
+  "ownedSimulatorsRemoved": true,
+  "suites": {
+    "shortcut": {
+      "passed": false,
+      "startedUTC": "2026-11-25T02:07:18.904409+00:00",
+      "method": "test02RunRegisteredCreateTaskShortcutAndVerifyPersistence",
+      "ownedDevicesRemoved": true,
+      "device": "02D194C8-945E-40FF-8351-88C1BFF0DCE2",
+      "deviceType": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "command": [
+        "xcodebuild",
+        "test-without-building",
+        "-xctestrun",
+        "/Users/m1/builds/gsd-systems-870cf76f-20261125/composed-products/GSDScreenshots_iphonesimulator27.1-arm64.xctestrun",
+        "-destination",
+        "platform=iOS Simulator,id=02D194C8-945E-40FF-8351-88C1BFF0DCE2",
+        "-destination-timeout",
+        "90",
+        "-parallel-testing-enabled",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "-resultBundlePath",
+        "/Users/m1/builds/gsd-systems-870cf76f-20261125/runs/ui870cf76f-shortcut-u0htw4lb/private/shortcut.xcresult",
+        "-testLanguage",
+        "he",
+        "-testRegion",
+        "IL",
+        "-only-testing:GSDScreenshotTests/GSDNativeSystemAcceptanceUITests/test02RunRegisteredCreateTaskShortcutAndVerifyPersistence"
+      ],
+      "result": "/Users/m1/builds/gsd-systems-870cf76f-20261125/runs/ui870cf76f-shortcut-u0htw4lb/private/shortcut.xcresult",
+      "artifacts": "/Users/m1/builds/gsd-systems-870cf76f-20261125/runs/ui870cf76f-shortcut-u0htw4lb/private/shortcut-ui",
+      "returncode": 65,
+      "testSummary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "02D194C8-945E-40FF-8351-88C1BFF0DCE2",
+              "deviceName": "GSD-Supplemental-shortcut-300da185913846f2b6d90cfc79504817",
+              "modelName": "iPhone 17 Pro",
+              "osBuildNumber": "24B8117",
+              "osVersion": "27.2",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 1,
+            "passedTests": 0,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "GSDScreenshots \u00b7 Built with macOS 27.0",
+        "expectedFailures": 0,
+        "failedTests": 1,
+        "finishTime": 1795572542.51,
+        "passedTests": 0,
+        "result": "Failed",
+        "runtimeWarnings": [],
+        "skippedTests": 0,
+        "startTime": 1795572480.851,
+        "statistics": [],
+        "testFailures": [
+          {
+            "failureText": "failed: caught error: \"NativeSurfaceFailure(message: \"The required Task prompt must expose one native text field.\")\"",
+            "targetName": "GSDScreenshotTests",
+            "testIdentifier": 1,
+            "testIdentifierString": "GSDNativeSystemAcceptanceUITests/test02RunRegisteredCreateTaskShortcutAndVerifyPersistence()",
+            "testIdentifierURL": "test://com.apple.xcode/GSD/GSDScreenshotTests/GSDNativeSystemAcceptanceUITests/test02RunRegisteredCreateTaskShortcutAndVerifyPersistence",
+            "testName": "test02RunRegisteredCreateTaskShortcutAndVerifyPersistence()"
+          }
+        ],
+        "title": "Test - GSDScreenshots",
+        "topInsights": [],
+        "totalTestCount": 1
+      },
+      "observation": {
+        "appNotRunningBeforeShortcut": true,
+        "createdTaskVisibleAfterInvocation": false,
+        "expectedTitle": "GSD-Shortcut-026C23DA",
+        "failure": "NativeSurfaceFailure(message: \"The required Task prompt must expose one native text field.\")",
+        "lastCapture": "99-system-owner-failure",
+        "passed": false,
+        "persistedAfterRelaunch": false,
+        "personalAccountUsed": false,
+        "productionSourceSHA": "9f2736d3e071d2ceb4a6dfada1a2c3767c9906be",
+        "registeredAppShortcutIdentifier": "plus.circle",
+        "registeredAppShortcutLabel": "\u05d4\u05d5\u05e1\u05e4\u05d4",
+        "schemaVersion": 1,
+        "scope": "registered_app_shortcut_background_create_and_persistence",
+        "shortcutInvoked": false,
+        "simulatorID": "02D194C8-945E-40FF-8351-88C1BFF0DCE2",
+        "siriVerified": false,
+        "taskParameter": "GSD-Shortcut-026C23DA !!",
+        "voiceOverSpeechVerified": false,
+        "watchConnectivityVerified": false
+      },
+      "observationSHA256": "9f3ed1132d8633796b1a500e646f2969618e303aa2fd8cdce2fb52aa82e19005",
+      "failure": "xctest_failed",
+      "finishedUTC": "2026-11-25T02:09:02.758363+00:00"
+    }
+  },
+  "wrapperPID": 36730,
+  "capacityPolicySHA256": "54d312bfd156eff91e84336c3527d08c96dd1d8865cb1c62ada29c057692ee96",
+  "capacityChecks": [
+    {
+      "at": "2026-11-25T02:07:17.418302+00:00",
+      "stage": "preflight",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 10017783808,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 310577725,
+      "swapChangeFromObservedBaselineBytes": 87881154,
+      "diskAvailableBytes": 38246506496,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 332818,
+        "Pages inactive": 251833,
+        "Pages speculative": 26786
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T02:07:19.066200+00:00",
+      "stage": "before_device",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 9743400960,
+      "memoryBudgetBytes": 4294967296,
+      "additionalMemoryGiB": 3,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 310577725,
+      "swapChangeFromObservedBaselineBytes": 87881154,
+      "diskAvailableBytes": 38227423232,
+      "diskBudgetBytes": 9138564891,
+      "additionalDiskGiB": 4,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 284193,
+        "Pages inactive": 283566,
+        "Pages speculative": 26931
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    },
+    {
+      "at": "2026-11-25T02:07:59.616673+00:00",
+      "stage": "after_install",
+      "fits": true,
+      "riskReasons": [],
+      "kernelMemoryPressureLevel": 1,
+      "reclaimableMemoryBytes": 6904152064,
+      "memoryBudgetBytes": 2147483648,
+      "additionalMemoryGiB": 1,
+      "memoryTransientMarginGiB": 1,
+      "swapUsedBytes": 310577725,
+      "swapChangeFromObservedBaselineBytes": 87881154,
+      "diskAvailableBytes": 37597802496,
+      "diskBudgetBytes": 5917339419,
+      "additionalDiskGiB": 1,
+      "concurrentDiskGrowthBytesPerSecond": 3744602.705017428,
+      "growthHorizonSeconds": 720,
+      "osDiskMarginGiB": 2,
+      "pages": {
+        "Pages free": 5872,
+        "Pages inactive": 413828,
+        "Pages speculative": 1696
+      },
+      "pageSize": 16384,
+      "cpuOrJobCountGate": false
+    }
+  ],
+  "driver": {
+    "developerDir": "/Applications/Xcode.app/Contents/Developer",
+    "version": "Xcode 27.0\nBuild version 27A266a",
+    "resolvedXcodebuild": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild"
+  },
+  "sourceAndFrozenProductsUnchanged": true,
+  "finishedUTC": "2026-11-25T02:09:08.049907+00:00"
+}
