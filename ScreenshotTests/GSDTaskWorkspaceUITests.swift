@@ -140,6 +140,31 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         let sourceColumn = app.scrollViews["task-workspace.board.column.urgent-important"].firstMatch
         let destination = app.scrollViews["task-workspace.board.column.not-urgent-important"].firstMatch
         XCTAssertTrue(source.waitForExistence(timeout: 10) && sourceColumn.exists && destination.exists)
+        // Revealing a title/completion button can leave the draggable body below
+        // the floating tab bar. Expose the full real card before a system lift.
+        for _ in 0..<14 {
+            let viewport = taskViewport(sourceColumn, in: app).insetBy(dx: 2, dy: 6)
+            let frame = source.frame
+            if !frame.isEmpty && viewport.contains(frame) { break }
+            guard !frame.isEmpty else {
+                XCTFail("The native Board drag source must remain materialized.")
+                return
+            }
+            if frame.minY < viewport.minY {
+                scrollTaskContainer(sourceColumn, swipingUp: false, in: app)
+            } else if frame.maxY > viewport.maxY {
+                scrollTaskContainer(sourceColumn, swipingUp: true, in: app)
+            } else {
+                XCTFail("The full native Board drag card must fit horizontally in its column viewport.")
+                return
+            }
+        }
+        let sourceViewport = taskViewport(sourceColumn, in: app).insetBy(dx: 2, dy: 6)
+        guard !source.frame.isEmpty && sourceViewport.contains(source.frame) else {
+            capture("02-native-board-drag-card-not-fully-visible")
+            XCTFail("The full native Board drag card must be visible above the tab bar after bounded scrolling.")
+            return
+        }
         let sourceVisible = source.frame.intersection(taskViewport(sourceColumn, in: app))
         let destinationVisible = taskViewport(destination, in: app).insetBy(dx: 4, dy: 12)
         XCTAssertGreaterThanOrEqual(sourceVisible.width, 44)
@@ -149,6 +174,19 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         XCTAssertGreaterThanOrEqual(destinationVisible.height, 44)
         let startPoint = CGPoint(x: sourceVisible.midX, y: sourceVisible.midY)
         let endPoint = CGPoint(x: destinationVisible.midX, y: destinationVisible.midY)
+        let innerButtons = source.descendants(matching: .button).allElementsBoundByIndex
+        let requiredButtons: Set<String> = [
+            "task-workspace.open.demo-finance",
+            "task-workspace.complete.demo-finance",
+            "task-workspace.board.actions.demo-finance"
+        ]
+        guard requiredButtons.isSubset(of: Set(innerButtons.map(\.identifier))),
+              innerButtons.allSatisfy({ !$0.frame.isEmpty }),
+              !innerButtons.contains(where: { $0.frame.insetBy(dx: -4, dy: -4).contains(startPoint) }) else {
+            capture("02-native-board-drag-point-overlaps-button")
+            XCTFail("A native Board lift must begin on the fully visible card body, outside every inner button.")
+            return
+        }
         let observation = XCTAttachment(string:
             "source=\(source.frame) sourceVisible=\(sourceVisible) "
             + "destination=\(destination.frame) destinationVisible=\(destinationVisible) "
