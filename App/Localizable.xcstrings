@@ -1213,23 +1213,6 @@
       },
       "extractionState": "manual"
     },
-    "A previous operation may have committed. Reconcile it in the original context before retrying.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A previous operation may have committed. Reconcile it in the original context before retrying."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ייתכן שהפעולה הקודמת כבר בוצעה. יש לבדוק את תוצאתה לפני ניסיון נוסף."
-          }
-        }
-      }
-    },
     "A refreshed look built for iOS 27 and macOS 27.": {
       "localizations": {
         "en": {
@@ -3269,40 +3252,6 @@
         }
       },
       "extractionState": "manual"
-    },
-    "ChatGPT plan requests require the official OpenAI Responses endpoint.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ChatGPT plan requests require the official OpenAI Responses endpoint."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "בקשות דרך מינוי ChatGPT חייבות להישלח לכתובת Responses הרשמית של OpenAI."
-          }
-        }
-      }
-    },
-    "ChatGPT plan usage is unavailable for this account or workspace.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ChatGPT plan usage is unavailable for this account or workspace."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "השימוש במינוי ChatGPT אינו זמין בחשבון או בסביבת העבודה האלה."
-          }
-        }
-      }
     },
     "ChatGPT requests permission to modify GSD tasks.": {
       "localizations": {
@@ -6416,23 +6365,6 @@
       },
       "extractionState": "manual"
     },
-    "Expand task workspace": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Expand task workspace"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "הרחבת מרחב המשימות"
-          }
-        }
-      }
-    },
     "Expands the editor to show every section": {
       "localizations": {
         "en": {
@@ -7010,23 +6942,6 @@
         }
       },
       "extractionState": "manual"
-    },
-    "GSD uses due dates. Change the due date instead.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GSD uses due dates. Change the due date instead."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ב־GSD משתמשים בתאריכי יעד. אפשר לשנות את תאריך היעד."
-          }
-        }
-      }
     },
     "GSD, %@": {
       "localizations": {
@@ -8047,23 +7962,6 @@
         }
       },
       "extractionState": "manual"
-    },
-    "Loading tasks…": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Loading tasks…"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "טעינת משימות…"
-          }
-        }
-      }
     },
     "Longer notes on a task": {
       "localizations": {
@@ -9918,23 +9816,6 @@
       },
       "extractionState": "manual"
     },
-    "Open Source Licenses": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open Source Licenses"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "רישיונות קוד פתוח"
-          }
-        }
-      }
-    },
     "Open System Settings": {
       "localizations": {
         "en": {
@@ -10053,23 +9934,6 @@
         }
       },
       "extractionState": "manual"
-    },
-    "OpenAI request failed (HTTP %lld, code: %@, parameter: %@, request: %@).": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OpenAI request failed (HTTP %lld, code: %@, parameter: %@, request: %@)."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "הבקשה ל־OpenAI נכשלה (HTTP %lld, קוד: %@, פרמטר: %@, בקשה: %@)."
-          }
-        }
-      }
     },
     "OpenAI request failed (HTTP %lld, code: %@, request: %@).": {
       "localizations": {
@@ -11346,23 +11210,6 @@
       },
       "extractionState": "manual"
     },
-    "Return this saved item to the matrix before changing it here.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Return this saved item to the matrix before changing it here."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "יש להחזיר את הפריט השמור למטריצה לפני שמשנים אותו כאן."
-          }
-        }
-      }
-    },
     "Return to matrix": {
       "localizations": {
         "en": {
@@ -11719,57 +11566,6 @@
         }
       },
       "extractionState": "manual"
-    },
-    "Saved prerequisite": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saved prerequisite"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "תנאי מוקדם שמור"
-          }
-        }
-      }
-    },
-    "Saved prerequisites still block their dependents. Open them to return them to the matrix.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saved prerequisites still block their dependents. Open them to return them to the matrix."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "משימות מקדימות שמורות עדיין חוסמות את המשימות התלויות בהן. פתחו אותן כדי להחזירן למטריצה."
-          }
-        }
-      }
-    },
-    "Saved references": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saved references"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "משימות שמורות מקושרות"
-          }
-        }
-      }
     },
     "Saved tasks": {
       "localizations": {
@@ -12553,23 +12349,6 @@
       },
       "extractionState": "manual"
     },
-    "Show live task workspace": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show live task workspace"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "הצגת מרחב משימות חי"
-          }
-        }
-      }
-    },
     "Shows suggestions": {
       "localizations": {
         "en": {
@@ -13147,40 +12926,6 @@
         }
       },
       "extractionState": "manual"
-    },
-    "Some prerequisites are no longer available. Open the task to review its dependencies.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Some prerequisites are no longer available. Open the task to review its dependencies."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "חלק מהמשימות המקדימות אינן זמינות עוד. פתחו את המשימה כדי לבדוק את התלויות שלה."
-          }
-        }
-      }
-    },
-    "Some selected tasks are no longer available.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Some selected tasks are no longer available."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "חלק מהמשימות שנבחרו אינן זמינות עוד."
-          }
-        }
-      }
     },
     "Sort the downloads folder": {
       "localizations": {
@@ -13913,23 +13658,6 @@
       },
       "extractionState": "manual"
     },
-    "Task workspace": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Task workspace"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "מרחב המשימות"
-          }
-        }
-      }
-    },
     "Tasks": {
       "localizations": {
         "en": {
@@ -14049,23 +13777,6 @@
       },
       "extractionState": "manual"
     },
-    "The AI request failed.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The AI request failed."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "בקשת הבינה המלאכותית נכשלה."
-          }
-        }
-      }
-    },
     "The API key is saved only in your device Keychain. An API provider may charge for usage. This is not ChatGPT account sign-in.": {
       "localizations": {
         "en": {
@@ -14083,40 +13794,6 @@
       },
       "extractionState": "manual"
     },
-    "The ChatGPT request or response format was invalid. Try again.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The ChatGPT request or response format was invalid. Try again."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "פורמט הבקשה או התשובה של ChatGPT אינו תקין. נסה שוב."
-          }
-        }
-      }
-    },
-    "The ChatGPT response was interrupted before completion. Try again.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The ChatGPT response was interrupted before completion. Try again."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "התשובה של ChatGPT נקטעה לפני שהושלמה. נסה שוב."
-          }
-        }
-      }
-    },
     "The ChatGPT session could not be refreshed before sign-out.": {
       "localizations": {
         "en": {
@@ -14133,23 +13810,6 @@
         }
       },
       "extractionState": "manual"
-    },
-    "The ChatGPT usage limit for this app has been reached. Review ChatGPT Settings → Usage.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The ChatGPT usage limit for this app has been reached. Review ChatGPT Settings → Usage."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "הגעת למגבלת השימוש ב־ChatGPT באפליקציה הזו. בדוק את הגדרות ChatGPT ← שימוש."
-          }
-        }
-      }
     },
     "The Columns button dims when the window is too narrow for a second column.": {
       "localizations": {
@@ -14253,57 +13913,6 @@
       },
       "extractionState": "manual"
     },
-    "The conversation changed during saving. Reload it before continuing.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The conversation changed during saving. Reload it before continuing."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "השיחה השתנתה בזמן השמירה. יש לטעון אותה מחדש לפני ההמשך."
-          }
-        }
-      }
-    },
-    "The conversation could not be saved. Please try again.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The conversation could not be saved. Please try again."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "לא ניתן לשמור את השיחה. נסו שוב."
-          }
-        }
-      },
-      "extractionState": "manual"
-    },
-    "The conversation exceeds the configured storage limit.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The conversation exceeds the configured storage limit."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "השיחה חורגת ממגבלת האחסון שהוגדרה."
-          }
-        }
-      }
-    },
     "The device Keychain could not clear the ChatGPT credentials. Unlock the device and try signing out again.": {
       "localizations": {
         "en": {
@@ -14389,91 +13998,6 @@
       },
       "extractionState": "manual"
     },
-    "The host denied this operation.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The host denied this operation."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "האפליקציה לא אישרה את הפעולה."
-          }
-        }
-      }
-    },
-    "The host operation exceeded its deadline.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The host operation exceeded its deadline."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "תם הזמן שהוקצב לפעולה."
-          }
-        }
-      }
-    },
-    "The host result does not match the original request.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The host result does not match the original request."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "תוצאת הפעולה אינה תואמת לבקשה המקורית."
-          }
-        }
-      }
-    },
-    "The host result exceeds the allowed output size.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The host result exceeds the allowed output size."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "תוצאת הפעולה גדולה מדי."
-          }
-        }
-      }
-    },
-    "The license document could not be loaded.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The license document could not be loaded."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "לא ניתן לטעון את מסמך הרישיונות."
-          }
-        }
-      }
-    },
     "The matrix": {
       "localizations": {
         "en": {
@@ -14508,40 +14032,6 @@
       },
       "extractionState": "manual"
     },
-    "The operation was cancelled; a dispatched write may still need reconciliation.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The operation was cancelled; a dispatched write may still need reconciliation."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "הפעולה בוטלה; אם נשלח שינוי, ייתכן שעדיין צריך לבדוק את תוצאתו."
-          }
-        }
-      }
-    },
-    "The original account, Space, document or scene is no longer current.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The original account, Space, document or scene is no longer current."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "החשבון, המרחב, המסמך או החלון המקוריים כבר אינם פעילים."
-          }
-        }
-      }
-    },
     "The plugin works with your cloud tasks. Continue with ChatGPT in Hanlin model settings controls which account pays for AI requests.": {
       "localizations": {
         "en": {
@@ -14558,23 +14048,6 @@
         }
       },
       "extractionState": "manual"
-    },
-    "The requested arguments are not valid for this operation.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The requested arguments are not valid for this operation."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "הפרטים שנמסרו אינם תקינים לפעולה זו."
-          }
-        }
-      }
     },
     "The requested change needs approval.": {
       "localizations": {
@@ -14593,40 +14066,6 @@
       },
       "extractionState": "manual"
     },
-    "The saved conversation could not be read. Its existing data has been preserved.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The saved conversation could not be read. Its existing data has been preserved."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "לא ניתן לקרוא את השיחה השמורה. הנתונים שלה נשמרו ללא שינוי."
-          }
-        }
-      },
-      "extractionState": "manual"
-    },
-    "The scoped tool catalog is unavailable or invalid.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The scoped tool catalog is unavailable or invalid."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "רשימת הכלים אינה זמינה או אינה תקינה."
-          }
-        }
-      }
-    },
     "The secure ChatGPT sign-in window could not open.": {
       "localizations": {
         "en": {
@@ -14643,23 +14082,6 @@
         }
       },
       "extractionState": "manual"
-    },
-    "The selected provider does not support this request.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The selected provider does not support this request."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ספק הבינה המלאכותית שנבחר אינו תומך בבקשה זו."
-          }
-        }
-      }
     },
     "The server had a problem. Your draft is saved — try again shortly.": {
       "localizations": {
@@ -14711,23 +14133,6 @@
         }
       },
       "extractionState": "manual"
-    },
-    "The stored conversation could not be validated. Original data was preserved.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The stored conversation could not be validated. Original data was preserved."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "לא ניתן היה לאמת את השיחה השמורה. הנתונים המקוריים נשמרו."
-          }
-        }
-      }
     },
     "The task editor asks before discarding changes, and only when you made some.": {
       "localizations": {
@@ -14882,23 +14287,6 @@
       },
       "extractionState": "manual"
     },
-    "This call is already reserved or conflicts with an earlier call. It was not repeated.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This call is already reserved or conflicts with an earlier call. It was not repeated."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "הבקשה כבר בטיפול או מתנגשת עם בקשה קודמת. היא לא בוצעה שוב."
-          }
-        }
-      }
-    },
     "This can't be undone.": {
       "localizations": {
         "en": {
@@ -14949,40 +14337,6 @@
         }
       },
       "extractionState": "manual"
-    },
-    "This host cannot perform an atomic conditional edit. No write was dispatched.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This host cannot perform an atomic conditional edit. No write was dispatched."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "האפליקציה אינה תומכת בעריכה מותנית זו. לא נשלח שינוי."
-          }
-        }
-      }
-    },
-    "This host or conversation format version is not supported.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This host or conversation format version is not supported."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "גרסת האפליקציה או פורמט השיחה אינם נתמכים."
-          }
-        }
-      }
     },
     "This is the complete payload. No name, email, account, device ID, or task data — the app cannot add fields without changing this preview.": {
       "localizations": {
@@ -15052,57 +14406,6 @@
       },
       "extractionState": "manual"
     },
-    "This task board column is not available.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This task board column is not available."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "העמודה הזו בלוח המשימות אינה זמינה."
-          }
-        }
-      }
-    },
-    "This task is no longer available. Refresh the workspace and try again.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This task is no longer available. Refresh the workspace and try again."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "המשימה אינה זמינה עוד. רעננו את מרחב המשימות ונסו שוב."
-          }
-        }
-      }
-    },
-    "This tool is unavailable through ChatGPT plan usage.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This tool is unavailable through ChatGPT plan usage."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "הכלי הזה אינו זמין דרך מינוי ChatGPT."
-          }
-        }
-      }
-    },
     "This week": {
       "localizations": {
         "en": {
@@ -15119,23 +14422,6 @@
         }
       },
       "extractionState": "manual"
-    },
-    "This workspace view is not supported.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This workspace view is not supported."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "תצוגה זו של מרחב המשימות אינה נתמכת."
-          }
-        }
-      }
     },
     "Thumbs down": {
       "localizations": {
@@ -16701,23 +15987,6 @@
       },
       "extractionState": "manual"
     },
-    "Workspace": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Workspace"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "מרחב משימות"
-          }
-        }
-      }
-    },
     "Would create a cycle": {
       "localizations": {
         "en": {
@@ -17496,6 +16765,737 @@
           "stringUnit": {
             "state": "translated",
             "value": "קיצור המקשים ‎⌘S שומר מכל שדה בעורך המשימה, גם במהלך ההקלדה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "A previous operation may have committed. Reconcile it in the original context before retrying.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A previous operation may have committed. Reconcile it in the original context before retrying."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ייתכן שהפעולה הקודמת כבר בוצעה. יש לבדוק את תוצאתה לפני ניסיון נוסף."
+          }
+        }
+      }
+    },
+    "ChatGPT plan requests require the official OpenAI Responses endpoint.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT plan requests require the official OpenAI Responses endpoint."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בקשות דרך מינוי ChatGPT חייבות להישלח לכתובת Responses הרשמית של OpenAI."
+          }
+        }
+      }
+    },
+    "ChatGPT plan usage is unavailable for this account or workspace.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ChatGPT plan usage is unavailable for this account or workspace."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "השימוש במינוי ChatGPT אינו זמין בחשבון או בסביבת העבודה האלה."
+          }
+        }
+      }
+    },
+    "OpenAI request failed (HTTP %lld, code: %@, parameter: %@, request: %@).": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenAI request failed (HTTP %lld, code: %@, parameter: %@, request: %@)."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הבקשה ל־OpenAI נכשלה (HTTP %lld, קוד: %@, פרמטר: %@, בקשה: %@)."
+          }
+        }
+      }
+    },
+    "The AI request failed.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The AI request failed."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בקשת הבינה המלאכותית נכשלה."
+          }
+        }
+      }
+    },
+    "The ChatGPT request or response format was invalid. Try again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The ChatGPT request or response format was invalid. Try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "פורמט הבקשה או התשובה של ChatGPT אינו תקין. נסה שוב."
+          }
+        }
+      }
+    },
+    "The ChatGPT response was interrupted before completion. Try again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The ChatGPT response was interrupted before completion. Try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "התשובה של ChatGPT נקטעה לפני שהושלמה. נסה שוב."
+          }
+        }
+      }
+    },
+    "The ChatGPT usage limit for this app has been reached. Review ChatGPT Settings → Usage.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The ChatGPT usage limit for this app has been reached. Review ChatGPT Settings → Usage."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הגעת למגבלת השימוש ב־ChatGPT באפליקציה הזו. בדוק את הגדרות ChatGPT ← שימוש."
+          }
+        }
+      }
+    },
+    "The conversation changed during saving. Reload it before continuing.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The conversation changed during saving. Reload it before continuing."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "השיחה השתנתה בזמן השמירה. יש לטעון אותה מחדש לפני ההמשך."
+          }
+        }
+      }
+    },
+    "The conversation exceeds the configured storage limit.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The conversation exceeds the configured storage limit."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "השיחה חורגת ממגבלת האחסון שהוגדרה."
+          }
+        }
+      }
+    },
+    "The host denied this operation.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The host denied this operation."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "האפליקציה לא אישרה את הפעולה."
+          }
+        }
+      }
+    },
+    "The host operation exceeded its deadline.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The host operation exceeded its deadline."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "תם הזמן שהוקצב לפעולה."
+          }
+        }
+      }
+    },
+    "The host result does not match the original request.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The host result does not match the original request."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "תוצאת הפעולה אינה תואמת לבקשה המקורית."
+          }
+        }
+      }
+    },
+    "The host result exceeds the allowed output size.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The host result exceeds the allowed output size."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "תוצאת הפעולה גדולה מדי."
+          }
+        }
+      }
+    },
+    "The operation was cancelled; a dispatched write may still need reconciliation.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The operation was cancelled; a dispatched write may still need reconciliation."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הפעולה בוטלה; אם נשלח שינוי, ייתכן שעדיין צריך לבדוק את תוצאתו."
+          }
+        }
+      }
+    },
+    "The original account, Space, document or scene is no longer current.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The original account, Space, document or scene is no longer current."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "החשבון, המרחב, המסמך או החלון המקוריים כבר אינם פעילים."
+          }
+        }
+      }
+    },
+    "The requested arguments are not valid for this operation.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The requested arguments are not valid for this operation."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הפרטים שנמסרו אינם תקינים לפעולה זו."
+          }
+        }
+      }
+    },
+    "The scoped tool catalog is unavailable or invalid.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The scoped tool catalog is unavailable or invalid."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "רשימת הכלים אינה זמינה או אינה תקינה."
+          }
+        }
+      }
+    },
+    "The selected provider does not support this request.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The selected provider does not support this request."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ספק הבינה המלאכותית שנבחר אינו תומך בבקשה זו."
+          }
+        }
+      }
+    },
+    "The stored conversation could not be validated. Original data was preserved.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The stored conversation could not be validated. Original data was preserved."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן היה לאמת את השיחה השמורה. הנתונים המקוריים נשמרו."
+          }
+        }
+      }
+    },
+    "This call is already reserved or conflicts with an earlier call. It was not repeated.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This call is already reserved or conflicts with an earlier call. It was not repeated."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הבקשה כבר בטיפול או מתנגשת עם בקשה קודמת. היא לא בוצעה שוב."
+          }
+        }
+      }
+    },
+    "This host cannot perform an atomic conditional edit. No write was dispatched.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This host cannot perform an atomic conditional edit. No write was dispatched."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "האפליקציה אינה תומכת בעריכה מותנית זו. לא נשלח שינוי."
+          }
+        }
+      }
+    },
+    "This host or conversation format version is not supported.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This host or conversation format version is not supported."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "גרסת האפליקציה או פורמט השיחה אינם נתמכים."
+          }
+        }
+      }
+    },
+    "This tool is unavailable through ChatGPT plan usage.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This tool is unavailable through ChatGPT plan usage."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הכלי הזה אינו זמין דרך מינוי ChatGPT."
+          }
+        }
+      }
+    },
+    "Open Source Licenses": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Source Licenses"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "רישיונות קוד פתוח"
+          }
+        }
+      }
+    },
+    "The license document could not be loaded.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The license document could not be loaded."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לטעון את מסמך הרישיונות."
+          }
+        }
+      }
+    },
+    "Workspace": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Workspace"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מרחב משימות"
+          }
+        }
+      }
+    },
+    "Task workspace": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Task workspace"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מרחב המשימות"
+          }
+        }
+      }
+    },
+    "Expand task workspace": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expand task workspace"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הרחבת מרחב המשימות"
+          }
+        }
+      }
+    },
+    "Show live task workspace": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show live task workspace"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הצגת מרחב משימות חי"
+          }
+        }
+      }
+    },
+    "Loading tasks…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading tasks…"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "טעינת משימות…"
+          }
+        }
+      }
+    },
+    "Saved prerequisite": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved prerequisite"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "תנאי מוקדם שמור"
+          }
+        }
+      }
+    },
+    "Saved references": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved references"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "משימות שמורות מקושרות"
+          }
+        }
+      }
+    },
+    "Some selected tasks are no longer available.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Some selected tasks are no longer available."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "חלק מהמשימות שנבחרו אינן זמינות עוד."
+          }
+        }
+      }
+    },
+    "Some prerequisites are no longer available. Open the task to review its dependencies.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Some prerequisites are no longer available. Open the task to review its dependencies."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "חלק מהמשימות המקדימות אינן זמינות עוד. פתחו את המשימה כדי לבדוק את התלויות שלה."
+          }
+        }
+      }
+    },
+    "Saved prerequisites still block their dependents. Open them to return them to the matrix.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved prerequisites still block their dependents. Open them to return them to the matrix."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "משימות מקדימות שמורות עדיין חוסמות את המשימות התלויות בהן. פתחו אותן כדי להחזירן למטריצה."
+          }
+        }
+      }
+    },
+    "This task is no longer available. Refresh the workspace and try again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This task is no longer available. Refresh the workspace and try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "המשימה אינה זמינה עוד. רעננו את מרחב המשימות ונסו שוב."
+          }
+        }
+      }
+    },
+    "Return this saved item to the matrix before changing it here.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Return this saved item to the matrix before changing it here."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "יש להחזיר את הפריט השמור למטריצה לפני שמשנים אותו כאן."
+          }
+        }
+      }
+    },
+    "This workspace view is not supported.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This workspace view is not supported."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "תצוגה זו של מרחב המשימות אינה נתמכת."
+          }
+        }
+      }
+    },
+    "This task board column is not available.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This task board column is not available."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "העמודה הזו בלוח המשימות אינה זמינה."
+          }
+        }
+      }
+    },
+    "GSD uses due dates. Change the due date instead.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GSD uses due dates. Change the due date instead."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ב־GSD משתמשים בתאריכי יעד. אפשר לשנות את תאריך היעד."
+          }
+        }
+      }
+    },
+    "The saved conversation could not be read. Its existing data has been preserved.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The saved conversation could not be read. Its existing data has been preserved."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לקרוא את השיחה השמורה. הנתונים שלה נשמרו ללא שינוי."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "The conversation could not be saved. Please try again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The conversation could not be saved. Please try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לשמור את השיחה. נסו שוב."
           }
         }
       },
