@@ -740,3 +740,15 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 - [ ] Run fresh31 Agent tests and the native build on this exact final source, using the independently reviewed exact native-identity parser.
 - [ ] Obtain final shared Board host qualification; pass all13 native release invocations, four real workspace configurations and two Share cases with all eight assertions on the final source.
 - [ ] Review original iPhone/iPad English/Hebrew captures for all five views and the genuine Hanlin path; provide release proof to the signing/TestFlight owner.
+
+
+## Resume: stable Board drop viewport (2026-11-26T12:10:47.258602+00:00)
+
+- [x] Preserve the prior clean 332ec10 source, products and all original native results. Its English iPad workspace lifted the actual card but returned it to its original lane; callback-only evidence recorded no target or drop callback. Earlier passing cases retain their actual source and runtime attribution.
+- [x] Validate the exact four-line full-viewport parent drop target in a separate diagnostic: the complete unchanged iPad workspace passed in 302.526 seconds, with identical realized source/destination points and all 31 compared Board frames. Drop, canonical move, persistence, ordinary scroll, native Flow dependency and reopen assertions all executed. Diagnostic output is excluded from release acceptance.
+- [x] Restore every original app and kit byte plus all 465 native product files, verify Agent/Core/shared evidence and prove all four diagnostic markers absent. Preserve the diagnostic raw passing XCTest result, the false image-alias export wrapper, and the append-only original UUID image mapping without rewriting history.
+- [x] Pin TaskVisualizationKit 595498a83998f9d052667af886911a6937d36a41 for clean final host acceptance. Original 27 package tests passed under Xcode 27.0 / 27A266a; provisional receipt SHA-256 c9453a3c779dc081397eedac0203fde9343c57df4299f442c0da2cbcfcb4b967 explicitly retains hostBoardPending=true and qualificationUsable=false. Original upstream libraries are unchanged.
+- [ ] Run a fresh exact-source 31-case Agent execution and clean native build; verify the final compiled kit implementation and all four diagnostic markers absent.
+- [ ] Validate unchanged Core1333/SDK evidence against the final consumed source/dependency/toolchain closure, with truthful execution attribution.
+- [ ] Qualify the clean iPad workspace against the same original gesture and canonical assertions, then complete the four native configurations, real cloud/Hanlin paths and both Share cases with all eight original assertions.
+- [ ] Review all original phone/tablet English/Hebrew images, seal complete source/product/runtime evidence, and hand the final gate to the signing/TestFlight owner. No final acceptance or release is claimed by this pin commit.
