@@ -24,6 +24,15 @@ EXPECTED = {
     "unchanged_snapshot_is_coalesced",
     "activation_resends_current_snapshot",
     "watch_reinstall_resends_current_snapshot",
+    "inactive_capture_waits_for_activation",
+    "undo_nonrecurring_stays_local",
+    "undo_recurring_stays_local",
+    "failed_undo_preserves_durable_queue",
+    "completion_released_after_undo_window",
+    "activation_keeps_undo_command_local",
+    "replacing_offer_releases_previous_completion",
+    "background_releases_pending_completion",
+    "relaunch_resends_original_command_id",
 }
 
 
@@ -61,6 +70,24 @@ def prepare(source, output):
                 raise ValueError("WatchModel storage injection seam changed")
             text = text.replace(needle, "let directory = watchProbeDirectory")
         (target / original.name).write_text(text)
+    lifecycle = source / "Watch/GSDWatchApp.swift"
+    inputs[str(lifecycle.relative_to(source))] = digest(lifecycle)
+    text = lifecycle.read_text()
+    marker = ".onChange(of: scenePhase, initial: true) { _, phase in"
+    if text.count(marker) != 1:
+        raise ValueError("Watch scene-phase lifecycle hook changed")
+    start = text.index(marker) + len(marker)
+    depth, end = 1, start
+    while depth and end < len(text):
+        depth += (text[end] == "{") - (text[end] == "}")
+        end += 1
+    if depth:
+        raise ValueError("Unbalanced Watch scene-phase lifecycle hook")
+    body = text[start:end - 1]
+    (target / "SceneLifecycle.swift").write_text(
+        "enum ProbeScenePhase { case active, inactive, background }\n"
+        "@MainActor func changeScenePhase(_ phase: ProbeScenePhase, model: WatchModel) {"
+        + body + "\n}\n")
     fixture = Path(__file__).with_name("watch_systems_probe.swift")
     inputs["probe/watch_systems_probe.swift"] = digest(fixture)
     inputs["probe/check_watch_systems.py"] = digest(Path(__file__))
@@ -83,6 +110,7 @@ let package = Package(
         "platformDoubles": ["WatchConnectivity", "WidgetKit", "UIKit", "TaskStore",
                             "BackgroundDatabaseWindow", "HarnessLaunch", "StoreLocation"],
         "storageInjection": "WatchModel initializer directory only",
+        "sceneLifecycle": "GSDWatchApp scenePhase closure compiled unchanged in a framework-free shell",
         "physicalWatchAcceptance": False,
         "nativeFrameworkCompilation": False,
     }

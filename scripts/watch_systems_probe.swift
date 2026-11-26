@@ -74,7 +74,128 @@ enum StoreLocation { static let appGroupID = AppGroup.id }
     @MainActor static func model(at directory: URL?) -> WatchModel {
         watchProbeDirectory = directory
         WCSession.default.outstandingUserInfoTransfers = []
+        WCSession.default.activationState = .activated
+        WCSession.default.receivedApplicationContext = [:]
         return WatchModel()
+    }
+
+    @MainActor static func watchTask(_ id: String, recurring: Bool = false) -> WatchTask {
+        WatchTask(id: id, title: id, urgent: true, important: true,
+                  createdAt: .now, updatedAt: .now, isRecurring: recurring)
+    }
+
+    @MainActor static func transferred() -> [WatchCommand] {
+        WCSession.default.outstandingUserInfoTransfers.compactMap { WatchWire.command(from: $0.userInfo) }
+    }
+
+    @MainActor static func waitForTransfers(_ count: Int) async -> Bool {
+        for _ in 0..<200 {
+            if transferred().count >= count { return true }
+            try? await _Concurrency.Task.sleep(for: .milliseconds(5))
+        }
+        return false
+    }
+
+    @MainActor static func undoChecks(root: URL) async throws {
+        func directory(_ name: String) throws -> URL {
+            let url = root.appendingPathComponent(name)
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+            return url
+        }
+        let session = WCSession.default
+        let inactiveDirectory = try directory("inactive-capture")
+        let inactive = model(at: inactiveDirectory)
+        session.activationState = .inactive
+        let captureAccepted = inactive.capture(text: "Wait for activation", quadrant: .urgentImportant)
+        let remainedLocal = transferred().isEmpty && WatchOutbox(directoryURL: inactiveDirectory).commands.count == 1
+        session.activationState = .activated
+        inactive.session(session, activationDidCompleteWith: .activated, error: nil)
+        let resumed = await waitForTransfers(1)
+        check("inactive_capture_waits_for_activation", captureAccepted && remainedLocal && resumed
+              && transferred().map(\.id) == inactive.outbox.commands.map(\.id))
+
+        for recurring in [false, true] {
+            let localDirectory = try directory(recurring ? "undo-recurring" : "undo-regular")
+            let local = model(at: localDirectory)
+            local.complete(watchTask("Undo locally", recurring: recurring))
+            let held = transferred().isEmpty && local.canUndo
+            local.undo()
+            check(recurring ? "undo_recurring_stays_local" : "undo_nonrecurring_stays_local",
+                  held && local.undoOffer == nil && local.outbox.commands.isEmpty
+                  && WatchOutbox(directoryURL: localDirectory).commands.isEmpty && transferred().isEmpty)
+        }
+
+        let blockedDirectory = try directory("blocked-undo")
+        let blocked = model(at: blockedDirectory)
+        blocked.complete(watchTask("Preserve on failure"))
+        let commandID = blocked.undoOffer?.commandID
+        let path = blockedDirectory.appendingPathComponent(WatchOutbox.fileName)
+        let saved = blockedDirectory.appendingPathComponent("preserved.json")
+        try FileManager.default.moveItem(at: path, to: saved)
+        try FileManager.default.createDirectory(at: path, withIntermediateDirectories: false)
+        blocked.undo()
+        let durable = try JSONDecoder().decode([WatchCommand].self, from: Data(contentsOf: saved))
+        let retained = blocked.undoOffer?.commandID == commandID && commandID != nil
+            && blocked.outbox.commands.map(\.id) == durable.map(\.id) && transferred().isEmpty
+        try FileManager.default.removeItem(at: path)
+        try FileManager.default.moveItem(at: saved, to: path)
+        blocked.undo()
+        check("failed_undo_preserves_durable_queue", retained && blocked.outbox.commands.isEmpty
+              && WatchOutbox(directoryURL: blockedDirectory).commands.isEmpty && transferred().isEmpty)
+
+        let activated = model(at: try directory("activation-hold"))
+        session.activationState = .inactive
+        activated.complete(watchTask("Keep Undo during activation"))
+        session.activationState = .activated
+        activated.session(session, activationDidCompleteWith: .activated, error: nil)
+        try await _Concurrency.Task.sleep(for: .milliseconds(50))
+        let activationHeld = transferred().isEmpty && activated.canUndo
+        activated.undo()
+        check("activation_keeps_undo_command_local", activationHeld && transferred().isEmpty
+              && activated.outbox.commands.isEmpty)
+
+        let replaced = model(at: try directory("replace-offer"))
+        replaced.complete(watchTask("first"))
+        let firstID = replaced.undoOffer?.commandID
+        replaced.complete(watchTask("second"))
+        let secondID = replaced.undoOffer?.commandID
+        let releasedFirst = firstID != nil && transferred().map(\.id) == [firstID!]
+        replaced.undo()
+        check("replacing_offer_releases_previous_completion", releasedFirst && secondID != firstID
+              && replaced.outbox.commands.map(\.id) == [firstID!] && transferred().map(\.id) == [firstID!])
+
+        let backgrounded = model(at: try directory("background-flush"))
+        backgrounded.complete(watchTask("Leaving app"))
+        let backgroundID = backgrounded.undoOffer?.commandID
+        let heldBeforeBackground = transferred().isEmpty
+        changeScenePhase(.inactive, model: backgrounded)
+        changeScenePhase(.background, model: backgrounded)
+        check("background_releases_pending_completion", heldBeforeBackground && backgroundID != nil
+              && backgrounded.undoOffer == nil && transferred().map(\.id) == [backgroundID!]
+              && backgrounded.outbox.commands.map(\.id) == [backgroundID!])
+
+        let restartDirectory = try directory("restart")
+        var terminated: WatchModel? = model(at: restartDirectory)
+        terminated!.complete(watchTask("Survive termination"))
+        let originalID = terminated!.undoOffer?.commandID
+        let heldBeforeTermination = transferred().isEmpty
+        terminated = nil
+        let relaunched = model(at: restartDirectory)
+        relaunched.session(session, activationDidCompleteWith: .activated, error: nil)
+        let sentAfterRestart = await waitForTransfers(1)
+        check("relaunch_resends_original_command_id", heldBeforeTermination && sentAfterRestart
+              && originalID != nil && transferred().map(\.id) == [originalID!]
+              && relaunched.outbox.commands.map(\.id) == [originalID!])
+
+        let expired = model(at: try directory("expiry"))
+        expired.complete(watchTask("Commit after Undo"))
+        let expiredID = expired.undoOffer?.commandID
+        let heldBeforeExpiry = transferred().isEmpty
+        try await _Concurrency.Task.sleep(for: .milliseconds(4100))
+        let sentAfterExpiry = await waitForTransfers(1)
+        check("completion_released_after_undo_window", heldBeforeExpiry && sentAfterExpiry
+              && expiredID != nil && expired.undoOffer == nil && transferred().map(\.id) == [expiredID!]
+              && expired.outbox.commands.map(\.id) == [expiredID!])
     }
 
     @MainActor static func queueChecks(root: URL) throws {
@@ -165,6 +286,7 @@ enum StoreLocation { static let appGroupID = AppGroup.id }
             defer { try? FileManager.default.removeItem(at: root) }
             try queueChecks(root: root)
             try await sessionChecks()
+            try await undoChecks(root: root)
             exit(failures == 0 ? 0 : 1)
         } catch {
             print("WATCH_SYSTEMS_ERROR " + String(describing: error))
