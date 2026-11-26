@@ -32,7 +32,7 @@ final class WatchSessionCoordinator: NSObject {
     private var ledger: WatchAppliedLedger
     private var debounceTask: _Concurrency.Task<Void, Never>?
     private var commandLoop: _Concurrency.Task<Void, Never>?
-    private var lastSent: Data?
+    private var lastSent: WatchSnapshot?
 
     /// Commands arrive on a WatchConnectivity queue. One stream, one consumer, so they apply in
     /// the order the watch sent them even though each apply awaits the database.
@@ -92,11 +92,11 @@ final class WatchSessionCoordinator: NSObject {
         guard let data = try? JSONEncoder().encode(snapshot) else { return }
         // `generatedAt` changes every build, so compare the payload with it held fixed.
         var stable = snapshot; stable.generatedAt = .distantPast
-        let fingerprint = try? JSONEncoder().encode(stable)
-        guard fingerprint != lastSent else { return }
+        // Codable key order is not a content fingerprint. Compare the value itself.
+        guard stable != lastSent else { return }
         do {
             try session.updateApplicationContext([Self.snapshotKey: data])
-            lastSent = fingerprint
+            lastSent = stable
         } catch {
             // Not paired or not reachable right now; the next task change sends again.
         }
@@ -157,7 +157,11 @@ final class WatchSessionCoordinator: NSObject {
 extension WatchSessionCoordinator: WCSessionDelegate {
     nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState,
                              error: Error?) {
-        _Concurrency.Task { @MainActor in self.schedule() }
+        _Concurrency.Task { @MainActor in
+            // A newly active or installed watch needs the current payload even if tasks did not change.
+            self.lastSent = nil
+            self.schedule()
+        }
     }
 
     nonisolated func sessionDidBecomeInactive(_ session: WCSession) {}
@@ -166,7 +170,11 @@ extension WatchSessionCoordinator: WCSessionDelegate {
     nonisolated func sessionDidDeactivate(_ session: WCSession) { session.activate() }
 
     nonisolated func sessionWatchStateDidChange(_ session: WCSession) {
-        _Concurrency.Task { @MainActor in self.schedule() }
+        _Concurrency.Task { @MainActor in
+            // A newly active or installed watch needs the current payload even if tasks did not change.
+            self.lastSent = nil
+            self.schedule()
+        }
     }
 
     nonisolated func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {

@@ -104,7 +104,10 @@ final class WatchModel: NSObject {
 
     func markUrgent(_ task: WatchTask) { queue(.markUrgent(taskID: task.id)) }
 
-    func capture(text: String, quadrant: Quadrant) { queue(.capture(text: text, quadrant: quadrant)) }
+    @discardableResult
+    func capture(text: String, quadrant: Quadrant) -> Bool {
+        queue(.capture(text: text, quadrant: quadrant)) != nil
+    }
 
     /// Removes the queued `complete` if it never left, otherwise queues a `reopen`.
     func undo() {
@@ -128,7 +131,11 @@ final class WatchModel: NSObject {
     @discardableResult
     func queue(_ kind: WatchCommand.Kind) -> WatchCommand? {
         let command = WatchCommand(id: UUID().uuidString, issuedAt: .now, kind: kind)
-        do { try outbox.add(command) } catch { return nil }   // no container: nothing to show or send
+        // WatchOutbox mutates before it writes. Publish only a durable queue so a failed
+        // save cannot appear as a pending task or be sent later during reactivation.
+        var pending = outbox
+        do { try pending.add(command) } catch { return nil }
+        outbox = pending
         send(command)
         return command
     }

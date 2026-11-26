@@ -342,6 +342,23 @@
       },
       "extractionState": "manual"
     },
+    "Couldn't save to GSD. Please try again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't save to GSD. Please try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "השמירה ב־GSD נכשלה. כדאי לנסות שוב."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
     "Delegate": {
       "localizations": {
         "en": {
