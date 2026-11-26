@@ -5,8 +5,8 @@ import HanlinAgentCore
 import HanlinChatCore
 import HanlinHostContracts
 
-public struct GSDHanlinMessage: Identifiable, Sendable {
-    public enum Role: String, Sendable { case user, assistant, status }
+public struct GSDHanlinMessage: Identifiable, Codable, Equatable, Sendable {
+    public enum Role: String, Codable, Sendable { case user, assistant, status }
     public let id: UUID
     public let role: Role
     public var text: String
@@ -77,6 +77,15 @@ public final class GSDHanlinAssistantState {
                      bundleFactory: @escaping BundleFactory) {
         self.init(store: store, conversationID: conversationID)
         self.bundleFactory = bundleFactory
+    }
+
+    public convenience init(store: TaskStore, scope: GSDHanlinConversationScope,
+                            conversationDirectory: URL) throws {
+        self.init(store: store, conversationID: scope.conversationID)
+    }
+
+    public func restoreConversation() async {
+        // Implement restoration after the focused regression demonstrates the gap.
     }
 
     public func resolveApproval(_ allowed: Bool, approvalID: UUID) {
