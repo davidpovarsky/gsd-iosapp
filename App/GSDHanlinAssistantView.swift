@@ -17,6 +17,7 @@ struct GSDHanlinAssistantView: View {
     @State private var requestID: UUID?
     @State private var assistant: GSDHanlinAssistantState
     @State private var loadedScope: GSDHanlinConversationScope?
+    @State private var restorationFailed = false
     private let taskStore: TaskStore
     let remoteBridge: GSDRemoteBridgeState?
     @State private var showRemoteBridgeSettings = false
@@ -129,7 +130,7 @@ struct GSDHanlinAssistantView: View {
                 if let configurationError {
                     Text(configurationError).font(.caption).foregroundStyle(.red).padding(.horizontal)
                 }
-                if isCurrentConversation, !assistant.isConversationReady, !isPreparingRequest {
+                if restorationFailed, !isPreparingRequest {
                     Button("Retry") { Task { await resetAssistantConversation() } }
                 }
                 if provider == "ChatGPT", chatGPT.canUsePlan {
@@ -377,6 +378,7 @@ struct GSDHanlinAssistantView: View {
         requestID = resetID
         isPreparingRequest = true
         loadedScope = nil
+        restorationFailed = false
         prompt = ""
         expandedWorkspace = nil
         configurationError = nil
@@ -396,8 +398,10 @@ struct GSDHanlinAssistantView: View {
             guard requestID == resetID, assistant === restored,
                   conversationScope == scope, !Task.isCancelled else { return }
             loadedScope = scope
+            restorationFailed = !restored.isConversationReady
         } catch {
             guard requestID == resetID, conversationScope == scope else { return }
+            restorationFailed = true
             configurationError = String(localized: "The saved conversation could not be read. Its existing data has been preserved.")
         }
     }
