@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { quadrant, validDate, nextRecurringTask, dependencyWouldCycle, builtInViews } from './task-domain.mjs';
+import {createRequestLedger,requestIDSchema} from './request-ledger.mjs';
 
 const sha = x => createHash('sha256').update(String(x)).digest('hex');
 const rand = (n=32) => randomBytes(n).toString('base64url');
@@ -22,6 +23,8 @@ const toolSecurity = tool => [{type:'oauth2',scopes:toolScopes(tool)}];
 const safeId = x => typeof x === 'string' && /^[A-Za-z0-9_-]{8,160}$/.test(x);
 
 const catalog = JSON.parse(fs.readFileSync(new URL('./tool-catalog.json',import.meta.url),'utf8'));
+for(const tool of catalog)if(tool.writes)tool.inputSchema={...tool.inputSchema,
+  properties:{...tool.inputSchema.properties,request_id:requestIDSchema}};
 const byName = new Map(catalog.map(x=>[x.name,x]));
 if (byName.size !== 22) throw Error('Unexpected GSD Hanlin catalog shape');
 
@@ -156,7 +159,7 @@ export function createGateway({
     decipher.setAuthTag(raw.subarray(12,28));
     return Buffer.concat([decipher.update(raw.subarray(28)),decipher.final()]).toString('utf8');
   };
-  const store={clients:{},pending:{},codes:{},access:{},refresh:{}};
+  const store={clients:{},pending:{},codes:{},access:{},refresh:{},receipts:{},audit:{}};
   if(fs.existsSync(stateFile)) {
     const prev=JSON.parse(fs.readFileSync(stateFile,'utf8'));
     for(const field of Object.keys(store))if(prev[field])Object.assign(store[field],prev[field]);
@@ -166,9 +169,12 @@ export function createGateway({
       for(const [id,record] of Object.entries(store[group]))
         if(record.expires<=clock())delete store[group][id];
     const tmp=stateFile+'.'+process.pid+'.tmp';
-    fs.writeFileSync(tmp,JSON.stringify(store),{mode:0o600});
+    fs.writeFileSync(tmp,JSON.stringify(store),{mode:0o600,flush:true});
     fs.renameSync(tmp,stateFile);
+    const directory=fs.openSync(stateDir,'r');
+    try{fs.fsyncSync(directory);}finally{fs.closeSync(directory);}
   };
+  const writeWithReceipt=createRequestLedger({store,save,seal,open,clock});
   const json=(res,status,value,extra={})=>{
     res.writeHead(status,{
       'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store',
@@ -755,7 +761,9 @@ export function createGateway({
           if(!def||!filterValidArgs(def.inputSchema,args))
             return json(res,200,rpcOk(raw.id,toolError('Invalid tool or parameters')));
           try {
-            const result=await executeTool(def,args,session);
+            const result=def.writes?
+              await writeWithReceipt(session.userId,name,args,parameters=>executeTool(def,parameters,session)):
+              await executeTool(def,args,session);
             return json(res,200,rpcOk(raw.id,{isError:Boolean(result.failures?.length),content:[{type:'text',text:JSON.stringify(result)}]}));
           }catch(error){
             if(error.http===401)return json(res,200,rpcOk(raw.id,toolAuthError(requiredScopes,'invalid_token')));
