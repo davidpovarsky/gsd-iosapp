@@ -717,3 +717,15 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 - Preserve and commit the reviewed inherited ordinary-scroll velocity/hold correction, raw PNG export and explicit Xcode 27.0 product audit. No product source or GSDKit/agent behavior changes in this checkpoint.
 - Execute a new unfiltered 1,333-case core suite and 31 agent cases under Xcode 27.0. These executions retain their actual executed SHA; a later shared-kit/UI-only pin may reuse them only with complete relevant source, manifest, dependency and compiler equality evidence. Final native UI and product gates remain required on the exact final products.
 - The shared Flow candidate is owned by the kit worker and is still under native qualification. Final app pin and all 13 native, four workspace and two Share cases follow its qualified receipt. No acceptance or release is claimed by this source checkpoint.
+
+## Resume: final shared visualization pin (2026-11-26T04:40:19.177040+00:00)
+
+- [x] Pin qualified TaskVisualizationKit 798cf6f832abd16715f377ca5a3118ef5ccc9d9d; retain original SwiftFlow/AdvancedKanban/ForceGraph sources and licenses. Qualification receipt: /Users/m1/builds/task-visualization-kit-20261125/native-kit-qualified-798cf6f-xcode27_0-20261126.json, SHA-256 e6554c6167cc2c18c4bc9269553584769ae8cd84107d52d57308daa946de0f32.
+- [x] Run the complete, unfiltered GSDKit suite under Xcode 27.0 (27A266a): 1,333/1,333, zero failed/skipped/missing/unexpected, source 88d1153527e1bedd353fa15e2d87f580ee0f25c3. Both genuine system opt-ins ran: live GSD Cloud and original web mapper plus isolated encrypted PocketBase.
+- [x] Preserve the first 1,332/1 TLS failure and verify native default TLS trust health 3/3 before the complete second execution. Reuse only the identical 325-file source snapshot, dependency pins and verified 27.0 compilation cache; preserve actual execution SHA.
+- [x] Verify original web readback (identity, notes, return/resave and quadrant), retire the owned fixture/backend/reverse tunnel/private credentials, and verify the live-cloud disposable identity set returned to its pre-run state.
+- [x] Bind the full core receipt core-release-acceptance-88d1153-attempt2.json (SHA-256 c0bf495e98c590a49407ee6901d857970a41372a93d83981eabd5770b54fe7ef) with the independently reviewed validator 7e9e49674aa29e1e291460854234c2b263c1c646718010fbcd9ecafe9223cda3. A final-source wrapper may reuse it only after exact whole-GSDKit input equality and must not claim another execution.
+- [x] Warm unchanged app/SDK compilation on 27.0 before this pin; this earlier build is not final native acceptance.
+- [ ] Run fresh final-source Hanlin Agent 31 and final build-for-testing; retain the SDK installation check and all locked dependency checks.
+- [ ] Pass all 13 native release invocations, 4 real workspace configurations and 2 Share tests with all 8 assertions on the final pinned source.
+- [ ] Review all five task views and genuine Hanlin flow in original iPhone/iPad English/Hebrew captures, then provide the final release proof to the signing/TestFlight owner.
