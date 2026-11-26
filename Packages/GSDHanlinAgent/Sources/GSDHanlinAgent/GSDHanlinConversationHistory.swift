@@ -69,6 +69,8 @@ final class GSDHanlinConversationHistory {
         self.directory = directory
     }
 
+    func isOwned(by owner: UUID) -> Bool { self.owner == owner }
+
     /// A newly opened sheet owns future writes. Already queued writes finish before its load.
     func activate(owner: UUID) async throws -> GSDHanlinConversationSnapshot? {
         self.owner = owner

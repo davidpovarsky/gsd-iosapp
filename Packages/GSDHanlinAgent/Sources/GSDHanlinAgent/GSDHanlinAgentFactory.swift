@@ -27,6 +27,7 @@ public enum GSDHanlinAgentFactory {
         conversationDirectory: URL,
         conversationID: UUID = UUID(),
         sceneID: UUID = UUID(),
+        conversationStore: (any HanlinConversationStore)? = nil,
         writeAuthorizer: @escaping GSDHanlinHost.WriteAuthorizer = { _ in false }
     ) throws -> GSDHanlinAgentBundle {
         let namespace = try HanlinConversationNamespace(
@@ -51,7 +52,12 @@ public enum GSDHanlinAgentFactory {
         #else
         engine = try HanlinAISDKAgentEngine(configuration: configuration)
         #endif
-        let persistence = try HanlinPrivateConversationStore(directory: conversationDirectory)
+        let persistence: any HanlinConversationStore
+        if let conversationStore {
+            persistence = conversationStore
+        } else {
+            persistence = try HanlinPrivateConversationStore(directory: conversationDirectory)
+        }
         let agent = HanlinAgentSession(
             identity: identity, host: host, engine: engine, store: persistence)
         // Provider approval means only "continue to host evaluation".
