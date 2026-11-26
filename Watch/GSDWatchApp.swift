@@ -29,8 +29,12 @@ struct GSDWatchApp: App {
             .task { model.start() }
             .onOpenURL { model.open(url: $0) }
             .onChange(of: scenePhase, initial: true) { _, phase in
-                    if phase == .active { model.consumeCaptureRequest() }
+                if phase == .active {
+                    model.consumeCaptureRequest()
+                } else {
+                    model.releasePendingCompletion()
                 }
+            }
         }
         WKNotificationScene(controller: ReminderNotificationController.self,
                             category: ReminderAction.categoryID)

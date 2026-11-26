@@ -73,12 +73,14 @@ final class WatchModel: NSObject {
 
     func complete(_ task: WatchTask) {
         // No Undo for a command that never queued: there is nothing to take back.
-        guard let command = queue(.complete(taskID: task.id)) else { return }
+        guard let command = queue(.complete(taskID: task.id), sendImmediately: false) else { return }
+        // WatchConnectivity can deliver a transfer after its local entry is removed.
+        // Keep this completion local while Undo is visible; release the previous offer.
+        releasePendingCompletion()
         undoOffer = UndoOffer(task: task, commandID: command.id)
-        undoExpiry?.cancel()
         undoExpiry = _Concurrency.Task { [weak self] in
             try? await _Concurrency.Task.sleep(for: .seconds(4))
-            if !_Concurrency.Task.isCancelled { self?.undoOffer = nil }
+            if !_Concurrency.Task.isCancelled { self?.releasePendingCompletion() }
         }
     }
 
@@ -109,16 +111,34 @@ final class WatchModel: NSObject {
         queue(.capture(text: text, quadrant: quadrant)) != nil
     }
 
+    /// End the four-second Undo window before suspension, on expiry, or when another
+    /// completion replaces it. The durable command keeps its original id across relaunch.
+    func releasePendingCompletion() {
+        let commandID = undoOffer?.commandID
+        undoOffer = nil
+        undoExpiry?.cancel()
+        undoExpiry = nil
+        guard let command = outbox.commands.first(where: { $0.id == commandID }) else { return }
+        send(command)
+    }
+
     /// Removes the queued `complete` if it never left, otherwise queues a `reopen`.
     func undo() {
         guard let offer = undoOffer else { return }
+        switch WatchOverlay.undoComplete(commandID: offer.commandID, of: offer.task, outbox: outbox.commands) {
+        case .removeFromOutbox(let id):
+            var pending = outbox
+            do { try pending.remove(id: id) } catch { return }
+            outbox = pending
+        case .queueReopen(let taskID):
+            guard queue(.reopen(taskID: taskID)) != nil else { return }
+        case .unavailable:
+            return
+        }
+        // A failed write keeps both the durable command and the Undo offer available.
         undoOffer = nil
         undoExpiry?.cancel()
-        switch WatchOverlay.undoComplete(commandID: offer.commandID, of: offer.task, outbox: outbox.commands) {
-        case .removeFromOutbox(let id): try? outbox.remove(id: id)
-        case .queueReopen(let taskID): queue(.reopen(taskID: taskID))
-        case .unavailable: break
-        }
+        undoExpiry = nil
     }
 
     /// Whether the offer can still be undone: a repeating task whose `complete` left has no Undo.
@@ -129,18 +149,19 @@ final class WatchModel: NSObject {
     }
 
     @discardableResult
-    func queue(_ kind: WatchCommand.Kind) -> WatchCommand? {
+    func queue(_ kind: WatchCommand.Kind, sendImmediately: Bool = true) -> WatchCommand? {
         let command = WatchCommand(id: UUID().uuidString, issuedAt: .now, kind: kind)
         // WatchOutbox mutates before it writes. Publish only a durable queue so a failed
         // save cannot appear as a pending task or be sent later during reactivation.
         var pending = outbox
         do { try pending.add(command) } catch { return nil }
         outbox = pending
-        send(command)
+        if sendImmediately { send(command) }
         return command
     }
 
     private func send(_ command: WatchCommand) {
+        guard WCSession.isSupported(), WCSession.default.activationState == .activated else { return }
         if let payload = WatchWire.userInfo(for: command) { WCSession.default.transferUserInfo(payload) }
     }
 
@@ -148,9 +169,12 @@ final class WatchModel: NSObject {
     /// leaves an id unrecorded when its store errors, so the watch has to offer it again; a
     /// repeat is safe because the phone skips ids it has applied.
     private func resendUnsent() {
+        guard WCSession.isSupported(), WCSession.default.activationState == .activated else { return }
         let inFlight = Set(WCSession.default.outstandingUserInfoTransfers
             .compactMap { WatchWire.command(from: $0.userInfo)?.id })
-        resendLedger.take(from: outbox, excluding: inFlight).forEach(send)
+        // Activation must not hand off a completion whose Undo window is still open.
+        let held = Set(undoOffer.map { [$0.commandID] } ?? [])
+        resendLedger.take(from: outbox, excluding: inFlight.union(held)).forEach(send)
     }
 
     // MARK: Snapshot from the iPhone
