@@ -13,6 +13,9 @@ import GSDWire
 @objc(ShareViewController)
 final class ShareViewController: UIViewController {
     private let outbox = ShareOutboxStore()
+    /// One identity and at most one direct POST for this compose sheet, including retries.
+    private let captureTaskID = IDGenerator.generate(size: IDGenerator.Size.task)
+    private var didAttemptPush = false
     /// The extension's whole lifetime after Add is a few seconds, so the push gets a hard budget:
     /// a slow or absent network falls through to the outbox rather than a hung sheet.
     private let push = DirectTaskPush(
@@ -32,14 +35,18 @@ final class ShareViewController: UIViewController {
         return URLSession(configuration: config)
     }
 
-    /// Choose the task id here so both outcomes share it: pushed → the app lands the same task
-    /// without re-pushing; not pushed (or timed out but landed) → the app's queued create resolves
-    /// to an update of the server copy, never a duplicate.
+    /// Keep one task identity if the outbox write fails after a remote push. A retry uses the
+    /// durable outbox only: the earlier POST may already have landed, and the app's queued
+    /// create updates that identity with any edits made after the failure.
     private func saveAndPush(_ capture: SharedCapture) async throws {
         var capture = capture
-        capture.taskID = IDGenerator.generate(size: IDGenerator.Size.task)
-        if let task = capture.pushedTask(), case .pushed(let recordID) = await push.attempt(task) {
-            capture.remoteRecordID = recordID
+        capture.taskID = captureTaskID
+        capture.remoteRecordID = nil
+        if !didAttemptPush, let task = capture.pushedTask() {
+            didAttemptPush = true
+            if case .pushed(let recordID) = await push.attempt(task) {
+                capture.remoteRecordID = recordID
+            }
         }
         try outbox.write(capture)
     }

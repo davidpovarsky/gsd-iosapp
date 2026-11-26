@@ -17466,6 +17466,40 @@
           }
         }
       }
+    },
+    "The saved conversation could not be read. Its existing data has been preserved.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The saved conversation could not be read. Its existing data has been preserved."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לקרוא את השיחה השמורה. הנתונים שלה נשמרו ללא שינוי."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "The conversation could not be saved. Please try again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The conversation could not be saved. Please try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לשמור את השיחה. נסו שוב."
+          }
+        }
+      },
+      "extractionState": "manual"
     }
   },
   "version": "1.0"

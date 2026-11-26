@@ -9,6 +9,7 @@ struct CaptureView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var text = ""
     @State private var chosen: Quadrant?
+    @State private var saveFailed = false
 
     private var overLimit: Bool { WatchCommandPlan.captureOverLimit(text) }
     private var parsed: ParsedCapture { CaptureParser.parse(text) }
@@ -41,11 +42,20 @@ struct CaptureView: View {
                         }
                     }
                     Button("Add") {
-                        model.capture(text: text, quadrant: quadrant)
-                        dismiss()
+                        if model.capture(text: text, quadrant: quadrant) {
+                            dismiss()
+                        } else {
+                            saveFailed = true
+                        }
                     }
                     .buttonStyle(.borderedProminent)
                     .disabled(overLimit)
+                }
+                if saveFailed {
+                    Text("Couldn't save to GSD. Please try again.")
+                        .font(.footnote)
+                        .foregroundStyle(.red)
+                        .accessibilityIdentifier("watch-capture-error")
                 }
             }
             .navigationTitle("New task")
