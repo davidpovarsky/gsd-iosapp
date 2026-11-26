@@ -33,6 +33,7 @@ EXPECTED = {
     "replacing_offer_releases_previous_completion",
     "background_releases_pending_completion",
     "relaunch_resends_original_command_id",
+    "following_action_releases_completion_first",
 }
 
 

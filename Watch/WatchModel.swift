@@ -156,7 +156,12 @@ final class WatchModel: NSObject {
         var pending = outbox
         do { try pending.add(command) } catch { return nil }
         outbox = pending
-        if sendImmediately { send(command) }
+        if sendImmediately {
+            // A later action may depend on the completed task (for example, a freed Today slot).
+            // Hand off the earlier completion first, ending its Undo offer.
+            releasePendingCompletion()
+            send(command)
+        }
         return command
     }
 

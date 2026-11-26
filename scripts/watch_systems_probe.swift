@@ -164,6 +164,14 @@ enum StoreLocation { static let appGroupID = AppGroup.id }
         check("replacing_offer_releases_previous_completion", releasedFirst && secondID != firstID
               && replaced.outbox.commands.map(\.id) == [firstID!] && transferred().map(\.id) == [firstID!])
 
+        let ordered = model(at: try directory("command-order"))
+        ordered.complete(watchTask("Complete before next action"))
+        let heldBeforeNextAction = transferred().isEmpty
+        let acceptedNextAction = ordered.capture(text: "Next action", quadrant: .urgentImportant)
+        check("following_action_releases_completion_first", heldBeforeNextAction && acceptedNextAction
+              && ordered.undoOffer == nil && transferred().count == 2
+              && transferred().map(\.id) == ordered.outbox.commands.map(\.id))
+
         let backgrounded = model(at: try directory("background-flush"))
         backgrounded.complete(watchTask("Leaving app"))
         let backgroundID = backgrounded.undoOffer?.commandID
