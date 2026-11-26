@@ -46,6 +46,7 @@ def prepare(source, output):
         ("Watch/WatchModel.swift", {"import WatchConnectivity", "import WidgetKit"}),
         ("App/Watch/WatchSessionCoordinator.swift",
          {"import UIKit", "import WatchConnectivity", "import GSDStore"}),
+        ("GSDKit/Sources/GSDStore/AppGroupDefaults.swift", set()),
     ):
         original = source / relative
         inputs[relative] = digest(original)
@@ -79,7 +80,8 @@ let package = Package(
     manifest = {
         "sourceRoot": str(source),
         "files": inputs,
-        "platformDoubles": ["WatchConnectivity", "WidgetKit", "UIKit", "TaskStore", "BackgroundDatabaseWindow"],
+        "platformDoubles": ["WatchConnectivity", "WidgetKit", "UIKit", "TaskStore",
+                            "BackgroundDatabaseWindow", "HarnessLaunch", "StoreLocation"],
         "storageInjection": "WatchModel initializer directory only",
         "physicalWatchAcceptance": False,
         "nativeFrameworkCompilation": False,

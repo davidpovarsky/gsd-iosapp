@@ -42,7 +42,13 @@ struct WidgetCenter {
     func run<T>(_ body: () async throws -> T) async rethrows -> T { try await body() }
 }
 enum TaskStoreError: Error { case unexpectedMutation }
-@MainActor enum AppGroupDefaults { static let shared = UserDefaults.standard }
+enum HarnessLaunch {
+    static let isIsolated = true
+    static func makeIsolatedDefaults() -> UserDefaults {
+        UserDefaults(suiteName: "GSDWatchProbe-" + UUID().uuidString)!
+    }
+}
+enum StoreLocation { static let appGroupID = AppGroup.id }
 @MainActor final class TaskStore {
     var tasks: [GSDModel.Task] = []
     var hasLoadedTasks = true
