@@ -148,8 +148,12 @@ struct GSDHanlinAssistantView: View {
                         .onSubmit(send)
                         .focused($promptFocused)
                         .accessibilityIdentifier("gsd.assistant.prompt")
-                    if assistant.isRunning || isPreparingRequest {
+                    if assistant.isRunning ||
+                        (isPreparingRequest && isCurrentConversation && assistant.isConversationReady) {
                         Button {
+                            guard assistant.isRunning ||
+                                (isPreparingRequest && loadedScope == conversationScope &&
+                                 assistant.isConversationReady) else { return }
                             cancelAssistantRequest()
                         } label: { Image(systemName: "stop.circle") }
                             .accessibilityLabel("Stop AI")

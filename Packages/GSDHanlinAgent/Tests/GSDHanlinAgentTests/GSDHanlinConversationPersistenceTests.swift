@@ -117,6 +117,9 @@ final class GSDHanlinConversationPersistenceTests: XCTestCase {
         let task = GSDModel.Task(id: "current-task", title: "Current", urgent: false, important: true,
                                  createdAt: now, updatedAt: now)
         try await tasks.create(task)
+        let persistedBeforeRestore = try await tasks.fetchAllTasks()
+        XCTAssertEqual(persistedBeforeRestore.count, 1)
+        XCTAssertEqual(persistedBeforeRestore.first?.id, task.id)
         let scope = scope()
         let request = GSDTaskWorkspaceRequest(presentation: .network, title: "Saved view", taskIDs: [task.id])
         let messages: [GSDHanlinMessage] = [.init(role: .assistant, text: "Your task workspace")]
@@ -125,7 +128,7 @@ final class GSDHanlinConversationPersistenceTests: XCTestCase {
         await restored.restoreConversation()
         XCTAssertEqual(restored.workspace, request)
         let afterRestore = try await tasks.fetchAllTasks()
-        XCTAssertEqual(afterRestore, [task])
+        XCTAssertEqual(afterRestore, persistedBeforeRestore)
 
         // A local reset or a synced deletion can remove the IDs while the same account's history remains.
         let emptyTasks = try fixture()

@@ -93,7 +93,10 @@ final class GSDHanlinConversationHistory {
             if let previous { _ = await previous.result }
             let namespace = try scope.displayNamespace
             let current = try await store.load(scope.conversationID, namespace: namespace)
-            if let current { _ = try Self.decode(current) }
+            if let current {
+                _ = try Self.decode(current)
+                guard current.revision < UInt64.max else { throw HanlinHostError.storageLimitExceeded }
+            }
             let bytes = try JSONEncoder().encode(snapshot)
             guard let text = String(data: bytes, encoding: .utf8) else {
                 throw GSDHanlinHistoryError.invalidSnapshot
@@ -134,10 +137,20 @@ enum GSDHanlinConversationHistoryRegistry {
         let store: HanlinPrivateConversationStore
         var histories: [GSDHanlinConversationScope: GSDHanlinConversationHistory] = [:]
     }
-    private static var directories: [URL: Directory] = [:]
+    private static var directories: [String: Directory] = [:]
 
     static func history(scope: GSDHanlinConversationScope, directory: URL) throws -> GSDHanlinConversationHistory {
-        let key = directory.standardizedFileURL
+        // Foundation can add a directory hint after the first save and shorten
+        // Darwin's /private aliases. Neither changes ownership of the private store.
+        var key = directory.standardizedFileURL.path(percentEncoded: false)
+        while key.count > 1, key.hasSuffix("/") { key.removeLast() }
+        #if canImport(Darwin)
+        for alias in ["/var", "/tmp", "/etc"]
+            where key == "/private" + alias || key.hasPrefix("/private" + alias + "/") {
+            key.removeFirst("/private".count)
+            break
+        }
+        #endif
         if let history = directories[key]?.histories[scope] { return history }
         var entry: Directory
         if let existing = directories[key] {
