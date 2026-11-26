@@ -729,3 +729,14 @@ Current scoped work and acceptance: [GSD completion](../docs/ai-agent/GSD_COMPLE
 - [ ] Run fresh final-source Hanlin Agent 31 and final build-for-testing; retain the SDK installation check and all locked dependency checks.
 - [ ] Pass all 13 native release invocations, 4 real workspace configurations and 2 Share tests with all 8 assertions on the final pinned source.
 - [ ] Review all five task views and genuine Hanlin flow in original iPhone/iPad English/Hebrew captures, then provide the final release proof to the signing/TestFlight owner.
+
+## Resume: explicit Board menu candidate (2026-11-26T05:21:12.622766+00:00)
+
+- [x] Preserve final-source b5f91308f0957a5587fd117cc0e6a4a1f1925b4e build and all31 Agent tests under Xcode27.0. Correct the external evidence parser for SwiftPM's 18 XCTest log identities plus 13 Swift Testing XML identities; retain original logs, XML and interpretation receipts.
+- [x] Preserve b5 Hebrew iPhone's four actual passing native methods and original images. The common kit798 iPad Board hold still opened its context menu in the Lorvex host; the remaining GSD matrix was superseded before another simulator or test was started.
+- [x] Pin TaskVisualizationKit 1f16b9d85f2023a2b844f43e8010c15e54cd87e4 for final host acceptance: native drag keeps the card body and existing commands use a separate visible44-point Menu. All original upstream libraries remain unchanged.
+- [x] Bind provisional candidate receipt /Users/m1/builds/task-visualization-kit-20261125/native-kit-candidate-1f16b9d-host-board-pending-20261126.json (SHA-256 1ed7e2fabdafc402259639a9fb6101835c7c7df3c2887820266f7529a1d8d492): original27 tests passed fresh; complete Flow input/dependency/fixture/compiler equivalence preserves actual798 fourteen-stage native evidence and reviewed originals. This provisional receipt explicitly does not qualify release.
+- [x] Retain the complete original1333 Xcode27.0 core execution at88d1153527e1bedd353fa15e2d87f580ee0f25c3 with both genuine system fixtures and verified disposable cleanup; bind only after exact325-file source/dependency/toolchain equivalence.
+- [ ] Run fresh31 Agent tests and the native build on this exact final source, using the independently reviewed exact native-identity parser.
+- [ ] Obtain final shared Board host qualification; pass all13 native release invocations, four real workspace configurations and two Share cases with all eight assertions on the final source.
+- [ ] Review original iPhone/iPad English/Hebrew captures for all five views and the genuine Hanlin path; provide release proof to the signing/TestFlight owner.
