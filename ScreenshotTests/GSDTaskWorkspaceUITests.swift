@@ -321,7 +321,10 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
         beforeAttachment.lifetime = .keepAlways
         add(beforeAttachment)
         capture("08-board-before-ordinary-scroll")
-        start.press(forDuration: 0.05, thenDragTo: end)
+        // Pause under touch before lift-off so this deliberately short scroll
+        // stays measurable instead of flinging the touched card offscreen.
+        start.press(forDuration: 0.05, thenDragTo: end,
+                    withVelocity: .slow, thenHoldForDuration: 0.2)
         let after = try nativeBoardCards(in: column)
         func physicallyVisible(_ observation: BoardCardObservation) -> Bool {
             let area = observation.frame.intersection(viewport)
@@ -713,9 +716,22 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
     }
 
     private func capture(_ name: String) {
-        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
-        attachment.name = "\(hebrew ? "he" : "en")-workspace-\(name)"
+        let screenshot = XCUIScreen.main.screenshot()
+        let attachment = XCTAttachment(screenshot: screenshot)
+        let captureName = "\(hebrew ? "he" : "en")-workspace-\(name)"
+        attachment.name = captureName
         attachment.lifetime = .keepAlways
         add(attachment)
+        // Export the same unmodified screen immediately for review while the case continues.
+        if let destination = ProcessInfo.processInfo.environment["GSD_SCREENSHOT_DIR"] {
+            do {
+                let directory = URL(fileURLWithPath: destination, isDirectory: true)
+                try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+                try screenshot.pngRepresentation.write(
+                    to: directory.appendingPathComponent(captureName + ".png"), options: .atomic)
+            } catch {
+                XCTFail("Workspace screenshot export failed: \(error)")
+            }
+        }
     }
 }

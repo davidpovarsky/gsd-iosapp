@@ -23,7 +23,7 @@ from gsd_appstore_connect import TEAM, APP_GROUP
 from gsd_simulator_smoke import devices_for_runtime
 from verify_gsd_release_bundle import audit, BUNDLES
 
-COMPILER_VERSION="Xcode 27.1\nBuild version 27A9275"
+COMPILER_VERSION="Xcode 27.0\nBuild version 27A266a"
 DRIVER_VERSION="Xcode 27.0\nBuild version 27A266a"
 IOS_RUNTIME="com.apple.CoreSimulator.SimRuntime.iOS-27-2"
 WATCH_RUNTIME="com.apple.CoreSimulator.SimRuntime.watchOS-27-0"
@@ -178,7 +178,7 @@ def audit_local_products(products: Path,build: str,version: str)->dict:
  targets={}
  for identifier,relative in BUNDLES.items():
   bundle=app/relative;info=plistlib.loads((bundle/"Info.plist").read_bytes())
-  require(info.get("DTXcodeBuild")=="27A9275","product_compiler_identity")
+  require(info.get("DTXcodeBuild")=="27A266a","product_compiler_identity")
   result=subprocess.run(["codesign","--verify","--strict",str(bundle)],capture_output=True,timeout=30)
   require(result.returncode==0,"product_signature")
   executable=bundle/info["CFBundleExecutable"]
