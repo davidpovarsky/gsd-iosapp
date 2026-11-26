@@ -49,7 +49,7 @@ struct GSDHanlinAssistantView: View {
         return .init(
             gsdAccountID: cloudSession.currentUserID, provider: provider,
             providerAccountID: provider == "ChatGPT"
-                ? (chatGPT.canUsePlan ? chatGPT.activeID?.uuidString : nil)
+                ? (chatGPT.canUsePlan ? chatGPT.activeID : nil)
                 : endpoint)
     }
 
