@@ -163,7 +163,7 @@ final class GSDTaskWorkspaceUITests: XCTestCase {
                 observationName: "native-board-lift-end") else { return }
         // iOS Transferable drag begins with a genuine system lift. A quick
         // vertical gesture remains ordinary scrolling and is verified separately.
-        start.press(forDuration: 0.75, thenDragTo: end)
+        start.press(forDuration: 1.2, thenDragTo: end)
         tapMode("table", in: app)
         _ = revealTaskCompletion("task-workspace.complete.demo-finance", in: app)
         let lane = app.buttons["task-workspace.lane.demo-finance"].firstMatch
