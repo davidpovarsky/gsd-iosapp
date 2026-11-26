@@ -145,56 +145,58 @@ struct TaskEditorView: View {
 
     private var editorStack: some View {
         NavigationStack {
-            Form {
-                Group {
-                    Section {
-                        TextField(String(localized: "Title"), text: $title)
-                            .accessibilityIdentifier("editor-title")
-                            .onChange(of: title) { _, _ in saveError = nil }
+            VStack(spacing: 0) {
+                Form {
+                    Group {
+                        Section {
+                            TextField(String(localized: "Title"), text: $title)
+                                .accessibilityIdentifier("editor-title")
+                                .onChange(of: title) { _, _ in saveError = nil }
+                        }
+                        Section {
+                            quadrantPicker
+                        } header: {
+                            Text(String(localized: "Quadrant"))
+                        } footer: {
+                            if let target = escalationTarget {
+                                Label(target.markUrgentHint, systemImage: "arrow.up")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundStyle(target.accent)
+                                    .accessibilityIdentifier("escalation-editor-hint")
+                            }
+                        }
+                        Section(String(localized: "Tags")) { tagField }
+                        Section(String(localized: "Notes")) {
+                            TextField(String(localized: "Description"), text: $description, axis: .vertical)
+                                .lineLimit(3...8)
+                                .accessibilityIdentifier("editor-description")
+                        }
+                        linksSection
+                        dueDateSection
+                        recurrenceSection
                     }
-                    Section {
-                        quadrantPicker
-                    } header: {
-                        Text(String(localized: "Quadrant"))
-                    } footer: {
-                        if let target = escalationTarget {
-                            Label(target.markUrgentHint, systemImage: "arrow.up")
-                                .font(.footnote.weight(.semibold))
-                                .foregroundStyle(target.accent)
-                                .accessibilityIdentifier("escalation-editor-hint")
+                    Group {
+                        subtasksSection
+                        estimateSection
+                        snoozeSection
+                        dependenciesSection
+                        reminderSection
+                        if let saveError {
+                            Section { Text(saveError).font(.caption).foregroundStyle(Surface.alert) }
                         }
                     }
-                    Section(String(localized: "Tags")) { tagField }
-                    Section(String(localized: "Notes")) {
-                        TextField(String(localized: "Description"), text: $description, axis: .vertical)
-                            .lineLimit(3...8)
-                            .accessibilityIdentifier("editor-description")
-                    }
-                    linksSection
-                    dueDateSection
-                    recurrenceSection
                 }
-                Group {
-                    subtasksSection
-                    estimateSection
-                    snoozeSection
-                    dependenciesSection
-                    reminderSection
-                    if let saveError {
-                        Section { Text(saveError).font(.caption).foregroundStyle(Surface.alert) }
-                    }
-                }
-            }
-            .scrollContentBackground(.hidden)
-            .background(Surface.paper)
-            .accessibilityIdentifier("task-editor")
-            .tint(Surface.tint)   // baseline calm action tint (carets + true actions, never system blue); picker values → ink3 by role
-            .environment(\.editMode, $subtaskEditMode)
-            .safeAreaInset(edge: .bottom) {
+                .scrollContentBackground(.hidden)
+                .background(Surface.paper)
+                .accessibilityIdentifier("task-editor")
+                .tint(Surface.tint)   // baseline calm action tint (carets + true actions, never system blue); picker values → ink3 by role
+                .environment(\.editMode, $subtaskEditMode)
                 if compactPresenter && !typeSize.isAccessibilitySize && detent == .medium {
                     showAllDetailsButton
+                        .padding(.top, 8)
                 }
             }
+            .background(Surface.paper)
             .navigationTitle(original == nil ? String(localized: "New Task") : String(localized: "Edit Task"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
