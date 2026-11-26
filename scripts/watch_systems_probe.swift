@@ -135,12 +135,14 @@ enum StoreLocation { static let appGroupID = AppGroup.id }
         try await _Concurrency.Task.sleep(for: .milliseconds(50))
         let firstData = session.contexts.first?[WatchWire.snapshotKey] as? Data
         let snapshot = firstData.flatMap { try? JSONDecoder().decode(WatchSnapshot.self, from: $0) }
+        print("WATCH_SYSTEMS_DIAGNOSTIC initial=\(initial) contexts=\(session.contexts.count) generatedAt=\(snapshot?.generatedAt.timeIntervalSince1970 ?? -1)")
         check("unchanged_snapshot_is_coalesced", initial && session.contexts.count == 1
               && snapshot?.generatedAt == Date(timeIntervalSince1970: 100))
 
         let priorActivation = session.contexts.count
         coordinator.session(session, activationDidCompleteWith: .activated, error: nil)
         let activated = await waitForContexts(priorActivation + 1)
+        print("WATCH_SYSTEMS_DIAGNOSTIC activationBefore=\(priorActivation) activationAfter=\(session.contexts.count)")
         check("activation_resends_current_snapshot", activated && session.contexts.count == priorActivation + 1)
 
         let priorReinstall = session.contexts.count
@@ -151,6 +153,7 @@ enum StoreLocation { static let appGroupID = AppGroup.id }
         session.isWatchAppInstalled = true
         coordinator.sessionWatchStateDidChange(session)
         let reinstalled = await waitForContexts(priorReinstall + 1)
+        print("WATCH_SYSTEMS_DIAGNOSTIC reinstallBefore=\(priorReinstall) reinstallAfter=\(session.contexts.count) uninstalledDidNotSend=\(uninstalledDidNotSend)")
         check("watch_reinstall_resends_current_snapshot", uninstalledDidNotSend && reinstalled
               && session.contexts.count == priorReinstall + 1)
     }
