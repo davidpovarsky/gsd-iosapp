@@ -162,7 +162,8 @@ struct GSDApp: App {
             guard session.currentUserID == nil, tokenStore.load() == nil else { return nil }
             return .guest(installationID: identity.installationID, datasetID: identity.datasetID)
         }
-        liveScheduler?.setScopeProvider(watchScopeProvider)
+        liveScheduler?.configureScope(store: store, mutationGate: watchMutationGate,
+                                      scopeProvider: watchScopeProvider)
         ReminderActionInbox.attach(store: store, mutationGate: watchMutationGate,
                                    scopeProvider: watchScopeProvider)
         // Apple Watch link (W2): sends the watch snapshot and applies its queued commands. A no-op

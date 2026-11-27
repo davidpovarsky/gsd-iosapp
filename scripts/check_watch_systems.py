@@ -95,6 +95,14 @@ def prepare(source, output, *, verified_fixture=True):
             fixture_scope = Path(__file__).with_name("watch_systems_fixture_scope.swift")
             inputs["probe/watch_systems_fixture_scope.swift"] = digest(fixture_scope)
             shutil.copyfile(fixture_scope, target / fixture_scope.name)
+    if "store.trashedTasks()" in (source / "App/Watch/WatchSessionCoordinator.swift").read_text():
+        (target / "TerminalRecordDouble.swift").write_text(
+            "import GSDModel\n"
+            "@MainActor extension TaskStore {\n"
+            "    func trashedTasks() async throws -> [ArchivedTask] { [] }\n"
+            "    func archivedTasksStamped() async throws -> [ArchivedTask] { [] }\n"
+            "}\n"
+        )
     lifecycle = source / "Watch/GSDWatchApp.swift"
     inputs[str(lifecycle.relative_to(source))] = digest(lifecycle)
     text = lifecycle.read_text()
@@ -135,6 +143,7 @@ let package = Package(
         "platformDoubles": ["WatchConnectivity", "WidgetKit", "UIKit", "TaskStore",
                             "BackgroundDatabaseWindow", "HarnessLaunch", "StoreLocation"],
         "storageInjection": "WatchModel initializer directory only",
+        "terminalRecordDouble": "Empty retained Trash/archive in the original fixtures; real terminal replay is a separate actual-TaskStore suite",
         "scopedOriginalFixturePrerequisite": scoped_host and verified_fixture,
         "scopePrerequisiteExplanation": (
             "Verified synthetic guest snapshot + call-site origin adapters, only in probe target; "

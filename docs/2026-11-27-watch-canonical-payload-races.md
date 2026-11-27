@@ -17,3 +17,13 @@ Scope21 preserves all original18 check bodies and adds:
 Reminder8 compiles the exact app scheduler, actual TaskStore, GRDB repository, ReminderMath, WatchAccountScope and WatchMutationGate. Only UserNotifications transport is a recording double; UIKit application state is a platform stub. The repository decorator suspends one actual GRDB result or injects a read error. The cases verify canonical title/body/due/scope, missing-row removal, required configured identity, cancellation, post-read scope revalidation, read-failure preservation, paused admission, and gate ownership through asynchronous notification add.
 
 Run the immutable driver with explicit --source-root and a new --output directory on the owned Mac runner. Source hashes before/after and the exact clean GRDB revision are required. No physical Watch, personal OAuth, system notification delivery, or native target compilation success is claimed by these fixtures. No Core test identity is added or changed.
+
+## Host correction
+
+The phone takes an admission ticket before its canonical fetchAllTasks read, keeps the real BackgroundDatabaseWindow open, and revalidates captured account generation after that await before building/sending a valid-scope snapshot. An unresolved account still sends an immediate empty snapshot without a read.
+
+The scheduler is configured once after canonical identity setup with a weak TaskStore reference, the same gate and the live scope provider. Its bounded Observation generation invalidates synchronously, including A → unresolved → A. Each call checks cancellation, admits, reads the canonical row by ID, and revalidates before using only that row's content and due time. Its gate/window lease spans center.add. Missing rows cancel stale requests; read failures retain them. Original reminder math, quiet hours, stable request identifier and weekly sweep behavior remain.
+
+A separate replay2 fixture uses actual phone capture, actual Trash/archive, the actual 200-entry ledger eviction, and a newly constructed coordinator. A lost-ack capture with no live row now queries retained Trash/archive through existing TaskStore APIs under the same scope/generation. Only a matching retained stable ID proves prior application and is acknowledged. Read errors remain unacknowledged. This is bounded by retained terminal records: permanently purged history cannot prove prior application, and no title/prefix heuristic is introduced. Existing unresolved legacy follow-up behavior remains.
+
+Original27 source and original18 scope checks remain intact; scope21, reminder8, gate8 and replay2 are separate standalone inventories. Native execution and final merged-target compilation remain required.

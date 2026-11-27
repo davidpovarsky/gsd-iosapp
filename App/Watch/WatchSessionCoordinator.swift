@@ -126,29 +126,44 @@ final class WatchSessionCoordinator: NSObject {
             guard let self else { return }
             try? await _Concurrency.Task.sleep(for: self.debounce)
             if _Concurrency.Task.isCancelled { return }
-            self.sendSnapshot()
+            await self.sendSnapshot()
         }
     }
 
     // MARK: Phone to watch
 
-    private func sendSnapshot() {
+    private func sendSnapshot() async {
         guard let session, session.activationState == .activated,
               session.isPaired, session.isWatchAppInstalled else { return }
-        let scope = currentScope
-        // A valid account waits for its first database emission. An unresolved identity must
-        // actively clear the old account from Watch, even while a replacement is still loading.
-        if scope != nil, !store.hasLoadedTasks { return }
-        let window = EscalationWindow.load(from: defaults)
-        var snapshot = scope == nil
-            ? WatchSnapshot(generatedAt: now(), escalationWindowDays: nil, tasks: [],
-                            doFirstTotal: 0, appliedCommandIDs: [])
-            : WatchSnapshotBuilder.build(
-                from: store.tasks, now: now(), escalationWindowDays: window.days,
+        guard let scope = currentScope else {
+            // Clear the previous account immediately; no database access is needed while
+            // identity is unresolved or a destructive transition is draining old work.
+            publish(WatchSnapshot(generatedAt: now(), escalationWindowDays: nil, tasks: [],
+                                  doFirstTotal: 0, appliedCommandIDs: []), through: session)
+            return
+        }
+        guard store.hasLoadedTasks, let ticket = mutationGate.admit() else { return }
+        let generation = scopeGeneration
+        defer { mutationGate.finish(ticket) }
+        await databaseWindow.run {
+            guard isCurrent(scope, generation: generation) else { return }
+            let rows: [Task]
+            do { rows = try await store.fetchAllTasks() }
+            catch { return } // keep the last valid snapshot until the canonical read succeeds
+            guard isCurrent(scope, generation: generation) else { return }
+            let window = EscalationWindow.load(from: defaults)
+            var snapshot = WatchSnapshotBuilder.build(
+                from: rows, now: now(), escalationWindowDays: window.days,
                 appliedCommandIDs: ledger.snapshotIDs)
-        snapshot.accountScope = scope
-        guard let data = try? JSONEncoder().encode(snapshot) else { return }
-        // `generatedAt` changes every build, so compare the payload with it held fixed.
+            snapshot.accountScope = scope
+            publish(snapshot, through: session)
+        }
+    }
+
+    private func publish(_ snapshot: WatchSnapshot, through session: WCSession) {
+        guard session.activationState == .activated, session.isPaired, session.isWatchAppInstalled,
+              let data = try? JSONEncoder().encode(snapshot) else { return }
+        // generatedAt changes every build, so compare the payload with it held fixed.
         var stable = snapshot; stable.generatedAt = .distantPast
         // Codable key order is not a content fingerprint. Compare the value itself.
         guard stable != lastSent else { return }
@@ -182,6 +197,28 @@ final class WatchSessionCoordinator: NSObject {
         do { task = try await store.fetchTask(id: command.taskID ?? "pending-\(command.id)") }
         catch { return }   // database unavailable: leave the id unrecorded so a retry can apply it
         guard isCurrent(scope, generation: generation) else { return }
+        // A lost capture acknowledgement may outlive the bounded command ledger. Retained
+        // Trash/archive records prove that this exact stable ID already existed and the user
+        // subsequently removed it. Never recreate it or guess from a title/prefix alone.
+        if case .capture = command.kind, task == nil {
+            let stableID = "pending-\(command.id)"
+            do {
+                let trash = try await store.trashedTasks()
+                guard isCurrent(scope, generation: generation) else { return }
+                if trash.contains(where: { $0.task.id == stableID }) {
+                    ledger.record(command.id)
+                    schedule()
+                    return
+                }
+                let archive = try await store.archivedTasksStamped()
+                guard isCurrent(scope, generation: generation) else { return }
+                if archive.contains(where: { $0.task.id == stableID }) {
+                    ledger.record(command.id)
+                    schedule()
+                    return
+                }
+            } catch { return } // unavailable terminal history cannot prove the command applied
+        }
         let now = Date(), zone = TimeZone.current
         // Read the rows fresh: `store.tasks` can lag behind a database that was just resumed.
         var nextRank: Int?
