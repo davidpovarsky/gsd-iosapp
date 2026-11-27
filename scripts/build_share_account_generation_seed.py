@@ -69,9 +69,20 @@ let package = Package(name: "GSDShareAccountGenerationFixture", platforms: [.mac
         xcode=subprocess.check_output(["xcodebuild","-version"],text=True,env=env,timeout=30).strip()
         assert xcode=="Xcode 27.0\nBuild version 27A266a"
         state["compilerVersion"]=xcode;state["compilerDeveloperDir"]=env["DEVELOPER_DIR"]
-        command=["swift","build","--package-path",str(package),"--scratch-path",str(scratch),"-j","2","--product","ShareAccountGenerationSeed"]
+        jobs=os.cpu_count()
+        assert isinstance(jobs,int) and jobs>0,"Useful native CPU count is unavailable"
+        swift=P(subprocess.check_output(["xcrun","--find","swift"],text=True,env=env,timeout=30).strip())
+        resolved_swift=swift.resolve();developer=P(env["DEVELOPER_DIR"]).resolve()
+        assert swift.is_absolute() and swift.is_file() and resolved_swift.is_relative_to(developer)
+        swift_version=subprocess.check_output([str(swift),"--version"],text=True,env=env,timeout=30).strip()
+        assert "Swift version" in swift_version
+        state["buildParallelism"]={"jobs":jobs,"measuredCPUCount":jobs,"measurement":"os.cpu_count()"}
+        state["swiftCompiler"]={"path":str(swift),"resolvedPath":str(resolved_swift),"sha256":digest(swift),
+            "version":swift_version,"selectionCommand":["xcrun","--find","swift"],
+            "versionCommand":[str(swift),"--version"],"checkedUTC":now()}
+        command=[str(swift),"build","--package-path",str(package),"--scratch-path",str(scratch),"-j",str(jobs),"--product","ShareAccountGenerationSeed"]
         run("build",command,900)
-        paths=run("show-bin-path",["swift","build","--package-path",str(package),"--scratch-path",str(scratch),"--show-bin-path"],120)
+        paths=run("show-bin-path",[str(swift),"build","--package-path",str(package),"--scratch-path",str(scratch),"--show-bin-path"],120)
         binary=P(paths.read_text().strip())/"ShareAccountGenerationSeed"
         assert binary.is_file() and binary.resolve().is_relative_to(scratch)
         preserved=out/"products";preserved.mkdir()
@@ -95,7 +106,7 @@ let package = Package(name: "GSDShareAccountGenerationFixture", platforms: [.mac
         assert inputs()==before and git("rev-parse","HEAD")==a.sha and not git("status","--porcelain")
         assert {n:digest(package/n) for n in package_before if n!="Package.resolved"}=={n:h for n,h in package_before.items() if n!="Package.resolved"}
         state["packageInputsAfter"]={n:digest(package/n) for n in package_before}
-        assert digest(__file__)==state["controllerSHA256"]
+        assert digest(__file__)==state["controllerSHA256"] and digest(swift)==state["swiftCompiler"]["sha256"]
         state.update(passed=True,sourceInputsUnchanged=True,dependencies=deps,product={"path":str(product),"sha256":digest(product)},
                      preservedProductFiles={x.relative_to(preserved).as_posix():digest(x) for x in preserved.rglob("*") if x.is_file()},
                      linkedLibraries=linked,linkedLibraryLog={"path":str(out/"linked-libraries.log"),"sha256":digest(out/"linked-libraries.log")})
