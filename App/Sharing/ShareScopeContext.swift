@@ -42,8 +42,8 @@ final class ShareScopeContext {
         observedScope = withObservationTracking { readScope() } onChange: { [weak self] in
             MainActor.assumeIsolated {
                 guard let self else { return }
-                generation &+= 1
-                stable = false
+                self.generation &+= 1
+                self.stable = false
                 _Concurrency.Task { @MainActor [weak self] in self?.observe() }
             }
         }
