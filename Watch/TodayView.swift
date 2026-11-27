@@ -9,7 +9,7 @@ struct TodayView: View {
     @Environment(WatchModel.self) private var model
     /// Whether this page is the one on screen, so only it answers a tapped reminder.
     let active: Bool
-    @State private var capturing = false
+    @State private var capturePresentation: CaptureView.Presentation?
 
     var body: some View {
         let today = model.today()
@@ -54,10 +54,14 @@ struct TodayView: View {
             .safeAreaInset(edge: .bottom) { WatchUndoBar() }
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
-                    Button { capturing = true } label: { Label("Add task", systemImage: "plus") }
+                    Button {
+                        capturePresentation = .init(origin: model.actionLease)
+                    } label: { Label("Add task", systemImage: "plus") }
                 }
             }
-            .sheet(isPresented: $capturing) { CaptureView() }
+            .sheet(item: $capturePresentation) { presentation in
+                CaptureView(origin: presentation.origin)
+            }
             .onChange(of: model.openedTaskID, initial: true) { _, _ in openTask(proxy, today: today) }
             .onChange(of: active) { _, _ in openTask(proxy, today: today) }
           }

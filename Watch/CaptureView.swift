@@ -10,8 +10,16 @@ struct CaptureView: View {
     @State private var text = ""
     @State private var chosen: Quadrant?
     @State private var saveFailed = false
+    struct Presentation: Identifiable {
+        let id = UUID()
+        let origin: WatchModel.ActionLease?
+    }
+
     @State private var origin: WatchModel.ActionLease?
-    @State private var boundOrigin = false
+
+    init(origin: WatchModel.ActionLease?) {
+        _origin = State(initialValue: origin)
+    }
 
     private var overLimit: Bool { WatchCommandPlan.captureOverLimit(text) }
     private var parsed: ParsedCapture { CaptureParser.parse(text) }
@@ -80,11 +88,6 @@ struct CaptureView: View {
                         .accessibilityIdentifier("watch-capture-error")
                 }
               }
-            }
-            .onAppear {
-                guard !boundOrigin else { return }
-                origin = model.actionLease
-                boundOrigin = true
             }
             .navigationTitle("New task")
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } } }

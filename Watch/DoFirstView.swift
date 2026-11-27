@@ -8,7 +8,7 @@ struct DoFirstView: View {
     @Environment(WatchModel.self) private var model
     /// Whether this page is the one on screen, so only it answers a tapped reminder.
     let active: Bool
-    @State private var capturing = false
+    @State private var capturePresentation: CaptureView.Presentation?
     private let rowLimit = 20
 
     var body: some View {
@@ -53,13 +53,20 @@ struct DoFirstView: View {
             .navigationTitle("GSD")
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
-                    Button { capturing = true } label: { Label("Add task", systemImage: "plus") }
+                    Button {
+                        capturePresentation = .init(origin: model.actionLease)
+                    } label: { Label("Add task", systemImage: "plus") }
                         .accessibilityIdentifier("watch-capture")
                 }
             }
-            .sheet(isPresented: $capturing) { CaptureView() }
+            .sheet(item: $capturePresentation) { presentation in
+                CaptureView(origin: presentation.origin)
+            }
             .onChange(of: model.captureRequested, initial: true) { _, requested in
-                if requested { capturing = true; model.captureRequested = false }
+                if requested {
+                    capturePresentation = .init(origin: model.actionLease)
+                    model.captureRequested = false
+                }
             }
             .safeAreaInset(edge: .bottom) { WatchUndoBar() }
             // A tapped reminder scrolls to the task's row (spec 4.4).
