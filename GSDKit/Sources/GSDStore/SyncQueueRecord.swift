@@ -18,6 +18,7 @@ struct SyncQueueRecord: Codable, FetchableRecord, PersistableRecord {
     var lastError: String?
     var lastAttemptAt: Int?
     var failedAt: Int?
+    var serverDatasetGeneration: String?
 }
 
 extension SyncQueueRecord {
@@ -32,6 +33,7 @@ extension SyncQueueRecord {
         lastError = item.lastError
         lastAttemptAt = item.lastAttemptAt
         failedAt = item.failedAt
+        serverDatasetGeneration = item.serverDatasetGeneration
     }
 
     func toDomain() throws -> SyncQueueItem {
@@ -47,7 +49,8 @@ extension SyncQueueRecord {
             status: SyncQueueItem.Status(rawValue: status) ?? .pending,
             lastError: lastError,
             lastAttemptAt: lastAttemptAt,
-            failedAt: failedAt
+            failedAt: failedAt,
+            serverDatasetGeneration: serverDatasetGeneration
         )
     }
 
