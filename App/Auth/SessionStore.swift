@@ -100,6 +100,7 @@ final class SessionStore {
     /// `client_id`). Silent on cancel, generic banner otherwise. Sets `accountNote` so any Apple
     /// sign-in surfaces the §8.4 "separate account" hint, not only a "Hide My Email" one.
     func signIn(provider: String) async {
+        guard !inProgress else { return }
         inProgress = true; lastError = nil
         defer { refreshIdentity(); inProgress = false }
         // Before the token exists, so no sync or push can run ahead of the sign-in drop.
@@ -218,7 +219,7 @@ final class SessionStore {
         case .prompt:
             // A pending account must not survive relaunch as an active session.
             pendingAccountToken = result.token
-            tokenStore.clear()
+            auth.signOut()
             refreshIdentity()
             pendingAccountSwitch = PendingAccountSwitch(newOwnerId: result.record.id,
                                                         newEmail: result.record.email)
@@ -252,7 +253,7 @@ final class SessionStore {
         case .merge:
             guard let token = pendingAccountToken else { signOut(); return }
             pendingAccountToken = nil
-            tokenStore.save(token)
+            auth.adoptSessionToken(token)
             refreshIdentity()
             UserDefaults.standard.set(pending.newOwnerId, forKey: lastOwnerKey)
             coordinator?.start(trigger: .signIn)
@@ -266,7 +267,7 @@ final class SessionStore {
             }
             guard let token = pendingAccountToken else { signOut(); return }
             pendingAccountToken = nil
-            tokenStore.save(token)
+            auth.adoptSessionToken(token)
             refreshIdentity()
             UserDefaults.standard.set(pending.newOwnerId, forKey: lastOwnerKey)
             coordinator?.start(trigger: .signIn)

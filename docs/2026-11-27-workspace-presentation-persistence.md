@@ -41,9 +41,9 @@ Required environment:
 
 - GSD_WORKSPACE_PRESENTATION_FIXTURE_ALLOWED=1
 - Optional GSD_WORKSPACE_PRESENTATION_FIXTURE_CASE selects one exact name below.
-  An unknown selector fails; no selector runs all eight.
+  An unknown selector fails; no selector runs all nine.
 
-The eight exact checks are:
+The nine exact checks are (the first eight remain unchanged):
 
 1. fresh_store_restores_hidden_lanes_and_timeline
 2. canonical_root_scopes_remain_distinct
@@ -53,6 +53,7 @@ The eight exact checks are:
 6. same_scope_views_share_latest_state
 7. invalid_identity_and_viewport_fail_closed
 8. session_resolution_holds_identity_until_apply
+9. oauth_retry_cannot_interrupt_an_inflight_signin
 
 Check 8 calls the actual SessionStore.signInWithEmail and resolveAccountSwitch
 methods with the real AuthService, PocketBaseClient, AccountSwitch, and JWT parser.
@@ -73,8 +74,24 @@ For a meaningful RED of the account phase defect, use the unchanged fixture and
 host preference helper with SessionStore from 6904270c3dc40db877eb0b8d64646f0a7a9c0f8f,
 select check 8, and require the synchronous inProgress assertion to fail after the
 real pending-account route. A compile/transport failure is not this RED.
-GREEN must run all eight against the new immutable candidate. The sole native
+GREEN must run all nine against the new immutable candidate. The sole native
 acceptance owner executes these jobs; do not duplicate Core1333 or Agent39.
+
+
+Check 9 holds the first real email sign-in response in a separate rejecting
+URLProtocol and attempts OAuth concurrently. The second entry must leave the first
+phase unresolved, start no transport or presenter, and preserve its original token
+until the held response is released. Cleanup always releases and joins that first
+login; only its exact response token/account may survive. Every URL is intercepted
+and an unexpected OAuth discovery request fails locally before any presenter.
+
+For its separate RED, keep the new fixture unchanged and use SessionStore from
+56d73d8d290d63f20c7b9a6d92a88dbf7d0f7b2c (before the OAuth admission guard), selecting
+oauth_retry_cannot_interrupt_an_inflight_signin. Require the precise assertion
+`A second OAuth attempt must not end the first sign-in phase.` A build, transport,
+or cleanup failure is not that RED. The existing eight checks and native UI branch
+are preserved; the app change is the same synchronous !inProgress entry guard
+already used by email login. No real OAuth browser is opened in either path.
 
 ## Native touch and cold relaunch gate
 
