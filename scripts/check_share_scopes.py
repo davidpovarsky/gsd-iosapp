@@ -21,7 +21,11 @@ EXPECTED = set([
     "title_enrichment_reads_canonical_row_without_ui_snapshot",
     "title_internal_write_drains_before_reset",
     "retained_trash_blocks_share_replay",
-    "retained_archive_blocks_share_replay"
+    "retained_archive_blocks_share_replay",
+    "canonical_edit_survives_pushed_creation_replay",
+    "canonical_edit_survives_queued_creation_replay",
+    "distinct_edited_retry_is_retained_without_overwriting_canonical",
+    "open_share_review_does_not_follow_account_transitions"
 ])
 
 def digest(path):
@@ -64,7 +68,10 @@ def prepare(source, output):
     shutil.copyfile(fixture, target / "Probe.swift")
     inputs["probe/check_share_scopes.py"] = digest(Path(__file__))
     inputs["probe/share_scope_probe.swift"] = digest(fixture)
-    settings = ', swiftSettings: [.define("SHARE_ACCOUNT_SCOPED")]' if scoped else ''
+    definitions = ['.define("SHARE_ACCOUNT_SCOPED")'] if scoped else []
+    if "func isReviewCurrent(" in (source / "App/Sharing/ShareInboxDrainer.swift").read_text():
+        definitions.append('.define("SHARE_REVIEW_LEASED")')
+    settings = ', swiftSettings: [' + ', '.join(definitions) + ']' if definitions else ''
     manifest = '''// swift-tools-version: 6.2
 import PackageDescription
 let package = Package(

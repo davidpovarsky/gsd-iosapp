@@ -151,12 +151,14 @@ actor ShareFetch {
         GSDModel.Task(id: "shared-stable-task-id", title: title, description: "https://example.com/article",
                      urgent: true, important: true, createdAt: stamp, updatedAt: stamp)
     }
-    static func capture(_ title: String, origin: WatchAccountScope?, pushed: Bool = false) throws -> SharedCapture {
+    static func capture(_ title: String, origin: WatchAccountScope?, pushed: Bool = false,
+                        editedRetry: Bool = false) throws -> SharedCapture {
         let value = SharedCapture(title: title, urls: [], urgent: true, important: true,
                                   tags: ["scope"], capturedAt: stamp,
                                   taskID: "shared-stable-task-id", remoteRecordID: pushed ? "remote-fixture-id" : nil)
         var object = try JSONSerialization.jsonObject(with: JSONEncoder().encode(value)) as! [String: Any]
         if let origin { object["origin"] = try JSONSerialization.jsonObject(with: JSONEncoder().encode(origin)) }
+        if editedRetry { object["isEditedRetry"] = true }
         return try JSONDecoder().decode(SharedCapture.self, from: JSONSerialization.data(withJSONObject: object))
     }
     @MainActor static func heldChecks(root: URL) async throws {
@@ -298,6 +300,65 @@ actor ShareFetch {
                   && rig.outbox.pending().isEmpty)
         }
     }
+    @MainActor static func liveReplayChecks(root: URL) async throws {
+        for pushed in [false, true] {
+            let rig = try ShareRig(directory: root.appendingPathComponent(pushed ? "live-pushed-replay" : "live-queued-replay"))
+            defer { rig.close() }
+            var edited = row("Canonical title after the first creation")
+            edited.description = "A later canonical note"
+            edited.completed = true
+            edited.tags = ["manual"]
+            edited.updatedAt = stamp.addingTimeInterval(50)
+            try await rig.rows.upsert(edited)
+            let before = try await rig.rows.fetchAll(), queueBefore = try await rig.queue.all()
+            try rig.outbox.write(capture("Original stale creation", origin: rig.origin, pushed: pushed))
+            await rig.drainer.drain(enrichTitles: false)
+            let after = try await rig.rows.fetchAll(), queueAfter = try await rig.queue.all()
+            check(pushed ? "canonical_edit_survives_pushed_creation_replay" : "canonical_edit_survives_queued_creation_replay",
+                  after == before && queueAfter == queueBefore && rig.outbox.pending().isEmpty)
+        }
+        let retry = try ShareRig(directory: root.appendingPathComponent("edited-retry-held"))
+        defer { retry.close() }
+        let canonical = row("Keep the canonical edit")
+        try await retry.rows.upsert(canonical)
+        let before = try await retry.rows.fetchAll(), queueBefore = try await retry.queue.all()
+        // The original retry fixture deliberately uses the same timestamp for both submits.
+        try retry.outbox.write(capture("User changed the failed sheet", origin: retry.origin, editedRetry: true))
+        await retry.drainer.drain(enrichTitles: false)
+        let after = try await retry.rows.fetchAll(), queueAfter = try await retry.queue.all()
+        let retained = retry.outbox.pending()
+        check("distinct_edited_retry_is_retained_without_overwriting_canonical",
+              after == before && queueAfter == queueBefore && retained.count == 1
+              && retained.first?.capture.title == "User changed the failed sheet"
+              && retained.first?.capture.taskID == canonical.id)
+    }
+
+    @MainActor static func reviewLeaseCheck(root: URL) async throws {
+        let rig = try ShareRig(directory: root.appendingPathComponent("open-review"))
+        defer { rig.close() }
+        try rig.outbox.write(capture("Review A content", origin: rig.origin))
+        guard let item = rig.drainer.reviewItems().first, item.canReview else { throw ProbeError.observationSetup }
+        #if SHARE_REVIEW_LEASED
+        guard let lease = item.reviewLease else { throw ProbeError.observationSetup }
+        let allowed: @MainActor () -> Bool = { rig.drainer.isReviewCurrent(lease) }
+        #else
+        // This is the original view's one-time presentation decision. It then retains
+        // and renders the captured value without consulting current identity again.
+        let allowed: @MainActor () -> Bool = { item.canReview }
+        #endif
+        let initiallyAllowed = allowed()
+        rig.identity.owner = nil
+        let hiddenDuringTransition = !allowed()
+        rig.identity.owner = "share-fixture-account-a"
+        let oldLeaseStillInvalid = !allowed()
+        rig.identity.owner = "share-fixture-account-b"
+        let hiddenUnderB = !allowed()
+        rig.identity.owner = "share-fixture-account-a"
+        let canReselect = await waitFor { rig.drainer.reviewItems().first?.canReview == true }
+        check("open_share_review_does_not_follow_account_transitions", initiallyAllowed
+              && hiddenDuringTransition && oldLeaseStillInvalid && hiddenUnderB && canReselect && !allowed())
+    }
+
     enum ProbeError: Error { case observationSetup, isolationRequired }
     @MainActor static func main() async {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("GSDShareScope-" + UUID().uuidString)
@@ -311,6 +372,8 @@ actor ShareFetch {
             try await writeChecks(root: root)
             try await titleChecks(root: root)
             try await terminalChecks(root: root)
+            try await liveReplayChecks(root: root)
+            try await reviewLeaseCheck(root: root)
             exit(failures == 0 ? 0 : 1)
         } catch {
             print("SHARE_SCOPE_ERROR " + String(describing: error)); exit(2)
