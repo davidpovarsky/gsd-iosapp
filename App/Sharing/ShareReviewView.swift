@@ -48,7 +48,13 @@ struct ShareReviewView: View {
 private struct ShareCaptureReviewDetail: View {
     @Environment(ShareInboxDrainer.self) private var drainer
     let capture: SharedCapture
-    let lease: ShareInboxDrainer.ReviewLease
+    @State private var lease: ShareInboxDrainer.ReviewLease
+
+    init(capture: SharedCapture, lease: ShareInboxDrainer.ReviewLease) {
+        self.capture = capture
+        // Destination value updates must never replace the authority selected on first open.
+        _lease = State(initialValue: lease)
+    }
 
     private var text: String {
         ([capture.title] + capture.urls + [capture.tags.map { "#" + $0 }.joined(separator: " ")])
