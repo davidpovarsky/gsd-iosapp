@@ -1,6 +1,7 @@
 import AppIntents
 import SwiftUI
 import UIKit
+import GSDModel
 import GSDStore
 import GSDSync
 import GSDSnapshot
