@@ -17874,6 +17874,108 @@
         }
       },
       "extractionState": "manual"
+    },
+    "Finish the pending data reset in Settings before syncing.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finish the pending data reset in Settings before syncing."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "יש להשלים את איפוס הנתונים הממתין בהגדרות לפני הסנכרון."
+          }
+        }
+      }
+    },
+    "Cloud reset status could not be verified. Try the data reset again in Settings.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cloud reset status could not be verified. Try the data reset again in Settings."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לאמת את מצב האיפוס בענן. יש לנסות שוב את איפוס הנתונים בהגדרות."
+          }
+        }
+      }
+    },
+    "This task's cloud data could not be verified. Please try again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This task's cloud data could not be verified. Please try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לאמת את נתוני הענן של המשימה. יש לנסות שוב."
+          }
+        }
+      }
+    },
+    "This task belongs to a different cloud data set. Keep it for review before retrying.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This task belongs to a different cloud data set. Keep it for review before retrying."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "המשימה שייכת למאגר נתונים אחר בענן. יש לשמור אותה לבדיקה לפני ניסיון נוסף."
+          }
+        }
+      }
+    },
+    "Your account changed. Try the data reset again in Settings.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your account changed. Try the data reset again in Settings."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "החשבון השתנה. יש לנסות שוב את איפוס הנתונים בהגדרות."
+          }
+        }
+      }
+    },
+    "The operation was interrupted. Please try again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The operation was interrupted. Please try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הפעולה נקטעה. יש לנסות שוב."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

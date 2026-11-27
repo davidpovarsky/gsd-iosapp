@@ -117,7 +117,8 @@ struct GSDApp: App {
             rawToken: { tokenStore.load() },   // health-only: lets an expired session say so
             history: historyRepo,
             reminders: scheduler,
-            library: GRDBCloudLibraryRepository(database)) // same account and sync lifecycle
+            library: GRDBCloudLibraryRepository(database),
+            resetRequests: GRDBDatasetResetRepository(database)) // exact reset intent survives process death
         _syncEngine = State(initialValue: syncEngine)
         // SyncCoordinator (Phase 5d) owns when sync fires (cadence/foreground/network/debounced push/SSE)
         // and the status surface; SessionStore delegates start/stop to it on sign-in/out.
@@ -191,14 +192,29 @@ struct GSDApp: App {
         // Darwin signal, and background refresh — all through ShareInboxDrainer so the landings
         // never diverge. Trivial glue; the logic is the tested ShareInbox + TaskStore.
         let fetcher = PageTitleFetcher()
+        let serverGeneration: @MainActor @Sendable (WatchAccountScope) async throws -> String = { scope in
+            try _Concurrency.Task.checkCancellation()
+            guard scope.isValid, scope.kind == "account", watchScopeProvider() == scope,
+                  let credential = tokenStore.load(),
+                  JWT.userId(credential) == scope.identifier else { throw AuthError.notSignedIn }
+            let generation = try await PocketBaseClient(baseURL: AuthConfig.live.baseURL)
+                .fetchDatasetGeneration(token: credential)
+            try _Concurrency.Task.checkCancellation()
+            guard tokenStore.load() == credential, watchScopeProvider() == scope else {
+                throw AuthError.notSignedIn
+            }
+            return generation
+        }
         let shareDrainer = ShareInboxDrainer(
             inbox: ShareInbox(store: isolated ? ShareOutboxStore(directoryURL: HarnessLaunch.scratchDirectory)
                                               : ShareOutboxStore()),
             store: store,
             titleEnricher: ShareTitleEnricher(store: store, fetch: fetcher.title,
-                                            mutationGate: watchMutationGate, scopeProvider: watchScopeProvider),
+                                            mutationGate: watchMutationGate, scopeProvider: watchScopeProvider,
+                                            serverGeneration: serverGeneration),
             mutationGate: watchMutationGate, scopeProvider: watchScopeProvider,
-            sharedDirectory: sharedDirectory, recoverJournals: true)
+            sharedDirectory: sharedDirectory, recoverJournals: true,
+            serverGeneration: serverGeneration)
         _shareDrainer = State(initialValue: shareDrainer)
         // In-app intents (Siri/Shortcuts run in this process) resolve the SAME store via
         // AppDependencyManager. A second connection on the live DB would be invisible to

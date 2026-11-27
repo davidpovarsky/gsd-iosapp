@@ -195,6 +195,7 @@ final class SyncCoordinator {
         }
         do {
             try await store.eraseAllData()
+            try await engine.completeDatasetReset(result)
         } catch {
             await refreshStatus()
             return false
@@ -204,7 +205,7 @@ final class SyncCoordinator {
     }
 
     /// One remote task-erase pass for account deletion (no local wipe; the caller decides the local
-    /// fate). A pass that deletes nothing means a complete listing came back empty. A single-flight
+    /// fate). A pass that deletes nothing means the atomic server transaction found no data. A single-flight
     /// skip is retried a few times, then reported as a retryable failure.
     func eraseRemoteTasksPass() async -> AccountDeleter.ErasePass {
         var result = await engine.eraseAllRemote()
@@ -213,6 +214,15 @@ final class SyncCoordinator {
             try? await _Concurrency.Task.sleep(for: .milliseconds(400))
             result = await engine.eraseAllRemote()
             tries += 1
+        }
+        if result.error == nil, !result.skipped, !result.notSignedIn {
+            do {
+                // A later account-deletion pass has its own explicit reset identity, so it can
+                // verify emptiness without mistaking a replayed nonempty receipt for new work.
+                try await engine.completeDatasetReset(result)
+            } catch {
+                result.error = error.localizedDescription
+            }
         }
         await refreshStatus()
         return AccountDeleter.ErasePass(result)
