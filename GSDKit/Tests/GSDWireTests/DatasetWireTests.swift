@@ -164,7 +164,8 @@ struct DatasetWireTests {
         var missingCount = response()
         missingCount.removeValue(forKey: "deleted_tasks")
         let invalid: [[String: Any]] = [
-            [:], missingCount, response(generation: ""), response(generation: NSNull()),
+            [:], missingCount, response(generation: "generation-1"),
+            response(generation: ""), response(generation: NSNull()),
             response(generation: String(repeating: "x", count: 129)),
             response(generation: "bad\nvalue"), response(requestID: ""),
             response(requestID: String(repeating: "r", count: 129)),
