@@ -310,6 +310,12 @@ struct GSDApp: App {
                         break
                     }
                 }
+                .onReceive(NotificationCenter.default.publisher(
+                    for: KeychainTokenStore.didChangeNotification).receive(on: RunLoop.main)) { _ in
+                    // Same-owner renewal can invalidate a frozen generation read without
+                    // changing SessionStore identity. Keep the capture and request a fresh pass.
+                    _Concurrency.Task { @MainActor in await shareDrainer.drain() }
+                }
                 .fullScreenCover(isPresented: Binding(
                     get: { !hasOnboarded },
                     set: { presenting in if !presenting { hasOnboarded = true } }

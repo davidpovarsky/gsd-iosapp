@@ -15,6 +15,8 @@ final class ShareInboxDrainer {
     private let recoverJournals: Bool
     private let serverGeneration: @MainActor @Sendable (WatchAccountScope) async throws -> String
     private(set) var pendingCount = 0
+    @ObservationIgnored private var drainInProgress = false
+    @ObservationIgnored private var pendingDrainEnrichment: Bool?
 
     init(inbox: ShareInbox, store: TaskStore, titleEnricher: ShareTitleEnricher,
          mutationGate: WatchMutationGate,
@@ -31,9 +33,33 @@ final class ShareInboxDrainer {
         refreshPending()
     }
 
+    /// Preserve requests received during a suspended credential/generation read.
+    /// Each owner performs at most its initial pass and one coalesced trailing pass.
+    /// Further real requests move to a new owner; a failure alone never schedules a retry.
+    func drain(enrichTitles: Bool = true) async {
+        guard !_Concurrency.Task.isCancelled else { return }
+        pendingDrainEnrichment = (pendingDrainEnrichment ?? false) || enrichTitles
+        guard !drainInProgress else { return }
+        drainInProgress = true
+        defer {
+            drainInProgress = false
+            // A foreground request may outlive a cancelled background owner. Hand off
+            // only that recorded request, with fresh scope/credential checks in drainOnce.
+            if let requested = pendingDrainEnrichment {
+                pendingDrainEnrichment = nil
+                _Concurrency.Task { @MainActor in await self.drain(enrichTitles: requested) }
+            }
+        }
+        for _ in 0..<2 {
+            guard !_Concurrency.Task.isCancelled, let requested = pendingDrainEnrichment else { break }
+            pendingDrainEnrichment = nil
+            await drainOnce(enrichTitles: requested)
+        }
+    }
+
     /// Recovery takes its file lease BEFORE any local gate ticket, then releases it.
     /// An active extension POST cannot be ingested early from its crash journal.
-    func drain(enrichTitles: Bool = true) async {
+    private func drainOnce(enrichTitles: Bool) async {
         if recoverJournals {
             do {
                 let lease = try await SharedMutationLease.acquire(directory: sharedDirectory, mode: .exclusive)
