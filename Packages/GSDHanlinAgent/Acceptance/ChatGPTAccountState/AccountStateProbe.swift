@@ -9,16 +9,20 @@ private actor FixtureNetwork {
     private let signingKey = P256.Signing.PrivateKey()
     private var attempt: HanlinChatGPTAuthorizationAttempt?
     private var refreshGate: CheckedContinuation<FixtureReply, Never>?
+    private var oldModelGate: CheckedContinuation<FixtureReply, Never>?
     var holdRefresh = false
+    private var holdFirstModel = false
     private(set) var requestCount = 0
     private(set) var revokeCount = 0
     private(set) var refreshCount = 0
+    private(set) var modelRequestCount = 0
     private(set) var firstRequestWasFenced: Bool?
     private(set) var revokedRotatedToken = false
 
     init(fence: GSDChatGPTLocalSignOutStore) { self.fence = fence }
 
     func setHoldRefresh() { holdRefresh = true }
+    func setHoldFirstModel() { holdFirstModel = true }
 
     func authorize(_ value: HanlinChatGPTAuthorizationAttempt) -> URL {
         attempt = value
@@ -81,6 +85,13 @@ private actor FixtureNetwork {
         refreshGate = nil
     }
 
+    func releaseOldModel() {
+        oldModelGate?.resume(returning: json([
+            "models": [["slug": "fixture-old-model", "display_name": "Old fixture", "visibility": "list"]]
+        ]))
+        oldModelGate = nil
+    }
+
     func response(_ request: URLRequest) async -> FixtureReply {
         requestCount += 1
         if firstRequestWasFenced == nil {
@@ -99,6 +110,10 @@ private actor FixtureNetwork {
             revokedRotatedToken = revokedRotatedToken || fields(request)["token"] == "fixture-rotated-refresh"
             return json(["error": "fixture_revoke_failure"], status: 400)
         case "/v1/models":
+            modelRequestCount += 1
+            if holdFirstModel, modelRequestCount == 1 {
+                return await withCheckedContinuation { oldModelGate = $0 }
+            }
             return json(["models": [["slug": "fixture-model", "display_name": "Fixture", "visibility": "list"]]])
         case "/api/accounts/oauth/token":
             if fields(request)["grant_type"] == "refresh_token" {
@@ -360,6 +375,36 @@ private extension Data {
         let revokedRotated = await rotatingNetwork.revokedRotatedToken
         check("refresh_after_signout_cannot_restore_credentials", refreshStarted && deniedBeforeRefreshCompletes
               && staleInferenceFailed && !rotatingReload.canUsePlan && revokedRotated)
+
+        let catalogStore = fence("same-registration-reauthentication")
+        let catalogKeychain = FixtureKeychain(snapshot())
+        let catalogNetwork = FixtureNetwork(fence: catalogStore)
+        await catalogNetwork.setHoldFirstModel()
+        let catalogState = state(catalogKeychain, fence: catalogStore, network: catalogNetwork)
+        let oldInference = _Concurrency.Task { @MainActor in try await catalogState.accessForInference() }
+        for _ in 0..<200 {
+            if await catalogNetwork.modelRequestCount == 1 { break }
+            try await _Concurrency.Task.sleep(for: .milliseconds(5))
+        }
+        let oldModelsStarted = await catalogNetwork.modelRequestCount == 1
+        GSDChatGPTAuthorization.callback = { await catalogNetwork.authorize($0) }
+        await catalogState.signIn(accountID: "fixture-client-a")
+        GSDChatGPTAuthorization.callback = nil
+        let newSessionReady = catalogState.canUsePlan && catalogState.models.map(\.slug) == ["fixture-model"]
+            && catalogKeychain.snapshot?.accounts.first?.credentials?.accessToken == "fixture-auth-access"
+        await catalogNetwork.releaseOldModel()
+        let oldInferenceFailed: Bool
+        switch await oldInference.result {
+        case .success: oldInferenceFailed = false
+        case .failure: oldInferenceFailed = true
+        }
+        let modelRequests = await catalogNetwork.modelRequestCount
+        check("same_registration_reauth_discards_old_model_catalog", oldModelsStarted && newSessionReady
+              && modelRequests == 2 && catalogState.models.map(\.slug) == ["fixture-model"]
+              && catalogState.selectedModelID == "fixture-model"
+              && catalogKeychain.snapshot?.accounts.first?.modelID == "fixture-model")
+        check("same_registration_reauth_invalidates_pending_inference", oldModelsStarted && newSessionReady
+              && oldInferenceFailed && catalogState.canUsePlan)
     }
 
     @MainActor static func main() async {

@@ -27,6 +27,8 @@ EXPECTED = {
     "verified_signin_clears_only_current_fence",
     "failed_signin_save_preserves_fence",
     "refresh_after_signout_cannot_restore_credentials",
+    "same_registration_reauth_discards_old_model_catalog",
+    "same_registration_reauth_invalidates_pending_inference",
 }
 
 
