@@ -1,12 +1,12 @@
 # Third-party notices provenance — 2026-11-27
 
 The app-bundled `THIRD_PARTY_NOTICES.md` now matches the dependency revisions selected for the final GSD candidate.
-The source base is `e484b310dcc4e56fbb905bed44168441e892617e`. This change updates resource content and provenance only.
+The initial source audit used `e484b310dcc4e56fbb905bed44168441e892617e`. The qualified Kit revision follow-up uses `e5ec0f69de29065ee2843cc8853d33c9f86e46fe` as its GSD base and preserves every license body.
 
 ## Selected sources
 
 - Original Hanlin SDK: `018981a3af55f4e524c3c3886003991eb243e7c3`, matching `HanlinSDK.lock.json`.
-- TaskVisualizationKit: `6ca9c98a1115b7e33fa29855ae296a92c81e8eef`, matching `project.yml`.
+- TaskVisualizationKit: `4006fe14a6d8019edd0aceffad0dbe79dd7c91af`, matching `project.yml`.
 - swift-ai-sdk: `abf0921c6e89e6521cc2b510ff11016b45a0ef08`, matching the native agent receipt and `Packages/GSDHanlinAgent/Package.resolved`.
 - Newly attributed resolved packages: opentelemetry-swift-core 2.6.0 and swift-atomics 1.3.1.
 
@@ -50,8 +50,8 @@ AdvancedKanban and ForceGraph pins are unchanged.
 | Hanlin SDK / vendored JSON | `018981a3af55f4e524c3c3886003991eb243e7c3` | [Packages/HanlinAgentSDK/Vendor/Swift-JSON/LICENSE](https://github.com/davidpovarsky/hanlin-ai/blob/018981a3af55f4e524c3c3886003991eb243e7c3/Packages/HanlinAgentSDK/Vendor/Swift-JSON/LICENSE) | `c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4` |
 | Hanlin SDK / vendored JSON | `018981a3af55f4e524c3c3886003991eb243e7c3` | [Packages/HanlinAgentSDK/Vendor/Swift-JSON/Licenses/RhoeJSON/LICENSE](https://github.com/davidpovarsky/hanlin-ai/blob/018981a3af55f4e524c3c3886003991eb243e7c3/Packages/HanlinAgentSDK/Vendor/Swift-JSON/Licenses/RhoeJSON/LICENSE) | `c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4` |
 | Hanlin SDK / vendored JSON | `018981a3af55f4e524c3c3886003991eb243e7c3` | [Packages/HanlinAgentSDK/Vendor/Swift-JSON/Licenses/RhoeJSON/NOTICE](https://github.com/davidpovarsky/hanlin-ai/blob/018981a3af55f4e524c3c3886003991eb243e7c3/Packages/HanlinAgentSDK/Vendor/Swift-JSON/Licenses/RhoeJSON/NOTICE) | `147def951fc5e289d1621cc9d6ad814be88060f3f0430d1f2378ae67bae14ada` |
-| TaskVisualizationKit | `6ca9c98a1115b7e33fa29855ae296a92c81e8eef` | [LICENSE](https://github.com/davidpovarsky/task-visualization-kit/blob/6ca9c98a1115b7e33fa29855ae296a92c81e8eef/LICENSE) | `8869099319696b017df9c997fbb04638975f4b735ed0ac78b71a2f820f43b0f9` |
-| TaskVisualizationKit | `6ca9c98a1115b7e33fa29855ae296a92c81e8eef` | [Sources/TaskVisualizationKit/Resources/ThirdPartyNotices.txt](https://github.com/davidpovarsky/task-visualization-kit/blob/6ca9c98a1115b7e33fa29855ae296a92c81e8eef/Sources/TaskVisualizationKit/Resources/ThirdPartyNotices.txt) | `0c569281ebf40d464db3b562d393a9e1aa1e36da54d89d4321cc2e2fdcc5e5a5` |
+| TaskVisualizationKit | `4006fe14a6d8019edd0aceffad0dbe79dd7c91af` | [LICENSE](https://github.com/davidpovarsky/task-visualization-kit/blob/4006fe14a6d8019edd0aceffad0dbe79dd7c91af/LICENSE) | `8869099319696b017df9c997fbb04638975f4b735ed0ac78b71a2f820f43b0f9` |
+| TaskVisualizationKit | `4006fe14a6d8019edd0aceffad0dbe79dd7c91af` | [Sources/TaskVisualizationKit/Resources/ThirdPartyNotices.txt](https://github.com/davidpovarsky/task-visualization-kit/blob/4006fe14a6d8019edd0aceffad0dbe79dd7c91af/Sources/TaskVisualizationKit/Resources/ThirdPartyNotices.txt) | `0c569281ebf40d464db3b562d393a9e1aa1e36da54d89d4321cc2e2fdcc5e5a5` |
 
 ## Content preservation and additions
 
@@ -70,8 +70,14 @@ bundled third-party notice now has its own immutable source link.
   — SHA256 `ae86d31f2136e9e6baea450d435259a6a6a2d5136f5e9e2eeee01380a517bdd4`.
 - Original SDK/Kit input bundle: `/mnt/development/projects/evidence/gsd-final-notices-20261127/original-sdk-kit-license-inputs.json`
   — SHA256 `a5fb0661b780134122447dc3ff04d074f45ee7667c5adbfce0d127a6da8e8d3d`.
-- Updated `THIRD_PARTY_NOTICES.md`: SHA256 `8b485856685f2782e624dbea818d46a316963791b53faf095a643dc7752735f3`; 69882 bytes.
+- Updated `THIRD_PARTY_NOTICES.md`: SHA256 `015add82661346c50c7c30579da84c7df820f7331354ade284cdc01211db0e24`; 69882 bytes.
 - Existing `project.yml` resource inclusion for `THIRD_PARTY_NOTICES.md` is unchanged.
 
 The source content checks pass. Final generated-project resolution and built-app resource verification belong
 to the native final build; this receipt does not claim those later actions have run.
+
+## Qualified presentation-state Kit follow-up
+
+The Kit successor `4006fe14a6d8019edd0aceffad0dbe79dd7c91af` passed its original 27, unchanged Network 7 and new presentation 12 native package cases. Its immutable publication addendum authorizes host intake. The earlier source audit and input bundles above remain preserved. Direct reads of the original Git objects at both `6ca9c98a1115b7e33fa29855ae296a92c81e8eef` and `4006fe14a6d8019edd0aceffad0dbe79dd7c91af` confirm that `LICENSE`, bundled `ThirdPartyNotices.txt` and `Package.resolved` are byte-identical. Only Kit revision references change in the app notice; all license bodies and upstream pins remain unchanged.
+
+Intake proof: `/mnt/development/projects/evidence/gsd-final-product-20261127/kit-4006-intake-e5ec0f6.json`. Original package receipt SHA256: `01e9d0b16c2abf76c3071276d1bf74f14cd187ef25d9e8adbbe8f206298002b3`. Publication addendum SHA256: `fe8fdf132aa2d76fe47a29a53647ac5d4258783fd931bf43f157e597b7675229`. Final GSD host and built-resource acceptance remain pending.

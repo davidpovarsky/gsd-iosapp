@@ -1170,9 +1170,9 @@ for the full license text and attribution terms.
 ```
 
 
-## TaskVisualizationKit 6ca9c98a1115b7e33fa29855ae296a92c81e8eef
+## TaskVisualizationKit 4006fe14a6d8019edd0aceffad0dbe79dd7c91af
 
-Source: https://github.com/davidpovarsky/task-visualization-kit/tree/6ca9c98a1115b7e33fa29855ae296a92c81e8eef
+Source: https://github.com/davidpovarsky/task-visualization-kit/tree/4006fe14a6d8019edd0aceffad0dbe79dd7c91af
 
 License: MIT
 
@@ -1202,7 +1202,7 @@ SOFTWARE.
 
 ### Original visualization libraries
 
-Source: https://github.com/davidpovarsky/task-visualization-kit/blob/6ca9c98a1115b7e33fa29855ae296a92c81e8eef/Sources/TaskVisualizationKit/Resources/ThirdPartyNotices.txt
+Source: https://github.com/davidpovarsky/task-visualization-kit/blob/4006fe14a6d8019edd0aceffad0dbe79dd7c91af/Sources/TaskVisualizationKit/Resources/ThirdPartyNotices.txt
 
 The following notice is reproduced from TaskVisualizationKit at the revision above. The original packages are consumed without upstream source modifications:
 
