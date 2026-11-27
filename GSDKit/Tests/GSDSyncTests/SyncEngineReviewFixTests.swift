@@ -95,33 +95,42 @@ struct SyncEngineReviewFixTests {
         #expect(try await tasks.fetch(id: "t1") == nil)   // deleted despite our own device_id on the record
     }
 
-    // Fix A: eraseAllRemote deletes EVERY remote record from a fresh index (even ones not local) and
-    // clears the local queue so no stale op resurrects a task.
-    final class TwoRecordExecutor: RequestExecuting, @unchecked Sendable {
-        private(set) var deletes: [String] = []
-        func execute(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
-            if (request.httpMethod ?? "GET") == "GET" {
-                let json = #"{"page":1,"perPage":200,"totalItems":2,"totalPages":1,"items":[{"id":"recA","task_id":"a","client_updated_at":"2001-01-01T00:00:00.000Z"},{"id":"recB","task_id":"b","client_updated_at":"2001-01-01T00:00:00.000Z"}]}"#
-                return (Data(json.utf8), HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!)
-            }
-            deletes.append(request.url!.lastPathComponent)
-            return (Data(), HTTPURLResponse(url: request.url!, statusCode: 204, httpVersion: nil, headerFields: nil)!)
-        }
-    }
+    // Fix A remains: every remote task, including one absent locally, must be erased and stale
+    // queued mutations retired. The stronger contract uses one atomic server reset, not enumeration.
 
     @Test func eraseAllRemoteDeletesAllIndexRecordsAndClearsQueue() async throws {
-        let db = try AppDatabase.inMemory(); let queue = GRDBSyncQueueRepository(db); let exec = TwoRecordExecutor()
-        // a stale pending update that must NOT survive the wipe (else it recreates a task)
+        let db = try AppDatabase.inMemory(); let queue = GRDBSyncQueueRepository(db)
+        let exec = AtomicEraseFixtureExecutor(remoteTaskIDs: ["a", "b"], expectedToken: token)
+        // Both pending and failed stale writes must disappear; neither remote task is stored locally.
         try await queue.enqueue(SyncQueueItem(id: "u1", taskId: "a", operation: .update, timestamp: 1, payload: sample("a")))
+        try await queue.enqueue(SyncQueueItem(
+            id: "failed", taskId: "b", operation: .create, timestamp: 2,
+            payload: sample("b"), status: .failed))
         let eng = SyncEngine(client: PocketBaseClient(baseURL: "https://api.vinny.io", executor: exec),
                              tasks: GRDBTaskRepository(db), queue: queue,
                              cursor: SyncCursor(defaults: UserDefaults(suiteName: "t.\(UUID().uuidString)")!),
                              deviceId: "dev-A", tokenProvider: { self.token },
                              now: { Date(timeIntervalSince1970: 2_000_000_000) }, throttleMs: 0,
                              history: GRDBSyncHistoryRepository(db))
+        #expect(await exec.snapshot().remoteTaskIDs == ["a", "b"])
         let result = await eng.eraseAllRemote()
+        let observed = await exec.snapshot()
         #expect(result.pushed == 2)
-        #expect(Set(exec.deletes) == ["recA", "recB"])
+        #expect(result.error == nil && !result.notSignedIn && !result.skipped)
+        #expect(observed.remoteTaskIDs.isEmpty)
+        #expect(observed.deletedTaskCounts == [2])
+        #expect(observed.requests.map { "\($0.httpMethod ?? "") \($0.url?.path ?? "")" } == [
+            "GET /api/gsd/dataset", "POST /api/gsd/dataset/reset"
+        ])
+        #expect(observed.requests.allSatisfy { $0.value(forHTTPHeaderField: "Authorization") == token })
+        #expect(!observed.requests.contains {
+            $0.httpMethod == "DELETE" || $0.url?.path.contains("/collections/tasks/") == true
+        })
+        let reset = try #require(observed.resetBodies.first)
+        #expect(observed.resetBodies.count == 1)
+        #expect(reset["expected_generation"] == "generation-before-reset")
+        let requestID = try #require(reset["request_id"])
+        #expect(!requestID.isEmpty && requestID.utf8.count <= 128)
         #expect(try await queue.all().isEmpty)   // stale ops cleared
     }
 }
