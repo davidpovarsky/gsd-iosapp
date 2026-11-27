@@ -74,7 +74,7 @@ struct OnboardingView: View {
             VStack(spacing: 8) {
                 primaryButton(String(localized: "Start using GSD"), action: onFinish)
                 syncSignInButtons
-                Text(String(localized: "To sync your tasks and use ChatGPT while this iPad is closed, sign in to GSD Cloud."))
+                Text(String(localized: "Sign in to GSD Cloud to sync your tasks and use them in ChatGPT while GSD is closed."))
                     .font(.caption)
                     .foregroundStyle(Surface.ink3)
                     .multilineTextAlignment(.center)

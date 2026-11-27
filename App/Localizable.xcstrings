@@ -17857,6 +17857,23 @@
         }
       },
       "extractionState": "manual"
+    },
+    "Sign in to GSD Cloud to sync your tasks and use them in ChatGPT while GSD is closed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to GSD Cloud to sync your tasks and use them in ChatGPT while GSD is closed."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "כדי לסנכרן את המשימות ולעבוד איתן ב־ChatGPT גם כש־GSD סגורה, יש להתחבר לחשבון GSD Cloud."
+          }
+        }
+      },
+      "extractionState": "manual"
     }
   },
   "version": "1.0"
