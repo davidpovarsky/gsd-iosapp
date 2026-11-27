@@ -51,7 +51,7 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def prepare(source, output):
+def prepare(source, output, *, verified_fixture=True):
     package = output / "package"
     inputs = {}
     for module in ("GSDModel", "GSDSnapshot"):
@@ -81,7 +81,7 @@ def prepare(source, output):
             if text.count(needle) != 1:
                 raise ValueError("WatchModel storage injection seam changed")
             text = text.replace(needle, "let directory = watchProbeDirectory")
-            if scoped_host:
+            if scoped_host and verified_fixture:
                 needle = "snapshot = snapshotStore.read() ?? .empty"
                 if text.count(needle) != 1:
                     raise ValueError("WatchModel initial snapshot prerequisite seam changed")
@@ -91,9 +91,10 @@ def prepare(source, output):
         gate = source / "App/Watch/WatchMutationGate.swift"
         inputs[str(gate.relative_to(source))] = digest(gate)
         shutil.copyfile(gate, target / gate.name)
-        fixture_scope = Path(__file__).with_name("watch_systems_fixture_scope.swift")
-        inputs["probe/watch_systems_fixture_scope.swift"] = digest(fixture_scope)
-        shutil.copyfile(fixture_scope, target / fixture_scope.name)
+        if verified_fixture:
+            fixture_scope = Path(__file__).with_name("watch_systems_fixture_scope.swift")
+            inputs["probe/watch_systems_fixture_scope.swift"] = digest(fixture_scope)
+            shutil.copyfile(fixture_scope, target / fixture_scope.name)
     lifecycle = source / "Watch/GSDWatchApp.swift"
     inputs[str(lifecycle.relative_to(source))] = digest(lifecycle)
     text = lifecycle.read_text()
@@ -134,11 +135,11 @@ let package = Package(
         "platformDoubles": ["WatchConnectivity", "WidgetKit", "UIKit", "TaskStore",
                             "BackgroundDatabaseWindow", "HarnessLaunch", "StoreLocation"],
         "storageInjection": "WatchModel initializer directory only",
-        "scopedOriginalFixturePrerequisite": scoped_host,
+        "scopedOriginalFixturePrerequisite": scoped_host and verified_fixture,
         "scopePrerequisiteExplanation": (
             "Verified synthetic guest snapshot + call-site origin adapters, only in probe target; "
             "all original27 assertion bodies unchanged and storage failure checks still reach disk."
-        ) if scoped_host else None,
+        ) if scoped_host and verified_fixture else None,
         "sceneLifecycle": "GSDWatchApp scenePhase closure compiled unchanged in a framework-free shell",
         "physicalWatchAcceptance": False,
         "nativeFrameworkCompilation": False,

@@ -381,6 +381,62 @@ struct ProbeOrigin { let scope: ProbeScope? }
               && reset.store.tasks.map(\.title) == ["Created after reset"])
     }
 
+
+    @MainActor static func canonicalSnapshotChecks(root: URL) async throws {
+        let missingDirectory = root.appendingPathComponent("missing-snapshot")
+        try FileManager.default.createDirectory(at: missingDirectory, withIntermediateDirectories: true)
+        watchProbeDirectory = missingDirectory
+        WCSession.default.outstandingUserInfoTransfers = []
+        WCSession.default.receivedApplicationContext = [:]
+        WCSession.default.activationState = .activated
+        let missing = WatchModel()
+        let wronglyAccepted = capture(missing, "No verified snapshot yet", origin: origin(missing))
+        check("missing_snapshot_starts_without_verified_origin", !missing.hasSnapshot
+              && origin(missing) == nil && !wronglyAccepted && missing.outbox.commands.isEmpty
+              && transferred().isEmpty)
+
+        WCSession.default.contexts = []
+        let canonical = try ProbePhone(owner: accountB.identifier, dataset: dataset,
+                                       directory: root.appendingPathComponent("phone-canonical-snapshot"))
+        defer { canonical.close() }
+        let oldRow = task("snapshot-imported-id", title: "Cached account A title").asTask
+        let actualRow = task("snapshot-imported-id", title: "Canonical account B title").asTask
+        canonical.store.tasks = [oldRow]
+        canonical.store.canonicalTasks = [actualRow]
+        canonical.phone.schedule()
+        let sent = await waitFor { latestSnapshot().flatMap(wireScope) == accountB }
+        check("phone_snapshot_uses_current_canonical_rows", sent
+              && canonical.store.fetchAllCount > 0
+              && latestSnapshot()?.tasks.map(\.title) == [actualRow.title]
+              && latestSnapshot()?.tasks.map(\.id) == [actualRow.id])
+
+        WCSession.default.contexts = []
+        let suspended = try ProbePhone(owner: accountA.identifier, dataset: dataset,
+                                       directory: root.appendingPathComponent("phone-snapshot-read"))
+        defer { suspended.close() }
+        suspended.store.tasks = [oldRow]
+        suspended.store.canonicalTasks = [oldRow]
+        let hold = ProbeReadHold()
+        suspended.store.beforeFetchAll = { await hold.wait() }
+        suspended.phone.schedule()
+        let entered = await waitFor { hold.entered }
+        suspended.identity.value = accountB.identifier
+        suspended.store.canonicalTasks = [actualRow]
+        suspended.store.beforeFetchAll = nil
+        hold.release()
+        let sentCurrent = await waitFor {
+            latestSnapshot().flatMap(wireScope) == accountB
+                && latestSnapshot()?.tasks.map(\.title) == [actualRow.title]
+        }
+        let allSent = WCSession.default.contexts.compactMap { $0[WatchWire.snapshotKey] as? Data }
+            .compactMap { try? JSONDecoder().decode(WatchSnapshot.self, from: $0) }
+        check("phone_snapshot_revalidates_scope_after_suspended_read", entered && sentCurrent
+              && suspended.store.fetchAllCount >= 2
+              && !allSent.isEmpty && allSent.allSatisfy {
+                  wireScope($0) == accountB && $0.tasks.map(\.title) == [actualRow.title]
+              })
+    }
+
     @MainActor static func main() async {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("GSDWatchScope-" + UUID().uuidString)
         do {
@@ -388,6 +444,7 @@ struct ProbeOrigin { let scope: ProbeScope? }
             defer { try? FileManager.default.removeItem(at: root) }
             try await watchChecks(root: root)
             try await phoneChecks(root: root)
+            try await canonicalSnapshotChecks(root: root)
             exit(failures == 0 ? 0 : 1)
         } catch {
             print("WATCH_SCOPE_ERROR " + String(describing: error))

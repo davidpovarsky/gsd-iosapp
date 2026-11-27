@@ -33,7 +33,10 @@ EXPECTED = set([
     "phone_rejects_unscoped_legacy_capture",
     "phone_revalidates_scope_after_suspended_fetch",
     "phone_emits_empty_snapshot_during_unresolved_identity",
-    "phone_rejects_previous_dataset_capture"
+    "phone_rejects_previous_dataset_capture",
+    "missing_snapshot_starts_without_verified_origin",
+    "phone_snapshot_uses_current_canonical_rows",
+    "phone_snapshot_revalidates_scope_after_suspended_read"
 ])
 
 def digest(path):
@@ -44,7 +47,7 @@ def prepare(source, output):
     spec = importlib.util.spec_from_file_location("watch_systems_preparation", helper)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    package = module.prepare(source, output)
+    package = module.prepare(source, output, verified_fixture=False)
     target = package / "Sources/WatchSystemsProbe"
     original = Path(__file__).with_name("watch_systems_probe.swift")
     original_text = original.read_text()
@@ -60,6 +63,18 @@ def prepare(source, output):
     if doubles.count(needle) != 1:
         raise ValueError("TaskStore double fetch hook changed")
     doubles = doubles.replace(needle, "        if let beforeFetch { await beforeFetch() }\n" + needle)
+    needle = "    func fetchAllTasks() async throws -> [GSDModel.Task] { tasks }"
+    if doubles.count(needle) != 1:
+        raise ValueError("TaskStore double canonical snapshot seam changed")
+    doubles = doubles.replace(needle, """    var canonicalTasks: [GSDModel.Task]?
+    var beforeFetchAll: (@MainActor () async -> Void)?
+    private(set) var fetchAllCount = 0
+    func fetchAllTasks() async throws -> [GSDModel.Task] {
+        fetchAllCount += 1
+        let captured = canonicalTasks ?? tasks
+        if let beforeFetchAll { await beforeFetchAll() }
+        return captured
+    }""")
     fixture = Path(__file__).with_name("watch_scope_probe.swift")
     (target / "Probe.swift").write_text(doubles + fixture.read_text())
     manifest = json.loads((output / "input-manifest.json").read_text())
@@ -79,6 +94,8 @@ def prepare(source, output):
     manifest["files"]["probe/watch_scope_probe.swift"] = digest(fixture)
     manifest["fixtureAdaptation"] = {
         "original27FixtureUnmodified": True,
+        "original27VerifiedGuestPrerequisiteDisabled": True,
+        "missingSnapshotBehavior": "Production snapshotStore.read() ?? .empty, no call-site adapters",
         "platformDoublesFromOriginalFixturePrefix": True,
         "suspendedReadHook": "TaskStore double beforeFetch await, for coordinator revalidation only",
         "scopeInput": "Real WatchCommand/WatchSnapshot JSON encode/decode",
