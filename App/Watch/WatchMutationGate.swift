@@ -1,23 +1,18 @@
 import Foundation
 import Observation
+import GSDSnapshot
 
 /// Admission for Watch writes and dataset replacement. A pause closes admission synchronously,
 /// then waits for complete TaskStore operations, including their internal repository awaits.
 /// Nested/overlapping pauses share the hold count; cancellation cannot release another hold.
 @MainActor @Observable
 final class WatchMutationGate {
-    struct Identity: Codable, Equatable {
-        let installationID: String
-        let datasetID: String
-
-        var isValid: Bool {
-            UUID(uuidString: installationID) != nil && UUID(uuidString: datasetID) != nil
-        }
-    }
+    typealias Identity = SharedDatasetIdentity
 
     private(set) var identity: Identity?
     private(set) var isPaused = false
-    @ObservationIgnored private let identityURL: URL?
+    @ObservationIgnored private let identityStore: SharedDatasetIdentityStore
+    @ObservationIgnored private let sharedDirectory: URL?
     @ObservationIgnored private var pauses = 0
     @ObservationIgnored private var admitted: Set<UUID> = []
     @ObservationIgnored private var drainWaiters: [CheckedContinuation<Void, Never>] = []
@@ -25,22 +20,11 @@ final class WatchMutationGate {
     /// No identity means no Watch admission. The app can still run, while a later dataset
     /// replacement retries the durable identity write before erasing any local data.
     init(directory: URL?) {
-        identityURL = directory?.appendingPathComponent("watch-dataset-identity.json")
-        if let identityURL {
-            do {
-                if FileManager.default.fileExists(atPath: identityURL.path) {
-                    let saved = try JSONDecoder().decode(Identity.self, from: Data(contentsOf: identityURL))
-                    guard saved.isValid else { return }
-                    identity = saved
-                } else {
-                    let fresh = Identity(installationID: UUID().uuidString, datasetID: UUID().uuidString)
-                    try Self.write(fresh, to: identityURL)
-                    identity = fresh
-                }
-            } catch {
-                // Fail closed. Do not overwrite unreadable identity data during initialization.
-            }
-        }
+        sharedDirectory = directory
+        identityStore = SharedDatasetIdentityStore(directory: directory)
+        // The app and first-ever Share agree on the atomic winner. Unreadable existing
+        // identity data still fails closed and is never replaced during initialization.
+        identity = try? identityStore.loadOrCreate()
     }
 
     func admit() -> UUID? {
@@ -72,25 +56,34 @@ final class WatchMutationGate {
         return try await operation()
     }
 
-    /// Rotate before the destructive body, after old writes drain. Commands outside the admitted
-    /// set keep their old dataset id and cannot recreate erased tasks after the pause ends.
-    /// A failed durable write prevents the local replacement from starting.
-    func replacingDataset<T>(_ operation: @MainActor () async throws -> T) async throws -> T {
+    /// Remote account deletion uses this boundary without rotating a retained local dataset.
+    /// Callers must release it before invoking replacingDataset; leases are never upgraded
+    /// or acquired recursively, and admitted operations never wait on this file lock.
+    func withExternalWritesPaused<T>(
+        _ operation: @MainActor () async throws -> T
+    ) async throws -> T {
         try await withPaused {
-            guard let identityURL else { throw IdentityError.unavailable }
-            let fresh = Identity(installationID: identity?.installationID ?? UUID().uuidString,
-                                 datasetID: UUID().uuidString)
-            do { try Self.write(fresh, to: identityURL) }
+            let lease: SharedMutationLease
+            do { lease = try await SharedMutationLease.acquire(directory: sharedDirectory, mode: .exclusive) }
+            catch is CancellationError { throw CancellationError() }
             catch { throw IdentityError.unavailable }
-            identity = fresh
+            defer { lease.release() }
+            try _Concurrency.Task<Never, Never>.checkCancellation()
             return try await operation()
         }
     }
 
-    private static func write(_ identity: Identity, to url: URL) throws {
-        try FileManager.default.createDirectory(at: url.deletingLastPathComponent(),
-                                               withIntermediateDirectories: true)
-        try JSONEncoder().encode(identity).write(to: url, options: .atomic)
+    /// Rotation occurs only after admitted local operations and cooperating extension POSTs
+    /// settle. A durable identity failure prevents the first remote/local destructive action.
+    func replacingDataset<T>(_ operation: @MainActor () async throws -> T) async throws -> T {
+        try await withExternalWritesPaused {
+            let fresh = Identity(installationID: identity?.installationID ?? UUID().uuidString,
+                                 datasetID: UUID().uuidString)
+            do { try identityStore.replace(fresh) }
+            catch { throw IdentityError.unavailable }
+            identity = fresh
+            return try await operation()
+        }
     }
 
     private enum IdentityError: Error, LocalizedError {

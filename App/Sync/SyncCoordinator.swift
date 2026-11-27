@@ -168,6 +168,14 @@ final class SyncCoordinator {
         }
     }
 
+    /// AccountDeleter owns the entire remote deletion under this lease. The caller releases
+    /// it before its separate local erase callback, which may rotate the dataset.
+    func withExternalWritesPaused<T>(
+        _ operation: @MainActor () async throws -> T
+    ) async throws -> T {
+        try await watchMutationGate.withExternalWritesPaused(operation)
+    }
+
     /// Import Replace uses the same durable reset boundary and retains its existing result/flush.
     func replacingLocalDataset<T>(_ operation: @MainActor () async throws -> T) async throws -> T {
         try await watchMutationGate.replacingDataset(operation)
