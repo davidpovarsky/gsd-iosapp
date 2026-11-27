@@ -62,7 +62,31 @@ final class ShareRepository: TaskRepository, Sendable {
     func observeAll() -> AsyncThrowingStream<[GSDModel.Task], Error> { base.observeAll() }
 }
 
-@MainActor @Observable final class ShareIdentity { var owner: String? = "share-fixture-account-a" }
+@MainActor @Observable final class ShareIdentity {
+    var owner: String? = "share-fixture-account-a"
+    var isGuest = false
+}
+actor ShareServerGeneration {
+    private var value = "server-generation-A"
+    private var shouldFail = false
+    private var waiting = false
+    private var entered = false
+    private var calls = 0
+    private var continuation: CheckedContinuation<Void, Never>?
+    func configure(value: String = "server-generation-A", fail: Bool = false, hold: Bool = false) {
+        self.value = value; shouldFail = fail; waiting = hold; entered = false
+    }
+    func fetch(_ scope: WatchAccountScope) async throws -> String {
+        calls += 1; entered = true
+        if waiting { await withCheckedContinuation { continuation = $0 } }
+        if shouldFail { throw ShareScopeProbe.ProbeError.generationUnavailable }
+        return value
+    }
+    func didEnter() -> Bool { entered }
+    func callCount() -> Int { calls }
+    func release() { waiting = false; continuation?.resume(); continuation = nil }
+}
+
 actor ShareFetch {
     private var waiting = false
     private var entered = false
@@ -87,11 +111,13 @@ actor ShareFetch {
     let suspension = ShareSuspension()
     let identity = ShareIdentity()
     let fetcher = ShareFetch()
+    let server = ShareServerGeneration()
     let enricher: ShareTitleEnricher
     let drainer: ShareInboxDrainer
     let defaults: UserDefaults
     let suite = "GSDShareScope-" + UUID().uuidString
-    init(directory: URL) throws {
+    init(directory: URL, guest: Bool = false) throws {
+        identity.isGuest = guest
         database = try AppDatabase.inMemory()
         rows = GRDBTaskRepository(database)
         queue = GRDBSyncQueueRepository(database)
@@ -108,24 +134,44 @@ actor ShareFetch {
         #if SHARE_ACCOUNT_SCOPED
         let identity = identity, gate = gate
         let provider: @MainActor @Sendable () -> WatchAccountScope? = {
-            guard !gate.isPaused, let owner = identity.owner, let dataset = gate.identity?.datasetID else { return nil }
-            return .account(userID: owner, datasetID: dataset)
+            guard !gate.isPaused, let owner = identity.owner, let local = gate.identity else { return nil }
+            return identity.isGuest
+                ? .guest(installationID: local.installationID, datasetID: local.datasetID)
+                : .account(userID: owner, datasetID: local.datasetID)
         }
+        #if SHARE_SERVER_GENERATION
+        let server = server
+        let generationProvider: @MainActor @Sendable (WatchAccountScope) async throws -> String = {
+            try await server.fetch($0)
+        }
+        enricher = ShareTitleEnricher(store: store, fetch: { await fetcher.fetch($0) },
+                                     mutationGate: gate, scopeProvider: provider,
+                                     serverGeneration: generationProvider)
+        drainer = ShareInboxDrainer(inbox: inbox, store: store, titleEnricher: enricher,
+                                   mutationGate: gate, scopeProvider: provider,
+                                   serverGeneration: generationProvider)
+        #else
         enricher = ShareTitleEnricher(store: store, fetch: { await fetcher.fetch($0) },
                                      mutationGate: gate, scopeProvider: provider)
         drainer = ShareInboxDrainer(inbox: inbox, store: store, titleEnricher: enricher,
                                    mutationGate: gate, scopeProvider: provider)
+        #endif
         #else
         enricher = ShareTitleEnricher(store: store, fetch: { await fetcher.fetch($0) })
         drainer = ShareInboxDrainer(inbox: inbox, store: store, titleEnricher: enricher)
         #endif
     }
     var origin: WatchAccountScope {
-        .account(userID: identity.owner!, datasetID: gate.identity!.datasetID)
+        identity.isGuest
+            ? .guest(installationID: gate.identity!.installationID, datasetID: gate.identity!.datasetID)
+            : .account(userID: identity.owner!, datasetID: gate.identity!.datasetID)
     }
     func close() { defaults.removePersistentDomain(forName: suite) }
-    func schedule(_ task: GSDModel.Task, origin: WatchAccountScope) -> _Concurrency.Task<Void, Never>? {
-        #if SHARE_ACCOUNT_SCOPED
+    func schedule(_ task: GSDModel.Task, origin: WatchAccountScope,
+                  serverGeneration: String? = "server-generation-A") -> _Concurrency.Task<Void, Never>? {
+        #if SHARE_SERVER_GENERATION
+        return enricher.schedule(for: task, origin: origin, serverDatasetGeneration: serverGeneration)
+        #elseif SHARE_ACCOUNT_SCOPED
         return enricher.schedule(for: task, origin: origin)
         #else
         return enricher.schedule(for: task)
@@ -152,13 +198,15 @@ actor ShareFetch {
                      urgent: true, important: true, createdAt: stamp, updatedAt: stamp)
     }
     static func capture(_ title: String, origin: WatchAccountScope?, pushed: Bool = false,
-                        editedRetry: Bool = false) throws -> SharedCapture {
+                        editedRetry: Bool = false,
+                        serverGeneration: String? = "server-generation-A") throws -> SharedCapture {
         let value = SharedCapture(title: title, urls: [], urgent: true, important: true,
                                   tags: ["scope"], capturedAt: stamp,
                                   taskID: "shared-stable-task-id", remoteRecordID: pushed ? "remote-fixture-id" : nil)
         var object = try JSONSerialization.jsonObject(with: JSONEncoder().encode(value)) as! [String: Any]
         if let origin { object["origin"] = try JSONSerialization.jsonObject(with: JSONEncoder().encode(origin)) }
         if editedRetry { object["isEditedRetry"] = true }
+        if let serverGeneration { object["serverDatasetGeneration"] = serverGeneration }
         return try JSONDecoder().decode(SharedCapture.self, from: JSONSerialization.data(withJSONObject: object))
     }
     @MainActor static func heldChecks(root: URL) async throws {
@@ -359,7 +407,118 @@ actor ShareFetch {
               && hiddenDuringTransition && oldLeaseStillInvalid && hiddenUnderB && canReselect && !allowed())
     }
 
-    enum ProbeError: Error { case observationSetup, isolationRequired }
+    static func queuedGeneration(_ item: SyncQueueItem) -> String? {
+        #if SHARE_SERVER_GENERATION
+        item.serverDatasetGeneration
+        #else
+        nil
+        #endif
+    }
+
+    @MainActor static func generationHeldChecks(root: URL) async throws {
+        for (name, mode) in [
+            ("account_capture_without_server_generation_stays_held", "unbound"),
+            ("account_capture_generation_mismatch_stays_held", "mismatch"),
+            ("generation_lookup_failure_preserves_share", "failure"),
+            ("pushed_capture_revalidates_server_generation_before_ingest", "pushed")
+        ] {
+            let rig = try ShareRig(directory: root.appendingPathComponent("generation-" + mode))
+            defer { rig.close() }
+            if mode == "mismatch" || mode == "pushed" {
+                await rig.server.configure(value: "server-generation-B")
+            } else if mode == "failure" {
+                await rig.server.configure(fail: true)
+            }
+            try rig.outbox.write(capture("Keep this old capture", origin: rig.origin,
+                                        pushed: mode == "pushed",
+                                        serverGeneration: mode == "unbound" ? nil : "server-generation-A"))
+            await rig.drainer.drain(enrichTitles: false)
+            let rows = try await rig.rows.fetchAll(), queue = try await rig.queue.all()
+            check(name, rows.isEmpty && queue.isEmpty && rig.outbox.pending().count == 1)
+        }
+    }
+
+    @MainActor static func generationReadCheck(root: URL) async throws {
+        let rig = try ShareRig(directory: root.appendingPathComponent("generation-held-read"))
+        defer { rig.close() }
+        try rig.outbox.write(capture("Account A capture", origin: rig.origin))
+        await rig.server.configure(hold: true)
+        let operation = _Concurrency.Task { await rig.drainer.drain(enrichTitles: false) }
+        let entered = await waitFor { await rig.server.didEnter() }
+        rig.identity.owner = "share-fixture-account-b"
+        await rig.server.release()
+        await operation.value
+        let rows = try await rig.rows.fetchAll(), queue = try await rig.queue.all()
+        check("late_share_generation_lookup_revalidates_account_scope",
+              entered && rows.isEmpty && queue.isEmpty && rig.outbox.pending().count == 1)
+    }
+
+    @MainActor static func generationQueueCheck(root: URL) async throws {
+        let rig = try ShareRig(directory: root.appendingPathComponent("generation-queue"))
+        defer { rig.close() }
+        try rig.outbox.write(capture("Bound local creation", origin: rig.origin))
+        await rig.drainer.drain(enrichTitles: false)
+        let rows = try await rig.rows.fetchAll(), queue = try await rig.queue.all()
+        check("share_generation_reaches_persisted_sync_queue",
+              rows.count == 1 && rows.first?.title == "Bound local creation"
+              && queue.count == 1 && queue.first?.taskId == rows.first?.id
+              && queue.allSatisfy { queuedGeneration($0) == "server-generation-A" }
+              && rig.outbox.pending().isEmpty)
+    }
+
+    @MainActor static func generationTitleChecks(root: URL) async throws {
+        let derived = String(URLTitle.derive(from: "https://example.com/article").prefix(FieldLimits.titleRange.upperBound))
+        for (name, mode) in [
+            ("title_generation_reaches_persisted_sync_queue", "bound"),
+            ("title_enrichment_rejects_rotated_server_generation", "rotated"),
+            ("unbound_account_title_enrichment_does_not_queue", "unbound")
+        ] {
+            let rig = try ShareRig(directory: root.appendingPathComponent("generation-title-" + mode))
+            defer { rig.close() }
+            let original = row(derived)
+            try await rig.rows.upsert(original)
+            let before = try await rig.rows.fetchAll()
+            if mode == "rotated" { await rig.server.configure(value: "server-generation-B") }
+            let operation = rig.schedule(original, origin: rig.origin,
+                                         serverGeneration: mode == "unbound" ? nil : "server-generation-A")
+            await operation?.value
+            let after = try await rig.rows.fetchAll(), queue = try await rig.queue.all()
+            if mode == "bound" {
+                check(name, after.count == 1 && after.first?.title == "Fetched page title"
+                      && queue.count == 1
+                      && queue.allSatisfy { queuedGeneration($0) == "server-generation-A" })
+            } else {
+                check(name, after == before && queue.isEmpty)
+            }
+        }
+    }
+
+    @MainActor static func guestGenerationControl(root: URL) async throws {
+        let captureRig = try ShareRig(directory: root.appendingPathComponent("guest-generation-create"), guest: true)
+        let titleRig = try ShareRig(directory: root.appendingPathComponent("guest-generation-title"), guest: true)
+        defer { captureRig.close(); titleRig.close() }
+        await captureRig.server.configure(fail: true)
+        await titleRig.server.configure(fail: true)
+        try captureRig.outbox.write(capture("Local guest capture", origin: captureRig.origin,
+                                           serverGeneration: nil))
+        await captureRig.drainer.drain(enrichTitles: false)
+        let derived = String(URLTitle.derive(from: "https://example.com/article").prefix(FieldLimits.titleRange.upperBound))
+        let original = row(derived)
+        try await titleRig.rows.upsert(original)
+        let operation = titleRig.schedule(original, origin: titleRig.origin, serverGeneration: nil)
+        await operation?.value
+        let captures = try await captureRig.rows.fetchAll(), titles = try await titleRig.rows.fetchAll()
+        let captureQueue = try await captureRig.queue.all(), titleQueue = try await titleRig.queue.all()
+        let captureCalls = await captureRig.server.callCount(), titleCalls = await titleRig.server.callCount()
+        check("guest_share_and_title_do_not_require_server_generation",
+              captures.count == 1 && captures.first?.title == "Local guest capture"
+              && titles.count == 1 && titles.first?.title == "Fetched page title"
+              && !captureQueue.isEmpty && !titleQueue.isEmpty
+              && (captureQueue + titleQueue).allSatisfy { queuedGeneration($0) == nil }
+              && captureCalls == 0 && titleCalls == 0 && captureRig.outbox.pending().isEmpty)
+    }
+
+    enum ProbeError: Error { case observationSetup, isolationRequired, generationUnavailable }
     @MainActor static func main() async {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("GSDShareScope-" + UUID().uuidString)
         do {
@@ -374,6 +533,11 @@ actor ShareFetch {
             try await terminalChecks(root: root)
             try await liveReplayChecks(root: root)
             try await reviewLeaseCheck(root: root)
+            try await generationHeldChecks(root: root)
+            try await generationReadCheck(root: root)
+            try await generationQueueCheck(root: root)
+            try await generationTitleChecks(root: root)
+            try await guestGenerationControl(root: root)
             exit(failures == 0 ? 0 : 1)
         } catch {
             print("SHARE_SCOPE_ERROR " + String(describing: error)); exit(2)

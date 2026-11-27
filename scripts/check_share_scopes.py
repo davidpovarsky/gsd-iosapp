@@ -25,7 +25,17 @@ EXPECTED = set([
     "canonical_edit_survives_pushed_creation_replay",
     "canonical_edit_survives_queued_creation_replay",
     "distinct_edited_retry_is_retained_without_overwriting_canonical",
-    "open_share_review_does_not_follow_account_transitions"
+    "open_share_review_does_not_follow_account_transitions",
+    "account_capture_without_server_generation_stays_held",
+    "account_capture_generation_mismatch_stays_held",
+    "generation_lookup_failure_preserves_share",
+    "pushed_capture_revalidates_server_generation_before_ingest",
+    "late_share_generation_lookup_revalidates_account_scope",
+    "share_generation_reaches_persisted_sync_queue",
+    "title_generation_reaches_persisted_sync_queue",
+    "title_enrichment_rejects_rotated_server_generation",
+    "unbound_account_title_enrichment_does_not_queue",
+    "guest_share_and_title_do_not_require_server_generation"
 ])
 
 def digest(path):
@@ -71,6 +81,8 @@ def prepare(source, output):
     definitions = ['.define("SHARE_ACCOUNT_SCOPED")'] if scoped else []
     if "func isReviewCurrent(" in (source / "App/Sharing/ShareInboxDrainer.swift").read_text():
         definitions.append('.define("SHARE_REVIEW_LEASED")')
+    if "serverGeneration:" in (source / "App/Sharing/ShareInboxDrainer.swift").read_text():
+        definitions.append('.define("SHARE_SERVER_GENERATION")')
     settings = ', swiftSettings: [' + ', '.join(definitions) + ']' if definitions else ''
     manifest = '''// swift-tools-version: 6.2
 import PackageDescription
@@ -99,6 +111,7 @@ let package = Package(
                                 "BackgroundDatabaseWindow", "WatchMutationGate"],
         "suspendedOperations": "TaskRepository decorator holds actual read results/internal upsert; all persistence is actual GRDB",
         "scopedShareAvailable": scoped,
+        "generationFixtureAdaptation": "Explicit known generation for original16 controls; constructor signatures only; original16 assertion bodies unchanged",
         "titleTaskHandleAdaptation": "Baseline only: return the existing Task handle; full async body remains unchanged",
         "database": "AppDatabase.inMemory; isolated suite and feedback defaults; no live credentials or network",
         "expectedGRDBRevision": grdb["state"]["revision"],
