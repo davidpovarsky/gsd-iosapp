@@ -26,6 +26,32 @@ public enum SharedTokenKeychain {
          kSecUseDataProtectionKeychain as String: true]
     }
 
+    public enum Snapshot: Sendable, Equatable {
+        case token(value: String, ownerID: String)
+        case missing
+        case unavailable
+    }
+
+    /// Only a definite missing item is signed out. Protected data, entitlement failures and
+    /// malformed content cannot authorize a guest bootstrap or a direct Share POST.
+    public static func snapshot() -> Snapshot {
+        var query = base
+        query[kSecReturnData as String] = true
+        query[kSecMatchLimit as String] = kSecMatchLimitOne
+        var item: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &item)
+        return snapshot(status: status, data: item as? Data)
+    }
+
+    static func snapshot(status: OSStatus, data: Data?) -> Snapshot {
+        if status == errSecItemNotFound { return .missing }
+        guard status == errSecSuccess, let data,
+              let token = String(data: data, encoding: .utf8),
+              let owner = JWT.userId(token), !owner.isEmpty, owner.utf8.count <= 160,
+              owner == owner.trimmingCharacters(in: .whitespacesAndNewlines) else { return .unavailable }
+        return .token(value: token, ownerID: owner)
+    }
+
     public static func load() -> String? {
         var query = base
         query[kSecReturnData as String] = true

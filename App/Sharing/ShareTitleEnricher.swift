@@ -1,39 +1,51 @@
 import Foundation
 import GSDModel
 import GSDStore
+import GSDSnapshot
 
-/// Upgrades a share-created task's URL-derived title to the real page title, in the background.
-/// Only acts when (1) the setting is on, (2) the task's title was derived from its shared URL
-/// (so iOS's real titles, which differ, are skipped), and (3) the title is still that derived
-/// value at save time (so a manual edit is never clobbered). Fire-and-forget: never blocks the
-/// task appearing. App-layer glue — verified by build + on-device smoke; its logic reuses the
-/// unit-tested URLTitle / PageTitleParser.
+/// Fetching does not hold an account transition open. Its eventual write must re-enter the
+/// originating scope and read the canonical row before changing the URL-derived title.
 @MainActor
 final class ShareTitleEnricher {
     private let store: TaskStore
     private let fetch: (URL) async -> String?
+    private let context: ShareScopeContext
 
-    init(store: TaskStore, fetch: @escaping (URL) async -> String?) {
+    init(store: TaskStore, fetch: @escaping (URL) async -> String?,
+         mutationGate: WatchMutationGate,
+         scopeProvider: @escaping @MainActor @Sendable () -> WatchAccountScope?) {
         self.store = store
         self.fetch = fetch
+        self.context = ShareScopeContext(mutationGate: mutationGate, scopeProvider: scopeProvider)
     }
 
-    func schedule(for task: GSDModel.Task) {
-        guard AppGroupDefaults.shared.object(forKey: AppGroupDefaults.Key.fetchShareTitles) as? Bool ?? false,
-              let url = sharedURL(in: task),
-              task.title == derivedTitle(for: url) else { return }   // not URL-derived (incl. iOS) → skip
-        _Concurrency.Task { [weak self] in
+    @discardableResult
+    func schedule(for task: GSDModel.Task, origin: WatchAccountScope) -> _Concurrency.Task<Void, Never>? {
+        guard !_Concurrency.Task.isCancelled,
+              context.currentScope == origin,
+              AppGroupDefaults.shared.object(forKey: AppGroupDefaults.Key.fetchShareTitles) as? Bool ?? false,
+              let url = sharedURL(in: task), task.title == derivedTitle(for: url) else { return nil }
+        let generation = context.generation
+        return _Concurrency.Task { [weak self] in
             guard let self,
-                  let fetched = await self.fetch(url)?.trimmingCharacters(in: .whitespacesAndNewlines),
-                  !fetched.isEmpty,
-                  var current = self.store.tasks.first(where: { $0.id == task.id }),
-                  current.title == self.derivedTitle(for: url) else { return }   // edited meanwhile → skip
-            current.title = String(fetched.prefix(FieldLimits.titleRange.upperBound))
-            try? await self.store.save(current)
+                  let fetched = await fetch(url)?.trimmingCharacters(in: .whitespacesAndNewlines),
+                  !fetched.isEmpty else { return }
+            do {
+                try context.require(origin, generation: generation)
+                try await context.withOrigin(origin) { scope, leaseGeneration in
+                    guard var current = try await store.fetchTask(id: task.id) else { return }
+                    try context.require(scope, generation: leaseGeneration)
+                    guard current.title == derivedTitle(for: url), sharedURL(in: current) == url else { return }
+                    current.title = String(fetched.prefix(FieldLimits.titleRange.upperBound))
+                    try await store.save(current)
+                }
+            } catch {
+                // Enrichment is optional. Keep the captured task and user edits unchanged;
+                // scope loss, cancellation or a failed read must never recreate a row.
+            }
         }
     }
 
-    /// The shared URL is the first line of the task's description (the share path stores it there).
     private func sharedURL(in task: GSDModel.Task) -> URL? {
         let firstLine = task.description.split(separator: "\n", maxSplits: 1).first.map(String.init)
             ?? task.description
@@ -41,7 +53,6 @@ final class ShareTitleEnricher {
         return url
     }
 
-    /// The exact title the builder/extension produced from this URL, clamped identically.
     private func derivedTitle(for url: URL) -> String {
         String(URLTitle.derive(from: url.absoluteString).prefix(FieldLimits.titleRange.upperBound))
     }

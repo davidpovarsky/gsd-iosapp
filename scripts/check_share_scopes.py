@@ -42,6 +42,8 @@ def prepare(source, output):
     scoped = "mutationGate:" in (source / "App/Sharing/ShareInboxDrainer.swift").read_text()
     copy = ["App/Watch/WatchMutationGate.swift", "App/Sharing/ShareInboxDrainer.swift",
             "App/Sharing/ShareTitleEnricher.swift"]
+    if scoped:
+        copy.append("App/Sharing/ShareScopeContext.swift")
     for relative in copy:
         path = source / relative
         inputs[relative] = digest(path)

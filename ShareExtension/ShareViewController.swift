@@ -13,18 +13,29 @@ import GSDWire
 @objc(ShareViewController)
 final class ShareViewController: UIViewController {
     private let outbox = ShareOutboxStore()
-    /// One identity and at most one direct POST for this compose sheet, including retries.
-    private let captureTaskID = IDGenerator.generate(size: IDGenerator.Size.task)
-    private var didAttemptPush = false
-    /// The extension's whole lifetime after Add is a few seconds, so the push gets a hard budget:
-    /// a slow or absent network falls through to the outbox rather than a hung sheet.
-    private let push = DirectTaskPush(
-        client: PocketBaseClient(baseURL: PocketBaseEndpoint.liveBaseURL, session: ShareViewController.shortBudgetSession()),
-        token: { SharedTokenKeychain.load() },
-        deviceID: { UserDefaults(suiteName: AppGroup.id)?.string(forKey: AppGroup.deviceIDKey) },
-        defaultReminder: {
-            UserDefaults(suiteName: AppGroup.id)?.object(forKey: AppGroup.defaultReminderKey) as? Int
-                ?? AppGroup.fallbackDefaultReminder
+    /// Constructed when the sheet opens, before asynchronous input decoding can outlive its account.
+    private lazy var captureSession = ShareCaptureSession(
+        outbox: outbox,
+        directory: FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: AppGroup.id),
+        credential: {
+            switch SharedTokenKeychain.snapshot() {
+            case .token(let value, let owner): .account(token: value, ownerID: owner)
+            case .missing: .signedOut
+            case .unavailable: .unavailable
+            }
+        },
+        push: { task, frozenToken in
+            let push = DirectTaskPush(
+                client: PocketBaseClient(baseURL: PocketBaseEndpoint.liveBaseURL,
+                                         session: ShareViewController.shortBudgetSession()),
+                token: { frozenToken },
+                deviceID: { UserDefaults(suiteName: AppGroup.id)?.string(forKey: AppGroup.deviceIDKey) },
+                defaultReminder: {
+                    UserDefaults(suiteName: AppGroup.id)?.object(forKey: AppGroup.defaultReminderKey) as? Int
+                        ?? AppGroup.fallbackDefaultReminder
+                })
+            if case .pushed(let recordID) = await push.attempt(task) { return recordID }
+            return nil
         })
 
     private static func shortBudgetSession() -> URLSession {
@@ -35,24 +46,13 @@ final class ShareViewController: UIViewController {
         return URLSession(configuration: config)
     }
 
-    /// Keep one task identity if the outbox write fails after a remote push. A retry uses the
-    /// durable outbox only: the earlier POST may already have landed, and the app's queued
-    /// create updates that identity with any edits made after the failure.
-    private func saveAndPush(_ capture: SharedCapture) async throws {
-        var capture = capture
-        capture.taskID = captureTaskID
-        capture.remoteRecordID = nil
-        if !didAttemptPush, let task = capture.pushedTask() {
-            didAttemptPush = true
-            if case .pushed(let recordID) = await push.attempt(task) {
-                capture.remoteRecordID = recordID
-            }
-        }
-        try outbox.write(capture)
+    private func saveAndPush(_ capture: SharedCapture) async throws -> ShareCaptureSession.SaveResult {
+        try await captureSession.save(capture)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        _ = captureSession
         _Concurrency.Task { [weak self] in
             guard let self else { return }
             let (title, urls) = await self.extractSharedItem()
@@ -69,7 +69,10 @@ final class ShareViewController: UIViewController {
         let composeView = ShareComposeView(
             initialTitle: prefilledTitle,
             urls: urls,
-            save: { [weak self] capture in try await self?.saveAndPush(capture) },
+            save: { [weak self] capture in
+                guard let self else { throw CocoaError(.userCancelled) }
+                return try await saveAndPush(capture)
+            },
             onComplete: { [weak self] in self?.extensionContext?.completeRequest(returningItems: nil) },
             onCancel: { [weak self] in
                 self?.extensionContext?.cancelRequest(

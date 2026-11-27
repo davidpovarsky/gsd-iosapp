@@ -289,6 +289,40 @@
         }
       },
       "extractionState": "manual"
+    },
+    "Saved on this device. Open GSD to review the task and choose its account.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved on this device. Open GSD to review the task and choose its account."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "נשמר במכשיר הזה. פתחו את GSD כדי לסקור את המשימה ולבחור את החשבון שלה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Done": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "סיום"
+          }
+        }
+      },
+      "extractionState": "manual"
     }
   },
   "version": "1.0"

@@ -9,6 +9,7 @@ import GSDSync
 /// control that does nothing). `reshowOnboarding` flips the App-owned flag.
 struct SettingsView: View {
     @Environment(TaskStore.self) private var store
+    @Environment(ShareInboxDrainer.self) private var shareDrainer
     @Environment(SessionStore.self) private var session
     @Environment(SyncCoordinator.self) private var sync
     @Environment(PaletteController.self) private var palette
@@ -105,6 +106,12 @@ struct SettingsView: View {
 
     private var sharingSection: some View {
         Section {
+            NavigationLink {
+                ShareReviewView()
+            } label: {
+                LabeledContent(String(localized: "Saved Shares"), value: String(shareDrainer.pendingCount))
+            }
+            .accessibilityIdentifier("gsd.share.saved-captures")
             Toggle(String(localized: "Fetch titles for shared links"), isOn: $fetchShareTitles)
                 .tint(Surface.tint)   // toggles read the single interactive tint, not a third "on" color
         } header: {
