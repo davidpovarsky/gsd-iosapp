@@ -25,6 +25,17 @@ extension AppDatabase {
                 table.primaryKey(["owner", "kind", "entityId"])
             }
         }
+        migrator.registerMigration("v10-dataset-generation") { db in
+            try db.alter(table: "syncQueue") { table in
+                table.add(column: "serverDatasetGeneration", .text)
+            }
+            try db.create(table: "datasetResetRequests") { table in
+                table.column("baseURL", .text).notNull()
+                table.column("owner", .text).notNull()
+                table.column("payload", .text).notNull()
+                table.primaryKey(["baseURL", "owner"])
+            }
+        }
         return migrator
     }
 
