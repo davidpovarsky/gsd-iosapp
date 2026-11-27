@@ -229,8 +229,14 @@ final class SessionStore {
     /// never double-resolve; the async work runs after the claim.
     func resolveAccountSwitch(_ resolution: AccountSwitchResolution) {
         guard let pending = pendingAccountSwitch else { return }
+        // Keep identity unresolved while the existing async choice is applied.
+        // In particular, clearing local data may suspend before a new token exists.
+        inProgress = true
         pendingAccountSwitch = nil
-        _Concurrency.Task { await self.apply(resolution, pending: pending) }
+        _Concurrency.Task {
+            defer { self.refreshIdentity(); self.inProgress = false }
+            await self.apply(resolution, pending: pending)
+        }
     }
 
     /// Outside-tap dismissal: runs one runloop turn AFTER any button action (which claims
