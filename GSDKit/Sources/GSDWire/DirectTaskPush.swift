@@ -8,8 +8,9 @@ import GSDModel
 /// over SSE) before the sheet dismisses.
 ///
 /// Deliberately narrow. It never refreshes a token (the app does that; an expired token is a
-/// skip), never retries (the outbox is the retry), and never throws (the caller always writes the
-/// outbox afterwards, with or without the record id). `owner` comes from the JWT and `device_id`
+/// skip), never retries a request, and never throws (the caller always writes the
+/// outbox afterwards, with or without the record id). Its server generation stays fixed across
+/// retries. `owner` comes from the JWT and `device_id`
 /// from the shared App-Group identity, exactly as `SyncEngine.push` stamps them, so a record pushed
 /// here is indistinguishable from one the app pushed.
 public struct DirectTaskPush: Sendable {
@@ -49,16 +50,45 @@ public struct DirectTaskPush: Sendable {
         self.defaultReminder = defaultReminder
     }
 
-    public func attempt(_ task: Task) async -> Outcome {
-        guard let token = token() else { return .skipped(.signedOut) }
-        guard !JWT.expiresWithin(0, of: token, now: now()) else { return .skipped(.tokenExpired) }
-        guard let owner = JWT.userId(token) else { return .skipped(.malformedToken) }
+    /// Discovers the server generation once unless this capture already owns a durable binding.
+    /// The required callback revalidates the sheet's origin and journals that exact generation
+    /// before the first POST. A failed discovery or callback never falls back to an unbound create.
+    public func attempt(
+        _ task: Task,
+        datasetGeneration: String? = nil,
+        beforeCreate: @Sendable (String) async throws -> Void
+    ) async -> Outcome {
+        guard let frozenToken = token() else { return .skipped(.signedOut) }
+        guard !JWT.expiresWithin(0, of: frozenToken, now: now()) else { return .skipped(.tokenExpired) }
+        guard let owner = JWT.userId(frozenToken) else { return .skipped(.malformedToken) }
         guard let deviceID = deviceID(), !deviceID.isEmpty else { return .skipped(.noDeviceIdentity) }
         let record = TaskWireMapper.toWire(task, owner: owner, deviceId: deviceID, defaultReminder: defaultReminder())
         do {
-            return .pushed(recordID: try await client.createTask(record, token: token))
+            try _Concurrency.Task<Never, Never>.checkCancellation()
+            let generation: String
+            if let datasetGeneration {
+                try DatasetIdentifier.validate(datasetGeneration, field: "generation")
+                generation = datasetGeneration
+            } else {
+                generation = try await client.fetchDatasetGeneration(token: frozenToken)
+            }
+            try _Concurrency.Task<Never, Never>.checkCancellation()
+            guard token()?.utf8.elementsEqual(frozenToken.utf8) == true else {
+                throw PreparationError.credentialsChanged
+            }
+            guard !JWT.expiresWithin(0, of: frozenToken, now: now()) else { return .skipped(.tokenExpired) }
+            try await beforeCreate(generation)
+            try _Concurrency.Task<Never, Never>.checkCancellation()
+            guard token()?.utf8.elementsEqual(frozenToken.utf8) == true else {
+                throw PreparationError.credentialsChanged
+            }
+            guard !JWT.expiresWithin(0, of: frozenToken, now: now()) else { return .skipped(.tokenExpired) }
+            return .pushed(recordID: try await client.createTask(
+                record, datasetGeneration: generation, token: frozenToken))
         } catch {
             return .failed(String("\(error)".prefix(200)))
         }
     }
+
+    private enum PreparationError: Error { case credentialsChanged }
 }

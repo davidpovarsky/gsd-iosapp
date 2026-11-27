@@ -58,7 +58,11 @@ def prepare(source, output):
     shutil.copyfile(fixture, target / "Probe.swift")
     inputs["probe/share_extension_scope_probe.swift"] = digest(fixture)
     inputs["probe/check_share_extension_scopes.py"] = digest(Path(__file__))
-    settings = ', swiftSettings: [.define("SHARE_SCOPE_PRESENT")]' if scoped else ''
+    session_source = source / "GSDKit/Sources/GSDSnapshot/ShareCaptureSession.swift"
+    dataset_generation = scoped and "public struct PushAuthorization" in session_source.read_text()
+    defines = ['.define("SHARE_SCOPE_PRESENT")'] if scoped else []
+    if dataset_generation: defines.append('.define("SHARE_SERVER_GENERATION")')
+    settings = ', swiftSettings: [' + ', '.join(defines) + ']' if defines else ''
     (package / "Package.swift").write_text('''// swift-tools-version: 6.2
 import PackageDescription
 let package = Package(name: "GSDShareExtensionScopeProbe", platforms: [.macOS(.v26)],
@@ -69,6 +73,7 @@ let package = Package(name: "GSDShareExtensionScopeProbe", platforms: [.macOS(.v
     ])
 '''.replace("SETTINGS", settings))
     manifest = {"sourceRoot": str(source), "files": inputs, "scopedWriterAvailable": scoped,
+        "serverGenerationFixturePrerequisite": dataset_generation,
         "realImplementations": ["ShareCaptureSession or complete legacy controller save method",
                                 "ShareScopePublisher when available", "SharedTokenKeychain snapshot/load",
                                 "JWT decode", "SharedCapture/ShareOutboxStore", "real filesystem/atomic publication/lease"],

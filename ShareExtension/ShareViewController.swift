@@ -27,7 +27,7 @@ final class ShareViewController: UIViewController {
                 case .unavailable: .unavailable
                 }
             },
-            push: { task, frozenToken in
+            push: { task, frozenToken, authorization in
                 let push = DirectTaskPush(
                     client: PocketBaseClient(baseURL: PocketBaseEndpoint.liveBaseURL,
                                              session: ShareViewController.shortBudgetSession()),
@@ -37,7 +37,10 @@ final class ShareViewController: UIViewController {
                         UserDefaults(suiteName: AppGroup.id)?.object(forKey: AppGroup.defaultReminderKey) as? Int
                             ?? AppGroup.fallbackDefaultReminder
                     })
-                if case .pushed(let recordID) = await push.attempt(task) { return recordID }
+                let outcome = await push.attempt(task, datasetGeneration: authorization.datasetGeneration) {
+                    try await authorization.prepare($0)
+                }
+                if case .pushed(let recordID) = outcome { return recordID }
                 return nil
             })
     }

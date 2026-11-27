@@ -24,11 +24,15 @@ public struct SharedCapture: Codable, Sendable, Equatable {
     /// Set only when a retry changes the sheet's original authored payload after a failed save.
     /// If that identity already exists, a distinct retry stays available for explicit review.
     public var isEditedRetry: Bool?
+    /// The server authority discovered for this capture before direct POST. It never advances
+    /// during retry/recovery. Missing bindings on account captures require explicit review.
+    public var serverDatasetGeneration: String?
 
     public init(title: String, urls: [String], urgent: Bool, important: Bool,
                 tags: [String], capturedAt: Date,
                 taskID: String? = nil, remoteRecordID: String? = nil,
-                origin: WatchAccountScope? = nil, isEditedRetry: Bool? = nil) {
+                origin: WatchAccountScope? = nil, isEditedRetry: Bool? = nil,
+                serverDatasetGeneration: String? = nil) {
         self.title = title
         self.urls = urls
         self.urgent = urgent
@@ -39,6 +43,7 @@ public struct SharedCapture: Codable, Sendable, Equatable {
         self.remoteRecordID = remoteRecordID
         self.origin = origin
         self.isEditedRetry = isEditedRetry
+        self.serverDatasetGeneration = serverDatasetGeneration
     }
 
     /// The task under `taskID` with `capturedAt` as both timestamps — what the extension pushes,

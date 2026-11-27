@@ -68,6 +68,18 @@ func readFixtureCredential() -> FixtureCredential {
     init(directory: URL, recorder: PushRecorder) {
         outbox = ShareOutboxStore(directoryURL: directory)
         #if SHARE_SCOPE_PRESENT
+        #if SHARE_SERVER_GENERATION
+        let writer = ShareCaptureSession(outbox: outbox, directory: directory, credential: {
+            switch readFixtureCredential() {
+            case .account(let token, let owner): .account(token: token, ownerID: owner)
+            case .signedOut: .signedOut
+            case .unavailable: .unavailable
+            }
+        }, push: { task, token, authorization in
+            do { try authorization.prepare("fixture-generation") } catch { return nil }
+            return await recorder.push(task, token: token)
+        })
+        #else
         let writer = ShareCaptureSession(outbox: outbox, directory: directory, credential: {
             switch readFixtureCredential() {
             case .account(let token, let owner): .account(token: token, ownerID: owner)
@@ -75,6 +87,7 @@ func readFixtureCredential() -> FixtureCredential {
             case .unavailable: .unavailable
             }
         }, push: { task, token in await recorder.push(task, token: token) })
+        #endif
         saveOperation = { try await writer.save($0) == .held }
         #else
         let controller = ShareViewController(outbox: outbox, push: DirectTaskPush(recorder: recorder))
