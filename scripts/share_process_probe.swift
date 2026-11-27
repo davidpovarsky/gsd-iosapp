@@ -35,7 +35,11 @@ import GSDSnapshot
     }
     @MainActor static func launch(_ arguments: [String]) throws -> Process {
         let process = Process()
-        process.executableURL = URL(fileURLWithPath: CommandLine.arguments[0])
+        guard let executableURL = Bundle.main.executableURL,
+              FileManager.default.isExecutableFile(atPath: executableURL.path) else {
+            throw ProbeError.setup("The running process executable could not be resolved.")
+        }
+        process.executableURL = executableURL
         process.arguments = arguments
         process.standardOutput = FileHandle.nullDevice
         process.standardError = FileHandle.nullDevice

@@ -14,29 +14,33 @@ import GSDWire
 final class ShareViewController: UIViewController {
     private let outbox = ShareOutboxStore()
     /// Constructed when the sheet opens, before asynchronous input decoding can outlive its account.
-    private lazy var captureSession = ShareCaptureSession(
-        outbox: outbox,
-        directory: FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: AppGroup.id),
-        credential: {
-            switch SharedTokenKeychain.snapshot() {
-            case .token(let value, let owner): .account(token: value, ownerID: owner)
-            case .missing: .signedOut
-            case .unavailable: .unavailable
-            }
-        },
-        push: { task, frozenToken in
-            let push = DirectTaskPush(
-                client: PocketBaseClient(baseURL: PocketBaseEndpoint.liveBaseURL,
-                                         session: ShareViewController.shortBudgetSession()),
-                token: { frozenToken },
-                deviceID: { UserDefaults(suiteName: AppGroup.id)?.string(forKey: AppGroup.deviceIDKey) },
-                defaultReminder: {
-                    UserDefaults(suiteName: AppGroup.id)?.object(forKey: AppGroup.defaultReminderKey) as? Int
-                        ?? AppGroup.fallbackDefaultReminder
-                })
-            if case .pushed(let recordID) = await push.attempt(task) { return recordID }
-            return nil
-        })
+    private lazy var captureSession = makeCaptureSession()
+
+    private func makeCaptureSession() -> ShareCaptureSession {
+        ShareCaptureSession(
+            outbox: outbox,
+            directory: FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: AppGroup.id),
+            credential: {
+                switch SharedTokenKeychain.snapshot() {
+                case .token(let value, let owner): .account(token: value, ownerID: owner)
+                case .missing: .signedOut
+                case .unavailable: .unavailable
+                }
+            },
+            push: { task, frozenToken in
+                let push = DirectTaskPush(
+                    client: PocketBaseClient(baseURL: PocketBaseEndpoint.liveBaseURL,
+                                             session: ShareViewController.shortBudgetSession()),
+                    token: { frozenToken },
+                    deviceID: { UserDefaults(suiteName: AppGroup.id)?.string(forKey: AppGroup.deviceIDKey) },
+                    defaultReminder: {
+                        UserDefaults(suiteName: AppGroup.id)?.object(forKey: AppGroup.defaultReminderKey) as? Int
+                            ?? AppGroup.fallbackDefaultReminder
+                    })
+                if case .pushed(let recordID) = await push.attempt(task) { return recordID }
+                return nil
+            })
+    }
 
     private static func shortBudgetSession() -> URLSession {
         let config = URLSessionConfiguration.ephemeral
