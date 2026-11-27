@@ -280,13 +280,15 @@ final class GSDChatGPTAccountState {
 
     func accessForInference() async throws -> (token: String, modelID: String, accountID: String) {
         guard !isBusy, let id = snapshot.activeID else { throw HanlinChatGPTPlanError.unavailable }
+        let epoch = epochs[id] ?? UUID()
+        epochs[id] = epoch
         let credential = try await validCredentials(for: id)
-        guard !isBusy, storageAvailable, snapshot.activeID == id, canUsePlan,
+        guard epochs[id] == epoch, !isBusy, storageAvailable, snapshot.activeID == id, canUsePlan,
               !locallySignedOut.contains(id), credential.canUsePlan else {
             throw HanlinChatGPTPlanError.unavailable
         }
         if models.isEmpty { await loadModels() }
-        guard !isBusy, storageAvailable, snapshot.activeID == id, canUsePlan,
+        guard epochs[id] == epoch, !isBusy, storageAvailable, snapshot.activeID == id, canUsePlan,
               !locallySignedOut.contains(id), !selectedModelID.isEmpty,
               models.contains(where: { $0.slug == selectedModelID }) else {
             throw HanlinChatGPTPlanError.unavailable
@@ -302,11 +304,16 @@ final class GSDChatGPTAccountState {
 
     private func loadModelsForActiveAccount() async {
         guard let id = snapshot.activeID, canUsePlan else { return }
+        let epoch = epochs[id] ?? UUID()
+        epochs[id] = epoch
         do {
             let credential = try await validCredentials(for: id)
-            guard snapshot.activeID == id, canUsePlan, !locallySignedOut.contains(id) else { return }
+            guard epochs[id] == epoch, snapshot.activeID == id, canUsePlan,
+                  !locallySignedOut.contains(id) else { return }
             let catalog = try await client.listModels(accessToken: credential.accessToken)
-            guard snapshot.activeID == id, activeAccount?.credentials != nil,
+            // Authentication may have replaced this registration while the request was in flight.
+            guard epochs[id] == epoch, snapshot.activeID == id, canUsePlan,
+                  activeAccount?.credentials != nil,
                   !locallySignedOut.contains(id) else { return }
             models = catalog
             if !catalog.contains(where: { $0.slug == selectedModelID }), let first = catalog.first {
@@ -316,7 +323,8 @@ final class GSDChatGPTAccountState {
                 ? String(localized: "This ChatGPT account has no available models for this app.")
                 : String(localized: "ChatGPT models are ready.")
         } catch {
-            guard snapshot.activeID == id, activeAccount?.credentials != nil,
+            guard epochs[id] == epoch, snapshot.activeID == id, canUsePlan,
+                  activeAccount?.credentials != nil,
                   !locallySignedOut.contains(id) else { return }
             models = []
             status = String(format: String(localized: "ChatGPT model access failed: %@"), GSDChatGPTCopy.error(error))
