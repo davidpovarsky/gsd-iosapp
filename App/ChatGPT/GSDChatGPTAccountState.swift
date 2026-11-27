@@ -22,7 +22,10 @@ final class GSDChatGPTAccountState {
     var showPlanWelcome = false
 
     @ObservationIgnored private var snapshot = GSDChatGPTSnapshot.empty()
-    @ObservationIgnored private let client = HanlinChatGPTPlanClient()
+    @ObservationIgnored private let client: HanlinChatGPTPlanClient
+    @ObservationIgnored private let loadSnapshot: @MainActor () throws -> GSDChatGPTSnapshot?
+    @ObservationIgnored private let saveSnapshot: @MainActor (GSDChatGPTSnapshot) throws -> Void
+    @ObservationIgnored private let localSignOutStore: GSDChatGPTLocalSignOutStore
     @ObservationIgnored private let authorization = GSDChatGPTAuthorization()
     @ObservationIgnored private var refreshes: [String: _Concurrency.Task<HanlinChatGPTPlanCredentials, Error>] = [:]
     @ObservationIgnored private var epochs: [String: UUID] = [:]
@@ -30,12 +33,28 @@ final class GSDChatGPTAccountState {
     @ObservationIgnored private var storageAvailable = true
     @ObservationIgnored private var signInOperationID: UUID?
 
-    private init() {
+    private convenience init() {
+        self.init(client: HanlinChatGPTPlanClient(),
+                  loadSnapshot: GSDChatGPTKeychain.load,
+                  saveSnapshot: GSDChatGPTKeychain.save,
+                  localSignOutStore: GSDChatGPTLocalSignOutStore())
+    }
+
+    /// App lifecycle acceptance injects storage and a URLSession-backed SDK client.
+    /// The shared live instance always uses the device Keychain and original SDK.
+    init(client: HanlinChatGPTPlanClient,
+         loadSnapshot: @escaping @MainActor () throws -> GSDChatGPTSnapshot?,
+         saveSnapshot: @escaping @MainActor (GSDChatGPTSnapshot) throws -> Void,
+         localSignOutStore: GSDChatGPTLocalSignOutStore) {
+        self.client = client
+        self.loadSnapshot = loadSnapshot
+        self.saveSnapshot = saveSnapshot
+        self.localSignOutStore = localSignOutStore
         do {
-            if let saved = try GSDChatGPTKeychain.load() {
+            if let saved = try loadSnapshot() {
                 snapshot = saved
             } else {
-                try GSDChatGPTKeychain.save(snapshot)
+                try saveSnapshot(snapshot)
             }
             publish()
         } catch {
@@ -62,7 +81,7 @@ final class GSDChatGPTAccountState {
     }
 
     private func persist(_ next: GSDChatGPTSnapshot) throws {
-        try GSDChatGPTKeychain.save(next)
+        try saveSnapshot(next)
         snapshot = next
         publish()
     }
