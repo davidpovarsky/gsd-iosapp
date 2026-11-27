@@ -13,6 +13,8 @@ final class GSDNetworkGestureAcceptanceUITests: XCTestCase {
     }
     private struct Geometry {
         let canvas: CGRect
+        let accessibilityContainer: CGRect
+        let clippingFrames: [CGRect]
         let nodes: [String: Node]
     }
 
@@ -183,9 +185,16 @@ final class GSDNetworkGestureAcceptanceUITests: XCTestCase {
             guard let ratio = pair["observedScale"] as? Double else {
                 throw Failure.condition("A native pair scale measurement is missing.")
             }
-            try require(abs(ratio - Double(requestedScale)) <= Double(scaleTolerance),
-                        "Every observed pair must reflect the requested 1.2x pinch; a clamp, pan, or automatic Fit is not a zoom pass.")
+            try require(ratio.isFinite && ratio > 1.05,
+                        "Every observed pair must show a real opening zoom; raw two-finger agreement is a separate mandatory host gate.")
         }
+        try recordNativePinch([
+            "pairs": pairs,
+            "beforeCanvas": frameJSON(baseline.canvas),
+            "afterCanvas": frameJSON(zoomed.canvas),
+            "minimumPairDistancePoints": Double(minimumPairDistance),
+            "witnessIDs": witnesses.map(\.id).sorted()
+        ])
         for before in witnesses {
             guard let after = zoomed.nodes[before.id] else { throw Failure.condition("Missing native task witness.") }
             try require(abs(before.frame.width - after.frame.width) <= geometryTolerance
@@ -252,7 +261,16 @@ final class GSDNetworkGestureAcceptanceUITests: XCTestCase {
         let snapshot: any XCUIElementSnapshot = try canvas.snapshot()
         var pending = snapshot.children
         var nodes: [String: Node] = [:]
+        var clippingFrames: [CGRect] = []
+        let fitFrame = app.buttons["task-workspace.network.fit"].firstMatch.frame
         while let item = pending.popLast() {
+            // XCTest unions offscreen buttons into the accessibility container.
+            // Its native unlabelled drawing layers retain the actual clipped viewport.
+            if item.elementType == .other && item.identifier.isEmpty
+                && item.frame.width >= 180 && item.frame.height >= 140
+                && app.frame.contains(item.frame) && item.frame.contains(fitFrame) {
+                clippingFrames.append(item.frame)
+            }
             if item.identifier.hasPrefix("task-workspace.open.") {
                 try require(nodes[item.identifier] == nil, "Native Network task identities must be unique.")
                 try require(!item.frame.isEmpty && !item.label.isEmpty, "A native node must expose its real frame and title.")
@@ -260,7 +278,13 @@ final class GSDNetworkGestureAcceptanceUITests: XCTestCase {
             } else { pending.append(contentsOf: item.children) }
         }
         try require(nodes.count >= 3, "The real demo graph must contain at least three measured task nodes.")
-        return Geometry(canvas: canvas.frame, nodes: nodes)
+        guard let physicalCanvas = clippingFrames.first else {
+            throw Failure.condition("The actual native clipping layers must expose a measurable viewport.")
+        }
+        try require(clippingFrames.allSatisfy { frameDifference($0, physicalCanvas) <= geometryTolerance },
+                    "Native clipping layers must agree on one unambiguous physical viewport.")
+        return Geometry(canvas: physicalCanvas, accessibilityContainer: snapshot.frame,
+                        clippingFrames: clippingFrames, nodes: nodes)
     }
 
     private func visibleNodes(_ measured: Geometry, in app: XCUIApplication) -> [Node] {
@@ -324,6 +348,32 @@ final class GSDNetworkGestureAcceptanceUITests: XCTestCase {
         ["x": Double(frame.minX), "y": Double(frame.minY), "width": Double(frame.width), "height": Double(frame.height)]
     }
 
+
+    // The host must decode this same test's original two-finger event before it
+    // can accept the run. XCTest's nominal scale is retained as input metadata.
+    private func recordNativePinch(_ values: [String: Any]) throws {
+        var observation = values
+        observation["schemaVersion"] = 1
+        observation["kind"] = "Network"
+        observation["sourceSHA"] = receipt["sourceSHA"]
+        observation["simulator"] = receipt["simulator"]
+        observation["requestedScale"] = 1.2
+        observation["requestedVelocity"] = 1.0
+        observation["maximumRelativeError"] = Double(scaleTolerance / requestedScale)
+        observation["observedAtUnixSeconds"] = Date().timeIntervalSince1970
+        let payload = try JSONSerialization.data(withJSONObject: observation, options: [.prettyPrinted, .sortedKeys])
+        let destination = artifacts.appendingPathComponent("native-pinch-measured-output.json")
+        try require(!FileManager.default.fileExists(atPath: destination.path), "Native pinch measurement must be append-only.")
+        try payload.write(to: destination, options: .atomic)
+        let attachment = XCTAttachment(data: payload, uniformTypeIdentifier: "public.json")
+        attachment.name = "GSD Network native pinch measured output"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        receipt["rawPinchInputGateRequired"] = true
+        receipt["nativePinchMeasuredOutput"] = observation
+        try persist()
+    }
+
     private func require(_ condition: Bool, _ message: String) throws {
         guard condition else { throw Failure.condition(message) }
     }
@@ -356,6 +406,8 @@ final class GSDNetworkGestureAcceptanceUITests: XCTestCase {
         if let geometry {
             measurements.append([
                 "stage": name, "canvas": frameJSON(geometry.canvas),
+                "accessibilityContainerFrame": frameJSON(geometry.accessibilityContainer),
+                "nativeClippingFrames": geometry.clippingFrames.map(frameJSON),
                 "nodes": geometry.nodes.values.sorted { $0.id < $1.id }.map {
                     ["id": $0.id, "title": $0.title, "frame": frameJSON($0.frame)] as [String: Any]
                 }

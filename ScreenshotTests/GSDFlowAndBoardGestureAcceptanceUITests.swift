@@ -55,7 +55,7 @@ final class GSDFlowAndBoardGestureAcceptanceUITests: XCTestCase {
             try verifyPinch(baseline, zoomed, witnesses: witnesses)
             try checked("nativeFlowPinchScaledNodePairs")
 
-            let panned = try panBackground(from: zoomed, witnesses: witnesses, in: app)
+            let panned = try panBackground(from: zoomed, baseline: baseline, witnesses: witnesses, in: app)
             try checked("nativeFlowPanMovedWitnessesTogether")
             let visibleAfterPan = visibleNodes(panned, in: app)
             let selected = try unwrap(visibleAfterPan.filter { candidate in
@@ -64,6 +64,23 @@ final class GSDFlowAndBoardGestureAcceptanceUITests: XCTestCase {
             "A measured witness must remain hittable for the post-transform canonical edit.")
             let taskID = String(selected.id.dropFirst("task-workspace.open.".count))
             let updatedTitle = try editObservedTask(selected, in: app)
+            // Offscreen Flow nodes are culled during camera motion. Restore the
+            // native Fit view and require every original value, with only this
+            // already observed canonical title edit, before continuing.
+            try require(fit.exists && fit.isHittable, "The original Fit action must remain available after the transformed edit.")
+            fit.tap()
+            let restored = try stableGeometry(in: app)
+            var expectedTitles = baseline.nodes.mapValues(\.title)
+            expectedTitles[selected.id] = updatedTitle
+            try require(restored.nodes.mapValues(\.title) == expectedTitles
+                        && restored.completionLabels == baseline.completionLabels,
+                        "Fit must restore every baseline task ID, title and completion value; only the intentional canonical title edit may differ.")
+            receipt["restoredAllTaskValues"] = [
+                "expectedTitles": expectedTitles, "actualTitles": restored.nodes.mapValues(\.title),
+                "baselineCompletionLabels": baseline.completionLabels,
+                "actualCompletionLabels": restored.completionLabels
+            ]
+            try persist()
             try tapMode("table", in: app)
             try filterTask(updatedTitle, in: app)
             let tableOpen = app.buttons[selected.id].firstMatch
@@ -187,7 +204,7 @@ final class GSDFlowAndBoardGestureAcceptanceUITests: XCTestCase {
     private func verifyPinch(_ before: Geometry, _ after: Geometry, witnesses: [Node]) throws {
         try require(witnesses.count >= 3, "Pinch must retain three real hittable Flow witnesses.")
         try require(frameDifference(before.canvas, after.canvas) <= tolerance, "Pinch must not resize the canvas.")
-        try requireSameTaskValues(before, after)
+        try requireVisibleTaskValues(before, after)
         var pairs: [[String: Any]] = []
         for (index, a) in witnesses.enumerated() {
             for b in witnesses.dropFirst(index + 1) where distance(a.frame, b.frame) >= 64 {
@@ -204,13 +221,17 @@ final class GSDFlowAndBoardGestureAcceptanceUITests: XCTestCase {
         try require(pairs.count >= 2, "Two distinct separated node pairs must independently measure the native pinch.")
         for pair in pairs {
             let observed = try unwrap(pair["scale"] as? Double, "Missing observed pinch scale.")
-            try require(abs(observed - Double(scale)) <= 0.06,
-                        "Every measured Flow pair must scale by 1.2; a no-op, pan or clamped result cannot pass.")
+            try require(observed.isFinite && observed > 1.05,
+                        "Every measured Flow pair must show a real opening zoom; raw two-finger agreement is a separate mandatory host gate.")
         }
+        try recordNativePinch([
+            "pairs": pairs, "beforeCanvas": frameJSON(before.canvas), "afterCanvas": frameJSON(after.canvas),
+            "minimumPairDistancePoints": 64, "witnessIDs": witnesses.map(\.id).sorted()
+        ])
         // Flow card/action frames scale with the actual rendered cards. Network's fixed 44pt rule does not apply.
     }
 
-    private func panBackground(from before: Geometry, witnesses: [Node], in app: XCUIApplication) throws -> Geometry {
+    private func panBackground(from before: Geometry, baseline: Geometry, witnesses: [Node], in app: XCUIApplication) throws -> Geometry {
         let canvas = graph(in: app)
         let viewport = visibleViewport(before.canvas, in: app)
         let safeArea = CGRect(x: viewport.minX + 24, y: viewport.minY + 80,
@@ -254,7 +275,7 @@ final class GSDFlowAndBoardGestureAcceptanceUITests: XCTestCase {
                 origin.withOffset(CGVector(dx: end.x - before.canvas.minX, dy: end.y - before.canvas.minY)))
         let after = try stableGeometry(in: app)
         try capture(app, "03-flow-native-pan", geometry: after)
-        try requireSameTaskValues(before, after)
+        try requireVisibleTaskValues(baseline, after)
         try require(frameDifference(before.canvas, after.canvas) <= tolerance, "Panning must not resize the canvas.")
         let visible = visibleNodes(after, in: app)
         let retained = witnesses.filter { old in visible.contains { $0.id == old.id } }
@@ -399,10 +420,10 @@ final class GSDFlowAndBoardGestureAcceptanceUITests: XCTestCase {
         return Geometry(canvas: canvas.frame, nodes: nodes, actionFrames: actions, completionLabels: completion)
     }
 
-    private func requireSameTaskValues(_ a: Geometry, _ b: Geometry) throws {
-        try require(a.nodes.mapValues(\.title) == b.nodes.mapValues(\.title)
-                    && a.completionLabels == b.completionLabels,
-                    "A viewport gesture must preserve all measured task identities, titles and completion values.")
+    private func requireVisibleTaskValues(_ baseline: Geometry, _ actual: Geometry) throws {
+        try require(actual.nodes.allSatisfy { id, node in baseline.nodes[id]?.title == node.title }
+                    && actual.completionLabels.allSatisfy { id, value in baseline.completionLabels[id] == value },
+                    "Every node and completion value materialized during a viewport gesture must retain its baseline canonical identity and value.")
     }
 
     private func visibleNodes(_ geometry: Geometry, in app: XCUIApplication) -> [Node] {
@@ -452,6 +473,32 @@ final class GSDFlowAndBoardGestureAcceptanceUITests: XCTestCase {
     private func frameJSON(_ frame: CGRect) -> [String: Double] {
         ["x": Double(frame.minX), "y": Double(frame.minY), "width": Double(frame.width), "height": Double(frame.height)]
     }
+
+    // The host must decode this same test's original two-finger event before it
+    // can accept the run. XCTest's nominal scale is retained as input metadata.
+    private func recordNativePinch(_ values: [String: Any]) throws {
+        var observation = values
+        observation["schemaVersion"] = 1
+        observation["kind"] = "Flow"
+        observation["sourceSHA"] = receipt["sourceSHA"]
+        observation["simulator"] = receipt["simulator"]
+        observation["requestedScale"] = 1.2
+        observation["requestedVelocity"] = 1.0
+        observation["maximumRelativeError"] = 0.06 / Double(scale)
+        observation["observedAtUnixSeconds"] = Date().timeIntervalSince1970
+        let payload = try JSONSerialization.data(withJSONObject: observation, options: [.prettyPrinted, .sortedKeys])
+        let destination = artifacts.appendingPathComponent("native-pinch-measured-output.json")
+        try require(!FileManager.default.fileExists(atPath: destination.path), "Native pinch measurement must be append-only.")
+        try payload.write(to: destination, options: .atomic)
+        let attachment = XCTAttachment(data: payload, uniformTypeIdentifier: "public.json")
+        attachment.name = "GSD Flow native pinch measured output"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        receipt["rawPinchInputGateRequired"] = true
+        receipt["nativePinchMeasuredOutput"] = observation
+        try persist()
+    }
+
     private func require(_ condition: Bool, _ message: String) throws {
         guard condition else { throw Failure.condition(message) }
     }

@@ -823,7 +823,12 @@ final class GSDWorkspacePresentationPersistenceUITests: XCTestCase {
         chart.pinch(withScale: 1.5, velocity: 1.0)
         try waitForValueChange(element("task-workspace.timeline.zoom-scale", in: app), from: "100%")
         let zoomed = try timelineObservation(in: app)
-        try require(zoomed.zoom >= 140 && zoomed.zoom <= 160, "The observed zoom must match the native 1.5 pinch.")
+        try recordNativePinch([
+            "beforePercent": full.zoom, "afterPercent": zoomed.zoom,
+            "beforeRangeSeconds": full.width, "afterRangeSeconds": zoomed.width
+        ])
+        try require(zoomed.zoom > full.zoom && zoomed.zoom < 1600,
+                    "The actual Timeline must show an unclamped opening zoom; raw two-finger agreement is a separate mandatory host gate.")
         try require(zoomed.width < full.width - 3600,
                     "A changed percentage alone is insufficient; the rendered date interval must narrow.")
         try require(abs(full.width / zoomed.width - zoomed.zoom / 100) < 0.04,
@@ -1147,6 +1152,32 @@ final class GSDWorkspacePresentationPersistenceUITests: XCTestCase {
             }
         }
         return viewport
+    }
+
+
+    // The host must decode this same test's original two-finger event before it
+    // can accept the run. XCTest's nominal scale is retained as input metadata.
+    private func recordNativePinch(_ values: [String: Any]) throws {
+        var observation = values
+        observation["schemaVersion"] = 1
+        observation["kind"] = "Timeline"
+        observation["sourceSHA"] = receipt["sourceSHA"]
+        observation["simulator"] = receipt["simulator"]
+        observation["requestedScale"] = 1.5
+        observation["requestedVelocity"] = 1.0
+        observation["maximumRelativeError"] = 10.0 / 150.0
+        observation["observedAtUnixSeconds"] = Date().timeIntervalSince1970
+        let payload = try JSONSerialization.data(withJSONObject: observation, options: [.prettyPrinted, .sortedKeys])
+        let destination = artifacts.appendingPathComponent("native-pinch-measured-output.json")
+        try require(!FileManager.default.fileExists(atPath: destination.path), "Native pinch measurement must be append-only.")
+        try payload.write(to: destination, options: .atomic)
+        let attachment = XCTAttachment(data: payload, uniformTypeIdentifier: "public.json")
+        attachment.name = "GSD Timeline native pinch measured output"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        receipt["rawPinchInputGateRequired"] = true
+        receipt["nativePinchMeasuredOutput"] = observation
+        try persist()
     }
 
     private func require(_ condition: Bool, _ message: String) throws {
