@@ -450,13 +450,38 @@ private struct FixtureAdmissionPresenter: WebAuthPresenting {
     }
 }
 
+/// Fixture-only synchronized ownership of the delayed URLProtocol. Every read, replacement,
+/// take and identity-based removal holds this lock; callbacks run only after take unlocks.
+/// The optional reference is never exposed except by that atomic take operation.
+private final class FixtureHeldLoginStorage: @unchecked Sendable {
+    private let lock = NSLock()
+    private var retained: FixtureHeldLoginProtocol?
+
+    var isHolding: Bool { lock.withLock { retained != nil } }
+
+    func store(_ instance: FixtureHeldLoginProtocol) {
+        lock.withLock { retained = instance }
+    }
+
+    func take() -> FixtureHeldLoginProtocol? {
+        lock.withLock {
+            defer { retained = nil }
+            return retained
+        }
+    }
+
+    func remove(_ instance: FixtureHeldLoginProtocol) {
+        lock.withLock { if retained === instance { retained = nil } }
+    }
+}
+
 /// Every URL is intercepted. The first password response is released explicitly by the test;
 /// an unexpected OAuth discovery request fails locally before any browser can be presented.
 private final class FixtureHeldLoginProtocol: URLProtocol, @unchecked Sendable {
     static let observations = Mutex((requests: 0, unexpected: false))
-    private static let held = Mutex<FixtureHeldLoginProtocol?>(nil)
+    private static let held = FixtureHeldLoginStorage()
     static let responseToken = fixtureToken(owner: "fixture-owner-b")
-    static var isHolding: Bool { held.withLock { $0 != nil } }
+    static var isHolding: Bool { held.isHolding }
 
     override class func canInit(with request: URLRequest) -> Bool { true }
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
@@ -471,15 +496,11 @@ private final class FixtureHeldLoginProtocol: URLProtocol, @unchecked Sendable {
         guard expected && first else {
             client?.urlProtocol(self, didFailWithError: URLError(.unsupportedURL)); return
         }
-        Self.held.withLock { $0 = self }
+        Self.held.store(self)
     }
 
     static func release() {
-        let pending = held.withLock { value -> FixtureHeldLoginProtocol? in
-            defer { value = nil }
-            return value
-        }
-        pending?.finish()
+        held.take()?.finish()
     }
 
     private func finish() {
@@ -497,7 +518,7 @@ private final class FixtureHeldLoginProtocol: URLProtocol, @unchecked Sendable {
     }
 
     override func stopLoading() {
-        Self.held.withLock { if $0 === self { $0 = nil } }
+        Self.held.remove(self)
     }
 }
 
