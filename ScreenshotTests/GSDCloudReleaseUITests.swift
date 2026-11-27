@@ -753,6 +753,181 @@ final class GSDCloudReleaseUITests: XCTestCase {
         try await fixture.verifyDeletionByApp()
         app.terminate()
     }
+    /// Additive real-app coverage for the account Share provider wired in GSDApp.init.
+    /// The host fixture writes only a pending Share file through the real GSDSnapshot producer.
+    /// All credential admission, generation fetches, local writes and uploads run in the app.
+    func test05AccountShareCaptureRequiresCurrentDatasetGeneration() async throws {
+        let environment = ProcessInfo.processInfo.environment
+        guard environment["GSD_SHARE_ACCOUNT_NATIVE_TEST"] == "1" else {
+            throw XCTSkip("Account Share acceptance requires its explicit owned fixture")
+        }
+        let source = try requireAcceptanceValue(environment["GSD_SYSTEM_SURFACE_APP_SOURCE"], "Missing exact app source")
+        let simulator = try requireAcceptanceValue(environment["GSD_SYSTEM_SURFACE_SIMULATOR_UDID"], "Missing owned simulator")
+        let artifactPath = try requireAcceptanceValue(environment["GSD_SYSTEM_SURFACE_ARTIFACTS"], "Missing native artifacts")
+        try requireAcceptance(environment["GSD_SYSTEM_SURFACE_FRESH_SIMULATOR"] == "1"
+            && source.range(of: "^[0-9a-f]{40}$", options: .regularExpression) != nil
+            && UUID(uuidString: simulator) != nil, "Account Share requires a fresh source-bound simulator")
+        let artifacts = URL(fileURLWithPath: artifactPath, isDirectory: true)
+            .appendingPathComponent("share-account-generation", isDirectory: true)
+        try requireAcceptance(!FileManager.default.fileExists(atPath: artifacts.path), "Native fixture evidence must be fresh")
+        try FileManager.default.createDirectory(at: artifacts, withIntermediateDirectories: true)
+        let base = environment["GSD_CLOUD_TEST_BASE"] ??
+            "https://torah-social.tail0a6c7d.ts.net:10000/gsd-cloud"
+        let fixture = CloudFixture(base: try requireAcceptanceValue(URL(string: base), "Invalid cloud base"))
+        addTeardownBlock { try await fixture.removeAccount() }
+        let app = application(demo: false)
+        app.launch()
+        let skip = app.buttons[label("Skip", "דילוג")]
+        if skip.waitForExistence(timeout: 5) { skip.tap() }
+        try navigate(app, label("Settings", "הגדרות"))
+        let open = app.buttons["gsd.cloud.open"]
+        for _ in 0..<4 where !open.isHittable { app.swipeUp() }
+        try requireAcceptance(open.waitForExistence(timeout: 10) && open.isHittable, "Native account entry is unavailable")
+        open.tap()
+        let mode = app.segmentedControls["gsd.cloud.mode"]
+        try requireAcceptance(mode.waitForExistence(timeout: 5), "Native account mode picker is unavailable")
+        mode.buttons[label("Create account", "יצירת חשבון")].tap()
+        let email = app.textFields["gsd.cloud.email"]
+        try requireAcceptance(email.waitForExistence(timeout: 5), "Native account email is unavailable")
+        email.tap(); email.typeText(fixture.email)
+        try pasteCloudPassword(fixture.password, into: app.secureTextFields["gsd.cloud.password"])
+        try pasteCloudPassword(fixture.password, into: app.secureTextFields["gsd.cloud.confirmation"])
+        let submit = app.buttons["gsd.cloud.submit"]
+        try requireAcceptance(submit.wait(for: \.isEnabled, toEqual: true, timeout: 8), "Native signup cannot submit")
+        for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
+        try requireAcceptance(submit.isHittable, "Native signup action is obscured")
+        submit.tap()
+        try requireAcceptance(email.waitForNonExistence(timeout: 30), "Native account creation did not finish")
+        let signedIn = app.descendants(matching: .any).matching(identifier: "gsd.cloud.signed-in").firstMatch
+        try requireAcceptance(signedIn.waitForExistence(timeout: 10), "Real native Keychain session is not established")
+        try await fixture.authenticateExistingAccount()
+        let admission = try await fixture.shareCaptureAdmission()
+        let currentID = UUID().uuidString
+        let staleID = UUID().uuidString
+        let currentTitle = "Account share " + UUID().uuidString.prefix(8)
+        let staleTitle = "Held share " + UUID().uuidString.prefix(8)
+        try await fixture.requireShareTaskCount(id: currentID, title: currentTitle, count: 0)
+        try await fixture.requireShareTaskCount(id: staleID, title: staleTitle, count: 0)
+        app.terminate()
+        try requireAcceptance(app.wait(for: .notRunning, timeout: 10), "Capture preparation requires a terminated app")
+        let seeded = try shareAccountCheckpoint("seed-current", artifacts: artifacts, source: source,
+            simulator: simulator, owner: admission.owner, generation: admission.generation,
+            taskID: currentID, title: currentTitle)
+        try requireAcceptance(seeded["canonicalTaskAbsent"] as? Bool == true
+            && seeded["pendingCaptureWrittenByRealProducer"] as? Bool == true,
+            "The positive capture must begin only in the real Share outbox")
+        app.launch()
+        try navigate(app, label("Matrix", "מטריצה"))
+        let currentCard = app.descendants(matching: .any).matching(identifier: "task-card-" + currentID).firstMatch
+        try requireAcceptance(currentCard.waitForExistence(timeout: 45)
+            && currentCard.label.contains(currentTitle), "The real foreground drain did not materialize the account capture")
+        try await fixture.waitForExactShareTask(id: currentID, title: currentTitle)
+        try shareAccountScreenshot(app, artifacts: artifacts, name: "01-current-generation-applied")
+        app.terminate()
+        try requireAcceptance(app.wait(for: .notRunning, timeout: 10), "Canonical verification requires a terminated app")
+        let applied = try shareAccountCheckpoint("verify-applied", artifacts: artifacts, source: source,
+            simulator: simulator, owner: admission.owner, generation: admission.generation,
+            taskID: currentID, title: currentTitle)
+        try requireAcceptance(applied["canonicalTaskMatches"] as? Bool == true
+            && applied["pendingCaptureAbsent"] as? Bool == true && applied["inFlightCaptureAbsent"] as? Bool == true,
+            "The canonical row must match and the applied pending and in-flight capture must be retired")
+        let rotated = try await fixture.resetShareFixture(expectedGeneration: admission.generation)
+        try requireAcceptance(!rotated.utf8.elementsEqual(admission.generation.utf8), "The real server reset must change authority")
+        try await fixture.requireShareTaskCount(id: currentID, title: currentTitle, count: 0)
+        let staleSeed = try shareAccountCheckpoint("seed-stale", artifacts: artifacts, source: source,
+            simulator: simulator, owner: admission.owner, generation: admission.generation,
+            taskID: staleID, title: staleTitle)
+        try requireAcceptance(staleSeed["canonicalTaskAbsent"] as? Bool == true
+            && staleSeed["pendingCaptureWrittenByRealProducer"] as? Bool == true
+            && staleSeed["scope"] as? [String: String] == seeded["scope"] as? [String: String],
+            "The stale capture must retain the same originating account and local dataset")
+        app.launch()
+        try navigate(app, label("Matrix", "מטריצה"))
+        let staleCard = app.descendants(matching: .any).matching(identifier: "task-card-" + staleID).firstMatch
+        try requireAcceptance(!staleCard.waitForExistence(timeout: 15), "An old-generation capture was recreated by the real app")
+        try await fixture.requireShareTaskCount(id: staleID, title: staleTitle, count: 0)
+        try shareAccountScreenshot(app, artifacts: artifacts, name: "02-stale-generation-held")
+        app.terminate()
+        try requireAcceptance(app.wait(for: .notRunning, timeout: 10), "Held-capture verification requires a terminated app")
+        let held = try shareAccountCheckpoint("verify-held", artifacts: artifacts, source: source,
+            simulator: simulator, owner: admission.owner, generation: admission.generation,
+            taskID: staleID, title: staleTitle)
+        try requireAcceptance(held["canonicalTaskAbsent"] as? Bool == true
+            && held["syncMutationAbsent"] as? Bool == true && held["pendingCaptureByteIdentical"] as? Bool == true,
+            "The old capture must remain durable without a canonical or queued mutation")
+        app.launch()
+        try navigate(app, label("Matrix", "מטריצה"))
+        try requireAcceptance(!staleCard.waitForExistence(timeout: 15), "A second app launch replayed an old-generation capture")
+        try await fixture.requireShareTaskCount(id: staleID, title: staleTitle, count: 0)
+        try shareAccountScreenshot(app, artifacts: artifacts, name: "03-stale-generation-after-relaunch")
+        app.terminate()
+        try requireAcceptance(app.wait(for: .notRunning, timeout: 10), "Cold persistence verification requires a terminated app")
+        let persisted = try shareAccountCheckpoint("verify-held-relaunch", artifacts: artifacts, source: source,
+            simulator: simulator, owner: admission.owner, generation: admission.generation,
+            taskID: staleID, title: staleTitle)
+        try requireAcceptance(persisted["canonicalTaskAbsent"] as? Bool == true
+            && persisted["syncMutationAbsent"] as? Bool == true && persisted["pendingCaptureByteIdentical"] as? Bool == true,
+            "The same pending bytes must survive the second real app process")
+        try await fixture.removeShareFixtureAndVerify()
+        let checks = [
+            "nativeSignupInstalledRealSession", "matchingCaptureAbsentBeforeForeground",
+            "matchingCaptureMaterializedAndUploadedOnce", "resetRotatedRemoteAuthority",
+            "staleCaptureRemainedPendingWithoutMutation", "staleCapturePreservedAfterColdRelaunch",
+            "ownedFixtureAccountRemoved"
+        ]
+        let report: [String: Any] = [
+            "schemaVersion": 1, "sourceSHA": source, "simulator": simulator, "language": language,
+            "scope": "real_app_account_share_generation_and_foreground_drain",
+            "demoSeed": false, "inMemoryStore": false, "personalAccount": false,
+            "appAuthenticationBackdoor": false, "sqlWritesByFixture": 0,
+            "owner": admission.owner, "appliedTaskID": currentID, "heldTaskID": staleID,
+            "initialGeneration": admission.generation, "rotatedGeneration": rotated,
+            "checks": checks,
+            "passed": true
+        ]
+        try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])
+            .write(to: artifacts.appendingPathComponent("acceptance.json"), options: .atomic)
+    }
+
+    private func shareAccountCheckpoint(_ phase: String, artifacts: URL, source: String,
+                                        simulator: String, owner: String, generation: String,
+                                        taskID: String, title: String) throws -> [String: Any] {
+        let nonce = UUID().uuidString
+        let request = artifacts.appendingPathComponent(phase + ".request.json")
+        let ackURL = artifacts.appendingPathComponent(phase + ".ack.json")
+        try requireAcceptance(!FileManager.default.fileExists(atPath: request.path)
+            && !FileManager.default.fileExists(atPath: ackURL.path), "Share checkpoint evidence must be fresh")
+        let value: [String: Any] = [
+            "schemaVersion": 1, "phase": phase, "nonce": nonce, "sourceSHA": source,
+            "simulator": simulator, "owner": owner, "generation": generation,
+            "taskID": taskID, "title": title, "appTerminatedRequired": true
+        ]
+        try JSONSerialization.data(withJSONObject: value, options: [.prettyPrinted, .sortedKeys])
+            .write(to: request, options: .atomic)
+        let deadline = Date().addingTimeInterval(60)
+        while Date() < deadline && !FileManager.default.fileExists(atPath: ackURL.path) {
+            Thread.sleep(forTimeInterval: 0.2)
+        }
+        let raw = try Data(contentsOf: ackURL)
+        let ack = try requireAcceptanceValue(try JSONSerialization.jsonObject(with: raw) as? [String: Any],
+                                             "Invalid Share checkpoint acknowledgment")
+        try requireAcceptance(ack["schemaVersion"] as? Int == 1 && ack["phase"] as? String == phase
+            && ack["nonce"] as? String == nonce && ack["sourceSHA"] as? String == source
+            && ack["simulator"] as? String == simulator && ack["owner"] as? String == owner
+            && ack["taskID"] as? String == taskID && ack["generation"] as? String == generation
+            && ack["captureComplete"] as? Bool == true && ack["appTerminatedVerified"] as? Bool == true,
+            "Share checkpoint must bind the exact owned source, simulator, account, capture and phase")
+        return ack
+    }
+
+    private func shareAccountScreenshot(_ app: XCUIApplication, artifacts: URL, name: String) throws {
+        let screenshot = app.screenshot()
+        try screenshot.pngRepresentation.write(to: artifacts.appendingPathComponent(name + ".png"), options: .atomic)
+        let attachment = XCTAttachment(screenshot: screenshot)
+        attachment.name = name; attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
 }
 
 @MainActor
@@ -883,5 +1058,69 @@ private final class CloudFixture {
             try await Task.sleep(for: .seconds(2))
         }
         return false
+    }
+}
+
+
+private extension CloudFixture {
+    func shareCaptureAdmission() async throws -> (owner: String, generation: String) {
+        try await verifyCurrentOwner()
+        let expectedOwner = try requireAcceptanceValue(owner, "Missing owned Share fixture account")
+        let data = try await request("api/gsd/dataset")
+        let value = try requireAcceptanceValue(try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                                               "Invalid dataset discovery response")
+        let generation = try requireAcceptanceValue(value["generation"] as? String, "Missing real dataset generation")
+        try requireAcceptance(!generation.isEmpty, "Empty dataset generation is not a valid fixture")
+        return (expectedOwner, generation)
+    }
+
+    func requireShareTaskCount(id: String, title: String, count: Int) async throws {
+        let data = try await request("api/collections/tasks/records")
+        let rows = try JSONDecoder().decode(Page.self, from: data).items.filter { $0.task_id == id }
+        try requireAcceptance(rows.count == count && rows.allSatisfy { $0.title == title },
+                              "Canonical Share task identity, title or count differs")
+    }
+
+    func waitForExactShareTask(id: String, title: String) async throws {
+        for _ in 0..<20 {
+            let data = try await request("api/collections/tasks/records")
+            let rows = try JSONDecoder().decode(Page.self, from: data).items.filter { $0.task_id == id }
+            if !rows.isEmpty {
+                try requireAcceptance(rows.count == 1 && rows[0].title == title, "Account Share upload duplicated or changed the capture")
+                return
+            }
+            try await Task.sleep(for: .seconds(2))
+        }
+        throw UIAcceptanceFailure(message: "Account Share capture was not uploaded by the app", file: #fileID, line: #line)
+    }
+
+    func resetShareFixture(expectedGeneration: String) async throws -> String {
+        try await verifyCurrentOwner()
+        let requestID = UUID().uuidString
+        let data = try await request("api/gsd/dataset/reset", method: "POST",
+                                    body: ["expected_generation": expectedGeneration, "request_id": requestID])
+        let value = try requireAcceptanceValue(try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                                               "Invalid real reset receipt")
+        let generation = try requireAcceptanceValue(value["generation"] as? String, "Reset has no generation")
+        try requireAcceptance(value["request_id"] as? String == requestID
+            && value["deleted_tasks"] as? Int == 1 && value["tombstoned_library"] as? Int == 0
+            && !generation.utf8.elementsEqual(expectedGeneration.utf8),
+            "The owned reset must rotate authority and remove exactly its one uploaded task")
+        return generation
+    }
+
+    func removeShareFixtureAndVerify() async throws {
+        try await verifyCurrentOwner()
+        let removedOwner = try requireAcceptanceValue(owner, "Missing cleanup owner")
+        _ = try await request("api/gsd/account", method: "DELETE")
+        _ = try await request("api/collections/users/records/" + removedOwner,
+                              expectedRejection: (404, "The requested resource wasn't found."))
+        _ = try await request("api/collections/users/auth-refresh", method: "POST",
+                              expectedRejection: (401, "The request requires valid record authorization token."))
+        _ = try await request("api/collections/users/auth-with-password", method: "POST",
+                              body: ["identity": email, "password": password], includeAuthorization: false,
+                              expectedRejection: (400, "Failed to authenticate."))
+        deletionVerified = true; token = nil; owner = nil
+        print("GSD_NATIVE_SHARE_ACCOUNT_CLEANUP_PASS owner=" + removedOwner)
     }
 }
