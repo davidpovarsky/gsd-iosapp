@@ -34,6 +34,16 @@ EXPECTED = {
     "background_releases_pending_completion",
     "relaunch_resends_original_command_id",
     "following_action_releases_completion_first",
+    "pending_capture_followup_waits_for_ack",
+    "capture_retains_overlay_task_id",
+    "capture_ack_releases_waiting_followup",
+    "capture_followup_mutates_canonical_task",
+    "canonical_prefixed_task_sends_normally",
+    "capture_replay_preserves_existing_task",
+    "relaunched_capture_preserves_transfer_dependency",
+    "unresolved_legacy_capture_action_stays_unacknowledged",
+    "capture_ack_keeps_local_undo_window",
+    "failed_capture_does_not_release_followup",
 }
 
 
