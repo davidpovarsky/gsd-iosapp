@@ -11,7 +11,7 @@
     "shortDescription": "Manage your GSD Cloud tasks"
   },
   "name": "gsd-chatgpt-mcp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Private ChatGPT connection to your GSD Cloud account, with tasks synchronized to your devices.",
   "author": {
     "name": "Goldy Sterling",
