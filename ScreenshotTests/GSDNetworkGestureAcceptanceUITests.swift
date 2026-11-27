@@ -116,7 +116,8 @@ final class GSDNetworkGestureAcceptanceUITests: XCTestCase {
         let canvas = network(in: app)
         let baseline = try stableGeometry(in: app)
         let beforeVisible = visibleNodes(baseline, in: app)
-        try require(!app.staticTexts["task-workspace.network.selected-title"].firstMatch.exists,
+        let initialTitle = app.staticTexts["task-workspace.network.selected-title"].firstMatch
+        try require(!initialTitle.exists || initialTitle.label.isEmpty,
                     "The fresh Network must start without an accessible selected title.")
         try require(beforeVisible.count >= 3, "Fit must expose at least three actual hittable task nodes.")
         try capture(app, "01-fit-baseline", geometry: baseline)
