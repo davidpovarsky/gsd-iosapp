@@ -211,6 +211,28 @@ enum ProbeFailure: Error { case invalidRequest, missingCapture }
             try? JSONSerialization.jsonObject(with: $0) as? [String: Any]
         }
         let bearer = try token()
+        let components: [String: Bool] = [
+            "pushed": outcome == .pushed(recordID: "record-fixture"),
+            "oneGET": gets.count == 1, "onePOST": posts.count == 1,
+            "twoRequests": requests.count == 2, "GETFirst": requests.first?.httpMethod == "GET",
+            "GETBase": gets.first?.url?.absoluteString == base + "/api/gsd/dataset",
+            "POSTBase": posts.first?.url?.absoluteString == base + "/api/collections/tasks/records",
+            "authorizationMatchesIndependentFixtureToken": requests.allSatisfy {
+                $0.value(forHTTPHeaderField: "Authorization") == bearer
+            },
+            "generationHeader": posts.first?.value(forHTTPHeaderField: "X-GSD-Dataset-Generation") == expectedGeneration,
+            "taskID": body?["task_id"] as? String == task.id,
+            "owner": body?["owner"] as? String == "generation-fixture-owner",
+            "device": body?["device_id"] as? String == "generation-fixture-device",
+            "title": body?["title"] as? String == task.title,
+            "defaultReminder": body?["notify_before"] as? Int == 15,
+            "requestsUseSameCredentialBytes": gets.first?.value(forHTTPHeaderField: "Authorization")
+                == posts.first?.value(forHTTPHeaderField: "Authorization"),
+            "recordedCredentialHasFixtureOwner": gets.first?.value(forHTTPHeaderField: "Authorization")
+                .flatMap { JWT.userId($0) } == "generation-fixture-owner"
+        ]
+        let details = try JSONSerialization.data(withJSONObject: components, options: [.sortedKeys])
+        print("SHARE_DATASET_DIAGNOSTIC " + String(decoding: details, as: UTF8.self))
         check("generation_get_and_create_use_same_base_bearer_and_payload",
               outcome == .pushed(recordID: "record-fixture") && gets.count == 1 && posts.count == 1
               && requests.count == 2 && requests.first?.httpMethod == "GET"
