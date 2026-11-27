@@ -46,6 +46,18 @@ def prepare(source, output):
         text = path.read_text()
         if "import UIKit\n" in text:
             text = text.replace("import UIKit\n", "")
+        if relative == "App/Intents/GSDAppIntents.swift":
+            dependency_type = "GSDAppIntentScope" if scoped else "TaskStore"
+            dependency_property = "scope" if scoped else "store"
+            # Public AppDependency.wrappedValue setter, via same-file extensions so the
+            # production private property and complete query/perform bodies stay intact.
+            for intent_type in ("GSDTaskQuery", "CreateTaskIntent", "CompleteTaskIntent"):
+                text += (
+                    "\nextension " + intent_type + " {\n"
+                    "    @MainActor init(_gsdAcceptanceDependency value: " + dependency_type + ") {\n"
+                    "        self.init()\n"
+                    "        self." + dependency_property + " = value\n"
+                    "    }\n}\n")
         (target / path.name).write_text(text)
     fixture = Path(__file__).with_name("app_intent_scope_probe.swift")
     shutil.copyfile(fixture, target / "Probe.swift")
@@ -74,6 +86,8 @@ let package = Package(
     receipt = {
         "sourceRoot": str(source), "files": inputs,
         "platformDoubles": ["UIKit applicationState"],
+        "dependencyInitialization": "Public AppDependency.wrappedValue setter through fixture-only same-file init extensions; no system perform-context emulation",
+        "systemDependencyResolutionAcceptance": False,
         "realImplementations": ["AppIntents framework", "GSDTaskQuery", "CreateTaskIntent", "CompleteTaskIntent",
                                 "TaskStore", "GRDBTaskRepository", "GRDBSyncQueueRepository",
                                 "BackgroundDatabaseWindow", "WatchMutationGate"],
@@ -127,6 +141,7 @@ def main():
         "passed": passed, "returncode": result.returncode, "checks": checks, "expected": sorted(EXPECTED),
         "realAppIntentMethodsWithTaskStoreAcceptance": passed,
         "systemSiriShortcutsHostAcceptance": False,
+        "systemDependencyResolutionAcceptance": False,
         "appIntentsFrameworkCompiled": set(names) == EXPECTED and len(names) == len(EXPECTED),
         "physicalWatchAcceptance": False, "nativeFrameworkCompilation": False,
         "dependencyExactAndClean": dependency_exact, "actualGRDBRevision": actual_revision,

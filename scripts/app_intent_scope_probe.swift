@@ -66,6 +66,13 @@ final class IntentRepository: TaskRepository, Sendable {
 @MainActor @Observable final class IntentIdentity {
     var owner: String? = "intent-fixture-account-a"
 }
+@MainActor enum IntentInjectedDependency {
+    #if INTENT_ACCOUNT_SCOPED
+    static var current: GSDAppIntentScope!
+    #else
+    static var current: TaskStore!
+    #endif
+}
 @MainActor final class IntentRig {
     let database: AppDatabase
     let rows: GRDBTaskRepository
@@ -96,8 +103,11 @@ final class IntentRepository: TaskRepository, Sendable {
             guard !gate.isPaused, let owner = identity.owner, let dataset = gate.identity?.datasetID else { return nil }
             return .account(userID: owner, datasetID: dataset)
         })
+        IntentInjectedDependency.current = scopeContext
         let registeredScope = scopeContext
         AppDependencyManager.shared.add(dependency: registeredScope)
+        #else
+        IntentInjectedDependency.current = store
         #endif
         let registeredStore = store
         AppDependencyManager.shared.add(dependency: registeredStore)
@@ -124,18 +134,18 @@ final class IntentRepository: TaskRepository, Sendable {
                       createdAt: stamp, updatedAt: stamp)
     }
     @MainActor static func select(_ title: String) async throws -> GSDTaskEntity {
-        let result = try await GSDTaskQuery().entities(matching: title)
+        let result = try await GSDTaskQuery(_gsdAcceptanceDependency: IntentInjectedDependency.current).entities(matching: title)
         guard let first = result.first else { throw ProbeError.missingSelection }
         return first
     }
     enum ProbeError: Error { case missingSelection }
     @MainActor static func complete(_ entity: GSDTaskEntity) async throws {
-        var intent = CompleteTaskIntent()
+        var intent = CompleteTaskIntent(_gsdAcceptanceDependency: IntentInjectedDependency.current)
         intent.task = entity
         _ = try await intent.perform()
     }
     @MainActor static func create(_ title: String) async throws {
-        var intent = CreateTaskIntent()
+        var intent = CreateTaskIntent(_gsdAcceptanceDependency: IntentInjectedDependency.current)
         intent.taskTitle = title
         _ = try await intent.perform()
     }
@@ -149,7 +159,7 @@ final class IntentRepository: TaskRepository, Sendable {
         let original = row("Legacy task")
         try await legacy.rows.upsert(original)
         let raw = GSDTaskEntity(id: original.id, title: original.title, completed: false)
-        let resolutionRejected = await rejected { _ = try await GSDTaskQuery().entities(for: [original.id]) }
+        let resolutionRejected = await rejected { _ = try await GSDTaskQuery(_gsdAcceptanceDependency: IntentInjectedDependency.current).entities(for: [original.id]) }
         let mutationRejected = await rejected { try await complete(raw) }
         let legacyRows = try await legacy.rows.fetchAll(), legacyQueue = try await legacy.queue.all()
         check("legacy_raw_shortcut_requires_reselection", resolutionRejected && mutationRejected
@@ -194,14 +204,14 @@ final class IntentRepository: TaskRepository, Sendable {
         let a = row("Query A content"), b = row("Query B content")
         try await query.rows.upsert(a)
         await query.suspension.arm(.fetchAll)
-        let oldQuery = _Concurrency.Task { try await GSDTaskQuery().suggestedEntities() }
+        let oldQuery = _Concurrency.Task { try await GSDTaskQuery(_gsdAcceptanceDependency: IntentInjectedDependency.current).suggestedEntities() }
         let entered = await waitFor { await query.suspension.isBlocked() }
         query.identity.owner = "intent-fixture-account-b"
         try await query.rows.upsert(b)
         await query.suspension.release()
         let oldRefused: Bool
         do { _ = try await oldQuery.value; oldRefused = false } catch { oldRefused = true }
-        let current = try await GSDTaskQuery().suggestedEntities()
+        let current = try await GSDTaskQuery(_gsdAcceptanceDependency: IntentInjectedDependency.current).suggestedEntities()
         check("canonical_query_revalidates_scope_after_suspended_read", entered && oldRefused
               && current.map(\.title) == [b.title])
 
@@ -281,7 +291,7 @@ final class IntentRepository: TaskRepository, Sendable {
         try await rig.rows.upsert(original)
         let selected = try await select(original.title)
         rig.identity.owner = nil
-        let queryRefused = await rejected { _ = try await GSDTaskQuery().suggestedEntities() }
+        let queryRefused = await rejected { _ = try await GSDTaskQuery(_gsdAcceptanceDependency: IntentInjectedDependency.current).suggestedEntities() }
         let createRefused = await rejected { try await create("Do not create while unresolved") }
         let completeRefused = await rejected { try await complete(selected) }
         let rows = try await rig.rows.fetchAll(), queue = try await rig.queue.all()
