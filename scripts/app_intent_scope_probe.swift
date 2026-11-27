@@ -96,9 +96,11 @@ final class IntentRepository: TaskRepository, Sendable {
             guard !gate.isPaused, let owner = identity.owner, let dataset = gate.identity?.datasetID else { return nil }
             return .account(userID: owner, datasetID: dataset)
         })
-        AppDependencyManager.shared.add(dependency: scopeContext)
+        let registeredScope = scopeContext
+        AppDependencyManager.shared.add(dependency: registeredScope)
         #endif
-        AppDependencyManager.shared.add(dependency: store)
+        let registeredStore = store
+        AppDependencyManager.shared.add(dependency: registeredStore)
     }
     func close() { defaults.removePersistentDomain(forName: suite) }
 }
