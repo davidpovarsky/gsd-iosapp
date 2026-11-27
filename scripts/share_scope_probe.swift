@@ -109,7 +109,7 @@ actor ShareFetch {
     let outbox: ShareOutboxStore
     let inbox: ShareInbox
     let suspension = ShareSuspension()
-    let identity = ShareIdentity()
+    let identity: ShareIdentity
     let fetcher = ShareFetch()
     let server = ShareServerGeneration()
     let enricher: ShareTitleEnricher
@@ -117,7 +117,9 @@ actor ShareFetch {
     let defaults: UserDefaults
     let suite = "GSDShareScope-" + UUID().uuidString
     init(directory: URL, guest: Bool = false) throws {
-        identity.isGuest = guest
+        let phase = ShareIdentity()
+        phase.isGuest = guest
+        identity = phase
         database = try AppDatabase.inMemory()
         rows = GRDBTaskRepository(database)
         queue = GRDBSyncQueueRepository(database)
