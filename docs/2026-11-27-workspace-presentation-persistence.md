@@ -32,7 +32,7 @@ fixture, compiled with these exact production files:
 
 Use the actual qualified TaskVisualizationKit and GSDKit packages as dependencies.
 Do not truncate or recreate the shared DTO source. A small isolated package can
-declare macOS 15, Swift 6.2, and an executable target with dependencies
+declare macOS 26 (the actual GSDKit minimum), Swift 6.2, and an executable target with dependencies
 TaskVisualizationKit, GSDSync, and GSDWire, and define
 GSD_WORKSPACE_PRESENTATION_FIXTURE. Copy the four source files byte-for-byte;
 retain their SHA256 hashes, the actual package pins, the compile log, and output.
