@@ -152,7 +152,7 @@ private final class FixtureURLProtocol: URLProtocol, @unchecked Sendable {
             client?.urlProtocol(self, didFailWithError: URLError(.resourceUnavailable)); return
         }
         let request = request
-        operation = _Concurrency.Task { [weak self] in
+        operation = _Concurrency.Task { @Sendable [weak self] in
             let reply = await backend.response(request)
             guard let self, !_Concurrency.Task.isCancelled,
                   let response = HTTPURLResponse(url: request.url!, statusCode: reply.status,
