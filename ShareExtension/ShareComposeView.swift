@@ -74,7 +74,7 @@ struct ShareComposeView: View {
                         }
                     }
                 }
-                .disabled(savedForReview)
+                .disabled(savedForReview || isSaving)
                 if savedForReview {
                     Section {
                         Text(String(localized: "Saved on this device. Open GSD to review the task and choose its account."))
