@@ -199,6 +199,9 @@ struct GSDApp: App {
         // mid-write risks SQLITE_BUSY. Registered in init(): background intent launches
         // run App.init before any perform().
         AppDependencyManager.shared.add(dependency: store)
+        let intentScope = GSDAppIntentScope(store: store, mutationGate: watchMutationGate,
+                                           scopeProvider: watchScopeProvider)
+        AppDependencyManager.shared.add(dependency: intentScope)
         // Re-register the App Shortcut phrases with Siri on every launch. Install-time
         // extraction alone has proven unreliable on Mac Catalyst (Siri: "I don't see an
         // app for that"), and Apple's guidance is to call this whenever phrases change.

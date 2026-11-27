@@ -3,7 +3,6 @@ import Foundation
 import GSDModel
 import GSDStore
 import GSDSnapshot
-import UIKit
 
 // Intents run in the app's process and resolve the ONE app-wired TaskStore via
 // @Dependency (registered in GSDApp.init). Opening a second database connection here
@@ -84,76 +83,27 @@ struct GSDTaskEntity: AppEntity {
 }
 
 struct GSDTaskQuery: EntityQuery, EntityStringQuery {
-    @Dependency private var store: TaskStore
+    @Dependency private var scope: GSDAppIntentScope
 
     func entities(for identifiers: [GSDTaskEntity.ID]) async throws -> [GSDTaskEntity] {
-        let taskStore = store
-        return try await withDatabaseResumedForIntent {
-            var found: [GSDTaskEntity] = []
-            for id in identifiers {
-                if let task = try await taskStore.fetchTask(id: id) {
-                    found.append(GSDTaskEntity(task: task))
-                }
-            }
-            return found
-        }
+        try await scope.entities(for: identifiers).map { GSDTaskEntity(selection: $0) }
     }
 
     func suggestedEntities() async throws -> [GSDTaskEntity] {
-        let taskStore = store
-        return try await withDatabaseResumedForIntent {
-            try await taskStore.fetchAllTasks()
-                .filter { !$0.completed && !$0.isSaved }
-                .prefix(20)
-                .map { GSDTaskEntity(task: $0) }
-        }
+        try await scope.suggestedEntities().map { GSDTaskEntity(selection: $0) }
     }
 
     func entities(matching string: String) async throws -> [GSDTaskEntity] {
-        let taskStore = store
-        let query = string.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        return try await withDatabaseResumedForIntent {
-            try await taskStore.fetchAllTasks()
-                .filter { task in
-                    !task.isSaved && (query.isEmpty
-                    || task.title.lowercased().contains(query)
-                    || task.tags.contains { $0.lowercased().contains(query) })
-                }
-                .prefix(20)
-                .map { GSDTaskEntity(task: $0) }
-        }
+        try await scope.entities(matching: string).map { GSDTaskEntity(selection: $0) }
     }
 }
 
 extension GSDTaskEntity {
-    init(task: Task) {
-        id = task.id
-        title = task.title
-        completed = task.completed
+    init(selection: GSDAppIntentScope.Selection) {
+        id = selection.identifier
+        title = selection.task.title
+        completed = selection.task.completed
     }
-}
-
-/// Siri/Shortcuts intents run in the background, where the database is suspended as the
-/// `0xDEAD10CC` mitigation (see `AppDatabase`). A `DatabaseQueue` rejects BOTH reads and writes
-/// while suspended ("Database is suspended" / `SQLITE_ABORT` on `BEGIN IMMEDIATE`), so any intent
-/// that touches the store must resume it for its work window. All default windows share
-/// ownership, and only the last owner may suspend again, after rechecking the current app state.
-/// Returning to the foreground during an await must leave the live UI's database resumed.
-///
-/// Mac Catalyst never suspends: `0xDEAD10CC` is an iOS jetsam kill that doesn't exist on macOS,
-/// and a Mac app is routinely `.inactive` with its window open and live (it merely isn't key —
-/// which is exactly the state Siri puts it in). The iOS gate would misread that as "backgrounded"
-/// and suspend the database out from under the visible UI after the intent finished. `GSDApp`'s
-/// scenePhase handler is gated the same way, so on the Mac the database is simply always live.
-@MainActor
-private func withDatabaseResumedForIntent<R>(_ body: () async throws -> R) async throws -> R {
-    #if targetEnvironment(macCatalyst)
-    return try await body()
-    #else
-    return try await BackgroundDatabaseWindow(isBackgrounded: {
-        UIApplication.shared.applicationState != .active
-    }).run(body)
-    #endif
 }
 
 struct CreateTaskIntent: AppIntent {
@@ -174,14 +124,12 @@ struct CreateTaskIntent: AppIntent {
     @Parameter(title: "Due Date")
     var dueDate: Date?
 
-    @Dependency private var store: TaskStore
+    @Dependency private var scope: GSDAppIntentScope
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let parsed = CaptureParser.parse(taskTitle)
-        try await withDatabaseResumedForIntent {
-            try await store.add(parsed, override: quadrant?.quadrant, dueDate: dueDate)
-        }
+        try await scope.create(parsed, quadrant: quadrant?.quadrant, dueDate: dueDate)
         return .result(dialog: "Added \(parsed.title) to GSD.")
     }
 }
@@ -194,18 +142,15 @@ struct CompleteTaskIntent: AppIntent {
     @Parameter(title: "Task")
     var task: GSDTaskEntity
 
-    @Dependency private var store: TaskStore
+    @Dependency private var scope: GSDAppIntentScope
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let message = try await withDatabaseResumedForIntent { () -> String in
-            guard let domainTask = try await store.fetchTask(id: task.id) else {
-                return String(localized: "That task is no longer available.")
-            }
-            if !domainTask.completed {
-                try await store.toggleComplete(domainTask)
-            }
-            return String(localized: "Completed \(domainTask.title).")
+        let message: String
+        if let title = try await scope.complete(identifier: task.id) {
+            message = String(localized: "Completed \(title).")
+        } else {
+            message = String(localized: "That task is no longer available.")
         }
         return .result(dialog: "\(message)")
     }

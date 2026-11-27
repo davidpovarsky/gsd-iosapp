@@ -21,3 +21,11 @@ Prepare only on Oracle; native owner executes on Mac and binds exact clean GRDB 
 - Apple, Creating your first app intent: https://developer.apple.com/documentation/appintents/creating-your-first-app-intent — register dependencies early and keep actions as wrappers over existing services.
 
 These are API/design references, not evidence that this app passed runtime acceptance.
+
+## Implemented host boundary
+
+GSDAppIntentScope is registered in GSDApp.init beside the existing TaskStore dependency, using the same canonical scope closure and mutation gate as Watch and notifications. Entity queries and Create/Complete actions resolve that context; original intent/action names, all AppShortcut phrases and non-opening flags remain unchanged.
+
+Entity IDs are versioned, sorted JSON references encoded as Strings, with the task ID and exact account/dataset. They persist across relaunch of the same dataset. A reset, another account, or a different installation/dataset requires selecting the task again; legacy raw IDs cannot establish origin. This is an explicit compatibility boundary, not an automatic migration to the current account.
+
+Observation invalidates generation synchronously before account changes. Each canonical query checks after awaited reads. Selected completion checks immutable origin and the canonical row before mutation. The existing gate ticket/window remains owned through every internal TaskStore await, so the existing reset/account replacement path drains the action before changing the dataset. Errors have English and Hebrew catalog entries. Core/store and the frozen Watch producer bytes remain unchanged.

@@ -17568,6 +17568,40 @@
         }
       },
       "extractionState": "manual"
+    },
+    "This task selection is no longer valid. Select the task again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This task selection is no longer valid. Select the task again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בחירת המשימה אינה תקפה עוד. בחרו את המשימה מחדש."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "GSD cannot verify the current account or task collection. Open GSD and try again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GSD cannot verify the current account or task collection. Open GSD and try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לאמת את החשבון או את אוסף המשימות הנוכחיים. פתחו את GSD ונסו שוב."
+          }
+        }
+      },
+      "extractionState": "manual"
     }
   },
   "version": "1.0"
