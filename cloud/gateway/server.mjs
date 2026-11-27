@@ -510,6 +510,8 @@ export function createGateway({
     if(u==='/api/health'&&method==='GET')return true;
     if(u==='/api/realtime'&&['GET','POST'].includes(method))return true;
     if(u==='/api/gsd/account'&&method==='DELETE')return true;
+    if(u==='/api/gsd/dataset'&&method==='GET')return true;
+    if(u==='/api/gsd/dataset/reset'&&method==='POST')return true;
     if(u==='/api/collections/gsd_library/records'&&method==='GET')return true;
     if(/^\/api\/gsd\/library\/(archive|trash|view)\/[A-Za-z0-9_-]{1,160}$/.test(u)&&method==='PUT')return true;
     if(/^\/api\/gsd\/tasks\/[A-Za-z0-9_-]{10,80}$/.test(u)&&['PATCH','DELETE'].includes(method))return true;
@@ -523,12 +525,19 @@ export function createGateway({
     return false;
   };
   function proxyToPocketBase(req,res,url) {
+    // IncomingMessage.headers coalesces duplicate fields; the generation is one opaque value.
+    let generations=0;
+    for(let index=0;index<req.rawHeaders.length;index+=2)
+      if(req.rawHeaders[index].toLowerCase()==='x-gsd-dataset-generation')generations++;
+    if(generations>1)return json(res,400,{status:400,message:'invalid_dataset_generation',data:{}});
     const forwarded=new URL(url.pathname+url.search,pbOrigin);
     const headers={
       'Accept':req.headers.accept||'application/json',
       'Authorization':req.headers.authorization||'',
       'Content-Type':req.headers['content-type']||'application/json'
     };
+    if(req.headers['x-gsd-dataset-generation']!==undefined)
+      headers['X-GSD-Dataset-Generation']=req.headers['x-gsd-dataset-generation'];
     const upstream=http.request(forwarded,{method:req.method,headers,timeout:60000},response=>{
       const allowedHeaders=['content-type','cache-control','etag','last-modified'];
       const result={};

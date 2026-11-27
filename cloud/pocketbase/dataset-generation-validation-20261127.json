@@ -1,0 +1,46 @@
+{
+  "scope": "isolated real PocketBase and gateway; production/native acceptance separate",
+  "baseline": "ed379d60d4c41da91d8b5dfe32601956c8abf7c3",
+  "sourceFiles": {
+    "cloud/gateway/server.mjs": "5cfb5332f44282db6bd0a3abe2a2c9377d43875034ea6f648fe751af8c10f342",
+    "cloud/pocketbase/pb_hooks/gsd_dataset.pb.js": "c1bc9e733936c26718e1ce55db9082b289cc751e8bb8a5fe8c494027936c4fd9",
+    "cloud/pocketbase/pb_hooks/gsd_dataset_helpers.js": "38bd9558aaf002aaa65e926398040a4c90ad0eb234bcf0b06f76cd5ae7d23204",
+    "cloud/pocketbase/pb_migrations/1795764000_dataset_generation.js": "6fc380d837a527702f99d99ee4ca3597cc48e00857904120b7f49da55364d6b3",
+    "cloud/pocketbase/test_dataset_generation.py": "24d3b059ccdd3391714d3fd2e936c366afcf6cc8932ae868e6d42a9cb291b329"
+  },
+  "red": {
+    "receipt": "/var/tmp/gsd-dataset-red-20261127-r2/receipt.json",
+    "sha256": "984ba83d2315c24f12ca8c21dd7b7568c11f145fc6185071c91d5475aefbf3a8",
+    "result": "RED_REPRODUCED"
+  },
+  "green": {
+    "receipt": "/var/tmp/gsd-dataset-completion-green-20261127-r2/receipt.json",
+    "sha256": "9b21f753f30c828e60bd411feefd71a30a9f72464017da54f5d9d84598491568",
+    "result": "PASS",
+    "checks": 56
+  },
+  "gatewayRegression": {
+    "finishedUTC": "2026-11-27T14:41:45.636271+00:00",
+    "exit": 0,
+    "command": [
+      "node",
+      "--test",
+      "/mnt/development/projects/worktrees/gsd-cloud-completion-20261127/cloud/gateway/gateway-security.test.mjs",
+      "/mnt/development/projects/worktrees/gsd-cloud-completion-20261127/cloud/gateway/mcp-auth.test.mjs",
+      "/mnt/development/projects/worktrees/gsd-cloud-completion-20261127/cloud/gateway/oauth-localization.test.mjs",
+      "/mnt/development/projects/worktrees/gsd-cloud-completion-20261127/cloud/gateway/rate-limit.test.mjs",
+      "/mnt/development/projects/worktrees/gsd-cloud-completion-20261127/cloud/gateway/request-receipts.test.mjs"
+    ],
+    "source": "/mnt/development/projects/worktrees/gsd-cloud-completion-20261127",
+    "serverSHA256": "5cfb5332f44282db6bd0a3abe2a2c9377d43875034ea6f648fe751af8c10f342",
+    "log": "/mnt/development/projects/evidence/gsd-lorvex-completion-20261127/shared/gsd-gateway-regression-r1.log",
+    "logSHA256": "399d5d35eb98e017efaee5361833ce077525eaa555303791b7d3f687534ed395"
+  },
+  "gates": [
+    "atomic delayed-create/reset and account deletion ordering",
+    "populated migration preserving every previous row",
+    "exact 128-byte UTF8 identifiers and duplicate header rejection",
+    "stable reset receipt across actual PocketBase and gateway restart",
+    "original27 OAuth/MCP/security regression tests"
+  ]
+}
