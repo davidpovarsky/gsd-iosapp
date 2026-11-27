@@ -15,13 +15,15 @@ The first three use actual TaskStore and GRDB readback, comparing persisted-befo
 
 Expected baseline: the original twelve pass, the four additions fail. Final acceptance requires all sixteen unique checks to pass on the final consumed source.
 
-## Extension9
+## Extension10
 
 The standalone extension probe executes the actual ShareCaptureSession, ShareScopePublisher, SharedTokenKeychain status interpretation, JWT decoder and filesystem outbox/identity/publication/lease code. Only HTTP and the SecItemCopyMatching result are doubled. No personal credentials or real network requests are used.
 
-The nine checks cover tri-state Keychain access; missing metadata; first-ever unpushed guest bootstrap; unavailable credentials; another-account replacement; same-owner credential replacement; A → unresolved → A publication invalidation; origin journaling before an admitted POST; and exactly-once recovery of an abandoned journal.
+The original nine checks cover tri-state Keychain access; missing metadata; first-ever unpushed guest bootstrap; unavailable credentials; another-account replacement; same-owner credential replacement; A → unresolved → A publication invalidation; origin journaling before an admitted POST; and exactly-once recovery of an abandoned journal.
 
-Expected bbbed baseline: eight pass and same_owner_token_replacement_invalidates_open_sheet fails. Final acceptance requires all nine unique checks to pass. Earlier original Share4 and native Share2/all-eight assertions remain independent required gates.
+A tenth additive check requires the actual writer to persist an authored-change fact on an edited retry after a failed local save, using identical timestamps for both attempts.
+
+Expected compiling baseline be27304: eight pass; same_owner_token_replacement_invalidates_open_sheet and edited_retry_records_authored_change_without_timestamp_inference fail. Final acceptance requires all ten unique checks to pass. Earlier original Share4 and native Share2/all-eight assertions remain independent required gates.
 
 ## Execution boundary
 

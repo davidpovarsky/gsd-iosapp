@@ -18,7 +18,8 @@ EXPECTED = set([
     "same_owner_token_replacement_invalidates_open_sheet",
     "unresolved_then_same_account_keeps_old_sheet_invalid",
     "post_uses_frozen_token_after_durable_origin_journal",
-    "abandoned_post_recovers_once_under_the_same_identity"
+    "abandoned_post_recovers_once_under_the_same_identity",
+    "edited_retry_records_authored_change_without_timestamp_inference"
 ])
 
 def digest(p): return hashlib.sha256(p.read_bytes()).hexdigest()

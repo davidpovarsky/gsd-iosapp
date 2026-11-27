@@ -268,6 +268,31 @@ func readFixtureCredential() -> FixtureCredential {
               && (origin(recovered.first?.capture)) == scope("fixture-account-a"))
     }
 
+
+    @MainActor static func editedRetryCheck(root: URL) async throws {
+        let directory = try makeDirectory(root, "edited-retry-fact")
+        let a = try token("fixture-account-a")
+        try identity(directory); try publish(scope("fixture-account-a"), directory: directory); setCredential(a)
+        let network = PushRecorder(), subject = ShareSubject(directory: directory, recorder: network)
+        let blocker = directory.appendingPathComponent(ShareOutboxStore.directoryName)
+        try Data("forced regular outbox failure".utf8).write(to: blocker)
+        var failed = false
+        do { _ = try await subject.save("Original input") } catch { failed = true }
+        let originalID = network.posts.first?.task.id
+        try FileManager.default.removeItem(at: blocker)
+        _ = try await subject.save("Edited after the failed save")
+        let pending = subject.outbox.pending()
+        let stored = try pending.first.map {
+            try JSONSerialization.jsonObject(with: JSONEncoder().encode($0.capture)) as! [String: Any]
+        }
+        check("edited_retry_records_authored_change_without_timestamp_inference",
+              failed && originalID != nil && network.posts.count == 1 && pending.count == 1
+              && pending.first?.capture.taskID == originalID
+              && pending.first?.capture.title == "Edited after the failed save"
+              && pending.first?.capture.capturedAt == Date(timeIntervalSince1970: 100)
+              && stored?["isEditedRetry"] as? Bool == true)
+    }
+
     @MainActor static func main() async {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("GSDShareExtensionScope-" + UUID().uuidString)
         do {
@@ -276,6 +301,7 @@ func readFixtureCredential() -> FixtureCredential {
             try await credentialChecks(root: root)
             try await staleSheetChecks(root: root)
             try await journalChecks(root: root)
+            try await editedRetryCheck(root: root)
             exit(failures == 0 ? 0 : 1)
         } catch {
             print("SHARE_EXTENSION_SCOPE_ERROR " + String(describing: error)); exit(2)
