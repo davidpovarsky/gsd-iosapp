@@ -235,6 +235,7 @@ final class SuspendedRepository: TaskRepository, Sendable {
         defer { rig.close() }
         let kept = task("kept-on-identity-failure")
         try await rig.tasks.upsert(kept)
+        let persistedBeforeFailure = try await rig.tasks.fetchAll()
         let previousIdentity = rig.gate.identity
         let path = rigDirectory.appendingPathComponent("watch-dataset-identity.json")
         let preserved = rigDirectory.appendingPathComponent("preserved-identity.json")
@@ -250,6 +251,18 @@ final class SuspendedRepository: TaskRepository, Sendable {
         } catch { refused = true }
         let rows = try await rig.tasks.fetchAll()
         let queued = try await rig.queue.all()
+        let failureDiagnostic: [String: Any] = [
+            "refused": refused, "destructiveBodyRan": destructiveBodyRan,
+            "rowsEqualOriginal": rows == [kept], "rowsEqualPersistedBefore": rows == persistedBeforeFailure,
+            "queueEmpty": queued.isEmpty, "identityUnchanged": rig.gate.identity == previousIdentity,
+            "paused": rig.gate.isPaused,
+            "originalCreatedAt": kept.createdAt.timeIntervalSince1970,
+            "persistedCreatedAt": rows.first?.createdAt.timeIntervalSince1970 ?? -1,
+            "originalUpdatedAt": kept.updatedAt.timeIntervalSince1970,
+            "persistedUpdatedAt": rows.first?.updatedAt.timeIntervalSince1970 ?? -1
+        ]
+        print("WATCH_GATE_DIAGNOSTIC " + String(decoding: try JSONSerialization.data(
+            withJSONObject: failureDiagnostic, options: [.sortedKeys]), as: UTF8.self))
         check("identity_failure_prevents_destructive_body", refused && !destructiveBodyRan
               && rows == [kept] && queued.isEmpty && rig.gate.identity == previousIdentity && !rig.gate.isPaused)
         try FileManager.default.removeItem(at: path)
