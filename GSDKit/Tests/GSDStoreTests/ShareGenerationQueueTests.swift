@@ -381,4 +381,116 @@ struct ShareGenerationQueueTests {
         #expect(rows.first?.operation == .delete)
         #expect(rows.first?.serverDatasetGeneration == "generation-A")
     }
+
+    @Test func explicitCreateAndSaveBindGenerationBeforeCanonicalWrites() async throws {
+        let rig = try rig()
+        try await rig.database.writer.write { db in
+            try db.execute(sql: """
+                CREATE TRIGGER require_create_generation BEFORE INSERT ON tasks
+                WHEN NEW.id = 'explicit-task' AND NOT EXISTS (
+                    SELECT 1 FROM syncQueue WHERE taskId = NEW.id AND operation = 'create'
+                        AND serverDatasetGeneration = 'generation-A'
+                )
+                BEGIN SELECT RAISE(ABORT, 'create generation must be persisted first'); END
+                """)
+            try db.execute(sql: """
+                CREATE TRIGGER require_save_generation BEFORE UPDATE ON tasks
+                WHEN NEW.id = 'explicit-task' AND NOT EXISTS (
+                    SELECT 1 FROM syncQueue WHERE taskId = NEW.id AND operation = 'update'
+                        AND serverDatasetGeneration = 'generation-A'
+                )
+                BEGIN SELECT RAISE(ABORT, 'save generation must be persisted first'); END
+                """)
+        }
+        let original = task("explicit-task")
+        try await rig.store.create(original, serverDatasetGeneration: "generation-A")
+        let creates = try await rig.queue.all()
+        #expect(creates.count == 1)
+        #expect(creates.first?.serverDatasetGeneration == "generation-A")
+        let created = try #require(creates.first)
+        try await rig.queue.remove(id: created.id)
+        var edited = try #require(try await rig.repository.fetch(id: original.id))
+        edited.title = "Explicitly saved"
+        try await rig.store.save(edited, serverDatasetGeneration: "generation-A")
+        let saves = try await rig.queue.all()
+        #expect(saves.count == 1)
+        #expect(saves.first?.operation == .update)
+        #expect(saves.first?.serverDatasetGeneration == "generation-A")
+        #expect(try await rig.repository.fetch(id: original.id)?.title == "Explicitly saved")
+    }
+
+    @Test func explicitBindingCannotReplaceAuthorityOrFallThroughQueueFailure() async throws {
+        let rig = try rig()
+        let original = try await seed(rig, status: .failed)
+        let before = try await rig.queue.all()
+        var edited = original
+        edited.title = "Must not replace authority"
+        await #expect(throws: SyncQueueGenerationError.conflictingGenerations) {
+            try await rig.store.create(edited, serverDatasetGeneration: "generation-B")
+        }
+        await #expect(throws: SyncQueueGenerationError.conflictingGenerations) {
+            try await rig.store.save(edited, serverDatasetGeneration: "generation-B")
+        }
+        for invalid in ["", String(repeating: "x", count: 129), "bad\r\nvalue"] {
+            await #expect(throws: SyncQueueGenerationError.invalidGeneration) {
+                try await rig.store.save(edited, serverDatasetGeneration: invalid)
+            }
+        }
+        #expect(try await rig.repository.fetch(id: original.id) == original)
+        #expect(try await rig.queue.all() == before)
+
+        let failing = try self.rig(failEnqueue: true)
+        await #expect(throws: InjectedFailure.enqueue) {
+            try await failing.store.create(original, serverDatasetGeneration: "generation-A")
+        }
+        await #expect(throws: InjectedFailure.enqueue) {
+            try await failing.store.save(original, serverDatasetGeneration: "generation-A")
+        }
+        #expect(try await failing.repository.fetch(id: original.id) == nil)
+        #expect(try await failing.queue.all().isEmpty)
+    }
+
+    @Test func cancelledWaiterDoesNotWriteOrBlockTheNextMutation() async throws {
+        let rig = try rig()
+        let held = HeldUpsertRepository(rig.repository)
+        let store = makeStore(rig.database, repository: held, queue: rig.queue)
+        let firstTask = task("first")
+        let cancelledTask = task("cancelled")
+        let lastTask = task("last")
+        let first = _Concurrency.Task { try await store.create(firstTask, serverDatasetGeneration: "generation-A") }
+        var cancelled: _Concurrency.Task<Void, Error>?
+        let entered = CompletionState()
+        do {
+            var upsertEntered = false
+            for _ in 0..<500 {
+                if await held.hasEntered() { upsertEntered = true; break }
+                try await _Concurrency.Task.sleep(for: .milliseconds(10))
+            }
+            guard upsertEntered else { throw InjectedFailure.waitTimeout }
+            cancelled = _Concurrency.Task { @MainActor in
+                entered.finished = true
+                try await store.create(cancelledTask, serverDatasetGeneration: "generation-B")
+            }
+            while !entered.finished { await _Concurrency.Task.yield() }
+            cancelled?.cancel()
+            await held.release()
+            try await first.value
+            let cancelledOperation = try #require(cancelled)
+            await #expect(throws: CancellationError.self) { try await cancelledOperation.value }
+            try await store.create(lastTask, serverDatasetGeneration: "generation-C")
+        } catch {
+            cancelled?.cancel()
+            await held.release()
+            _ = try? await first.value
+            _ = try? await cancelled?.value
+            throw error
+        }
+        #expect(try await rig.repository.fetch(id: cancelledTask.id) == nil)
+        #expect(try await rig.repository.fetch(id: firstTask.id) != nil)
+        #expect(try await rig.repository.fetch(id: lastTask.id) != nil)
+        let rows = try await rig.queue.all()
+        #expect(!rows.contains { $0.taskId == cancelledTask.id })
+        #expect(rows.first { $0.taskId == firstTask.id }?.serverDatasetGeneration == "generation-A")
+        #expect(rows.first { $0.taskId == lastTask.id }?.serverDatasetGeneration == "generation-C")
+    }
 }

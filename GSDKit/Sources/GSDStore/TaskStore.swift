@@ -122,6 +122,9 @@ public final class TaskStore {
     @ObservationIgnored private var observerTask: _Concurrency.Task<Void, Never>?
     @ObservationIgnored private var smartViewObserverTask: _Concurrency.Task<Void, Never>?
     @ObservationIgnored private var archiveObserverTask: _Concurrency.Task<Void, Never>?
+    // Only queued mutation critical sections share this FIFO. Reads and system callbacks stay outside.
+    @ObservationIgnored private var queuedMutationActive = false
+    @ObservationIgnored private var queuedMutationWaiters: [CheckedContinuation<Void, Never>] = []
 
     /// Trash, Undo from Trash, and Import Replace skip `syncQueue` and write their queue rows through
     /// `trashRepository` and `repository`, in the same write as the move, so all three must share one
@@ -327,7 +330,8 @@ public final class TaskStore {
         }
     }
 
-    public func create(_ task: Task) async throws {
+    /// A Share-originated creation can bind its original server generation before the task is written.
+    public func create(_ task: Task, serverDatasetGeneration: String? = nil) async throws {
         var t = task
         t.tags = Self.canonicalTags(task.tags)
         t.notifyBefore = t.notifyBefore ?? notificationSettings.defaultReminder   // D-10: a new task stores a number
@@ -335,7 +339,7 @@ public final class TaskStore {
         t.createdAt = now
         t.updatedAt = now
         try TaskValidator.validate(t)
-        try await upsertEnqueued(t, op: .create)
+        try await upsertEnqueued(t, op: .create, serverDatasetGeneration: serverDatasetGeneration)
         await refreshReminder(t)
     }
 
@@ -377,7 +381,8 @@ public final class TaskStore {
         return copy
     }
 
-    public func save(_ task: Task) async throws {
+    /// An omitted generation inherits every pending/failed binding for this task.
+    public func save(_ task: Task, serverDatasetGeneration: String? = nil) async throws {
         var t = task
         if let current = try await repository.fetch(id: task.id) { t.savedAt = current.savedAt }
         guard !(t.isSaved && t.completed) else { throw TaskStoreError.savedItemRequiresReturn }
@@ -385,7 +390,7 @@ public final class TaskStore {
         t.notifyBefore = t.notifyBefore ?? notificationSettings.defaultReminder   // D-10: any write settles a legacy null
         t.updatedAt = clock()
         try TaskValidator.validate(t)
-        try await upsertEnqueued(t, op: .update)
+        try await upsertEnqueued(t, op: .update, serverDatasetGeneration: serverDatasetGeneration)
         await refreshReminder(t)
     }
 
@@ -451,19 +456,22 @@ public final class TaskStore {
     /// layered over the same server delete the web client performs, so the two clients
     /// remain byte-identical on the wire while both now offer a way back.
     public func delete(_ task: Task) async throws {
-        // One write reads the live row, moves it into Trash, queues the delete, and removes the task's
-        // queued creates and updates. A removed row can't be re-queued by the next sync's seed, so a Trash
-        // that landed without its delete would let the next pull resurrect the task. A failed write keeps
-        // the row live.
-        let trashedAt = clock()   // one reading for the Trash time and the delete's queue time
-        let item = Self.makeQueueItem(task.id, .delete, payload: nil, at: trashedAt)
         do {
-            try await trashRepository.trash(task, at: trashedAt, queueing: item)
-        } catch {
-            // Nothing landed, whichever part failed, so the user can retry. The cause is logged first,
-            // because a lasting fault such as a full disk reads the same as a passing one to the user.
-            Self.log.error("Trash write failed, task kept live: \(String(describing: type(of: error)), privacy: .public) \(String(describing: error))")
-            throw TaskStoreError.deleteNotRecorded
+            await beginQueuedMutation()
+            defer { finishQueuedMutation() }
+            try _Concurrency.Task<Never, Never>.checkCancellation()
+            let generation = try await resolvedGeneration(for: task.id)
+            // The inherited binding travels with the same atomic Trash/delete transaction
+            // before it removes the task's queued creates and updates.
+            let trashedAt = clock()
+            let item = Self.makeQueueItem(
+                task.id, .delete, payload: nil, at: trashedAt, serverDatasetGeneration: generation)
+            do {
+                try await trashRepository.trash(task, at: trashedAt, queueing: item)
+            } catch {
+                Self.log.error("Trash write failed, task kept live: \(String(describing: type(of: error)), privacy: .public) \(String(describing: error))")
+                throw TaskStoreError.deleteNotRecorded
+            }
         }
         onMutation?()
         await reminders.cancel(taskID: task.id)   // after the write commits, so a failed Trash leaves it armed
@@ -497,10 +505,18 @@ public final class TaskStore {
     /// queued delete: a delete still waiting out a backoff would land after the create and take the
     /// task off every device. If the write fails, the task stays in Trash with its delete queued.
     public func restoreFromTrash(id: String) async throws {
-        let queuedAt = clock()
-        let restored = try await trashRepository.restore(id: id, queueing: { task in
-            Self.makeQueueItem(task.id, .create, payload: task, at: queuedAt)
-        })
+        let restored: Task?
+        do {
+            await beginQueuedMutation()
+            defer { finishQueuedMutation() }
+            try _Concurrency.Task<Never, Never>.checkCancellation()
+            let generation = try await resolvedGeneration(for: id)
+            let queuedAt = clock()
+            restored = try await trashRepository.restore(id: id, queueing: { task in
+                Self.makeQueueItem(
+                    task.id, .create, payload: task, at: queuedAt, serverDatasetGeneration: generation)
+            })
+        }
         guard let task = restored else { return }
         onMutation?()
         await refreshReminder(task)
@@ -631,38 +647,81 @@ public final class TaskStore {
         else { await reminders.schedule(task) }
     }
 
-    /// Enqueue a sync op for a local mutation (§7.5). Only an archive's `.delete` carries a payload. Best-effort —
-    /// a queue failure must not fail the user's mutation (the next sync's seed/reconcile
-    /// self-heals). Returns the queue-item id so a failed companion write can remove the orphan.
+    /// Only queued mutations are serialized. A waiter checks cancellation after admission,
+    /// then releases in defer; cancellation never opens a second writer's critical section.
+    private func beginQueuedMutation() async {
+        if !queuedMutationActive {
+            queuedMutationActive = true
+            return
+        }
+        await withCheckedContinuation { queuedMutationWaiters.append($0) }
+    }
+
+    private func finishQueuedMutation() {
+        if queuedMutationWaiters.isEmpty {
+            queuedMutationActive = false
+        } else {
+            queuedMutationWaiters.removeFirst().resume()
+        }
+    }
+
+    private func resolvedGeneration(for taskID: String, proposed: String? = nil) async throws -> String? {
+        try SyncQueueItem.resolvedServerDatasetGeneration(
+            for: taskID, in: try await syncQueue.all(), proposed: proposed)
+    }
+
+    /// Unbound mutations keep the existing best-effort queue contract. A bound mutation
+    /// requires durable enqueue: falling through would let a later seed choose a new generation.
     @discardableResult
-    private func enqueue(_ taskId: String, _ op: SyncQueueItem.Operation, payload: Task?, at stamp: Date? = nil,
-                         clearingWrites: Bool = false) async -> String? {
-        let item = Self.makeQueueItem(taskId, op, payload: payload, at: stamp ?? clock())
+    private func enqueue(
+        _ taskId: String, _ op: SyncQueueItem.Operation, payload: Task?, at stamp: Date? = nil,
+        clearingWrites: Bool = false, serverDatasetGeneration: String? = nil
+    ) async throws -> String? {
+        let item = Self.makeQueueItem(
+            taskId, op, payload: payload, at: stamp ?? clock(),
+            serverDatasetGeneration: serverDatasetGeneration)
         do {
             if clearingWrites { try await syncQueue.enqueueClearingWrites(item) } else { try await syncQueue.enqueue(item) }
-        } catch { return nil }
+        } catch {
+            if serverDatasetGeneration != nil { throw error }
+            return nil
+        }
         onMutation?()
         return item.id
     }
 
-    /// The one place a queue item is built: a fresh id and the clock reading in milliseconds. Nonisolated
-    /// because Undo builds its item inside the trash repository's write, off the main actor.
-    nonisolated private static func makeQueueItem(_ taskId: String, _ op: SyncQueueItem.Operation,
-                                                  payload: Task?, at stamp: Date) -> SyncQueueItem {
-        SyncQueueItem(id: IDGenerator.generate(size: IDGenerator.Size.task), taskId: taskId, operation: op,
-                      timestamp: Int(stamp.timeIntervalSince1970 * 1000), payload: payload)
+    /// The one place a queue item is built: a fresh id and the clock reading in milliseconds.
+    /// Nonisolated because Undo builds its item inside the trash repository's write.
+    nonisolated private static func makeQueueItem(
+        _ taskId: String, _ op: SyncQueueItem.Operation, payload: Task?, at stamp: Date,
+        serverDatasetGeneration: String? = nil
+    ) -> SyncQueueItem {
+        SyncQueueItem(
+            id: IDGenerator.generate(size: IDGenerator.Size.task), taskId: taskId, operation: op,
+            timestamp: Int(stamp.timeIntervalSince1970 * 1000), payload: payload,
+            serverDatasetGeneration: serverDatasetGeneration)
     }
 
-    /// Race-proof write (design 2026-06-10 Fix E): persist the queue item BEFORE the task row.
-    /// Both serialize through the same GRDB writer, so any task visible to a reconcile
-    /// `fetchAll` already has queue protection. If the upsert then fails, the orphaned item is
-    /// removed — an unpersisted task must not push a ghost create.
-    private func upsertEnqueued(_ task: Task, op: SyncQueueItem.Operation) async throws {
-        let queueItemId = await enqueue(task.id, op, payload: task)
+    /// Resolve authority and persist the queue item BEFORE the task row. The FIFO also covers
+    /// Import Replace, which may remove earlier queued writes in its atomic repository operation.
+    /// A failed companion write removes only this operation's new queue row.
+    private func upsertEnqueued(
+        _ task: Task, op: SyncQueueItem.Operation, serverDatasetGeneration: String? = nil,
+        beforeUpsert: (@MainActor () async throws -> Void)? = nil
+    ) async throws {
+        await beginQueuedMutation()
+        defer { finishQueuedMutation() }
+        try _Concurrency.Task<Never, Never>.checkCancellation()
+        let generation = try await resolvedGeneration(for: task.id, proposed: serverDatasetGeneration)
+        try _Concurrency.Task<Never, Never>.checkCancellation()
+        let queueItemID = try await enqueue(
+            task.id, op, payload: task, serverDatasetGeneration: generation)
         do {
+            try _Concurrency.Task<Never, Never>.checkCancellation()
+            try await beforeUpsert?()
             try await repository.upsert(task)
         } catch {
-            if let queueItemId { try? await syncQueue.remove(id: queueItemId) }
+            if let queueItemID { try? await syncQueue.remove(id: queueItemID) }
             throw error
         }
     }
@@ -763,17 +822,25 @@ public final class TaskStore {
     /// remove that task with no archive or trash copy. If the queue write fails, the task goes
     /// back to active and nothing changes on the server.
     public func archive(_ task: Task) async throws {
-        let task = try await repository.fetch(id: task.id) ?? task
-        // One clock reading for `archivedAt` and the delete's queue time. Two readings let a write land
-        // between them: the pull would see it as newer than the archive and bring the task back, while
-        // the push sees it as older than the delete and sends it.
-        let archivedAt = clock()
-        try await archiveRepository.archive(task, at: archivedAt)
-        // The delete carries the task as archived, so push can skip it if the server copy moved on (B-47).
-        // The delete and the removal of the task's queued writes are one write: a failure restores the task.
-        guard await enqueue(task.id, .delete, payload: task, at: archivedAt, clearingWrites: true) != nil else {
-            try? await archiveRepository.restore(id: task.id)
-            throw TaskStoreError.archiveNotRecorded
+        do {
+            await beginQueuedMutation()
+            defer { finishQueuedMutation() }
+            try _Concurrency.Task<Never, Never>.checkCancellation()
+            let task = try await repository.fetch(id: task.id) ?? task
+            let generation = try await resolvedGeneration(for: task.id)
+            // Preserve the original move-before-delete order and one clock reading (B-47).
+            let archivedAt = clock()
+            try await archiveRepository.archive(task, at: archivedAt)
+            do {
+                guard try await enqueue(
+                    task.id, .delete, payload: task, at: archivedAt, clearingWrites: true,
+                    serverDatasetGeneration: generation) != nil else {
+                    throw TaskStoreError.archiveNotRecorded
+                }
+            } catch {
+                try? await archiveRepository.restore(id: task.id)
+                throw TaskStoreError.archiveNotRecorded
+            }
         }
         await reminders.cancel(taskID: task.id)   // an archived task must not fire a reminder
     }
@@ -786,8 +853,9 @@ public final class TaskStore {
     public func restore(_ task: Task) async throws {
         var t = task
         t.updatedAt = clock()
-        try await archiveRepository.restore(id: task.id)
-        try await upsertEnqueued(t, op: .update)
+        try await upsertEnqueued(t, op: .update, beforeUpsert: {
+            try await self.archiveRepository.restore(id: task.id)
+        })
     }
 
     public func deletePermanently(_ task: Task) async throws {
@@ -1051,6 +1119,9 @@ public final class TaskStore {
     public func importTasks(_ data: Data, mode: ImportMode) async throws -> ImportResult {
         switch mode {
         case .replace:
+            await beginQueuedMutation()
+            defer { finishQueuedMutation() }
+            try _Concurrency.Task<Never, Never>.checkCancellation()
             let result = try TaskImporter.replace(from: data)
             let now = clock()
             // D3: the import restores the backup's settings, so its default is the one in effect after.
@@ -1064,9 +1135,24 @@ public final class TaskStore {
             // under the pull-suppression gate, so a create or update still queued for one would find no
             // record later and POST it back. The same write clears them (I3). It also reads which tasks
             // are left out, so a task saved after this point is deleted like the rest.
-            let items = stamped.map { Self.makeQueueItem($0.id, .update, payload: $0, at: now) }
+            let queued = try await syncQueue.all()
+            var bindings: [String: String] = [:]
+            for taskID in Set(queued.map(\.taskId)) {
+                if let generation = try SyncQueueItem.resolvedServerDatasetGeneration(for: taskID, in: queued) {
+                    bindings[taskID] = generation
+                }
+            }
+            let generationByTaskID = bindings
+            let items = stamped.map {
+                Self.makeQueueItem(
+                    $0.id, .update, payload: $0, at: now,
+                    serverDatasetGeneration: generationByTaskID[$0.id])
+            }
+            try _Concurrency.Task<Never, Never>.checkCancellation()
             try await repository.replaceAll(stamped, queueing: items, deletingLeftOut: { id in
-                Self.makeQueueItem(id, .delete, payload: nil, at: now)
+                Self.makeQueueItem(
+                    id, .delete, payload: nil, at: now,
+                    serverDatasetGeneration: generationByTaskID[id])
             })
             onMutation?()
             try await restoreCompanionStores(result, mode: .replace)
@@ -1144,18 +1230,23 @@ public final class TaskStore {
     /// `appTheme` + `hasOnboarded` live in the App layer's `@AppStorage` and are intentionally
     /// untouched.
     public func eraseAllData() async throws {
-        try await repository.replaceAll([])
-        for archived in try await archiveRepository.fetchAll() {
-            try await archiveRepository.deletePermanently(id: archived.id)
-        }
-        // "Erase all data" must mean all of it — leaving the trash behind would keep a
-        // recoverable copy of tasks the user just asked to be rid of.
-        _ = try await trashRepository.empty()
-        for view in try await smartViewRepository.fetchAll() {
-            try await smartViewRepository.delete(id: view.id)
-        }
-        for item in try await syncQueue.all() {
-            try await syncQueue.remove(id: item.id)
+        do {
+            await beginQueuedMutation()
+            defer { finishQueuedMutation() }
+            try _Concurrency.Task<Never, Never>.checkCancellation()
+            try await repository.replaceAll([])
+            for archived in try await archiveRepository.fetchAll() {
+                try await archiveRepository.deletePermanently(id: archived.id)
+            }
+            // "Erase all data" must mean all of it — leaving the trash behind would keep a
+            // recoverable copy of tasks the user just asked to be rid of.
+            _ = try await trashRepository.empty()
+            for view in try await smartViewRepository.fetchAll() {
+                try await smartViewRepository.delete(id: view.id)
+            }
+            for item in try await syncQueue.all() {
+                try await syncQueue.remove(id: item.id)
+            }
         }
         await reminders.cancelAll()
         await reminders.setBadge(0)
