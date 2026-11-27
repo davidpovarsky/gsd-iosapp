@@ -270,12 +270,13 @@ private extension Data {
               && separatedReload.accounts.first(where: { $0.id == "fixture-client-b" })?.signedIn == true)
 
         let blockedURL = root.appendingPathComponent("blocked-fence-directory")
-        try Data("not a directory".utf8).write(to: blockedURL)
         let blockedStore = GSDChatGPTLocalSignOutStore(directory: blockedURL)
         let blockedKeychain = FixtureKeychain(snapshot())
         blockedKeychain.failSave = true
         let blockedNetwork = FixtureNetwork(fence: blockedStore)
         let blocked = state(blockedKeychain, fence: blockedStore, network: blockedNetwork)
+        // Fault the write after successful initialization, independently of read-error handling.
+        try Data("not a directory".utf8).write(to: blockedURL)
         await blocked.signOut()
         let blockedRequests = await blockedNetwork.requestCount
         check("both_storage_failures_report_failure_without_remote_work", !blocked.canUsePlan && !blocked.isBusy
@@ -343,8 +344,11 @@ private extension Data {
         }
         let refreshStarted = await rotatingNetwork.refreshCount == 1
         let signingOut = _Concurrency.Task { @MainActor in await rotating.signOut() }
-        try await _Concurrency.Task.sleep(for: .milliseconds(50))
-        let deniedBeforeRefreshCompletes = !rotating.canUsePlan
+        for _ in 0..<200 {
+            if rotating.isBusy { break }
+            try await _Concurrency.Task.sleep(for: .milliseconds(5))
+        }
+        let deniedBeforeRefreshCompletes = rotating.isBusy && !rotating.canUsePlan
         await rotatingNetwork.releaseRefresh()
         await signingOut.value
         let staleInferenceFailed: Bool
