@@ -16,6 +16,8 @@ struct GSDHanlinAssistantView: View {
     @State private var sendTask: _Concurrency.Task<Void, Never>?
     @State private var requestID: UUID?
     @State private var assistant: GSDHanlinAssistantState
+    @State private var loadedScope: GSDHanlinConversationScope?
+    @State private var restorationFailed = false
     private let taskStore: TaskStore
     let remoteBridge: GSDRemoteBridgeState?
     @State private var showRemoteBridgeSettings = false
@@ -37,13 +39,30 @@ struct GSDHanlinAssistantView: View {
         _assistant = State(initialValue: GSDHanlinAssistantState(store: store))
     }
 
+    private var conversationScope: GSDHanlinConversationScope {
+        #if DEBUG && targetEnvironment(simulator)
+        if ProcessInfo.processInfo.arguments.contains("--demo-seed") &&
+           ProcessInfo.processInfo.arguments.contains("--gsd-native-hanlin-fixture") {
+            return .init(gsdAccountID: "native-fixture", provider: "OpenAI",
+                         providerAccountID: "gsd-native-fixture")
+        }
+        #endif
+        return .init(
+            gsdAccountID: cloudSession.currentUserID, provider: provider,
+            providerAccountID: provider == "ChatGPT"
+                ? (chatGPT.canUsePlan ? chatGPT.activeID : nil)
+                : endpoint)
+    }
+
     var body: some View {
+        let isCurrentConversation = loadedScope == conversationScope
+        let visibleMessages = isCurrentConversation ? assistant.messages : []
         let approvalOwner = assistant
-        let approvalID = approvalOwner.pendingApprovalID
+        let approvalID = isCurrentConversation ? approvalOwner.pendingApprovalID : nil
         let approvalRequest = approvalOwner.pendingApproval
         NavigationStack {
             VStack(spacing: 0) {
-                if assistant.messages.isEmpty {
+                if visibleMessages.isEmpty {
                     ContentUnavailableView {
                         Label("Task AI assistant", systemImage: "sparkles")
                     } description: {
@@ -53,7 +72,7 @@ struct GSDHanlinAssistantView: View {
                 ScrollViewReader { proxy in
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(assistant.messages) { entry in
+                            ForEach(visibleMessages) { entry in
                                 HStack {
                                     if entry.role == .user { Spacer(minLength: 36) }
                                     Text(AssistantCopy.message(entry))
@@ -68,10 +87,10 @@ struct GSDHanlinAssistantView: View {
                                 }
                                 .id(entry.id)
                             }
-                            if let dashboard = assistant.dashboard {
+                            if isCurrentConversation, let dashboard = assistant.dashboard {
                                 visualDashboard(dashboard)
                             }
-                            if let request = assistant.workspace {
+                            if isCurrentConversation, let request = assistant.workspace {
                                 VStack(alignment: .leading, spacing: 8) {
                                     GSDTaskWorkspaceView(store: taskStore, request: request)
                                         .id(request)
@@ -92,19 +111,27 @@ struct GSDHanlinAssistantView: View {
                     }
                     .accessibilityElement(children: .contain)
                     .accessibilityIdentifier("gsd.assistant.conversation")
-                    .onChange(of: assistant.messages.count) { _, _ in
-                        if let last = assistant.messages.last?.id {
+                    .onChange(of: loadedScope) { _, _ in
+                        if isCurrentConversation, let last = assistant.messages.last?.id {
+                            proxy.scrollTo(last, anchor: .bottom)
+                        }
+                    }
+                    .onChange(of: assistant.transcriptRevision) { _, _ in
+                        if isCurrentConversation, let last = assistant.messages.last?.id {
                             withAnimation(.easeOut(duration: 0.2)) { proxy.scrollTo(last, anchor: .bottom) }
                         }
                     }
                 }
-                if let failure = assistant.failure {
+                if isCurrentConversation, let failure = assistant.failure {
                     Text(GSDChatGPTCopy.error(failure)).font(.caption).foregroundStyle(.red).padding(.horizontal)
-                } else if let error = assistant.errorMessage {
+                } else if isCurrentConversation, let error = assistant.errorMessage {
                     Text(AssistantCopy.status(error)).font(.caption).foregroundStyle(.red).padding(.horizontal)
                 }
                 if let configurationError {
                     Text(configurationError).font(.caption).foregroundStyle(.red).padding(.horizontal)
+                }
+                if restorationFailed, !isPreparingRequest {
+                    Button("Retry") { Task { await resetAssistantConversation() } }
                 }
                 if provider == "ChatGPT", chatGPT.canUsePlan {
                     HStack {
@@ -121,8 +148,12 @@ struct GSDHanlinAssistantView: View {
                         .onSubmit(send)
                         .focused($promptFocused)
                         .accessibilityIdentifier("gsd.assistant.prompt")
-                    if assistant.isRunning || isPreparingRequest {
+                    if assistant.isRunning ||
+                        (isPreparingRequest && isCurrentConversation && assistant.isConversationReady) {
                         Button {
+                            guard assistant.isRunning ||
+                                (isPreparingRequest && loadedScope == conversationScope &&
+                                 assistant.isConversationReady) else { return }
                             cancelAssistantRequest()
                         } label: { Image(systemName: "stop.circle") }
                             .accessibilityLabel("Stop AI")
@@ -130,7 +161,8 @@ struct GSDHanlinAssistantView: View {
                         Button(action: send) {
                             Image(systemName: "arrow.up.circle.fill").font(.title2)
                         }
-                        .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        .disabled(!isCurrentConversation || !assistant.isConversationReady ||
+                                  prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                         .accessibilityLabel("Send to AI")
                         .accessibilityIdentifier("gsd.assistant.send")
                     }
@@ -162,6 +194,9 @@ struct GSDHanlinAssistantView: View {
                     showModelSettings = true
                 }
             }
+            .task(id: conversationScope) {
+                await resetAssistantConversation()
+            }
             .onDisappear {
                 cancelAssistantRequest()
                 chatGPT.cancelSignIn()
@@ -169,14 +204,6 @@ struct GSDHanlinAssistantView: View {
             .onChange(of: cloudSession.currentUserID) { _, _ in
                 cancelAssistantRequest()
                 dismiss()
-            }
-            .onChange(of: chatGPT.activeID) { _, _ in
-                Task { await resetAssistantConversation() }
-            }
-            .onChange(of: chatGPT.canUsePlan) { _, available in
-                if !available, provider == "ChatGPT" {
-                    Task { await resetAssistantConversation() }
-                }
             }
             .fullScreenCover(item: $expandedWorkspace) { sheet in
                 GSDTaskWorkspaceSheet(store: taskStore, request: sheet.request)
@@ -347,21 +374,47 @@ struct GSDHanlinAssistantView: View {
 
     @MainActor
     private func resetAssistantConversation() async {
+        let scope = conversationScope
+        if loadedScope == scope, assistant.isConversationReady { return }
         let previous = assistant
         let cancellation = cancelAssistantRequest()
         let resetID = UUID()
         requestID = resetID
         isPreparingRequest = true
+        loadedScope = nil
+        restorationFailed = false
+        prompt = ""
+        expandedWorkspace = nil
+        configurationError = nil
+        defer {
+            if requestID == resetID {
+                requestID = nil
+                isPreparingRequest = false
+            }
+        }
         await cancellation.value
-        guard requestID == resetID, assistant === previous else { return }
-        assistant = GSDHanlinAssistantState(store: taskStore)
-        requestID = nil
-        isPreparingRequest = false
+        guard requestID == resetID, assistant === previous,
+              conversationScope == scope, !Task.isCancelled else { return }
+        do {
+            let restored = try GSDHanlinAssistantState(store: taskStore, scope: scope)
+            assistant = restored
+            await restored.restoreConversation()
+            guard requestID == resetID, assistant === restored,
+                  conversationScope == scope, !Task.isCancelled else { return }
+            loadedScope = scope
+            restorationFailed = !restored.isConversationReady
+        } catch {
+            guard requestID == resetID, conversationScope == scope else { return }
+            restorationFailed = true
+            configurationError = String(localized: "The saved conversation could not be read. Its existing data has been preserved.")
+        }
     }
 
     private func send() {
         let text = prompt.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !text.isEmpty, !assistant.isRunning, !isPreparingRequest else { return }
+        let scope = conversationScope
+        guard !text.isEmpty, !assistant.isRunning, !isPreparingRequest,
+              loadedScope == scope, assistant.isConversationReady else { return }
         let id = UUID()
         requestID = id
         isPreparingRequest = true
@@ -389,20 +442,23 @@ struct GSDHanlinAssistantView: View {
                 if selectedProvider == "ChatGPT" {
                     let access = try await chatGPT.accessForInference()
                     try Task.checkCancellation()
-                    guard requestID == id, assistant === sendingAssistant else { return }
+                    guard requestID == id, assistant === sendingAssistant,
+                          loadedScope == scope, conversationScope == scope else { return }
                     await sendingAssistant.send(text, modelID: access.modelID,
                         endpoint: "https://api.openai.com/v1/responses",
                         credential: access.token, provider: "ChatGPT")
                 } else {
                     try Task.checkCancellation()
-                    guard requestID == id, assistant === sendingAssistant else { return }
+                    guard requestID == id, assistant === sendingAssistant,
+                          loadedScope == scope, conversationScope == scope else { return }
                     await sendingAssistant.send(text, modelID: selectedModel, endpoint: selectedEndpoint,
                                                 credential: selectedCredential, provider: selectedProvider)
                 }
             } catch is CancellationError {
                 if requestID == id, prompt.isEmpty { prompt = text }
             } catch {
-                guard requestID == id, assistant === sendingAssistant else { return }
+                guard requestID == id, assistant === sendingAssistant,
+                          loadedScope == scope, conversationScope == scope else { return }
                 configurationError = String(format: String(localized: "ChatGPT access failed: %@"), GSDChatGPTCopy.error(error))
                 if prompt.isEmpty { prompt = text }
             }

@@ -27,6 +27,7 @@ let package = Package(
             .product(name: "GSDStore", package: "GSDKit"),
             .product(name: "HanlinAgentCore", package: "HanlinSDK"),
             .product(name: "HanlinHostContracts", package: "HanlinSDK"),
+            .product(name: "HanlinPersistenceAdapters", package: "HanlinSDK"),
             .product(name: "HanlinChatCore", package: "HanlinSDK")
         ])
     ],
