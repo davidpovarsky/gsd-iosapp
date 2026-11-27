@@ -9,12 +9,16 @@ struct GSDTaskWorkspaceView: View {
     let store: TaskStore
     var request = GSDTaskWorkspaceRequest()
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(SessionStore.self) private var session
     @State private var editor: WorkspaceEditor?
+    @State private var presentationSession = GSDTaskWorkspacePresentationSession(
+        store: GSDTaskWorkspacePresentationDefaults.store)
 
     var body: some View {
         TaskWorkspaceView(
             snapshot: snapshot,
             initialPresentation: TaskWorkspacePresentation(rawValue: request.presentation.rawValue) ?? .graph,
+            presentationState: presentationSession.binding,
             onAction: perform
         )
         .overlay {
@@ -33,6 +37,24 @@ struct GSDTaskWorkspaceView: View {
                 SavedEditorView(target: target).environment(store)
             }
         }
+        .task(id: presentationConnection) {
+            let observedSession = session
+            presentationSession.connect(identityOwner: ObjectIdentifier(observedSession),
+                                        rootTaskIDs: request.taskIDs) { [weak observedSession] in
+                guard let observedSession else { return nil }
+                return GSDTaskWorkspacePresentationAccount.validated(
+                    isSignedIn: observedSession.isSignedIn,
+                    userID: observedSession.currentUserID,
+                    inProgress: observedSession.inProgress,
+                    hasPendingAccountSwitch: observedSession.pendingAccountSwitch != nil)
+            }
+        }
+        .onDisappear { presentationSession.disconnect() }
+    }
+
+    private var presentationConnection: GSDTaskWorkspacePresentationConnection {
+        .init(identity: ObjectIdentifier(session),
+              rootTaskIDs: GSDTaskWorkspacePresentationScope.canonicalRoots(request.taskIDs))
     }
 
     private var snapshot: TaskWorkspaceSnapshot {
@@ -149,4 +171,16 @@ struct GSDTaskWorkspaceSheet: View {
                 }
         }
     }
+}
+
+
+@MainActor
+private enum GSDTaskWorkspacePresentationDefaults {
+    // Existing App-Group UI preferences; HarnessLaunch supplies its reset, isolated suite.
+    static let store = GSDTaskWorkspacePresentationStore(defaults: .shared)
+}
+
+private struct GSDTaskWorkspacePresentationConnection: Hashable {
+    let identity: ObjectIdentifier
+    let rootTaskIDs: [String]?
 }
