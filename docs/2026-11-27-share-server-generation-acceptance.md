@@ -51,3 +51,13 @@ the new eleven-case suite exercises the real DirectTaskPush/PocketBaseClient pro
 The app-side drainer/title acceptance follows the root's create/save generation contract.
 There is no new full Core, native Share-sheet, live server or personal-account claim in this
 source checkpoint.
+
+## Producer protocol freeze after observed RED
+
+Native execution of immutable `7c009cb7b8789f9fbeff6dcc93a2f1ba2655920d` reached all eleven identities: 0 passed and 11 failed as expected. The preserved receipt is `share-dataset11-red-7c009cb/receipt.json`, SHA-256 `878d0142c938aac87dd7c70acfac1c43343f4a03ebd6264d4d8e8e8a528b84ef`; execution proof `84381ad91c7ed0eb50398578c0de6c0eff5d14eebca65989788bfdd99f52fd49`. This is a meaningful native RED, not a setup or compilation failure.
+
+The producer uses the normally merged wire API `c21c46b7296ca30e92c0f090ec95acb294ea5d1d`. `DirectTaskPush.attempt` now requires an asynchronous preparation callback. Discovery and create use the same client/base and frozen bearer. The callback validates the sheet's exact credential/publication scope and atomically persists the capture's immutable server generation before create. Cancellation, failed discovery, failed journal write and stale scope cannot fall back to headerless POST. An already bound capture never discovers a newer generation. Unbound account captures stay durable and return the existing held/review state.
+
+The original eight `DirectTaskPushTests` identities remain. Their HTTP fixture now returns a generation to GET; the create test asserts exactly one GET followed by one POST, with the generation header, while retaining all original task/owner/device/title/date payload assertions and the default-reminder assertion. The four skip cases still require zero requests. Required callback arguments are explicit fixtures, not a production bypass.
+
+The original Share retry four assertion source is unchanged. Its controller fixture now supplies a known synthetic generation to the real preparation callback before its recording network double. The extension ten case bodies and assertions are unchanged; only their constructor fixture supplies the same explicit prerequisite. Both adapters record this prerequisite. They prove their existing retry/account-scope behavior, while the new eleven-case fixture proves actual PocketBase generation discovery, cancellation and durable binding. Actual Apple framework, real server and system Share-sheet acceptance remain separate gates.

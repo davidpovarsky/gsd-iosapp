@@ -76,10 +76,20 @@ public struct ShareOutboxStore: Sendable {
                 journalPayload.remoteRecordID = nil
                 return queued.capture.taskID == item.capture.taskID && item.capture.taskID != nil
                     && queued.capture.origin == item.capture.origin
+                    && Self.sameGeneration(queued.capture.serverDatasetGeneration,
+                                           item.capture.serverDatasetGeneration)
                     && (queuedPayload == journalPayload || queued.capture.capturedAt > item.capture.capturedAt)
             }
             if !alreadyQueued { try write(item.capture) }
             removeInFlight(id: item.id)
+        }
+    }
+
+    private static func sameGeneration(_ lhs: String?, _ rhs: String?) -> Bool {
+        switch (lhs, rhs) {
+        case let (lhs?, rhs?): lhs.utf8.elementsEqual(rhs.utf8)
+        case (nil, nil): true
+        default: false
         }
     }
 

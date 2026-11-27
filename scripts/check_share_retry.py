@@ -55,7 +55,7 @@ import GSDSnapshot
 '''
 
 
-def scoped_controller_operation(text):
+def scoped_controller_operation(text, dataset_generation=False):
     # Keep the production delegation method. Only UIKit ownership and the verified
     # synthetic account prerequisite are fixture setup; the actual per-sheet writer runs.
     marker = "    private func saveAndPush(_ capture: SharedCapture) async throws -> ShareCaptureSession.SaveResult {"
@@ -64,7 +64,7 @@ def scoped_controller_operation(text):
     start = text.index(marker)
     end = text.index("\n    override func viewDidLoad()", start)
     method = text[start:end].rstrip().replace("private func saveAndPush", "func saveAndPush", 1)
-    return '''import Foundation
+    operation = '''import Foundation
 import GSDModel
 import GSDSnapshot
 @MainActor final class ShareViewController {
@@ -83,6 +83,13 @@ import GSDSnapshot
             })
     }
 ''' + method + "\n}\n"
+    if dataset_generation:
+        operation = operation.replace(
+            "push: { task, _ in",
+            'push: { task, _, authorization in\n'
+            '                do { try authorization.prepare("fixture-generation") }\n'
+            '                catch { return nil }')
+    return operation
 
 
 def main():
@@ -111,7 +118,9 @@ def main():
     original = source / "ShareExtension/ShareViewController.swift"
     inputs[str(original.relative_to(source))] = digest(original)
     scoped = (source / "GSDKit/Sources/GSDSnapshot/ShareCaptureSession.swift").exists()
-    operation = scoped_controller_operation(original.read_text()) if scoped else controller_operation(original.read_text())
+    session_source = source / "GSDKit/Sources/GSDSnapshot/ShareCaptureSession.swift"
+    dataset_generation = scoped and "public struct PushAuthorization" in session_source.read_text()
+    operation = scoped_controller_operation(original.read_text(), dataset_generation) if scoped else controller_operation(original.read_text())
     (target / "ShareViewController.swift").write_text(operation)
     if scoped:
         # Read-only same-file fixture access; no production storage/path behavior changes.
@@ -139,6 +148,7 @@ let package = Package(
         "sourceRoot": str(source), "files": inputs,
         "productionOperation": "ShareViewController.saveAndPush and actual ShareCaptureSession when present",
         "verifiedAccountFixturePrerequisite": scoped,
+        "serverGenerationFixturePrerequisite": dataset_generation,
         "unchangedOriginalAssertionFixture": True,
         "accountIsolationAcceptance": False,
         "doubles": ["DirectTaskPush", "UIViewController presentation shell"],

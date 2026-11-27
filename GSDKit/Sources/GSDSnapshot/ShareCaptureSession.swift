@@ -10,21 +10,42 @@ public final class ShareCaptureSession {
         case unavailable
     }
     public enum SaveResult: Sendable, Equatable { case queued, held }
+
+    /// The sheet, rather than the network helper, owns the immutable server binding.
+    /// Preparation runs on the sheet's actor and must succeed before a direct create.
+    public struct PushAuthorization: Sendable {
+        public let datasetGeneration: String?
+        private let preparation: @MainActor @Sendable (String) throws -> Void
+
+        fileprivate init(
+            datasetGeneration: String?,
+            preparation: @escaping @MainActor @Sendable (String) throws -> Void
+        ) {
+            self.datasetGeneration = datasetGeneration
+            self.preparation = preparation
+        }
+
+        @MainActor
+        public func prepare(_ generation: String) throws {
+            try preparation(generation)
+        }
+    }
     public let origin: WatchAccountScope?
     private let publicationNonce: String?
     private let credential: Credential
     private let readCredential: @MainActor () -> Credential
     private let publication: ShareScopePublicationStore
     private let outbox: ShareOutboxStore
-    private let push: @MainActor (GSDModel.Task, String) async -> String?
+    private let push: @MainActor (GSDModel.Task, String, PushAuthorization) async -> String?
     private let captureTaskID = IDGenerator.generate(size: IDGenerator.Size.task)
     private let journalID = UUID()
     private var didAttemptPush = false
+    private var boundServerGeneration: String?
     private var firstSubmittedInput: SharedCapture?
 
     public init(outbox: ShareOutboxStore, directory: URL?,
                 credential: @escaping @MainActor () -> Credential,
-                push: @escaping @MainActor (GSDModel.Task, String) async -> String?) {
+                push: @escaping @MainActor (GSDModel.Task, String, PushAuthorization) async -> String?) {
         self.outbox = outbox
         self.publication = ShareScopePublicationStore(directory: directory)
         self.readCredential = credential
@@ -75,6 +96,7 @@ public final class ShareCaptureSession {
         capture.taskID = captureTaskID
         capture.origin = origin
         capture.remoteRecordID = nil
+        capture.serverDatasetGeneration = boundServerGeneration
         if let firstSubmittedInput {
             capture.isEditedRetry = Self.sameAuthoredInput(firstSubmittedInput, input) ? nil : true
         } else {
@@ -88,13 +110,35 @@ public final class ShareCaptureSession {
            let record = try? publication.read(), !record.guestBootstrap,
            case .account(let frozenToken, _) = credential, let task = capture.pushedTask() {
             didAttemptPush = true
-            capture.remoteRecordID = await push(task, frozenToken)
+            let journalCapture = capture
+            let authorization = PushAuthorization(datasetGeneration: boundServerGeneration) { [self] generation in
+                try _Concurrency.Task<Never, Never>.checkCancellation()
+                guard isCurrent() else { throw PreparationError.staleOrigin }
+                guard !generation.isEmpty, generation.utf8.count <= 128,
+                      !generation.utf8.contains(where: { $0 < 0x20 || $0 == 0x7F }) else {
+                    throw PreparationError.invalidGeneration
+                }
+                if let boundServerGeneration,
+                   !boundServerGeneration.utf8.elementsEqual(generation.utf8) {
+                    throw PreparationError.changedGeneration
+                }
+                // Remember the authority even if this journal rewrite fails. No POST may
+                // start until the bound payload is durable, and retries never discover anew.
+                boundServerGeneration = generation
+                var boundCapture = journalCapture
+                boundCapture.serverDatasetGeneration = generation
+                try outbox.writeInFlight(boundCapture, id: journalID)
+            }
+            capture.remoteRecordID = await push(task, frozenToken, authorization)
+            capture.serverDatasetGeneration = boundServerGeneration
         }
         // Retry after any outbox failure still uses the same task ID, takes no second POST,
         // and queues current edits through create rather than claiming the first remote fields.
         try outbox.write(capture)
         outbox.removeInFlight(id: journalID)
         let verified = isCurrent() && (try? publication.read())?.guestBootstrap == false
-        return verified ? .queued : .held
+        let hasRequiredBinding = origin?.kind != "account" || capture.serverDatasetGeneration != nil
+        return verified && hasRequiredBinding ? .queued : .held
     }
+    private enum PreparationError: Error { case staleOrigin, invalidGeneration, changedGeneration }
 }

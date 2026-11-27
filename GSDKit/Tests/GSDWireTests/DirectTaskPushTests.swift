@@ -3,7 +3,7 @@ import Foundation
 import GSDModel
 @testable import GSDWire
 
-/// `DirectTaskPush` is what the Share Extension runs after Save: one POST with a short budget,
+/// `DirectTaskPush` is what the Share Extension runs after Save: one dataset GET and one guarded POST with a short budget,
 /// or a clear reason it did not try. Pure over an injected executor — no network, no keychain.
 struct DirectTaskPushTests {
     final class RecordingExecutor: RequestExecuting, @unchecked Sendable {
@@ -13,7 +13,8 @@ struct DirectTaskPushTests {
         func execute(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
             requests.append(request)
             if let networkError { throw PocketBaseError.network(networkError) }
-            let body = #"{"id":"rec_new","task_id":"t-1","title":"t","urgent":false,"important":false}"#
+            let body = request.httpMethod == "GET" ? #"{"generation":"fixture-generation"}"#
+                : #"{"id":"rec_new","task_id":"t-1","title":"t","urgent":false,"important":false}"#
             return (Data(body.utf8), HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: nil, headerFields: nil)!)
         }
     }
@@ -42,18 +43,24 @@ struct DirectTaskPushTests {
 
     @Test func aSharedTasksDirectPushCarriesTheDefaultReminder() async throws {
         let exec = RecordingExecutor()
-        _ = await push(exec, token: jwt()).attempt(task)
-        let body = try #require(exec.requests.first?.httpBody)
+        _ = await push(exec, token: jwt()).attempt(task) { _ in }
+        let body = try #require(exec.requests.first(where: { $0.httpMethod == "POST" })?.httpBody)
         let json = try #require(JSONSerialization.jsonObject(with: body) as? [String: Any])
         #expect(json["notify_before"] as? Int == 15)   // the injected default; the task has no offset
     }
 
     @Test func pushesOneCreateAndReturnsTheRecordID() async throws {
         let exec = RecordingExecutor()
-        let outcome = await push(exec, token: jwt()).attempt(task)
+        let outcome = await push(exec, token: jwt()).attempt(task) { _ in }
         #expect(outcome == .pushed(recordID: "rec_new"))
-        let req = try #require(exec.requests.first)
-        #expect(exec.requests.count == 1)
+        let discovery = try #require(exec.requests.first)
+        #expect(discovery.httpMethod == "GET")
+        #expect(discovery.url?.path == "/api/gsd/dataset")
+        #expect(discovery.value(forHTTPHeaderField: "Authorization") == jwt())
+        let req = try #require(exec.requests.last)
+        #expect(exec.requests.count == 2)
+        #expect(exec.requests.filter { $0.httpMethod == "POST" }.count == 1)
+        #expect(req.value(forHTTPHeaderField: "X-GSD-Dataset-Generation") == "fixture-generation")
         #expect(req.httpMethod == "POST")
         #expect(req.url?.path == "/api/collections/tasks/records")
         #expect(req.value(forHTTPHeaderField: "Authorization") == jwt())
@@ -68,41 +75,41 @@ struct DirectTaskPushTests {
 
     @Test func signedOutSkipsWithoutARequest() async throws {
         let exec = RecordingExecutor()
-        let outcome = await push(exec, token: nil).attempt(task)
+        let outcome = await push(exec, token: nil).attempt(task) { _ in }
         #expect(outcome == .skipped(.signedOut))
         #expect(exec.requests.isEmpty)
     }
 
     @Test func expiredTokenSkipsWithoutARequest() async throws {   // the extension never refreshes; the app will
         let exec = RecordingExecutor()
-        let outcome = await push(exec, token: jwt(exp: Int(now.timeIntervalSince1970) - 60)).attempt(task)
+        let outcome = await push(exec, token: jwt(exp: Int(now.timeIntervalSince1970) - 60)).attempt(task) { _ in }
         #expect(outcome == .skipped(.tokenExpired))
         #expect(exec.requests.isEmpty)
     }
 
     @Test func tokenWithoutOwnerSkips() async throws {   // never push owner:"" (SyncEngine has the same guard)
         let exec = RecordingExecutor()
-        let outcome = await push(exec, token: jwt(id: nil)).attempt(task)
+        let outcome = await push(exec, token: jwt(id: nil)).attempt(task) { _ in }
         #expect(outcome == .skipped(.malformedToken))
         #expect(exec.requests.isEmpty)
     }
 
     @Test func missingDeviceIdentitySkips() async throws {
         let exec = RecordingExecutor()
-        let outcome = await push(exec, token: jwt(), deviceID: nil).attempt(task)
+        let outcome = await push(exec, token: jwt(), deviceID: nil).attempt(task) { _ in }
         #expect(outcome == .skipped(.noDeviceIdentity))
         #expect(exec.requests.isEmpty)
     }
 
     @Test func serverErrorIsFailedNotThrown() async throws {   // the compose sheet falls back to the outbox
         let exec = RecordingExecutor(); exec.status = 500
-        let outcome = await push(exec, token: jwt()).attempt(task)
+        let outcome = await push(exec, token: jwt()).attempt(task) { _ in }
         guard case .failed = outcome else { Issue.record("expected .failed, got \(outcome)"); return }
     }
 
     @Test func networkErrorIsFailedNotThrown() async throws {
         let exec = RecordingExecutor(); exec.networkError = "offline"
-        let outcome = await push(exec, token: jwt()).attempt(task)
+        let outcome = await push(exec, token: jwt()).attempt(task) { _ in }
         guard case .failed = outcome else { Issue.record("expected .failed, got \(outcome)"); return }
     }
 }
