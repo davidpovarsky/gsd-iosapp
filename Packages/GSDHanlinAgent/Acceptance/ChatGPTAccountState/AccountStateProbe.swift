@@ -399,11 +399,10 @@ private extension Data {
         case .failure: oldInferenceFailed = true
         }
         let modelRequests = await catalogNetwork.modelRequestCount
-        check("same_registration_reauth_discards_old_model_catalog", oldModelsStarted && newSessionReady
+        check("same_registration_reauth_discards_stale_catalog_and_inference", oldModelsStarted && newSessionReady
               && modelRequests == 2 && catalogState.models.map(\.slug) == ["fixture-model"]
               && catalogState.selectedModelID == "fixture-model"
-              && catalogKeychain.snapshot?.accounts.first?.modelID == "fixture-model")
-        check("same_registration_reauth_invalidates_pending_inference", oldModelsStarted && newSessionReady
+              && catalogKeychain.snapshot?.accounts.first?.modelID == "fixture-model"
               && oldInferenceFailed && catalogState.canUsePlan)
     }
 
