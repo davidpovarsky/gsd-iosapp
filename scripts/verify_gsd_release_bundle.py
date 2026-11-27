@@ -3,6 +3,7 @@
 from __future__ import annotations
 import argparse
 import json
+import os
 from pathlib import Path
 import plistlib
 import subprocess
@@ -27,6 +28,13 @@ def command(args: list[str]) -> bytes:
     if result.returncode:
         raise RuntimeError("Verification failed: " + " ".join(args[:3]))
     return result.stdout
+
+def provisioning_profile(profile_path: Path) -> dict:
+    args = ["security", "cms", "-D", "-i", str(profile_path)]
+    keychain = os.environ.get("APPLE_SIGNING_KEYCHAIN")
+    if keychain:
+        args.extend(["-k", keychain])
+    return plistlib.loads(command(args))
 
 def audit(app: Path, build: str, version: str, signed: bool) -> list[dict]:
     found = {}
@@ -70,7 +78,7 @@ def audit(app: Path, build: str, version: str, signed: bool) -> list[dict]:
             profile_path = path / "embedded.mobileprovision"
             if not profile_path.exists():
                 raise RuntimeError("Release bundle has no provisioning profile: " + identifier)
-            profile = plistlib.loads(command(["security", "cms", "-D", "-i", str(profile_path)]))
+            profile = provisioning_profile(profile_path)
             validate_profile(profile, identifier)
             details = subprocess.run(["codesign", "-dvvv", str(path)], capture_output=True,
                                      text=True, timeout=30)
