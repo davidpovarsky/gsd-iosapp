@@ -194,9 +194,13 @@ struct GSDApp: App {
         let fetcher = PageTitleFetcher()
         let serverGeneration: @MainActor @Sendable (WatchAccountScope) async throws -> String = { scope in
             try _Concurrency.Task.checkCancellation()
+            // Share admission uses the public, single-read token/owner snapshot. Protected
+            // or unavailable shared credentials hold the capture for a later retry.
             guard scope.isValid, scope.kind == "account", watchScopeProvider() == scope,
-                  let credential = tokenStore.load(),
-                  JWT.userId(credential) == scope.identifier else { throw AuthError.notSignedIn }
+                  case let .token(credential, owner) = SharedTokenKeychain.snapshot(),
+                  owner == scope.identifier, tokenStore.load() == credential else {
+                throw AuthError.notSignedIn
+            }
             let generation = try await PocketBaseClient(baseURL: AuthConfig.live.baseURL)
                 .fetchDatasetGeneration(token: credential)
             try _Concurrency.Task.checkCancellation()
