@@ -211,7 +211,9 @@ enum ProbeFailure: Error { case invalidRequest, missingCapture }
             try? JSONSerialization.jsonObject(with: $0) as? [String: Any]
         }
         let bearer = try token()
+        let independentFixtureTokensHaveStableBytes = try (0..<16).allSatisfy { _ in try token() == bearer }
         let components: [String: Bool] = [
+            "independentFixtureTokensHaveStableBytes": independentFixtureTokensHaveStableBytes,
             "pushed": outcome == .pushed(recordID: "record-fixture"),
             "oneGET": gets.count == 1, "onePOST": posts.count == 1,
             "twoRequests": requests.count == 2, "GETFirst": requests.first?.httpMethod == "GET",
