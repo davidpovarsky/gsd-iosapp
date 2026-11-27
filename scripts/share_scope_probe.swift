@@ -72,6 +72,7 @@ actor ShareServerGeneration {
     private var waiting = false
     private var entered = false
     private var calls = 0
+    private var invalidateNextResult = false
     private var continuation: CheckedContinuation<Void, Never>?
     func configure(value: String = "server-generation-A", fail: Bool = false, hold: Bool = false) {
         self.value = value; shouldFail = fail; waiting = hold; entered = false
@@ -79,11 +80,16 @@ actor ShareServerGeneration {
     func fetch(_ scope: WatchAccountScope) async throws -> String {
         calls += 1; entered = true
         if waiting { await withCheckedContinuation { continuation = $0 } }
+        if invalidateNextResult {
+            invalidateNextResult = false
+            throw ShareScopeProbe.ProbeError.generationUnavailable
+        }
         if shouldFail { throw ShareScopeProbe.ProbeError.generationUnavailable }
         return value
     }
     func didEnter() -> Bool { entered }
     func callCount() -> Int { calls }
+    func invalidateInFlightResultOnce() { invalidateNextResult = true }
     func release() { waiting = false; continuation?.resume(); continuation = nil }
 }
 
@@ -554,6 +560,45 @@ actor ShareFetch {
               && titleAfter == titleBefore && titleQueueAfter == titleQueueBefore)
     }
 
+
+    /// Credential renewal can invalidate the exact-token generation read without changing owner.
+    /// A notification received during that read must request one later pass, never retarget origin.
+    @MainActor static func renewalDrainChecks(root: URL) async throws {
+        let same = try ShareRig(directory: root.appendingPathComponent("same-owner-renewal"))
+        let switched = try ShareRig(directory: root.appendingPathComponent("other-owner-renewal"))
+        defer { same.close(); switched.close() }
+        let current = capture("Current owner after renewal", origin: same.origin)
+        try same.outbox.write(current)
+        await same.server.configure(hold: true)
+        let first = _Concurrency.Task { await same.drainer.drain(enrichTitles: false) }
+        let entered = await waitFor { await same.server.didEnter() }
+        await same.server.invalidateInFlightResultOnce()
+        // Several payload-free token notifications arrive during the one suspended admission.
+        for _ in 0..<3 { await same.drainer.drain(enrichTitles: false) }
+        await same.server.release()
+        await first.value
+        let rows = try await same.rows.fetchAll(), queue = try await same.queue.all()
+        let calls = await same.server.callCount()
+        check("same_owner_refresh_requests_one_trailing_share_drain",
+              entered && calls == 2 && rows.count == 1 && rows.first?.title == current.title
+              && queue.count == 1 && queuedGeneration(queue[0]) == "server-generation-A"
+              && same.outbox.pending().isEmpty)
+
+        let old = capture("Original account remains durable", origin: switched.origin)
+        try switched.outbox.write(old)
+        await switched.server.configure(hold: true)
+        let held = _Concurrency.Task { await switched.drainer.drain(enrichTitles: false) }
+        let heldEntered = await waitFor { await switched.server.didEnter() }
+        switched.identity.owner = "share-fixture-account-b"
+        await switched.drainer.drain(enrichTitles: false)
+        await switched.server.release()
+        await held.value
+        let otherRows = try await switched.rows.fetchAll(), otherQueue = try await switched.queue.all()
+        check("trailing_share_drain_preserves_original_account_authority",
+              heldEntered && otherRows.isEmpty && otherQueue.isEmpty
+              && switched.outbox.pending().map(\.capture) == [old])
+    }
+
     enum ProbeError: Error { case observationSetup, isolationRequired, generationUnavailable }
     @MainActor static func main() async {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("GSDShareScope-" + UUID().uuidString)
@@ -562,6 +607,7 @@ actor ShareFetch {
             AppGroupDefaults.shared.set(true, forKey: AppGroupDefaults.Key.fetchShareTitles)
             try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
             defer { try? FileManager.default.removeItem(at: root) }
+            if !CommandLine.arguments.contains("--share-renewal-only") {
             try await heldChecks(root: root)
             try await currentControl(root: root)
             try await writeChecks(root: root)
@@ -575,6 +621,8 @@ actor ShareFetch {
             try await generationTitleChecks(root: root)
             try await guestGenerationControl(root: root)
             try await canonicalEditsDuringGenerationRead(root: root)
+            }
+            try await renewalDrainChecks(root: root)
             exit(failures == 0 ? 0 : 1)
         } catch {
             print("SHARE_SCOPE_ERROR " + String(describing: error)); exit(2)

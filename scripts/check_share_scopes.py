@@ -3,11 +3,17 @@
 import argparse
 import hashlib
 import json
+import os
 import platform
 import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+RENEWAL_EXPECTED = {
+    "same_owner_refresh_requests_one_trailing_share_drain",
+    "trailing_share_drain_preserves_original_account_authority",
+}
 
 EXPECTED = set([
     "legacy_share_stays_durable_for_review",
@@ -37,7 +43,7 @@ EXPECTED = set([
     "unbound_account_title_enrichment_does_not_queue",
     "guest_share_and_title_do_not_require_server_generation",
     "canonical_edits_during_generation_lookup_are_preserved"
-])
+]) | RENEWAL_EXPECTED
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -127,8 +133,10 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--scratch-path", type=Path)
     parser.add_argument("--prepare-only", action="store_true")
-    parser.add_argument("--jobs", type=int, default=2)
+    parser.add_argument("--jobs", type=int, default=os.cpu_count() or 1)
+    parser.add_argument("--renewal-only", action="store_true")
     args = parser.parse_args()
+    expected = RENEWAL_EXPECTED if args.renewal_only else EXPECTED
     source, output = args.source_root.resolve(), args.output.resolve()
     if output.exists():
         raise ValueError("Output exists; retain prior evidence")
@@ -142,6 +150,8 @@ def main():
     scratch = (args.scratch_path or output / "build").resolve()
     command = ["swift", "run", "--package-path", str(package), "--scratch-path", str(scratch),
                "-j", str(args.jobs), "ShareScopeProbe", "--demo-share-scope"]
+    if args.renewal_only:
+        command.append("--share-renewal-only")
     result = subprocess.run(command, capture_output=True, text=True, timeout=600)
     (output / "stdout.log").write_text(result.stdout)
     (output / "stderr.log").write_text(result.stderr)
@@ -156,10 +166,11 @@ def main():
     dependency_exact = actual_revision == manifest["expectedGRDBRevision"] and dirty.returncode == 0 and not dirty.stdout
     changed = [relative for relative, sha in manifest["files"].items()
                if not relative.startswith("probe/") and digest(source / relative) != sha]
-    passed = (result.returncode == 0 and set(names) == EXPECTED and len(names) == len(EXPECTED)
+    passed = (result.returncode == 0 and set(names) == expected and len(names) == len(expected)
               and all(check["passed"] for check in checks) and dependency_exact and not changed)
     receipt = {
-        "passed": passed, "returncode": result.returncode, "checks": checks, "expected": sorted(EXPECTED),
+        "passed": passed, "returncode": result.returncode, "checks": checks, "expected": sorted(expected),
+        "selectedRenewalOnly": args.renewal_only, "fullCatalogCount": len(EXPECTED),
         "actualShareScopeWithTaskStoreAcceptance": passed,
         "nativeShareSheetAcceptance": False,
         "liveCloudAcceptance": False,
