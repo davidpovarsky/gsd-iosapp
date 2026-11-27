@@ -567,7 +567,7 @@ actor ShareFetch {
         let same = try ShareRig(directory: root.appendingPathComponent("same-owner-renewal"))
         let switched = try ShareRig(directory: root.appendingPathComponent("other-owner-renewal"))
         defer { same.close(); switched.close() }
-        let current = capture("Current owner after renewal", origin: same.origin)
+        let current = try capture("Current owner after renewal", origin: same.origin)
         try same.outbox.write(current)
         await same.server.configure(hold: true)
         let first = _Concurrency.Task { await same.drainer.drain(enrichTitles: false) }
@@ -584,7 +584,7 @@ actor ShareFetch {
               && queue.count == 1 && queuedGeneration(queue[0]) == "server-generation-A"
               && same.outbox.pending().isEmpty)
 
-        let old = capture("Original account remains durable", origin: switched.origin)
+        let old = try capture("Original account remains durable", origin: switched.origin)
         try switched.outbox.write(old)
         await switched.server.configure(hold: true)
         let held = _Concurrency.Task { await switched.drainer.drain(enrichTitles: false) }
