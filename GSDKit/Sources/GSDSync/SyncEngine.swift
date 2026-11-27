@@ -13,6 +13,8 @@ public struct SyncResult: Equatable, Sendable {
     public var skipped = false       // a concurrent sync was in-flight (dropped)
     public var notSignedIn = false
     public var error: String?
+    /// A durable acknowledgement awaiting the caller's local reset completion; contains no credential.
+    public var datasetReset: DatasetResetRequest?
 }
 
 /// `.background` is the BGAppRefreshTask window (§9.4): a full sync so a share-captured task
@@ -27,6 +29,12 @@ struct StaleSyncSession: Error {}
 
 /// The server confirmed a session, but for a different account than the token's owner claim.
 struct SyncIdentityMismatch: Error {}
+
+private struct DatasetResetPending: Error, CustomStringConvertible {
+    var description: String {
+        String(localized: "Finish the pending data reset in Settings before syncing.")
+    }
+}
 
 /// What the internal test initializer passes for `tombstones`: no task is archived or trashed.
 private struct NoTombstones: TombstoneRepository {
@@ -48,6 +56,9 @@ public actor SyncEngine {
     private let queue: any SyncQueueRepository
     private let tombstones: any TombstoneRepository
     private let library: (any CloudLibraryRepository)?
+    private let resetRequests: any DatasetResetRepository
+    private var pendingResetOwners: Set<String> = []
+    private var isResetting = false
     private let cursor: SyncCursor
     private let deviceId: String
     private let tokenProvider: @Sendable () async throws -> String?
@@ -78,11 +89,12 @@ public actor SyncEngine {
                 history: any SyncHistoryRepository = NoopSyncHistoryRepository(),
                 reminders: any ReminderScheduling = NoopReminderScheduler(),
                 defaultReminder: @escaping @Sendable () -> Int = SyncEngine.deviceDefaultReminder,
-                library: (any CloudLibraryRepository)? = nil) {
+                library: (any CloudLibraryRepository)? = nil,
+                resetRequests: any DatasetResetRepository = MemoryDatasetResetRepository()) {
         self.init(client: client, tasks: tasks, queue: queue, tombstones: tombstones, cursor: cursor,
                   deviceId: deviceId, tokenProvider: tokenProvider, rawToken: rawToken, fenced: true,
                   now: now, throttleMs: throttleMs, history: history, reminders: reminders,
-                  defaultReminder: defaultReminder, library: library)
+                  defaultReminder: defaultReminder, library: library, resetRequests: resetRequests)
     }
 
     /// Test seam for the many engine tests that never archive or trash a task or end a session.
@@ -94,11 +106,12 @@ public actor SyncEngine {
          now: @escaping @Sendable () -> Date = { Date() },
          throttleMs: Int = 100,
          history: any SyncHistoryRepository = NoopSyncHistoryRepository(),
-         defaultReminder: @escaping @Sendable () -> Int = SyncEngine.deviceDefaultReminder) {
+         defaultReminder: @escaping @Sendable () -> Int = SyncEngine.deviceDefaultReminder,
+         resetRequests: any DatasetResetRepository = MemoryDatasetResetRepository()) {
         self.init(client: client, tasks: tasks, queue: queue, tombstones: NoTombstones(), cursor: cursor,
                   deviceId: deviceId, tokenProvider: tokenProvider, rawToken: rawToken, fenced: false,
                   now: now, throttleMs: throttleMs, history: history, reminders: NoopReminderScheduler(),
-                  defaultReminder: defaultReminder)
+                  defaultReminder: defaultReminder, resetRequests: resetRequests)
     }
 
     private init(client: PocketBaseClient, tasks: any TaskRepository, queue: any SyncQueueRepository,
@@ -107,9 +120,11 @@ public actor SyncEngine {
                  rawToken: @escaping @Sendable () -> String?, fenced: Bool,
                  now: @escaping @Sendable () -> Date, throttleMs: Int,
                  history: any SyncHistoryRepository, reminders: any ReminderScheduling,
-                 defaultReminder: @escaping @Sendable () -> Int, library: (any CloudLibraryRepository)? = nil) {
+                 defaultReminder: @escaping @Sendable () -> Int, library: (any CloudLibraryRepository)? = nil,
+                 resetRequests: any DatasetResetRepository) {
         self.client = client; self.tasks = tasks; self.queue = queue; self.tombstones = tombstones
         self.library = library
+        self.resetRequests = resetRequests
         self.cursor = cursor
         self.deviceId = deviceId; self.tokenProvider = tokenProvider; self.rawToken = rawToken
         self.fenced = fenced
@@ -129,9 +144,28 @@ public actor SyncEngine {
     /// Call just before each write, with no suspension between. The session lives in the token store,
     /// not the database, so a sign-out can still land during the write itself, and that one write
     /// goes through. A nil `owner` is a test calling a phase directly, with no run to fence.
-    private func fence(_ owner: String?) throws {
+    private func fence(_ owner: String?, allowPendingReset: Bool = false) throws {
+        if !allowPendingReset && (isResetting || owner.map(pendingResetOwners.contains) == true) {
+            throw DatasetResetPending()
+        }
         guard fenced, let owner, sessionOwner() != owner else { return }
         throw StaleSyncSession()
+    }
+
+    /// Check persisted intent before any automatic seed/pull/push, including after a process restart.
+    private func requireNoPendingReset(owner: String) async throws {
+        if try await resetRequests.load(baseURL: client.baseURL, owner: owner) != nil {
+            pendingResetOwners.insert(owner)
+        }
+        try _Concurrency.Task.checkCancellation()
+        try fence(owner)
+    }
+
+    /// Destructive work also fences an exact credential refresh/sign-out boundary after every await.
+    private func resetSession(token: String, owner: String) throws {
+        try _Concurrency.Task.checkCancellation()
+        try fence(owner, allowPendingReset: true)
+        if fenced && rawToken() != token { throw StaleSyncSession() }
     }
 
     private static let epoch = "1970-01-01 00:00:00.000Z"
@@ -475,6 +509,7 @@ public actor SyncEngine {
         }
         let start = now()
         do {
+            try await requireNoPendingReset(owner: owner)
             try await dropSignedOutDeletesIfOwed()                                  // resurrect on sight: before anything else
             if library != nil { try await confirmIdentity(token: token, owner: owner) }
             if cursor.load() == nil { try await seedExistingTasks(owner: owner) }      // first-sync seed BEFORE pull/reconcile
@@ -556,6 +591,7 @@ public actor SyncEngine {
         }
         let start = now()
         do {
+            try await requireNoPendingReset(owner: owner)
             try await dropSignedOutDeletesIfOwed()   // a push-only drain may be the first run after sign-in
             let (pushed, failed) = try await push(token: token, owner: owner)
             result.pushed = pushed; result.failed = failed
@@ -571,58 +607,88 @@ public actor SyncEngine {
 
     // MARK: Destructive ops (§3.4)
 
-    /// Erase-all remote wipe: with pull suppressed, AUTHORITATIVELY delete every remote record from a
-    /// fresh index, then clear the local queue so no stale pending op can resurrect a task after the
-    /// App wipes local. Direct deletes (not via the queue) avoid a create-then-delete orphan race and
-    /// give an honest success/failure the caller checks BEFORE clearing local. Signed-out → no-op.
+    /// Erase one account dataset atomically. Persist the exact reset identity before POST so a
+    /// response lost after the server commit can only replay that receipt, never erase newer tasks.
+    /// The acknowledgement stays durable until the caller has finished its local reset.
     public func eraseAllRemote() async -> SyncResult {
         guard !isSyncing else { return SyncResult(skipped: true) }
-        isSyncing = true; isErasing = true
-        defer { isSyncing = false; isErasing = false }
+        isSyncing = true; isErasing = true; isResetting = true
+        defer { isSyncing = false; isErasing = false; isResetting = false }
         var result = SyncResult()
         let token: String
         do {
             guard let t = try await tokenProvider() else { result.notSignedIn = true; return result }
             token = t
         } catch {
-            // CRITICAL distinction: nil = genuinely signed out (caller may erase local-only);
-            // a throw = a session EXISTS but can't be validated — report an error so the caller
-            // refuses the local wipe (otherwise "erase everywhere" would wipe local, report
-            // success, and leave every task alive on the server).
+            // An unavailable existing session never authorizes a local-only wipe.
             result.error = String("\(error)".prefix(200))
             return result
         }
-        guard JWT.userId(token) != nil else {
+        guard let owner = JWT.userId(token) else {
             result.error = "Could not derive owner from auth token"; return result
         }
         let start = now()
         do {
-            let index = try await client.remoteIndex(token: token)
-            for (_, ref) in index {
-                try await client.deleteTask(recordId: ref.recordId, token: token)
-                result.pushed += 1
-                if throttleMs > 0 { try? await _Concurrency.Task.sleep(for: .milliseconds(throttleMs)) }
+            try resetSession(token: token, owner: owner)
+            var request = try await resetRequests.load(baseURL: client.baseURL, owner: owner)
+            try resetSession(token: token, owner: owner)
+            if request == nil {
+                let generation = try await client.fetchDatasetGeneration(token: token)
+                try resetSession(token: token, owner: owner)
+                let proposed = try DatasetResetRequest(baseURL: client.baseURL, owner: owner,
+                                                      expectedGeneration: generation,
+                                                      requestID: UUID().uuidString)
+                // Also stop an already-awaiting realtime landing before the durable claim returns.
+                pendingResetOwners.insert(owner)
+                request = try await resetRequests.claim(proposed)
+                try resetSession(token: token, owner: owner)
             }
-            if library != nil {
-                for item in try await client.listLibrary(token: token) where !item.deleted {
-                    var removed = item
-                    removed.deleted = true
-                    removed.payload = ""
-                    let previous = WireDate.parse(item.clientUpdatedAt) ?? now()
-                    removed.clientUpdatedAt = WireDate.format(max(now(), previous.addingTimeInterval(0.001)))
-                    try await client.putLibrary(removed, expectedVersion: item.clientUpdatedAt, token: token)
-                    result.pushed += 1
-                }
+            guard var pending = request else { throw DatasetResetJournalError.invalidRequest }
+            pendingResetOwners.insert(owner)
+            if pending.acknowledgement == nil {
+                try resetSession(token: token, owner: owner)
+                let receipt = try await client.resetDataset(expectedGeneration: pending.expectedGeneration,
+                                                            requestID: pending.requestID, token: token)
+                try resetSession(token: token, owner: owner)
+                let acknowledgement = try DatasetResetAcknowledgement(
+                    generation: receipt.generation, deletedTasks: receipt.deletedTasks,
+                    tombstonedLibrary: receipt.tombstonedLibrary)
+                pending = try await resetRequests.acknowledge(pending, receipt: acknowledgement)
+                try resetSession(token: token, owner: owner)
             }
-            // Full wipe → no pending op should survive (they'd recreate/clobber). Clear the queue only
-            // after every remote delete succeeded; a partial failure throws first → queue intact → retry.
-            for item in try await queue.all() { try await queue.remove(id: item.id) }
+            guard let acknowledgement = pending.acknowledgement else {
+                throw DatasetResetJournalError.acknowledgementRequired
+            }
+            result.datasetReset = pending
+            result.pushed = acknowledgement.removedCount
+            let items = try await queue.all()
+            for item in items {
+                try resetSession(token: token, owner: owner)
+                try await queue.remove(id: item.id)
+            }
+            try resetSession(token: token, owner: owner)
             await record(trigger: .manual, result: result, conflicts: 0, start: start)
         } catch {
+            // A stale/cancelled session is an error here, never permission to erase local data.
             result.error = String("\(error)".prefix(200))
             await record(trigger: .manual, result: result, conflicts: 0, start: start)
         }
         return result
+    }
+
+    /// Call after local data is erased, or after an acknowledged remote-only account-deletion pass.
+    /// Retaining this intent on any error prevents automatic sync from recreating the old dataset.
+    public func completeDatasetReset(_ result: SyncResult) async throws {
+        guard let request = result.datasetReset else { return }
+        guard result.error == nil, !result.skipped, !result.notSignedIn,
+              request.baseURL.utf8.elementsEqual(client.baseURL.utf8) else {
+            throw DatasetResetJournalError.invalidRequest
+        }
+        try _Concurrency.Task.checkCancellation()
+        try fence(request.owner, allowPendingReset: true)
+        try await resetRequests.complete(request)
+        try fence(request.owner, allowPendingReset: true)
+        pendingResetOwners.remove(request.owner)
     }
 
     /// Drain pending deletes (from a destructive import-replace) with pull suppressed. The deletes
@@ -644,18 +710,23 @@ public actor SyncEngine {
     /// is pending for that task (queue-aware, like reconcile). Malformed/task_id-less payloads are
     /// skipped (the cadence safety-net reconciles).
     public func applyRealtime(rawData: String) async {
+        guard !isErasing else { return }
         guard let data = rawData.data(using: .utf8),
               let event = try? JSONDecoder().decode(RealtimeEvent.self, from: data),
               let record = event.record else { return }
         // A late event from a session that already ended writes nothing. Checked again before each
         // write, because the awaits below can outlast a sign-out.
-        let sessionAtStart = sessionOwner()
+        var sessionAtStart = sessionOwner()
         if fenced && sessionAtStart == nil { return }
         if !record.owner.isEmpty {
             guard let token = try? await tokenProvider(),
                   let owner = JWT.userId(token),
                   record.owner == owner
             else { return }       // fail closed when the event has an owner we cannot validate
+            if sessionAtStart == nil { sessionAtStart = owner }
+        }
+        if let owner = sessionAtStart {
+            do { try await requireNoPendingReset(owner: owner) } catch { return }
         }
         let pending = (try? await queue.all()) ?? []
         switch event.action {
@@ -922,6 +993,17 @@ public actor SyncEngine {
         let oldestPendingMs = items.filter { $0.status == .pending }.map(\.timestamp).min()
         let failedCount = items.filter { $0.status == .failed }.count
         let token = ((try? await tokenProvider()).flatMap { $0 }) ?? rawToken()
+        if let owner = token.flatMap({ JWT.userId($0) }) {
+            do {
+                if try await resetRequests.load(baseURL: client.baseURL, owner: owner) != nil
+                    || pendingResetOwners.contains(owner) {
+                    return SyncHealth(level: .warning, message: DatasetResetPending().description)
+                }
+            } catch {
+                return SyncHealth(level: .warning, message: String(localized:
+                    "Cloud reset status could not be verified. Try the data reset again in Settings."))
+            }
+        }
         let expiry = token.flatMap { JWT.expiry($0) }
         return SyncHealth.evaluate(oldestPendingMs: oldestPendingMs, failedCount: failedCount,
                                    tokenExpiry: expiry, online: online, now: now())
