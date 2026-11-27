@@ -68,9 +68,19 @@ extension PocketBaseClient {
     }
 
     /// Create a `tasks` record; returns the new PocketBase record id.
-    package func createTask(_ record: PocketBaseTaskRecord, token: String) async throws -> String {
-        let req = authedRequest(path: "/api/collections/tasks/records", method: "POST",
-                                token: token, body: try JSONEncoder().encode(record))
+    package func createTask(
+        _ record: PocketBaseTaskRecord,
+        datasetGeneration: String? = nil,
+        token: String
+    ) async throws -> String {
+        if let datasetGeneration {
+            try DatasetIdentifier.validate(datasetGeneration, field: "generation")
+        }
+        var req = authedRequest(path: "/api/collections/tasks/records", method: "POST",
+                               token: token, body: try JSONEncoder().encode(record))
+        if let datasetGeneration {
+            req.setValue(datasetGeneration, forHTTPHeaderField: "X-GSD-Dataset-Generation")
+        }
         return try await send(req, as: PocketBaseTaskRecord.self).id
     }
     /// Delete by record id (204, no body).
