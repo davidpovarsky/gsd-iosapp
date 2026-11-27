@@ -109,7 +109,6 @@ enum ShareInputExtractor {
                 if let url = await loadObject(URL.self, from: provider),
                    !url.absoluteString.isEmpty {
                     let title = pageTitle ?? URLTitle.derive(from: url.absoluteString)
-                    report("typed_url", bytes: title.utf8.count)
                     return (title, [url.absoluteString])
                 }
             }
@@ -117,13 +116,11 @@ enum ShareInputExtractor {
                 if let text = await loadText(from: provider) { return (text, []) }
             }
         }
-        report(metadataFallback == nil ? "empty" : "metadata", bytes: metadataFallback?.utf8.count ?? 0)
         return (metadataFallback ?? "", [])
     }
 
     private static func loadText(from provider: NSItemProvider) async -> String? {
         if let text = nonempty(await loadObject(String.self, from: provider)) {
-            report("typed_text", bytes: text.utf8.count)
             return text
         }
         // Use only declared, supported encodings; never interpret arbitrary binary data as text.
@@ -131,7 +128,6 @@ enum ShareInputExtractor {
             guard supportedTextTypes.contains(identifier),
                   let data = await loadData(from: provider, identifier: identifier),
                   let text = nonempty(decodeText(data, identifier: identifier)) else { continue }
-            report("text_data", bytes: text.utf8.count)
             return text
         }
         return nil
@@ -185,10 +181,4 @@ enum ShareInputExtractor {
         }
     }
 
-    nonisolated private static func report(_ path: String, bytes: Int) {
-        #if DEBUG
-        // Counts and the selected decoder path only; never shared text, links, or account data.
-        print("GSD_SHARE_INPUT path=\(path) bytes=\(bytes)")
-        #endif
-    }
 }

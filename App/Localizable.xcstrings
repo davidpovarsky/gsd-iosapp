@@ -17789,6 +17789,74 @@
         }
       },
       "extractionState": "manual"
+    },
+    "Share as a new task": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share as a new task"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "שיתוף כמשימה חדשה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "These retry edits were not applied to the existing task. Choose GSD when sharing to create a new task. The existing task and saved copy stay unchanged.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These retry edits were not applied to the existing task. Choose GSD when sharing to create a new task. The existing task and saved copy stay unchanged."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "השינויים מהניסיון החוזר לא הוחלו על המשימה הקיימת. בחרו ב־GSD בעת השיתוף כדי ליצור משימה חדשה. המשימה הקיימת והעותק השמור יישארו ללא שינוי."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Choose GSD when sharing to create a new task in the selected account. The original saved copy stays unchanged.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose GSD when sharing to create a new task in the selected account. The original saved copy stays unchanged."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בחרו ב־GSD בעת השיתוף כדי ליצור משימה חדשה בחשבון שנבחר. העותק המקורי השמור יישאר ללא שינוי."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "The account or task collection changed. Return to Saved Shares and select this item again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The account or task collection changed. Return to Saved Shares and select this item again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "החשבון או אוסף המשימות השתנו. חזרו לשיתופים השמורים ובחרו את הפריט מחדש."
+          }
+        }
+      },
+      "extractionState": "manual"
     }
   },
   "version": "1.0"

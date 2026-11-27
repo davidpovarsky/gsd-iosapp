@@ -5,7 +5,7 @@ import GSDStore
 import GSDSnapshot
 
 /// Shared admission for app-side Share ingest and delayed title writes.
-@MainActor
+@MainActor @Observable
 final class ShareScopeContext {
     let mutationGate: WatchMutationGate
     private let scopeProvider: @MainActor @Sendable () -> WatchAccountScope?

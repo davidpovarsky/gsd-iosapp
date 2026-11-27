@@ -20,6 +20,7 @@ public final class ShareCaptureSession {
     private let captureTaskID = IDGenerator.generate(size: IDGenerator.Size.task)
     private let journalID = UUID()
     private var didAttemptPush = false
+    private var firstSubmittedInput: SharedCapture?
 
     public init(outbox: ShareOutboxStore, directory: URL?,
                 credential: @escaping @MainActor () -> Credential,
@@ -56,8 +57,14 @@ public final class ShareCaptureSession {
     private func isCurrent() -> Bool {
         guard let origin, let publicationNonce,
               publication.matches(origin, nonce: publicationNonce),
-              Self.credential(readCredential(), matches: origin) else { return false }
+              readCredential() == credential else { return false }
         return true
+    }
+
+    /// The retry fact follows authored fields, never timestamps or mutable server metadata.
+    private static func sameAuthoredInput(_ lhs: SharedCapture, _ rhs: SharedCapture) -> Bool {
+        lhs.title == rhs.title && lhs.urls == rhs.urls && lhs.urgent == rhs.urgent
+            && lhs.important == rhs.important && lhs.tags == rhs.tags
     }
 
     public func save(_ input: SharedCapture) async throws -> SaveResult {
@@ -68,6 +75,12 @@ public final class ShareCaptureSession {
         capture.taskID = captureTaskID
         capture.origin = origin
         capture.remoteRecordID = nil
+        if let firstSubmittedInput {
+            capture.isEditedRetry = Self.sameAuthoredInput(firstSubmittedInput, input) ? nil : true
+        } else {
+            firstSubmittedInput = input
+            capture.isEditedRetry = nil
+        }
         // A process death or ambiguous HTTP failure must retain the chosen identity.
         // Recovery waits for this lease before treating a journal as an abandoned write.
         try outbox.writeInFlight(capture, id: journalID)
