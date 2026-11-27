@@ -219,7 +219,7 @@ final class SessionStore {
         case .prompt:
             // A pending account must not survive relaunch as an active session.
             pendingAccountToken = result.token
-            tokenStore.clear()
+            auth.signOut()
             refreshIdentity()
             pendingAccountSwitch = PendingAccountSwitch(newOwnerId: result.record.id,
                                                         newEmail: result.record.email)
@@ -253,7 +253,7 @@ final class SessionStore {
         case .merge:
             guard let token = pendingAccountToken else { signOut(); return }
             pendingAccountToken = nil
-            tokenStore.save(token)
+            auth.adoptSessionToken(token)
             refreshIdentity()
             UserDefaults.standard.set(pending.newOwnerId, forKey: lastOwnerKey)
             coordinator?.start(trigger: .signIn)
@@ -267,7 +267,7 @@ final class SessionStore {
             }
             guard let token = pendingAccountToken else { signOut(); return }
             pendingAccountToken = nil
-            tokenStore.save(token)
+            auth.adoptSessionToken(token)
             refreshIdentity()
             UserDefaults.standard.set(pending.newOwnerId, forKey: lastOwnerKey)
             coordinator?.start(trigger: .signIn)
