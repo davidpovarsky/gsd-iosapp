@@ -835,6 +835,91 @@
         }
       },
       "extractionState": "manual"
+    },
+    "Changes on hold: %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changes on hold: %lld"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "שינויים מושהים: %lld"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "These changes are kept on this Watch and have not been sent to the current account or task collection.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These changes are kept on this Watch and have not been sent to the current account or task collection."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "השינויים האלה נשמרו בשעון ולא נשלחו לחשבון או לאוסף המשימות הנוכחיים."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "The account or task collection changed. This draft has not been sent.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The account or task collection changed. This draft has not been sent."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "החשבון או אוסף המשימות השתנו. הטיוטה הזו לא נשלחה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Start a new task": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start a new task"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "יצירת משימה חדשה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Resume draft": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resume draft"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "המשך עריכת הטיוטה"
+          }
+        }
+      },
+      "extractionState": "manual"
     }
   },
   "version": "1.0"

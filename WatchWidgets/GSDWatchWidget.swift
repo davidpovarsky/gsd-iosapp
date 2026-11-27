@@ -16,6 +16,12 @@ struct WatchWidgetProvider: TimelineProvider {
         WatchSnapshotStore(directoryURL: FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: AppGroup.id))
     }
 
+    /// Old unscoped snapshots remain on disk, but cannot expose rows in a different account.
+    private func verifiedSnapshot() -> WatchSnapshot? {
+        guard let snapshot = store.read(), snapshot.accountScope?.isValid == true else { return nil }
+        return snapshot
+    }
+
     /// A sample row, so the gallery shows what the widget looks like instead of the empty state.
     func placeholder(in context: Context) -> WatchWidgetEntry {
         let sample = WatchTask(id: "sample", title: String(localized: "Call the dentist"), urgent: true, important: true,
@@ -25,11 +31,11 @@ struct WatchWidgetProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (WatchWidgetEntry) -> Void) {
-        completion(WatchWidgetEntry(date: .now, snapshot: store.read()))
+        completion(WatchWidgetEntry(date: .now, snapshot: verifiedSnapshot()))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<WatchWidgetEntry>) -> Void) {
-        let snapshot = store.read()
+        let snapshot = verifiedSnapshot()
         let dates = WatchWidgetContent.timelineDates(snapshot ?? .empty, now: .now, calendar: .current)
         completion(Timeline(entries: dates.map { WatchWidgetEntry(date: $0, snapshot: snapshot) }, policy: .atEnd))
     }
@@ -37,7 +43,7 @@ struct WatchWidgetProvider: TimelineProvider {
     /// Smart Stack relevance around the remaining due times. The older `date(from:to:)` form is
     /// deprecated in watchOS 26, so this uses `date(interval:kind:)`.
     func relevance() async -> WidgetRelevance<Void> {
-        let windows = WatchWidgetContent.relevanceIntervals(store.read() ?? .empty, now: .now, calendar: .current)
+        let windows = WatchWidgetContent.relevanceIntervals(verifiedSnapshot() ?? .empty, now: .now, calendar: .current)
         return WidgetRelevance(windows.map { WidgetRelevanceAttribute(context: .date(interval: $0, kind: .scheduled)) })
     }
 }

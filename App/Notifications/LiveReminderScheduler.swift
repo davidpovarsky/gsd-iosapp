@@ -1,19 +1,84 @@
 import Foundation
+import Synchronization
+import Observation
+import UIKit
 import UserNotifications
 import GSDModel
 import GSDStore
+import GSDSnapshot
 
 /// The live `ReminderScheduling` implementation (product spec §9). Lives in the App target —
 /// the only layer that imports `UserNotifications`. Owns the scheduling math (`ReminderMath` +
 /// quiet hours), reads `NotificationSettings` via an injected closure (so it needn't reach into
 /// the store's internals), and uses the stable id `task-<id>` so a reschedule REPLACES rather
 /// than stacks. `@unchecked Sendable`: `UNUserNotificationCenter.current()` is a thread-safe
-/// singleton and the injected closure is `@Sendable`; the type holds no mutable state.
+/// singleton and injected closures are `@Sendable`; the once-bound actor context uses a Mutex.
 final class LiveReminderScheduler: ReminderScheduling, @unchecked Sendable {
     private let center = UNUserNotificationCenter.current()
     private let settingsProvider: @Sendable () -> NotificationSettings
     private let calendar: Calendar
     private let now: @Sendable () -> Date
+    // SessionStore depends on TaskStore, which depends on this scheduler. GSDApp installs
+    // the required context once, after construction and before any reminder operation.
+    // The context holds the store weakly so the TaskStore -> scheduler relationship is not a cycle.
+    private let scopeContext = Mutex<ScopeContext?>(nil)
+
+    @MainActor
+    private final class ScopeContext {
+        weak var store: TaskStore?
+        let mutationGate: WatchMutationGate
+        let scopeProvider: @MainActor @Sendable () -> WatchAccountScope?
+        private var observedScope: WatchAccountScope?
+        private var scopeIsStable = false
+        private(set) var generation: UInt64 = 0
+
+        let databaseWindow = BackgroundDatabaseWindow(isBackgrounded: {
+            #if targetEnvironment(macCatalyst)
+            false
+            #else
+            UIApplication.shared.applicationState != .active
+            #endif
+        })
+
+        init(store: TaskStore, mutationGate: WatchMutationGate,
+             scopeProvider: @escaping @MainActor @Sendable () -> WatchAccountScope?) {
+            self.store = store
+            self.mutationGate = mutationGate
+            self.scopeProvider = scopeProvider
+            observeScope()
+        }
+
+        private func readScope() -> WatchAccountScope? {
+            guard !mutationGate.isPaused, let dataset = mutationGate.identity?.datasetID,
+                  let scope = scopeProvider(), scope.isValid, scope.datasetID == dataset else { return nil }
+            return scope
+        }
+
+        var currentScope: WatchAccountScope? {
+            guard scopeIsStable, let scope = readScope(), scope == observedScope else { return nil }
+            return scope
+        }
+
+        func isCurrent(_ scope: WatchAccountScope, generation: UInt64) -> Bool {
+            !_Concurrency.Task.isCancelled && generation == self.generation && currentScope == scope
+        }
+
+        private func observeScope() {
+            observedScope = withObservationTracking {
+                readScope()
+            } onChange: { [weak self] in
+                // All tracked inputs belong to the MainActor gate and canonical SessionStore.
+                MainActor.assumeIsolated { self?.invalidateScope() }
+            }
+            scopeIsStable = true
+        }
+
+        private func invalidateScope() {
+            generation &+= 1
+            scopeIsStable = false
+            _Concurrency.Task { @MainActor [weak self] in self?.observeScope() }
+        }
+    }
 
     init(settingsProvider: @escaping @Sendable () -> NotificationSettings,
          calendar: Calendar = .current,
@@ -23,7 +88,45 @@ final class LiveReminderScheduler: ReminderScheduling, @unchecked Sendable {
         self.now = now
     }
 
+    @MainActor
+    func configureScope(store: TaskStore, mutationGate: WatchMutationGate,
+                        scopeProvider: @escaping @MainActor @Sendable () -> WatchAccountScope?) {
+        let context = ScopeContext(store: store, mutationGate: mutationGate, scopeProvider: scopeProvider)
+        scopeContext.withLock { current in
+            precondition(current == nil, "Reminder scope is installed once during app construction")
+            current = context
+        }
+    }
+
     func schedule(_ task: Task) async {
+        guard !_Concurrency.Task.isCancelled, let context = scopeContext.withLock({ $0 }) else { return }
+        await schedule(taskID: task.id, context: context)
+    }
+
+    @MainActor
+    private func schedule(taskID: String, context: ScopeContext) async {
+        guard !_Concurrency.Task.isCancelled, let store = context.store else { return }
+        guard let scope = context.currentScope, let ticket = context.mutationGate.admit() else { return }
+        let generation = context.generation
+        defer { context.mutationGate.finish(ticket) }
+        await context.databaseWindow.run {
+            guard context.isCurrent(scope, generation: generation) else { return }
+            let canonical: Task?
+            do { canonical = try await store.fetchTask(id: taskID) }
+            catch { return } // a failed read must not remove a previously scheduled reminder
+            guard context.isCurrent(scope, generation: generation) else { return }
+            guard let canonical else {
+                center.removePendingNotificationRequests(withIdentifiers: [identifier(for: taskID)])
+                return
+            }
+            // The passed Task may belong to an older resync/account. Only the canonical row
+            // read inside this identity lease supplies notification content and timing.
+            await scheduleCanonical(canonical, scope: scope)
+        }
+    }
+
+    @MainActor
+    private func scheduleCanonical(_ task: Task, scope: WatchAccountScope) async {
         let id = identifier(for: task.id)
         guard !task.isSaved else {
             center.removePendingNotificationRequests(withIdentifiers: [id])
@@ -45,6 +148,8 @@ final class LiveReminderScheduler: ReminderScheduling, @unchecked Sendable {
         if !task.description.isEmpty { content.body = task.description }
         content.sound = settings.soundEnabled ? .default : nil
         content.userInfo = ["taskID": task.id]
+        guard let value = scope.notificationValue else { return }
+        content.userInfo[WatchAccountScope.notificationKey] = value
         content.categoryIdentifier = ReminderAction.categoryID
 
         let comps = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: deferred)

@@ -17,11 +17,14 @@ public struct WatchCommand: Codable, Sendable, Equatable, Identifiable {
     public var id: String
     public var issuedAt: Date
     public var kind: Kind
+    /// Nil on legacy commands: retained on disk, but never assigned to the next account.
+    public var accountScope: WatchAccountScope?
 
-    public init(id: String, issuedAt: Date, kind: Kind) {
+    public init(id: String, issuedAt: Date, kind: Kind, accountScope: WatchAccountScope? = nil) {
         self.id = id
         self.issuedAt = issuedAt
         self.kind = kind
+        self.accountScope = accountScope
     }
 
     /// The task a command targets; `nil` for a capture.
@@ -35,12 +38,13 @@ public struct WatchCommand: Codable, Sendable, Equatable, Identifiable {
 
     // Flat wire shape: {id, issuedAt, kind, taskID?, text?, quadrant?}. A new kind is additive,
     // and an unknown kind fails to decode rather than turning into some other command.
-    private enum CodingKeys: String, CodingKey { case id, issuedAt, kind, taskID, text, quadrant }
+    private enum CodingKeys: String, CodingKey { case id, issuedAt, kind, taskID, text, quadrant, accountScope }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(String.self, forKey: .id)
         issuedAt = try c.decode(Date.self, forKey: .issuedAt)
+        accountScope = try c.decodeIfPresent(WatchAccountScope.self, forKey: .accountScope)
         let name = try c.decode(String.self, forKey: .kind)
         if name == "capture" {
             kind = .capture(text: try c.decode(String.self, forKey: .text),
@@ -65,6 +69,7 @@ public struct WatchCommand: Codable, Sendable, Equatable, Identifiable {
         var c = encoder.container(keyedBy: CodingKeys.self)
         try c.encode(id, forKey: .id)
         try c.encode(issuedAt, forKey: .issuedAt)
+        try c.encodeIfPresent(accountScope, forKey: .accountScope)
         switch kind {
         case .complete(let t): try c.encode("complete", forKey: .kind); try c.encode(t, forKey: .taskID)
         case .reopen(let t): try c.encode("reopen", forKey: .kind); try c.encode(t, forKey: .taskID)

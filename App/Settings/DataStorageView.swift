@@ -135,8 +135,16 @@ struct DataStorageView: View {
         pendingImportData = nil
         _Concurrency.Task {
             do {
-                let result = try await store.importTasks(data, mode: mode)
-                if mode == .replace { await sync.flushAfterReplace() }   // §3.4 drain cleared-task deletes under the gate
+                let result: ImportResult
+                if mode == .replace {
+                    result = try await sync.replacingLocalDataset {
+                        let imported = try await store.importTasks(data, mode: mode)
+                        await sync.flushAfterReplace()   // §3.4 drain cleared-task deletes under the gate
+                        return imported
+                    }
+                } else {
+                    result = try await store.importTasks(data, mode: mode)
+                }
                 statusMessage = result.skipped == 0
                     ? String(localized: "Imported \(result.tasks.count) tasks.")
                     : String(localized: "Imported \(result.tasks.count) tasks (\(result.skipped) skipped).")

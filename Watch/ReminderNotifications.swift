@@ -23,11 +23,13 @@ final class WatchAppDelegate: NSObject, WKApplicationDelegate, @preconcurrency U
         defer { completionHandler() }
         guard let taskID = response.notification.request.content.userInfo["taskID"] as? String else { return }
         let model = WatchModel.shared
+        guard let scope = WatchAccountScope.fromNotification(response.notification.request.content.userInfo),
+              let origin = model.actionLease, origin.scope == scope else { return }
         if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
             model.open(taskID: taskID)   // Only a tap opens the task; a dismiss must not navigate.
         } else if let kind = WatchReminderRoute.kind(forAction: response.actionIdentifier, taskID: taskID) {
             model.start()                // A button press can launch the app in the background.
-            model.queue(kind)
+            model.queue(kind, origin: origin)
         }
     }
 
@@ -50,26 +52,34 @@ final class WatchAppDelegate: NSObject, WKApplicationDelegate, @preconcurrency U
 final class ReminderNotificationController: WKUserNotificationHostingController<ReminderNotificationView> {
     private var title = ""
     private var taskID: String?
+    private var origin: WatchAccountScope?
 
-    override var body: ReminderNotificationView { ReminderNotificationView(title: title, taskID: taskID) }
+    override var body: ReminderNotificationView { ReminderNotificationView(title: title, taskID: taskID, origin: origin) }
 
     override func didReceive(_ notification: UNNotification) {
         let content = notification.request.content
         title = content.title
         taskID = content.userInfo["taskID"] as? String
+        origin = WatchAccountScope.fromNotification(content.userInfo)
     }
 }
 
 struct ReminderNotificationView: View {
     let title: String
     let taskID: String?
+    let origin: WatchAccountScope?
 
     var body: some View {
-        let card = taskID.flatMap {
+        let verified = origin != nil && origin == WatchModel.shared.actionLease?.scope
+        let card = (verified ? taskID : nil).flatMap {
             WatchReminderRoute.card(for: $0, in: WatchModel.shared.snapshot, now: .now, timeZone: .current)
         }
         VStack(alignment: .leading, spacing: 4) {
-            Text(title).font(.headline)
+            if verified {
+                Text(title).font(.headline)
+            } else {
+                Text("Open GSD on your iPhone to load your tasks.")
+            }
             if let card {
                 Text(card.quadrant.title)
                 if let due = card.dueDate {

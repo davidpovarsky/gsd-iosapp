@@ -13,6 +13,7 @@ struct TodayView: View {
 
     var body: some View {
         let today = model.today()
+        let origin = model.actionLease
         NavigationStack {
           ScrollViewReader { proxy in
             List {
@@ -22,7 +23,7 @@ struct TodayView: View {
                 } else if !today.picks.isEmpty {
                     Section {
                         ForEach(Array(today.picks.enumerated()), id: \.element.id) { index, task in
-                            PickRow(task: task, label: today.rowLabel(at: index))
+                            PickRow(task: task, origin: origin, label: today.rowLabel(at: index))
                         }
                     } header: {
                         Text("Today").accessibilityLabel(today.sectionLabel)
@@ -33,7 +34,7 @@ struct TodayView: View {
                 } else {
                     Section("Pick up to three for today") {
                         ForEach(today.suggestions) { task in
-                            Button { model.addToToday(task) } label: {
+                            Button { model.addToToday(task, origin: origin) } label: {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(task.title)
                                     Text("Add to today").font(.footnote).foregroundStyle(.secondary)
@@ -45,7 +46,7 @@ struct TodayView: View {
                 }
 
                 let pendingCount = model.lists().pendingCount
-                if pendingCount > 0 || model.hasSnapshot {
+                if pendingCount > 0 || model.hasSnapshot || model.quarantinedCount > 0 {
                     Section { WatchFooter(pending: pendingCount) }
                 }
             }
@@ -73,6 +74,7 @@ struct TodayView: View {
 private struct PickRow: View {
     @Environment(WatchModel.self) private var model
     let task: WatchTask
+    let origin: WatchModel.ActionLease?
     let label: String
 
     var body: some View {
@@ -86,11 +88,11 @@ private struct PickRow: View {
         .accessibilityElement(children: .combine)
         .accessibilityLabel(task.dueDate.map { String(localized: "\(label), due \($0.formatted(date: .abbreviated, time: .omitted))") } ?? label)
         .swipeActions(edge: .leading) {
-            Button { model.complete(task) } label: { Label("Complete", systemImage: "checkmark") }
+            Button { model.complete(task, origin: origin) } label: { Label("Complete", systemImage: "checkmark") }
                 .tint(.green)
         }
         .swipeActions(edge: .trailing) {
-            Button { model.removeFromToday(task) } label: { Label("Remove from today", systemImage: "minus.circle") }
+            Button { model.removeFromToday(task, origin: origin) } label: { Label("Remove from today", systemImage: "minus.circle") }
         }
     }
 }

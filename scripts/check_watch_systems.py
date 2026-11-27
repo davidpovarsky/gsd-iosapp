@@ -34,6 +34,16 @@ EXPECTED = {
     "background_releases_pending_completion",
     "relaunch_resends_original_command_id",
     "following_action_releases_completion_first",
+    "pending_capture_followup_waits_for_ack",
+    "capture_retains_overlay_task_id",
+    "capture_ack_releases_waiting_followup",
+    "capture_followup_mutates_canonical_task",
+    "canonical_prefixed_task_sends_normally",
+    "capture_replay_preserves_existing_task",
+    "relaunched_capture_preserves_transfer_dependency",
+    "unresolved_legacy_capture_action_stays_unacknowledged",
+    "capture_ack_keeps_local_undo_window",
+    "failed_capture_does_not_release_followup",
 }
 
 
@@ -41,7 +51,7 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def prepare(source, output):
+def prepare(source, output, *, verified_fixture=True):
     package = output / "package"
     inputs = {}
     for module in ("GSDModel", "GSDSnapshot"):
@@ -52,6 +62,7 @@ def prepare(source, output):
         shutil.copytree(original, package / "Sources" / module)
     target = package / "Sources/WatchSystemsProbe"
     target.mkdir(parents=True)
+    scoped_host = "struct ActionLease" in (source / "Watch/WatchModel.swift").read_text()
     for relative, excluded in (
         ("Watch/WatchModel.swift", {"import WatchConnectivity", "import WidgetKit"}),
         ("App/Watch/WatchSessionCoordinator.swift",
@@ -70,7 +81,28 @@ def prepare(source, output):
             if text.count(needle) != 1:
                 raise ValueError("WatchModel storage injection seam changed")
             text = text.replace(needle, "let directory = watchProbeDirectory")
+            if scoped_host and verified_fixture:
+                needle = "snapshot = snapshotStore.read() ?? .empty"
+                if text.count(needle) != 1:
+                    raise ValueError("WatchModel initial snapshot prerequisite seam changed")
+                text = text.replace(needle, "snapshot = snapshotStore.read() ?? watchFixtureInitialSnapshot")
         (target / original.name).write_text(text)
+    if scoped_host:
+        gate = source / "App/Watch/WatchMutationGate.swift"
+        inputs[str(gate.relative_to(source))] = digest(gate)
+        shutil.copyfile(gate, target / gate.name)
+        if verified_fixture:
+            fixture_scope = Path(__file__).with_name("watch_systems_fixture_scope.swift")
+            inputs["probe/watch_systems_fixture_scope.swift"] = digest(fixture_scope)
+            shutil.copyfile(fixture_scope, target / fixture_scope.name)
+    if "store.trashedTasks()" in (source / "App/Watch/WatchSessionCoordinator.swift").read_text():
+        (target / "TerminalRecordDouble.swift").write_text(
+            "import GSDModel\n"
+            "@MainActor extension TaskStore {\n"
+            "    func trashedTasks() async throws -> [ArchivedTask] { [] }\n"
+            "    func archivedTasksStamped() async throws -> [ArchivedTask] { [] }\n"
+            "}\n"
+        )
     lifecycle = source / "Watch/GSDWatchApp.swift"
     inputs[str(lifecycle.relative_to(source))] = digest(lifecycle)
     text = lifecycle.read_text()
@@ -111,6 +143,12 @@ let package = Package(
         "platformDoubles": ["WatchConnectivity", "WidgetKit", "UIKit", "TaskStore",
                             "BackgroundDatabaseWindow", "HarnessLaunch", "StoreLocation"],
         "storageInjection": "WatchModel initializer directory only",
+        "terminalRecordDouble": "Empty retained Trash/archive in the original fixtures; real terminal replay is a separate actual-TaskStore suite",
+        "scopedOriginalFixturePrerequisite": scoped_host and verified_fixture,
+        "scopePrerequisiteExplanation": (
+            "Verified synthetic guest snapshot + call-site origin adapters, only in probe target; "
+            "all original27 assertion bodies unchanged and storage failure checks still reach disk."
+        ) if scoped_host and verified_fixture else None,
         "sceneLifecycle": "GSDWatchApp scenePhase closure compiled unchanged in a framework-free shell",
         "physicalWatchAcceptance": False,
         "nativeFrameworkCompilation": False,

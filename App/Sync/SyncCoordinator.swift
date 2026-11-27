@@ -22,6 +22,7 @@ final class SyncCoordinator {
     private let realtime: PocketBaseRealtime
     private let tokenProvider: @Sendable () async -> String?
     private let signedIn: @MainActor () -> Bool
+    private let watchMutationGate: WatchMutationGate
 
     /// The engine, for the read-only Sync History screen.
     var engineForHistory: SyncEngine { engine }
@@ -43,13 +44,14 @@ final class SyncCoordinator {
     /// Whether a sync session exists, for callers that must not act on stale data while signed in.
     var isSignedIn: Bool { signedIn() }
 
-    init(engine: SyncEngine, realtime: PocketBaseRealtime,
+    init(engine: SyncEngine, realtime: PocketBaseRealtime, watchMutationGate: WatchMutationGate,
          tokenProvider: @escaping @Sendable () async -> String?,
          signedIn: @escaping @MainActor () -> Bool) {
         self.engine = engine
         self.realtime = realtime
         self.tokenProvider = tokenProvider
         self.signedIn = signedIn
+        self.watchMutationGate = watchMutationGate
     }
 
     // MARK: Lifecycle
@@ -67,7 +69,7 @@ final class SyncCoordinator {
     func beginSignIn() async {
         stop()
         heldForSignIn = true
-        await engine.beginSignIn()
+        await watchMutationGate.withPaused { await engine.beginSignIn() }
     }
 
     func cancelSignIn() {
@@ -155,6 +157,23 @@ final class SyncCoordinator {
     /// intact (which would just re-pull every task back). Retries a single-flight skip a few times.
     @discardableResult
     func eraseEverywhere(store: TaskStore) async -> Bool {
+        do {
+            // The user confirmed a reset. Rotate durably before even the remote erase, so a
+            // later failure cannot reopen the old dataset and replay a queued capture.
+            return try await watchMutationGate.replacingDataset {
+                await eraseEverywhereWhilePaused(store: store)
+            }
+        } catch {
+            return false   // identity persistence failed; no destructive operation started
+        }
+    }
+
+    /// Import Replace uses the same durable reset boundary and retains its existing result/flush.
+    func replacingLocalDataset<T>(_ operation: @MainActor () async throws -> T) async throws -> T {
+        try await watchMutationGate.replacingDataset(operation)
+    }
+
+    private func eraseEverywhereWhilePaused(store: TaskStore) async -> Bool {
         var result = await engine.eraseAllRemote()
         var tries = 0
         while result.skipped && tries < 5 {
