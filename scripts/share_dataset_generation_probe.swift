@@ -141,8 +141,11 @@ enum ProbeFailure: Error { case invalidRequest, missingCapture }
     @MainActor static var failures = 0
 
     static func token() throws -> String {
+        // Requests and the independent exact-byte assertion must use one deterministic fixture.
+        // Dictionary serialization order is not part of the JWT identity contract.
         let claims = try JSONSerialization.data(
-            withJSONObject: ["id": "generation-fixture-owner", "exp": 4_000_000_000])
+            withJSONObject: ["id": "generation-fixture-owner", "exp": 4_000_000_000],
+            options: [.sortedKeys])
         return "fixture." + claims.base64EncodedString().replacingOccurrences(of: "+", with: "-")
             .replacingOccurrences(of: "/", with: "_").replacingOccurrences(of: "=", with: "")
             + ".signature"
