@@ -61,7 +61,8 @@ private enum WorkspacePresentationFixture {
             ("same_scope_views_share_latest_state", sharedViews),
             ("invalid_identity_and_viewport_fail_closed", validation),
             ("session_resolution_holds_identity_until_apply", accountResolution),
-            ("oauth_retry_cannot_interrupt_an_inflight_signin", oauthAdmission)
+            ("oauth_retry_cannot_interrupt_an_inflight_signin", oauthAdmission),
+            ("delete_cannot_interrupt_an_inflight_signin", deleteAdmission)
         ]
         let selection = ProcessInfo.processInfo.environment["GSD_WORKSPACE_PRESENTATION_FIXTURE_CASE"]
         let selected = cases.filter { selection == nil || $0.0 == selection }
@@ -379,6 +380,75 @@ private enum WorkspacePresentationFixture {
         if let admissionFailure { throw admissionFailure }
     }
 
+    private static func deleteAdmission() async throws {
+        let keys = ["gsd.lastOwnerId", "gsd.accountEmail", "gsd.accountProvider"]
+        let saved = keys.map { ($0, UserDefaults.standard.object(forKey: $0)) }
+        defer {
+            for (key, value) in saved {
+                if let value { UserDefaults.standard.set(value, forKey: key) }
+                else { UserDefaults.standard.removeObject(forKey: key) }
+            }
+        }
+        UserDefaults.standard.set("fixture-owner-a", forKey: "gsd.lastOwnerId")
+        let originalToken = fixtureToken(owner: "fixture-owner-a")
+        let tokens = FixtureTokens(token: originalToken)
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [FixtureHeldDeleteAdmissionProtocol.self]
+        let transport = URLSession(configuration: configuration)
+        defer { FixtureHeldDeleteAdmissionProtocol.release(); transport.invalidateAndCancel() }
+        let client = PocketBaseClient(baseURL: "https://fixture.invalid", session: transport)
+        let auth = AuthService(client: client, presenter: FixtureAdmissionPresenter(), tokenStore: tokens,
+                               config: AuthConfig(baseURL: "https://fixture.invalid",
+                                                  redirectURI: "fixture://callback", callbackScheme: "fixture"))
+        let session = SessionStore(auth: auth, tokenStore: tokens, coordinator: nil,
+                                   hasLocalActiveTasks: { false })
+        let first = _Concurrency.Task {
+            await session.signInWithEmail("fixture-b@example.invalid", password: "fixture-only", createAccount: false)
+        }
+        var admissionFailure: Error?
+        do {
+            let deadline = Date().addingTimeInterval(10)
+            while !FixtureHeldDeleteAdmissionProtocol.isHolding && Date() < deadline {
+                try await _Concurrency.Task.sleep(for: .milliseconds(20))
+            }
+            try require(FixtureHeldDeleteAdmissionProtocol.isHolding && session.inProgress,
+                        "The first real AuthService password response must be held before attempting deletion.")
+            await session.deleteAccount(eraseLocalData: false)
+            try require(session.inProgress,
+                        "A delete attempt must not end the active sign-in phase.")
+            try require(Account.validated(isSignedIn: session.isSignedIn, userID: session.currentUserID,
+                                          inProgress: session.inProgress,
+                                          hasPendingAccountSwitch: session.pendingAccountSwitch != nil) == nil,
+                        "An overlapping delete must not reopen validated account admission.")
+            try require(tokens.load() == originalToken,
+                        "An overlapping delete must not clear or replace the retained account token.")
+            try require(FixtureHeldDeleteAdmissionProtocol.observations.withLock { $0.requests } == 1 &&
+                        !FixtureHeldDeleteAdmissionProtocol.observations.withLock { $0.unexpected } &&
+                        FixtureAdmissionPresenter.calls.withLock { $0 } == 0,
+                        "A rejected delete must not start another request or authorization presenter.")
+        } catch { admissionFailure = error }
+        // Release and join even the negative baseline; retain both admission and cleanup failures.
+        let hadHeldResponse = FixtureHeldDeleteAdmissionProtocol.isHolding
+        FixtureHeldDeleteAdmissionProtocol.release()
+        if !hadHeldResponse { first.cancel(); transport.invalidateAndCancel() }
+        await first.value
+        var completionFailure: Error?
+        do {
+            try require(!session.inProgress && session.isSignedIn && session.currentUserID == "fixture-owner-b" &&
+                        tokens.load() == FixtureHeldDeleteAdmissionProtocol.responseToken,
+                        "Only the original held sign-in may install its final account and exact response token.")
+            try require(FixtureAdmissionPresenter.calls.withLock { $0 } == 0,
+                        "The delete admission fixture must never enter an authorization presenter.")
+        } catch { completionFailure = error }
+        if let admissionFailure {
+            if let completionFailure {
+                throw Failure.assertion("\(admissionFailure); cleanup: \(completionFailure)")
+            }
+            throw admissionFailure
+        }
+        if let completionFailure { throw completionFailure }
+    }
+
     @MainActor
     private final class EraseGate {
         let fails: Bool
@@ -522,6 +592,64 @@ private final class FixtureHeldLoginProtocol: URLProtocol, @unchecked Sendable {
     }
 }
 
+/// The deletion admission case has its own delayed request owner so it can run after the
+/// original OAuth case without resetting or weakening that case's single-request checks.
+private final class FixtureHeldDeleteAdmissionStorage: @unchecked Sendable {
+    private let lock = NSLock()
+    private var retained: FixtureHeldDeleteAdmissionProtocol?
+    var isHolding: Bool { lock.withLock { retained != nil } }
+    func store(_ instance: FixtureHeldDeleteAdmissionProtocol) {
+        lock.withLock { retained = instance }
+    }
+    func take() -> FixtureHeldDeleteAdmissionProtocol? {
+        lock.withLock {
+            defer { retained = nil }
+            return retained
+        }
+    }
+    func remove(_ instance: FixtureHeldDeleteAdmissionProtocol) {
+        lock.withLock { if retained === instance { retained = nil } }
+    }
+}
+
+/// Intercepts every URL locally. Only the first synthetic password response may succeed;
+/// an unguarded DELETE fails locally while the original password response stays held.
+private final class FixtureHeldDeleteAdmissionProtocol: URLProtocol, @unchecked Sendable {
+    static let observations = Mutex((requests: 0, unexpected: false))
+    private static let held = FixtureHeldDeleteAdmissionStorage()
+    static let responseToken = fixtureToken(owner: "fixture-owner-b")
+    static var isHolding: Bool { held.isHolding }
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() {
+        let expected = request.url?.host == "fixture.invalid" &&
+            request.url?.path == "/api/collections/users/auth-with-password" && request.httpMethod == "POST"
+        let first = Self.observations.withLock {
+            $0.requests += 1
+            $0.unexpected = $0.unexpected || !expected || $0.requests != 1
+            return $0.requests == 1
+        }
+        guard expected && first else {
+            client?.urlProtocol(self, didFailWithError: URLError(.unsupportedURL)); return
+        }
+        Self.held.store(self)
+    }
+    static func release() { held.take()?.finish() }
+    private func finish() {
+        guard let url = request.url else { return }
+        let data = try! JSONSerialization.data(withJSONObject: [
+            "token": Self.responseToken,
+            "record": ["id": "fixture-owner-b", "email": "fixture-b@example.invalid"]
+        ] as [String: Any])
+        let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "HTTP/1.1",
+                                       headerFields: ["Content-Type": "application/json"])!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: data)
+        client?.urlProtocolDidFinishLoading(self)
+    }
+    override func stopLoading() { Self.held.remove(self) }
+}
+
 /// Compile-only optional dependency. The actual SessionStore is initialized with coordinator:nil.
 /// Every method traps so this fixture cannot accidentally replace or claim sync behavior.
 @MainActor
@@ -534,6 +662,9 @@ final class SyncCoordinator {
     func releaseAfterFailedAccountDeletion() { fatalError("Unexpected coordinator") }
     func eraseRemoteTasksPass() async -> AccountDeleter.ErasePass { fatalError("Unexpected coordinator") }
     func syncNow() async { fatalError("Unexpected coordinator") }
+    func withExternalWritesPaused<T>(_ operation: @MainActor () async throws -> T) async throws -> T {
+        fatalError("Unexpected coordinator")
+    }
 }
 
 #else
