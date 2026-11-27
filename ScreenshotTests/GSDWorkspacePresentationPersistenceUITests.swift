@@ -15,7 +15,7 @@ import TaskVisualizationKit
 private enum WorkspacePresentationFixture {
     private typealias State = TaskWorkspacePresentationState
     private typealias Scope = GSDTaskWorkspacePresentationScope
-    private typealias Account = GSDTaskWorkspacePresentationAccount
+    fileprivate typealias Account = GSDTaskWorkspacePresentationAccount
     private enum Failure: Error { case assertion(String) }
 
     @MainActor
@@ -36,7 +36,7 @@ private enum WorkspacePresentationFixture {
 
     @MainActor
     @Observable
-    private final class Identity {
+    fileprivate final class Identity {
         var signedIn = true
         var userID: String? = "fixture-owner-a"
         var inProgress = false
