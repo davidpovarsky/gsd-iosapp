@@ -305,14 +305,16 @@ struct AuthServiceSessionFenceTests {
         }
 
         func respond(_ index: Int, body: Data, status: Int = 200) throws {
-            let reply = try #require(replies.removeValue(forKey: index))
+            let pendingReply = replies.removeValue(forKey: index)
+            let reply = try #require(pendingReply)
             reply.resume(returning: (body, try http(pending[index], status)))
         }
 
         func deleteCount() -> Int { requests.filter { $0.httpMethod == "DELETE" }.count }
 
         private func http(_ request: URLRequest, _ status: Int) throws -> HTTPURLResponse {
-            try #require(HTTPURLResponse(url: try #require(request.url), statusCode: status,
+            let url = try #require(request.url)
+            return try #require(HTTPURLResponse(url: url, statusCode: status,
                                         httpVersion: nil, headerFields: nil))
         }
     }
