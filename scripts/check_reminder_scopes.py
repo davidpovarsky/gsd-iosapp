@@ -39,7 +39,8 @@ def prepare(source, output):
     scoped = "func configureScope(" in scheduler
     if scheduler.count("import UserNotifications\n") != 1:
         raise ValueError("UserNotifications platform import changed")
-    scheduler = scheduler.replace("import UserNotifications\n", "")
+    # Retain the real framework import for NSString.localizedUserNotificationString.
+    # Module-local fixture types shadow only notification delivery/content/requests.
     if "import UIKit\n" in scheduler:
         scheduler = scheduler.replace("import UIKit\n", "")
     (target / "LiveReminderScheduler.swift").write_text(scheduler)
@@ -71,6 +72,7 @@ let package = Package(
     receipt = {
         "sourceRoot": str(source), "files": inputs,
         "platformDoubles": ["UserNotifications recording center", "UIKit applicationState"],
+        "retainedFrameworkAPI": "Actual UserNotifications NSString localization extension; module-local transport types remain doubles",
         "realImplementations": ["TaskStore", "GRDBTaskRepository", "ReminderMath",
                                 "BackgroundDatabaseWindow", "LiveReminderScheduler", "WatchMutationGate"],
         "suspendedRead": "TaskRepository decorator holds one actual GRDB read result or injects one read error",
