@@ -17500,6 +17500,57 @@
         }
       },
       "extractionState": "manual"
+    },
+    "The saved ChatGPT account state could not be read. Unlock the device and try again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The saved ChatGPT account state could not be read. Unlock the device and try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לקרוא את מצב חשבון ChatGPT השמור. פתחו את נעילת המכשיר ונסו שוב."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "The device could not save the ChatGPT sign-out. Please try again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The device could not save the ChatGPT sign-out. Please try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן לשמור את היציאה מ־ChatGPT במכשיר. נסו שוב."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Retry": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retry"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ניסיון חוזר"
+          }
+        }
+      },
+      "extractionState": "manual"
     }
   },
   "version": "1.0"

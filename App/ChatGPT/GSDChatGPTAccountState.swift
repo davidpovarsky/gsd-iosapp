@@ -22,7 +22,10 @@ final class GSDChatGPTAccountState {
     var showPlanWelcome = false
 
     @ObservationIgnored private var snapshot = GSDChatGPTSnapshot.empty()
-    @ObservationIgnored private let client = HanlinChatGPTPlanClient()
+    @ObservationIgnored private let client: HanlinChatGPTPlanClient
+    @ObservationIgnored private let loadSnapshot: @MainActor () throws -> GSDChatGPTSnapshot?
+    @ObservationIgnored private let saveSnapshot: @MainActor (GSDChatGPTSnapshot) throws -> Void
+    @ObservationIgnored private let localSignOutStore: GSDChatGPTLocalSignOutStore
     @ObservationIgnored private let authorization = GSDChatGPTAuthorization()
     @ObservationIgnored private var refreshes: [String: _Concurrency.Task<HanlinChatGPTPlanCredentials, Error>] = [:]
     @ObservationIgnored private var epochs: [String: UUID] = [:]
@@ -30,17 +33,63 @@ final class GSDChatGPTAccountState {
     @ObservationIgnored private var storageAvailable = true
     @ObservationIgnored private var signInOperationID: UUID?
 
-    private init() {
+    private convenience init() {
+        self.init(client: HanlinChatGPTPlanClient(),
+                  loadSnapshot: GSDChatGPTKeychain.load,
+                  saveSnapshot: GSDChatGPTKeychain.save,
+                  localSignOutStore: GSDChatGPTLocalSignOutStore())
+    }
+
+    /// App lifecycle acceptance injects storage and a URLSession-backed SDK client.
+    /// The shared live instance always uses the device Keychain and original SDK.
+    init(client: HanlinChatGPTPlanClient,
+         loadSnapshot: @escaping @MainActor () throws -> GSDChatGPTSnapshot?,
+         saveSnapshot: @escaping @MainActor (GSDChatGPTSnapshot) throws -> Void,
+         localSignOutStore: GSDChatGPTLocalSignOutStore) {
+        self.client = client
+        self.loadSnapshot = loadSnapshot
+        self.saveSnapshot = saveSnapshot
+        self.localSignOutStore = localSignOutStore
+        _ = reloadStoredState()
+    }
+
+    /// A screen reopen or explicit sign-in may retry a transient Keychain lock once.
+    /// Reloading never grants access to a registration with a local sign-out fence.
+    @discardableResult
+    private func reloadStoredState() -> Bool {
         do {
-            if let saved = try GSDChatGPTKeychain.load() {
-                snapshot = saved
+            let denied = try localSignOutStore.deniedRegistrationHashes()
+            let restored: GSDChatGPTSnapshot
+            if let saved = try loadSnapshot() {
+                restored = saved
             } else {
-                try GSDChatGPTKeychain.save(snapshot)
+                restored = .empty()
+                try saveSnapshot(restored)
             }
+            snapshot = restored
+            locallySignedOut.formUnion(restored.accounts.compactMap { account in
+                denied.contains(GSDChatGPTLocalSignOutStore.registrationHash(account.clientID))
+                    ? account.clientID : nil
+            })
+            storageAvailable = true
+            models = []
             publish()
+            if activeID == nil {
+                status = String(localized: "Continue with ChatGPT to use your plan for eligible AI requests.")
+            } else if activeAccount?.credentials == nil || locallySignedOut.contains(activeID ?? "") {
+                status = String(localized: "Sign in again to use this ChatGPT account.")
+            } else {
+                status = canUsePlan
+                    ? String(localized: "ChatGPT account selected.")
+                    : String(localized: "Signed in to ChatGPT. Plan usage permission has not been granted.")
+            }
+            return true
         } catch {
             storageAvailable = false
-            status = String(localized: "The device Keychain is unavailable. Unlock the device and reopen this screen.")
+            models = []
+            publish()
+            status = String(localized: "The saved ChatGPT account state could not be read. Unlock the device and try again.")
+            return false
         }
     }
 
@@ -51,24 +100,25 @@ final class GSDChatGPTAccountState {
     private func publish() {
         activeID = snapshot.activeID
         email = activeAccount?.email
-        canUsePlan = activeAccount?.credentials?.canUsePlan == true &&
+        canUsePlan = storageAvailable && activeAccount?.credentials?.canUsePlan == true &&
             !locallySignedOut.contains(snapshot.activeID ?? "")
         selectedModelID = activeAccount?.modelID ?? ""
         accounts = snapshot.accounts.map {
             .init(id: $0.clientID,
                   label: ($0.email ?? String(localized: "ChatGPT account")) + " · " + String($0.clientID.suffix(6)),
-                  signedIn: $0.credentials != nil && !locallySignedOut.contains($0.clientID))
+                  signedIn: storageAvailable && $0.credentials != nil && !locallySignedOut.contains($0.clientID))
         }
     }
 
     private func persist(_ next: GSDChatGPTSnapshot) throws {
-        try GSDChatGPTKeychain.save(next)
+        try saveSnapshot(next)
         snapshot = next
         publish()
     }
 
     func signIn(accountID: String? = nil, requestPlanConsent: Bool = false) async {
-        guard !isBusy, storageAvailable else { return }
+        guard !isBusy else { return }
+        if !storageAvailable, !reloadStoredState() { return }
         isBusy = true
         let operationID = UUID()
         signInOperationID = operationID
@@ -117,7 +167,11 @@ final class GSDChatGPTAccountState {
                 next.accounts.append(.init(credentials: credential))
             }
             next.activeID = credential.clientID
-            try persist(next)
+            // A verified interactive sign-in is the only operation that removes this fence.
+            // Publish eligibility only after both credential persistence and fence removal succeed.
+            try saveSnapshot(next)
+            try localSignOutStore.clearAfterSignIn(credential.clientID)
+            snapshot = next
             signInOperationID = nil
             locallySignedOut.remove(credential.clientID)
             publish()
@@ -203,6 +257,11 @@ final class GSDChatGPTAccountState {
             do { refreshed = try await client.refresh(credential) }
             catch HanlinChatGPTPlanError.oauth(_, let code, _) where
                 code == "near_expiry" && credential.expiresAt.timeIntervalSinceNow > 5 {
+                guard let self, self.epochs[id] == epoch,
+                      !self.locallySignedOut.contains(id),
+                      self.snapshot.accounts.first(where: { $0.clientID == id })?.credentials != nil else {
+                    throw CancellationError()
+                }
                 return credential
             }
             guard let self, self.epochs[id] == epoch,
@@ -221,12 +280,16 @@ final class GSDChatGPTAccountState {
 
     func accessForInference() async throws -> (token: String, modelID: String, accountID: String) {
         guard !isBusy, let id = snapshot.activeID else { throw HanlinChatGPTPlanError.unavailable }
+        let epoch = epochs[id] ?? UUID()
+        epochs[id] = epoch
         let credential = try await validCredentials(for: id)
-        guard !isBusy, snapshot.activeID == id, credential.canUsePlan else {
+        guard epochs[id] == epoch, !isBusy, storageAvailable, snapshot.activeID == id, canUsePlan,
+              !locallySignedOut.contains(id), credential.canUsePlan else {
             throw HanlinChatGPTPlanError.unavailable
         }
         if models.isEmpty { await loadModels() }
-        guard !isBusy, snapshot.activeID == id, !selectedModelID.isEmpty,
+        guard epochs[id] == epoch, !isBusy, storageAvailable, snapshot.activeID == id, canUsePlan,
+              !locallySignedOut.contains(id), !selectedModelID.isEmpty,
               models.contains(where: { $0.slug == selectedModelID }) else {
             throw HanlinChatGPTPlanError.unavailable
         }
@@ -235,15 +298,22 @@ final class GSDChatGPTAccountState {
 
     func loadModels() async {
         guard !isBusy else { return }
+        if !storageAvailable, !reloadStoredState() { return }
         await loadModelsForActiveAccount()
     }
 
     private func loadModelsForActiveAccount() async {
         guard let id = snapshot.activeID, canUsePlan else { return }
+        let epoch = epochs[id] ?? UUID()
+        epochs[id] = epoch
         do {
             let credential = try await validCredentials(for: id)
+            guard epochs[id] == epoch, snapshot.activeID == id, canUsePlan,
+                  !locallySignedOut.contains(id) else { return }
             let catalog = try await client.listModels(accessToken: credential.accessToken)
-            guard snapshot.activeID == id, activeAccount?.credentials != nil,
+            // Authentication may have replaced this registration while the request was in flight.
+            guard epochs[id] == epoch, snapshot.activeID == id, canUsePlan,
+                  activeAccount?.credentials != nil,
                   !locallySignedOut.contains(id) else { return }
             models = catalog
             if !catalog.contains(where: { $0.slug == selectedModelID }), let first = catalog.first {
@@ -253,27 +323,46 @@ final class GSDChatGPTAccountState {
                 ? String(localized: "This ChatGPT account has no available models for this app.")
                 : String(localized: "ChatGPT models are ready.")
         } catch {
-            guard snapshot.activeID == id else { return }
+            guard epochs[id] == epoch, snapshot.activeID == id, canUsePlan,
+                  activeAccount?.credentials != nil,
+                  !locallySignedOut.contains(id) else { return }
             models = []
             status = String(format: String(localized: "ChatGPT model access failed: %@"), GSDChatGPTCopy.error(error))
         }
     }
 
     func signOut() async {
-        guard !isBusy, let id = snapshot.activeID else { return }
+        guard !isBusy, let id = snapshot.activeID,
+              let index = snapshot.accounts.firstIndex(where: { $0.clientID == id }) else { return }
         isBusy = true
         defer { isBusy = false }
-        if let pending = refreshes[id] {
-            do { _ = try await pending.value }
-            catch { status = String(localized: "The ChatGPT session could not be refreshed before sign-out.") }
-        }
+        let credential = snapshot.accounts[index].credentials
+        let pending = refreshes.removeValue(forKey: id)
+        // Revoke in-memory authority immediately, before waiting on any network operation.
         epochs[id] = UUID()
-        refreshes[id]?.cancel(); refreshes[id] = nil
+        pending?.cancel()
         locallySignedOut.insert(id)
         models = []
+        showPlanWelcome = false
         publish()
-        guard let index = snapshot.accounts.firstIndex(where: { $0.clientID == id }) else { return }
-        let credential = snapshot.accounts[index].credentials
+
+        var fenced = false
+        do { try localSignOutStore.markSignedOut(id); fenced = true } catch {}
+        var cleared = false
+        do {
+            var next = snapshot
+            next.accounts[index].credentials = nil
+            try persist(next)
+            cleared = true
+        } catch {}
+        guard fenced || cleared else {
+            // Neither store committed the denial. Keep this process disabled and report failure.
+            status = String(localized: "The device could not save the ChatGPT sign-out. Please try again.")
+            return
+        }
+        // A rotating SDK refresh may still finish. Its old app epoch cannot persist or return it;
+        // the SDK's revoke operation follows the rotated token from the captured credential.
+        if let pending { _ = await pending.result }
         var revoked = credential == nil
         if let credential {
             for attempt in 0..<2 {
@@ -286,16 +375,11 @@ final class GSDChatGPTAccountState {
                 }
             }
         }
-        do {
-            var next = snapshot
-            next.accounts[index].credentials = nil
-            try persist(next)
-            models = []
+        if cleared {
             status = revoked
                 ? String(localized: "Signed out of ChatGPT in GSD.")
                 : String(localized: "Signed out on this device. Remote revocation was not confirmed; disconnect GSD in ChatGPT settings.")
-        } catch {
-            canUsePlan = false
+        } else {
             status = String(localized: "The device Keychain could not clear the ChatGPT credentials. Unlock the device and try signing out again.")
         }
     }
