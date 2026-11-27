@@ -16,7 +16,7 @@ enum ReminderActionInbox {
         let done: () -> Void
     }
 
-    private final class Context {
+    @MainActor private final class Context {
         let store: TaskStore
         let handler: ReminderActionHandler
         let mutationGate: WatchMutationGate
