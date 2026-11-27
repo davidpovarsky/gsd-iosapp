@@ -43,9 +43,14 @@ struct GSDHanlinProviderCredentialStore {
             return nil
         }
         let previous = try decoded()?.0
-        // Keep the old endpoint-only ownership behavior until the regression is observed.
-        let record = GSDHanlinProviderCredential(
-            registrationID: previous?.registrationID ?? UUID(), credential: credential)
+        // Unchanged credentials keep their history across model-only edits. A different
+        // credential gets an unrelated registration, even at the same endpoint.
+        let record: GSDHanlinProviderCredential
+        if let previous, previous.credential == credential {
+            record = previous
+        } else {
+            record = GSDHanlinProviderCredential(credential: credential)
+        }
         try saveData(Self.encoded(record))
         return record
     }
