@@ -20,16 +20,19 @@ public struct WatchSnapshot: Codable, Sendable, Equatable {
     /// Every `today-focus` match on the iPhone, for "+N more on iPhone".
     public var doFirstTotal: Int
     public var appliedCommandIDs: [String]
+    /// Nil means account/dataset identity is unresolved, including pre-scope legacy snapshots.
+    public var accountScope: WatchAccountScope?
 
     public init(version: Int = WatchSnapshot.currentVersion, generatedAt: Date,
                 escalationWindowDays: Int?, tasks: [WatchTask], doFirstTotal: Int,
-                appliedCommandIDs: [String]) {
+                appliedCommandIDs: [String], accountScope: WatchAccountScope? = nil) {
         self.version = version
         self.generatedAt = generatedAt
         self.escalationWindowDays = escalationWindowDays
         self.tasks = tasks
         self.doFirstTotal = doFirstTotal
         self.appliedCommandIDs = appliedCommandIDs
+        self.accountScope = accountScope
     }
 
     public static let empty = WatchSnapshot(generatedAt: .distantPast, escalationWindowDays: nil,
