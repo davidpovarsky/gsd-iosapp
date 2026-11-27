@@ -350,8 +350,10 @@ struct GSDHanlinAssistantView: View {
                     Text(configurationError).foregroundStyle(.red)
                 }
                 if draftProvider != "ChatGPT", !providerCredentialLoaded {
-                    Text("The device Keychain is unavailable. Unlock the device and reopen this screen.")
-                        .font(.caption).foregroundStyle(.secondary)
+                    if configurationError == nil {
+                        Text("The device Keychain is unavailable. Unlock the device and reopen this screen.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
                     Button("Retry") { loadProviderCredential() }
                         .accessibilityIdentifier("gsd.assistant.retry-provider-credential")
                 }
@@ -359,6 +361,7 @@ struct GSDHanlinAssistantView: View {
             .navigationTitle("Hanlin model settings")
             .sheet(isPresented: $showChatGPTSettings) {
                 GSDChatGPTSettingsView(account: chatGPT) {
+                    await cancelAssistantRequest().value
                     await resetAssistantConversation()
                 }
             }
