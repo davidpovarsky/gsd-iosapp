@@ -19,6 +19,11 @@ public final class ShareInbox {
         self.newID = newID
     }
 
+    public func pendingCaptures() -> [(id: String, capture: SharedCapture)] { store.pending() }
+    public func pendingRecoveryCount() -> Int { store.inFlightCaptures().count }
+    /// The app calls this while holding its exclusive external-write lease, before admission.
+    public func recoverInFlight() throws { try store.recoverInFlight() }
+
     /// Single-flight (`isDraining` set synchronously before any `await`). Each pending capture
     /// is built into a valid `Task` and handed on; the file is removed only after the handler
     /// succeeds. A transient throw keeps the file for the next drain.
@@ -31,6 +36,15 @@ public final class ShareInbox {
     ///   sync item — the server already has it.
     public func drain(create: (Task) async throws -> Void,
                       ingestPushed: (Task) async throws -> Void) async {
+        await drain { _, task, pushed in
+            if pushed { try await ingestPushed(task) }
+            else { try await create(task) }
+        }
+    }
+
+    /// Production consumers validate the original capture before any TaskStore write.
+    /// The older closure overload remains the pure inbox API for existing clients/tests.
+    public func drain(consume: (SharedCapture, Task, Bool) async throws -> Void) async {
         guard !_Concurrency.Task.isCancelled, !isDraining else { return }
         isDraining = true
         defer { isDraining = false }
@@ -39,10 +53,10 @@ public final class ShareInbox {
             let capture = item.capture
             do {
                 if capture.remoteRecordID != nil, let pushed = capture.pushedTask() {
-                    try await ingestPushed(pushed)
+                    try await consume(capture, pushed, true)
                 } else {
                     let task = SharedCaptureBuilder.task(from: capture, id: capture.taskID ?? newID(), now: now())
-                    try await create(task)
+                    try await consume(capture, task, false)
                 }
                 // A successful create is already committed. Acknowledge that item even if
                 // cancellation arrived during it, then leave later captures pending.

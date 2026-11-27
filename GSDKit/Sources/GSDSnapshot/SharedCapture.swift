@@ -18,10 +18,17 @@ public struct SharedCapture: Codable, Sendable, Equatable {
     /// Set when the extension's direct push succeeded: the PocketBase record id. The app then
     /// lands the task locally WITHOUT enqueueing a sync item (`ShareInbox` → `ingestPushed`).
     public var remoteRecordID: String?
+    /// Immutable account/dataset origin chosen by the extension sheet. Older captures decode nil.
+    /// Nil, mismatched and unresolved origins stay in the outbox for explicit review.
+    public var origin: WatchAccountScope?
+    /// Set only when a retry changes the sheet's original authored payload after a failed save.
+    /// If that identity already exists, a distinct retry stays available for explicit review.
+    public var isEditedRetry: Bool?
 
     public init(title: String, urls: [String], urgent: Bool, important: Bool,
                 tags: [String], capturedAt: Date,
-                taskID: String? = nil, remoteRecordID: String? = nil) {
+                taskID: String? = nil, remoteRecordID: String? = nil,
+                origin: WatchAccountScope? = nil, isEditedRetry: Bool? = nil) {
         self.title = title
         self.urls = urls
         self.urgent = urgent
@@ -30,6 +37,8 @@ public struct SharedCapture: Codable, Sendable, Equatable {
         self.capturedAt = capturedAt
         self.taskID = taskID
         self.remoteRecordID = remoteRecordID
+        self.origin = origin
+        self.isEditedRetry = isEditedRetry
     }
 
     /// The task under `taskID` with `capturedAt` as both timestamps — what the extension pushes,

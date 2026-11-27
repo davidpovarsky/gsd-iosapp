@@ -17602,6 +17602,261 @@
         }
       },
       "extractionState": "manual"
+    },
+    "Saved Shares": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved Shares"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "שיתופים שמורים"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Saved share": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved share"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "שיתוף שמור"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Saved shares stay on this device until their original account and task collection can be verified.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved shares stay on this device until their original account and task collection can be verified."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "השיתופים השמורים נשארים במכשיר עד לאימות החשבון ואוסף המשימות המקוריים שלהם."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Try adding saved shares again": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try adding saved shares again"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "נסו להוסיף שוב את השיתופים השמורים"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "No saved shares are ready to review.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No saved shares are ready to review."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "אין שיתופים שמורים הזמינים לסקירה."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Review a saved share": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review a saved share"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "סקירת שיתוף שמור"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Sign in to the original account to review this share. Its content has been preserved.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to the original account to review this share. Its content has been preserved."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "היכנסו לחשבון המקורי כדי לסקור את השיתוף הזה. התוכן שלו נשמר."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Share again": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share again"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "שיתוף מחדש"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "The original saved copy stays unchanged. Share it again to create a new capture for your chosen account.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The original saved copy stays unchanged. Share it again to create a new capture for your chosen account."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "העותק המקורי נשמר ללא שינוי. שתפו אותו מחדש כדי ליצור משימה חדשה בחשבון שתבחרו."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Review Saved Share": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review Saved Share"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "סקירת שיתוף שמור"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Wait for GSD to verify the current account, then try again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wait for GSD to verify the current account, then try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "המתינו לאימות החשבון הנוכחי ב־GSD, ואז נסו שוב."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Share as a new task": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share as a new task"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "שיתוף כמשימה חדשה"
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "These retry edits were not applied to the existing task. Choose GSD when sharing to create a new task. The existing task and saved copy stay unchanged.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These retry edits were not applied to the existing task. Choose GSD when sharing to create a new task. The existing task and saved copy stay unchanged."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "השינויים מהניסיון החוזר לא הוחלו על המשימה הקיימת. בחרו ב־GSD בעת השיתוף כדי ליצור משימה חדשה. המשימה הקיימת והעותק השמור יישארו ללא שינוי."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "Choose GSD when sharing to create a new task in the selected account. The original saved copy stays unchanged.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose GSD when sharing to create a new task in the selected account. The original saved copy stays unchanged."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בחרו ב־GSD בעת השיתוף כדי ליצור משימה חדשה בחשבון שנבחר. העותק המקורי השמור יישאר ללא שינוי."
+          }
+        }
+      },
+      "extractionState": "manual"
+    },
+    "The account or task collection changed. Return to Saved Shares and select this item again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The account or task collection changed. Return to Saved Shares and select this item again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "החשבון או אוסף המשימות השתנו. חזרו לשיתופים השמורים ובחרו את הפריט מחדש."
+          }
+        }
+      },
+      "extractionState": "manual"
     }
   },
   "version": "1.0"

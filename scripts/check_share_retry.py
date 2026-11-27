@@ -55,6 +55,36 @@ import GSDSnapshot
 '''
 
 
+def scoped_controller_operation(text):
+    # Keep the production delegation method. Only UIKit ownership and the verified
+    # synthetic account prerequisite are fixture setup; the actual per-sheet writer runs.
+    marker = "    private func saveAndPush(_ capture: SharedCapture) async throws -> ShareCaptureSession.SaveResult {"
+    if text.count(marker) != 1:
+        raise ValueError("Expected the single scoped Share delegation method")
+    start = text.index(marker)
+    end = text.index("\n    override func viewDidLoad()", start)
+    method = text[start:end].rstrip().replace("private func saveAndPush", "func saveAndPush", 1)
+    return '''import Foundation
+import GSDModel
+import GSDSnapshot
+@MainActor final class ShareViewController {
+    private let captureSession: ShareCaptureSession
+    init(outbox: ShareOutboxStore, push: DirectTaskPush) {
+        let directory = outbox._gsdAcceptanceContainer
+        let identity = try! SharedDatasetIdentityStore(directory: directory).loadOrCreate()
+        let publication = ShareScopePublicationStore(directory: directory)
+        try! publication.publish(ShareScopePublication(
+            scope: .account(userID: "share-retry-fixture", datasetID: identity.datasetID)))
+        captureSession = ShareCaptureSession(outbox: outbox, directory: directory,
+            credential: { .account(token: "fixture-token", ownerID: "share-retry-fixture") },
+            push: { task, _ in
+                if case .pushed(let id) = await push.attempt(task) { return id }
+                return nil
+            })
+    }
+''' + method + "\n}\n"
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-root", type=Path, default=Path(__file__).resolve().parents[1])
@@ -80,7 +110,16 @@ def main():
     target.mkdir(parents=True)
     original = source / "ShareExtension/ShareViewController.swift"
     inputs[str(original.relative_to(source))] = digest(original)
-    (target / "ShareViewController.swift").write_text(controller_operation(original.read_text()))
+    scoped = (source / "GSDKit/Sources/GSDSnapshot/ShareCaptureSession.swift").exists()
+    operation = scoped_controller_operation(original.read_text()) if scoped else controller_operation(original.read_text())
+    (target / "ShareViewController.swift").write_text(operation)
+    if scoped:
+        # Read-only same-file fixture access; no production storage/path behavior changes.
+        copied_outbox = package / "Sources/GSDSnapshot/ShareOutboxStore.swift"
+        with copied_outbox.open("a") as f:
+            f.write("\nextension ShareOutboxStore {\n"
+                    "    public var _gsdAcceptanceContainer: URL? { directoryURL?.deletingLastPathComponent() }\n"
+                    "}\n")
     fixture = Path(__file__).with_name("share_retry_probe.swift")
     inputs["probe/share_retry_probe.swift"] = digest(fixture)
     inputs["probe/check_share_retry.py"] = digest(Path(__file__))
@@ -98,7 +137,10 @@ let package = Package(
 ''')
     manifest = {
         "sourceRoot": str(source), "files": inputs,
-        "productionOperation": "ShareViewController.saveAndPush and per-sheet state",
+        "productionOperation": "ShareViewController.saveAndPush and actual ShareCaptureSession when present",
+        "verifiedAccountFixturePrerequisite": scoped,
+        "unchangedOriginalAssertionFixture": True,
+        "accountIsolationAcceptance": False,
         "doubles": ["DirectTaskPush", "UIViewController presentation shell"],
         "liveCloudAcceptance": False, "nativeShareAcceptance": False,
     }

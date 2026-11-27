@@ -8,7 +8,7 @@ import GSDSnapshot
 /// button shows a spinner meanwhile. A write failure surfaces inline — the sheet does not dismiss.
 struct ShareComposeView: View {
     let urls: [String]
-    let save: (SharedCapture) async throws -> Void
+    let save: (SharedCapture) async throws -> ShareCaptureSession.SaveResult
     let onComplete: () -> Void
     let onCancel: () -> Void
 
@@ -17,9 +17,10 @@ struct ShareComposeView: View {
     @State private var tagsText = ""
     @State private var errorMessage: String?
     @State private var isSaving = false
+    @State private var savedForReview = false
 
     init(initialTitle: String, urls: [String],
-         save: @escaping (SharedCapture) async throws -> Void,
+         save: @escaping (SharedCapture) async throws -> ShareCaptureSession.SaveResult,
          onComplete: @escaping () -> Void, onCancel: @escaping () -> Void) {
         self.urls = urls
         self.save = save
@@ -31,44 +32,53 @@ struct ShareComposeView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section(String(localized: "Task")) {
-                    TextField(String(localized: "Title"), text: $title, axis: .vertical)
-                        .accessibilityIdentifier("share.title")
-                }
-                Section(String(localized: "Quadrant")) {
-                    Picker(String(localized: "Quadrant"), selection: $quadrant) {
-                        ForEach(Quadrant.allCases, id: \.self) { q in
-                            Text(q.title).tag(q)
-                        }
+                Group {
+                    Section(String(localized: "Task")) {
+                        TextField(String(localized: "Title"), text: $title, axis: .vertical)
+                            .accessibilityIdentifier("share.title")
                     }
-                }
-                Section {
-                    TextField(String(localized: "comma, separated, tags"), text: $tagsText)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                    let chips = SharedCaptureBuilder.committedTags(fromField: tagsText)
-                    if !chips.isEmpty {
-                        FlowLayout(spacing: 6) {
-                            ForEach(chips, id: \.self) { tag in
-                                Text(tag)
-                                    .font(.footnote)
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 5)
-                                    .background(.quaternary, in: Capsule())
+                    Section(String(localized: "Quadrant")) {
+                        Picker(String(localized: "Quadrant"), selection: $quadrant) {
+                            ForEach(Quadrant.allCases, id: \.self) { q in
+                                Text(q.title).tag(q)
                             }
                         }
-                        .padding(.vertical, 2)
                     }
-                } header: {
-                    Text(String(localized: "Tags"))
-                } footer: {
-                    Text(String(localized: "Separate tags with commas"))
-                }
-                if !urls.isEmpty {
-                    Section(String(localized: "Link")) {
-                        ForEach(urls, id: \.self) { url in
-                            Text(url).font(.footnote).foregroundStyle(.secondary).lineLimit(2)
+                    Section {
+                        TextField(String(localized: "comma, separated, tags"), text: $tagsText)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
+                        let chips = SharedCaptureBuilder.committedTags(fromField: tagsText)
+                        if !chips.isEmpty {
+                            FlowLayout(spacing: 6) {
+                                ForEach(chips, id: \.self) { tag in
+                                    Text(tag)
+                                        .font(.footnote)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 5)
+                                        .background(.quaternary, in: Capsule())
+                                }
+                            }
+                            .padding(.vertical, 2)
                         }
+                    } header: {
+                        Text(String(localized: "Tags"))
+                    } footer: {
+                        Text(String(localized: "Separate tags with commas"))
+                    }
+                    if !urls.isEmpty {
+                        Section(String(localized: "Link")) {
+                            ForEach(urls, id: \.self) { url in
+                                Text(url).font(.footnote).foregroundStyle(.secondary).lineLimit(2)
+                            }
+                        }
+                    }
+                }
+                .disabled(savedForReview || isSaving)
+                if savedForReview {
+                    Section {
+                        Text(String(localized: "Saved on this device. Open GSD to review the task and choose its account."))
+                            .accessibilityIdentifier("share.saved-for-review")
                     }
                 }
                 if let errorMessage {
@@ -79,11 +89,15 @@ struct ShareComposeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(String(localized: "Cancel"), action: onCancel)
-                        .disabled(isSaving)
+                    if !savedForReview {
+                        Button(String(localized: "Cancel"), action: onCancel)
+                            .disabled(isSaving)
+                    }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    if isSaving {
+                    if savedForReview {
+                        Button(String(localized: "Done"), action: onComplete)
+                    } else if isSaving {
                         ProgressView()
                             .accessibilityLabel(String(localized: "Adding to GSD"))
                     } else {
@@ -107,8 +121,13 @@ struct ShareComposeView: View {
         errorMessage = nil
         _Concurrency.Task {
             do {
-                try await save(capture)
-                onComplete()
+                let result = try await save(capture)
+                if result == .held {
+                    isSaving = false
+                    savedForReview = true
+                } else {
+                    onComplete()
+                }
             } catch {
                 isSaving = false
                 errorMessage = String(localized: "Couldn't save to GSD. Please try again.")

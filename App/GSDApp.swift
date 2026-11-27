@@ -1,6 +1,7 @@
 import AppIntents
 import SwiftUI
 import UIKit
+import GSDModel
 import GSDStore
 import GSDSync
 import GSDSnapshot
@@ -18,6 +19,7 @@ struct GSDApp: App {
     @State private var watchSession: WatchSessionCoordinator
     @State private var spotlightIndexer: SpotlightIndexer
     @State private var shareDrainer: ShareInboxDrainer
+    private let shareScopePublisher: ShareScopePublisher
     /// True when the local database couldn't be opened even after recovery — the app shows a
     /// recovery screen instead of the main UI (so no edits hit a throwaway store).
     @State private var databaseUnavailable: Bool
@@ -77,8 +79,9 @@ struct GSDApp: App {
             liveScheduler = live
         }
         // The test/demo harness owns a scratch identity, never the real app-group dataset.
-        let watchMutationGate = WatchMutationGate(directory: isolated ? HarnessLaunch.scratchDirectory
-            : FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: AppGroup.id))
+        let sharedDirectory = isolated ? HarnessLaunch.scratchDirectory
+            : FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: AppGroup.id)
+        let watchMutationGate = WatchMutationGate(directory: sharedDirectory)
         // Repos shared by the store and the sync engine (Phase 5c): pulled writes reach the store's
         // observer, and the store's enqueues reach the engine's drain — same GRDB instances.
         let taskRepo = GRDBTaskRepository(database, now: now)
@@ -162,6 +165,7 @@ struct GSDApp: App {
             guard session.currentUserID == nil, tokenStore.load() == nil else { return nil }
             return .guest(installationID: identity.installationID, datasetID: identity.datasetID)
         }
+        shareScopePublisher = ShareScopePublisher(directory: sharedDirectory, scopeProvider: watchScopeProvider)
         liveScheduler?.configureScope(store: store, mutationGate: watchMutationGate,
                                       scopeProvider: watchScopeProvider)
         ReminderActionInbox.attach(store: store, mutationGate: watchMutationGate,
@@ -191,7 +195,10 @@ struct GSDApp: App {
             inbox: ShareInbox(store: isolated ? ShareOutboxStore(directoryURL: HarnessLaunch.scratchDirectory)
                                               : ShareOutboxStore()),
             store: store,
-            titleEnricher: ShareTitleEnricher(store: store, fetch: fetcher.title))
+            titleEnricher: ShareTitleEnricher(store: store, fetch: fetcher.title,
+                                            mutationGate: watchMutationGate, scopeProvider: watchScopeProvider),
+            mutationGate: watchMutationGate, scopeProvider: watchScopeProvider,
+            sharedDirectory: sharedDirectory, recoverJournals: true)
         _shareDrainer = State(initialValue: shareDrainer)
         // In-app intents (Siri/Shortcuts run in this process) resolve the SAME store via
         // AppDependencyManager. A second connection on the live DB would be invisible to
@@ -232,6 +239,7 @@ struct GSDApp: App {
                 DemoHomeScreen()
             } else {
             ContentView()
+                .environment(shareDrainer)
                 .environment(store)
                 .environment(session)
                 .environment(coordinator)

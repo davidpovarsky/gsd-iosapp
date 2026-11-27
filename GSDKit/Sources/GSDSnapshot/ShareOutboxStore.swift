@@ -6,6 +6,10 @@ import GSDModel
 /// file, and multiple shares before the app opens each survive.
 public struct ShareOutboxStore: Sendable {
     public static let directoryName = "share-outbox"
+    public static let inFlightDirectoryName = "share-inflight"
+    private var inFlightDirectoryURL: URL? {
+        directoryURL?.deletingLastPathComponent().appendingPathComponent(Self.inFlightDirectoryName, isDirectory: true)
+    }
     private let directoryURL: URL?
 
     /// Production: resolves `<AppGroup>/share-outbox/` (pure Foundation; GRDB-free).
@@ -31,6 +35,52 @@ public struct ShareOutboxStore: Sendable {
         try data.write(to: url, options: .atomic)
         // Wake a running app to drain now (esp. Mac Catalyst, where scenePhase won't).
         ShareOutboxSignal.post()
+    }
+
+    /// Written before direct POST, under the extension shared lease. A crash retains the
+    /// exact capture identity and origin even when the HTTP outcome is uncertain.
+    public func writeInFlight(_ capture: SharedCapture, id: UUID) throws {
+        guard let dir = inFlightDirectoryURL else { throw ShareOutboxError.noContainer }
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        try JSONEncoder().encode(capture).write(
+            to: dir.appendingPathComponent(id.uuidString + ".json"), options: .atomic)
+    }
+
+    public func inFlightCaptures() -> [(id: UUID, capture: SharedCapture)] {
+        guard let dir = inFlightDirectoryURL,
+              let names = try? FileManager.default.contentsOfDirectory(atPath: dir.path) else { return [] }
+        return names.compactMap { name in
+            guard name.hasSuffix(".json"), let id = UUID(uuidString: String(name.dropLast(5))),
+                  let data = try? Data(contentsOf: dir.appendingPathComponent(name)),
+                  let capture = try? JSONDecoder().decode(SharedCapture.self, from: data) else {
+                return nil // preserve unreadable journals; never replace them with fresh data
+            }
+            return (id: id, capture: capture)
+        }.sorted { $0.capture.capturedAt < $1.capture.capturedAt }
+    }
+
+    public func removeInFlight(id: UUID) {
+        guard let dir = inFlightDirectoryURL else { return }
+        // The ordinary outbox is already durable. A failed cleanup is harmless: recovery
+        // recognizes the same stable identity/payload and does not create another task.
+        try? FileManager.default.removeItem(at: dir.appendingPathComponent(id.uuidString + ".json"))
+    }
+
+    /// Caller holds the exclusive external-write lease, so no live writer can still own a journal.
+    public func recoverInFlight() throws {
+        for item in inFlightCaptures() {
+            let alreadyQueued = pending().contains { queued in
+                var queuedPayload = queued.capture
+                queuedPayload.remoteRecordID = nil
+                var journalPayload = item.capture
+                journalPayload.remoteRecordID = nil
+                return queued.capture.taskID == item.capture.taskID && item.capture.taskID != nil
+                    && queued.capture.origin == item.capture.origin
+                    && (queuedPayload == journalPayload || queued.capture.capturedAt > item.capture.capturedAt)
+            }
+            if !alreadyQueued { try write(item.capture) }
+            removeInFlight(id: item.id)
+        }
     }
 
     /// All captures, sorted by `capturedAt`. Unreadable/corrupt files are skipped AND deleted
