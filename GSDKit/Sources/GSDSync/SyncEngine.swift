@@ -168,6 +168,21 @@ public actor SyncEngine {
         if fenced && rawToken() != token { throw StaleSyncSession() }
     }
 
+    private static func failureMessage(_ error: any Error) -> String {
+        switch error {
+        case let generation as SyncQueueGenerationError:
+            return generation.localizedDescription
+        case is DatasetResetJournalError:
+            return String(localized: "Cloud reset status could not be verified. Try the data reset again in Settings.")
+        case is StaleSyncSession:
+            return String(localized: "Your account changed. Try the data reset again in Settings.")
+        case is CancellationError:
+            return String(localized: "The operation was interrupted. Please try again.")
+        default:
+            return String("\(error)".prefix(200))
+        }
+    }
+
     private static let epoch = "1970-01-01 00:00:00.000Z"
 
     /// Pull remote → local (upsert-only; no deletes). LWW vs local; device-local preserved via the
@@ -277,7 +292,18 @@ public actor SyncEngine {
         var pushed = 0, failed = 0
         var identityConfirmed = false
         var writtenThisPush: [String: String] = [:]   // taskId -> the version this push stored (F2)
-        for item in try await queue.pending() where isDue(item, nowMs: nowMs) {
+        // Keep the complete binding snapshot for this drain, including failed rows. Removing a
+        // successful first row must not make a later row for that capture lose its authority.
+        let queued = try await queue.all()
+        for var item in queued where item.status == .pending && isDue(item, nowMs: nowMs) {
+            try fence(owner)
+            let generation = try SyncQueueItem.resolvedServerDatasetGeneration(for: item.taskId, in: queued)
+            if let generation, item.serverDatasetGeneration == nil {
+                item.serverDatasetGeneration = generation
+                try await queue.update(item) // persist inheritance before any network mutation
+                try fence(owner)
+            }
+            try _Concurrency.Task.checkCancellation()
             try fence(owner)   // outside the item's `do`: a session that ended must not spend this item's retries
             let remote = index[item.taskId]
             // Parity S11 (Android `MalformedRemoteVersion`): a remote copy whose version is missing or
@@ -334,6 +360,8 @@ public actor SyncEngine {
                     let wire = TaskWireMapper.toWire(payload, current: current, owner: owner, deviceId: deviceId,
                                                      recordId: remote?.recordId ?? "",
                                                      defaultReminder: defaultReminder())
+                    try _Concurrency.Task.checkCancellation()
+                    try fence(owner)
                     if let listed {
                         var guarded = wire
                         guarded.clientUpdatedAt = LWW.guardedVersion(outgoing: wire.clientUpdatedAt, expected: listed.version)
@@ -352,7 +380,8 @@ public actor SyncEngine {
                     } else {
                         // Record the new recordId in the live index so a later same-drain DELETE for the
                         // same task_id finds it (else the create leaks an orphan remote record).
-                        let newRecordId = try await client.createTask(wire, token: token)
+                        let newRecordId = try await client.createTask(
+                            wire, datasetGeneration: item.serverDatasetGeneration, token: token)
                         index[item.taskId] = RemoteIndexEntry(recordId: newRecordId, version: wire.clientUpdatedAt, deviceId: deviceId)
                         writtenThisPush[item.taskId] = wire.clientUpdatedAt
                     }
@@ -499,7 +528,7 @@ public actor SyncEngine {
         } catch {
             // A throwing provider is NOT "signed out" — a session exists but couldn't be validated
             // (expired + refresh unavailable). Surface it; a silent no-op hides a dead session.
-            result.error = String("\(error)".prefix(200))
+            result.error = Self.failureMessage(error)
             return result
         }
 
@@ -555,7 +584,7 @@ public actor SyncEngine {
         } catch is StaleSyncSession {
             result.notSignedIn = true   // the session ended, so there's no sync outcome to report or record
         } catch {
-            result.error = String("\(error)".prefix(200))
+            result.error = Self.failureMessage(error)
             await record(trigger: trigger, result: result, conflicts: 0, start: start)
         }
         return result
@@ -583,7 +612,7 @@ public actor SyncEngine {
             guard let t = try await tokenProvider() else { result.notSignedIn = true; return result }
             token = t
         } catch {
-            result.error = String("\(error)".prefix(200))   // dead session ≠ signed out (see sync())
+            result.error = Self.failureMessage(error)   // dead session ≠ signed out (see sync())
             return result
         }
         guard let owner = JWT.userId(token) else {
@@ -599,7 +628,7 @@ public actor SyncEngine {
         } catch is StaleSyncSession {
             result.notSignedIn = true   // see sync()
         } catch {
-            result.error = String("\(error)".prefix(200))
+            result.error = Self.failureMessage(error)
             await record(trigger: trigger, result: result, conflicts: 0, start: start)
         }
         return result
@@ -621,7 +650,7 @@ public actor SyncEngine {
             token = t
         } catch {
             // An unavailable existing session never authorizes a local-only wipe.
-            result.error = String("\(error)".prefix(200))
+            result.error = Self.failureMessage(error)
             return result
         }
         guard let owner = JWT.userId(token) else {
@@ -670,7 +699,7 @@ public actor SyncEngine {
             await record(trigger: .manual, result: result, conflicts: 0, start: start)
         } catch {
             // A stale/cancelled session is an error here, never permission to erase local data.
-            result.error = String("\(error)".prefix(200))
+            result.error = Self.failureMessage(error)
             await record(trigger: .manual, result: result, conflicts: 0, start: start)
         }
         return result
