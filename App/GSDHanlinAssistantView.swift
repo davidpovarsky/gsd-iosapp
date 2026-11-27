@@ -1,4 +1,3 @@
-import Security
 import SwiftUI
 import Charts
 import enum GSDModel.Quadrant
@@ -27,7 +26,14 @@ struct GSDHanlinAssistantView: View {
     @State private var expandedWorkspace: GSDWorkspaceSheet?
     @State private var showModelSettings = false
     @State private var apiToken = ""
-    @State private var configuredToken = ""
+    @State private var providerCredential: GSDHanlinProviderCredential?
+    @State private var providerCredentialLoaded = false
+    @State private var draftProvider = "OpenRouter"
+    @State private var draftModelID = ""
+    @State private var draftEndpoint = ""
+    @State private var followsConversation = true
+    @State private var conversationNearBottom = true
+    @State private var userScrollingConversation = false
     @State private var configurationError: String?
     @AppStorage("gsd.hanlin.provider") private var provider = "OpenRouter"
     @AppStorage("gsd.hanlin.model") private var modelID = ""
@@ -39,19 +45,27 @@ struct GSDHanlinAssistantView: View {
         _assistant = State(initialValue: GSDHanlinAssistantState(store: store))
     }
 
-    private var conversationScope: GSDHanlinConversationScope {
+    private var configuredToken: String { providerCredential?.credential ?? "" }
+
+    private var isNativeProviderFixture: Bool {
         #if DEBUG && targetEnvironment(simulator)
-        if ProcessInfo.processInfo.arguments.contains("--demo-seed") &&
-           ProcessInfo.processInfo.arguments.contains("--gsd-native-hanlin-fixture") {
+        ProcessInfo.processInfo.arguments.contains("--demo-seed") &&
+            ProcessInfo.processInfo.arguments.contains("--gsd-native-hanlin-fixture")
+        #else
+        false
+        #endif
+    }
+
+    private var conversationScope: GSDHanlinConversationScope {
+        if isNativeProviderFixture {
             return .init(gsdAccountID: "native-fixture", provider: "OpenAI",
                          providerAccountID: "gsd-native-fixture")
         }
-        #endif
         return .init(
             gsdAccountID: cloudSession.currentUserID, provider: provider,
             providerAccountID: provider == "ChatGPT"
                 ? (chatGPT.canUsePlan ? chatGPT.activeID : nil)
-                : endpoint)
+                : providerCredential?.conversationAccountID(endpoint: endpoint))
     }
 
     var body: some View {
@@ -109,6 +123,21 @@ struct GSDHanlinAssistantView: View {
                             }
                         }.padding(15)
                     }
+                    .onScrollGeometryChange(for: Bool.self) { geometry in
+                        let visibleBottom = geometry.contentOffset.y + geometry.containerSize.height
+                        return visibleBottom >= geometry.contentSize.height + geometry.contentInsets.bottom - 80
+                    } action: { _, nearBottom in
+                        conversationNearBottom = nearBottom
+                        if userScrollingConversation { followsConversation = nearBottom }
+                    }
+                    .onScrollPhaseChange { _, phase in
+                        let wasUserScrolling = userScrollingConversation
+                        userScrollingConversation = phase == .tracking || phase == .interacting ||
+                            phase == .decelerating
+                        if wasUserScrolling, phase == .idle {
+                            followsConversation = conversationNearBottom
+                        }
+                    }
                     .accessibilityElement(children: .contain)
                     .accessibilityIdentifier("gsd.assistant.conversation")
                     .onChange(of: loadedScope) { _, _ in
@@ -117,7 +146,8 @@ struct GSDHanlinAssistantView: View {
                         }
                     }
                     .onChange(of: assistant.transcriptRevision) { _, _ in
-                        if isCurrentConversation, let last = assistant.messages.last?.id {
+                        if isCurrentConversation, followsConversation, !userScrollingConversation,
+                           let last = assistant.messages.last?.id {
                             withAnimation(.easeOut(duration: 0.2)) { proxy.scrollTo(last, anchor: .bottom) }
                         }
                     }
@@ -184,14 +214,19 @@ struct GSDHanlinAssistantView: View {
                     Button("MCP", systemImage: "network") { showRemoteBridgeSettings = true }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Model", systemImage: "gearshape") { showModelSettings = true }
+                    Button("Model", systemImage: "gearshape") { openModelSettings() }
                 }
             }
             .onAppear {
-                apiToken = GSDHanlinKeychain.read()
-                configuredToken = apiToken
+                loadProviderCredential()
                 if provider == "ChatGPT" ? !chatGPT.canUsePlan : modelID.isEmpty {
-                    showModelSettings = true
+                    openModelSettings()
+                }
+            }
+            .onChange(of: provider) { _, selected in
+                if selected != "ChatGPT" {
+                    cancelAssistantRequest()
+                    loadProviderCredential()
                 }
             }
             .task(id: conversationScope) {
@@ -281,7 +316,7 @@ struct GSDHanlinAssistantView: View {
         NavigationStack {
             Form {
                 Section("AI provider") {
-                    Picker("Provider", selection: $provider) {
+                    Picker("Provider", selection: $draftProvider) {
                         Text("ChatGPT plan").tag("ChatGPT")
                         Text("OpenRouter").tag("OpenRouter")
                         Text("OpenAI").tag("OpenAI")
@@ -289,7 +324,7 @@ struct GSDHanlinAssistantView: View {
                         Text("Google").tag("Google")
                         Text("Other compatible").tag("Other")
                     }
-                    if provider == "ChatGPT" {
+                    if draftProvider == "ChatGPT" {
                         Button("Continue with ChatGPT") { showChatGPTSettings = true }
                             .accessibilityIdentifier("hanlin.chatgpt.settings")
                         Text(chatGPT.status).font(.caption).foregroundStyle(.secondary)
@@ -297,10 +332,10 @@ struct GSDHanlinAssistantView: View {
                             LabeledContent("Model", value: chatGPT.selectedModelID)
                         }
                     } else {
-                        TextField("Model identifier", text: $modelID)
+                        TextField("Model identifier", text: $draftModelID)
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
-                        TextField("HTTPS API base URL", text: $endpoint)
+                        TextField("HTTPS API base URL", text: $draftEndpoint)
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
                             .keyboardType(.URL)
@@ -314,10 +349,19 @@ struct GSDHanlinAssistantView: View {
                 if let configurationError {
                     Text(configurationError).foregroundStyle(.red)
                 }
+                if draftProvider != "ChatGPT", !providerCredentialLoaded {
+                    if configurationError == nil {
+                        Text("The device Keychain is unavailable. Unlock the device and reopen this screen.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                    Button("Retry") { loadProviderCredential() }
+                        .accessibilityIdentifier("gsd.assistant.retry-provider-credential")
+                }
             }
             .navigationTitle("Hanlin model settings")
             .sheet(isPresented: $showChatGPTSettings) {
                 GSDChatGPTSettingsView(account: chatGPT) {
+                    await cancelAssistantRequest().value
                     await resetAssistantConversation()
                 }
             }
@@ -331,32 +375,74 @@ struct GSDHanlinAssistantView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        if provider == "ChatGPT" {
+                        if draftProvider == "ChatGPT" {
                             guard chatGPT.canUsePlan else {
                                 configurationError = String(localized: "Connect ChatGPT and enable plan usage first.")
                                 return
                             }
                             configurationError = nil
                             cancelAssistantRequest()
+                            commitModelSettings()
                             showModelSettings = false
                             return
                         }
-                        guard let url = URL(string: endpoint), url.scheme == "https", url.host != nil,
-                              !modelID.isEmpty else {
+                        guard let url = URL(string: draftEndpoint), url.scheme == "https", url.host != nil,
+                              !draftModelID.isEmpty else {
                             configurationError = String(localized: "Enter an HTTPS endpoint and a model identifier.")
                             return
                         }
+                        cancelAssistantRequest()
                         do {
-                            try GSDHanlinKeychain.save(apiToken)
-                            configuredToken = apiToken
+                            let saved = try GSDHanlinProviderKeychain.store.save(apiToken)
+                            providerCredential = saved
+                            providerCredentialLoaded = true
+                            apiToken = saved?.credential ?? ""
                             configurationError = nil
-                            cancelAssistantRequest()
+                            commitModelSettings()
                             showModelSettings = false
                         } catch {
                             configurationError = String(localized: "Keychain could not securely store this credential.")
                         }
                     }
+                    .disabled(draftProvider != "ChatGPT" && !providerCredentialLoaded && apiToken.isEmpty)
                 }
+            }
+        }
+    }
+
+    @MainActor
+    private func openModelSettings() {
+        loadProviderCredential()
+        draftProvider = provider
+        draftModelID = modelID
+        draftEndpoint = endpoint
+        apiToken = configuredToken
+        showModelSettings = true
+    }
+
+    @MainActor
+    private func commitModelSettings() {
+        provider = draftProvider
+        modelID = draftModelID
+        endpoint = draftEndpoint
+    }
+
+    @MainActor
+    private func loadProviderCredential() {
+        guard !isNativeProviderFixture else {
+            providerCredentialLoaded = true
+            return
+        }
+        do {
+            providerCredential = try GSDHanlinProviderKeychain.store.read()
+            providerCredentialLoaded = true
+            apiToken = configuredToken
+        } catch {
+            providerCredentialLoaded = false
+            providerCredential = nil
+            apiToken = ""
+            if provider != "ChatGPT" {
+                configurationError = String(localized: "The device Keychain is unavailable. Unlock the device and reopen this screen.")
             }
         }
     }
@@ -383,6 +469,9 @@ struct GSDHanlinAssistantView: View {
         isPreparingRequest = true
         loadedScope = nil
         restorationFailed = false
+        followsConversation = true
+        conversationNearBottom = true
+        userScrollingConversation = false
         prompt = ""
         expandedWorkspace = nil
         configurationError = nil
@@ -418,16 +507,13 @@ struct GSDHanlinAssistantView: View {
         let id = UUID()
         requestID = id
         isPreparingRequest = true
+        followsConversation = true
+        userScrollingConversation = false
         configurationError = nil
         prompt = ""
         promptFocused = false
         let sendingAssistant = assistant
-        #if DEBUG && targetEnvironment(simulator)
-        let nativeFixture = ProcessInfo.processInfo.arguments.contains("--demo-seed") &&
-            ProcessInfo.processInfo.arguments.contains("--gsd-native-hanlin-fixture")
-        #else
-        let nativeFixture = false
-        #endif
+        let nativeFixture = isNativeProviderFixture
         // The explicit simulator fixture never reads a real provider credential
         // into its request and never changes Keychain or saved model settings.
         let selectedProvider = nativeFixture ? "OpenAI" : provider
@@ -462,53 +548,6 @@ struct GSDHanlinAssistantView: View {
                 configurationError = String(format: String(localized: "ChatGPT access failed: %@"), GSDChatGPTCopy.error(error))
                 if prompt.isEmpty { prompt = text }
             }
-        }
-    }
-}
-
-private enum GSDHanlinKeychain {
-    private static let service = "com.itorah.gsd.hanlin-agent"
-    private static let account = "current-provider-api-key"
-
-    static func read() -> String {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: account,
-            kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne
-        ]
-        var result: CFTypeRef?
-        guard SecItemCopyMatching(query as CFDictionary, &result) == errSecSuccess,
-              let bytes = result as? Data, let text = String(data: bytes, encoding: .utf8)
-        else { return "" }
-        return text
-    }
-
-    static func save(_ value: String) throws {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: account
-        ]
-        if value.isEmpty {
-            let status = SecItemDelete(query as CFDictionary)
-            guard status == errSecSuccess || status == errSecItemNotFound else {
-                throw NSError(domain: NSOSStatusErrorDomain, code: Int(status))
-            }
-            return
-        }
-        let data = Data(value.utf8)
-        var result = SecItemUpdate(query as CFDictionary,
-            [kSecValueData as String: data] as CFDictionary)
-        if result == errSecItemNotFound {
-            var item = query
-            item[kSecValueData as String] = data
-            item[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
-            result = SecItemAdd(item as CFDictionary, nil)
-        }
-        guard result == errSecSuccess else {
-            throw NSError(domain: NSOSStatusErrorDomain, code: Int(result))
         }
     }
 }
