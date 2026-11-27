@@ -392,4 +392,519 @@ final class SyncCoordinator {
     func eraseRemoteTasksPass() async -> AccountDeleter.ErasePass { fatalError("Unexpected coordinator") }
     func syncNow() async { fatalError("Unexpected coordinator") }
 }
+
+#else
+import Foundation
+import UIKit
+import XCTest
+
+/// Ordinary app data and real touch only. A read-only host watcher attests DB/outbox invariance.
+@MainActor
+final class GSDWorkspacePresentationPersistenceUITests: XCTestCase {
+    private enum Failure: Error { case condition(String) }
+    private struct TaskIdentity {
+        let id: String
+        let title: String
+    }
+    private struct TimelineObservation {
+        let zoom: Double
+        let lower: Date
+        let upper: Date
+        let label: String
+        let chartFrame: CGRect
+        var width: TimeInterval { upper.timeIntervalSince(lower) }
+        var json: [String: Any] {
+            ["zoomPercent": zoom, "lowerEpoch": lower.timeIntervalSince1970,
+             "upperEpoch": upper.timeIntervalSince1970, "visibleRange": label,
+             "chartFrame": NSStringFromCGRect(chartFrame)]
+        }
+    }
+    private var hebrew = false
+    private var artifacts = URL(fileURLWithPath: "/")
+    private var receipt: [String: Any] = [:]
+    private var checks: [String] = []
+    private let lane = "urgent-important"
+
+    func testBoardCollapseAndTimelineZoomPersistAcrossNavigationAndRelaunch() throws {
+        continueAfterFailure = false
+        let environment = ProcessInfo.processInfo.environment
+        guard environment["GSD_SYSTEM_SURFACE_FRESH_SIMULATOR"] == "1",
+              let source = environment["GSD_SYSTEM_SURFACE_APP_SOURCE"],
+              source.range(of: "^[0-9a-f]{40}$", options: .regularExpression) != nil,
+              let simulator = environment["GSD_SYSTEM_SURFACE_SIMULATOR_UDID"],
+              UUID(uuidString: simulator) != nil,
+              let root = environment["GSD_SYSTEM_SURFACE_ARTIFACTS"], root.hasPrefix("/"),
+              let language = environment["GSD_TEST_LANGUAGE"], ["en", "he"].contains(language),
+              let family = environment["GSD_WORKSPACE_PRESENTATION_DEVICE_FAMILY"],
+              ["phone", "tablet"].contains(family) else {
+            throw Failure.condition("Missing owned simulator, source, family, language, or artifacts.")
+        }
+        let actualFamily = UIDevice.current.userInterfaceIdiom == .pad ? "tablet" : "phone"
+        try require(actualFamily == family, "The actual test device must match the declared family.")
+        if let actual = environment["SIMULATOR_UDID"] {
+            try require(actual.caseInsensitiveCompare(simulator) == .orderedSame,
+                        "The test runner must use the declared owned simulator.")
+        }
+        hebrew = language == "he"
+        artifacts = URL(fileURLWithPath: root, isDirectory: true)
+            .appendingPathComponent("workspace-presentation-\(family)-\(language)", isDirectory: true)
+        try require(!FileManager.default.fileExists(atPath: artifacts.path),
+                    "Evidence must use a new append-only configuration directory.")
+        try FileManager.default.createDirectory(at: artifacts, withIntermediateDirectories: true)
+        receipt = [
+            "schemaVersion": 1, "sourceSHA": source, "simulator": simulator,
+            "language": language, "deviceFamily": family, "actualDeviceFamily": actualFamily,
+            "scope": "ordinary_app_native_workspace_presentation_and_disk_relaunch",
+            "demoSeed": false, "inMemoryStore": false, "personalAccount": false,
+            "taskMutationRoute": "original_ui_actions", "timeZone": TimeZone.current.identifier,
+            "passed": false
+        ]
+        try persist()
+        XCUIDevice.shared.orientation = family == "tablet" ? .landscapeLeft : .portrait
+        let app = XCUIApplication(bundleIdentifier: "com.itorah.gsd")
+        app.launchArguments = [
+            "-AppleLanguages", hebrew ? "(he)" : "(en)",
+            "-AppleLocale", hebrew ? "he_IL" : "en_US"
+        ]
+        defer { app.terminate() }
+        do {
+            try exercise(app)
+            receipt["passed"] = true
+            try persist()
+        } catch {
+            try? capture(app, "failure-presentation-native-state")
+            receipt["failure"] = String(describing: error)
+            try persist()
+            throw error
+        }
+    }
+
+    private func exercise(_ app: XCUIApplication) throws {
+        app.launch()
+        try openWorkspace(app)
+        try tapMode("table", in: app)
+        let token = String(UUID().uuidString.prefix(8))
+        var tasks: [TaskIdentity] = []
+        for letter in ["A", "B", "C"] {
+            let task = try createTask("GSD Presentation \(letter) \(token)", in: app)
+            tasks.append(task)
+            try setDatePresence(true, using: app.buttons["task-workspace.date.\(task.id)"], in: app)
+        }
+        try require(Set(tasks.map(\.id)).count == 3, "Three real independent task identities are required.")
+        receipt["tasks"] = tasks.map { ["id": $0.id, "title": $0.title] }
+        try checked("ordinaryTasksAndDatesCreated")
+        try capture(app, "01-ordinary-tasks-and-dates")
+
+        try tapMode("board", in: app)
+        let expanded = element("task-workspace.board.column.\(lane)", in: app)
+        try require(expanded.waitForExistence(timeout: 10), "The original Board lane must start expanded.")
+        let before = try databaseCheckpoint("before-collapse", tasks: tasks, in: app)
+        let collapse = try boardCollapseControl(in: app)
+        collapse.tap()
+        try requireCollapsedBoard(app)
+        try tapMode("timeline", in: app)
+        try tapMode("board", in: app)
+        try requireCollapsedBoard(app)
+        let search = app.textFields["task-workspace.search"]
+        try require(search.isHittable, "The real workspace search field must be reachable.")
+        search.tap()
+        search.typeText("NoSuchGSDPresentation-" + token + "\n")
+        try require(element("task-workspace.board", in: app).waitForNonExistence(timeout: 8),
+                    "The filter must actually remove the visible Board before restoration.")
+        try capture(app, "02-board-filtered-away")
+        let clear = app.buttons[hebrew ? "ניקוי חיפוש" : "Clear search"]
+        try require(clear.waitForExistence(timeout: 5) && clear.isHittable, "The normal clear-search action is missing.")
+        clear.tap()
+        try require(clear.waitForNonExistence(timeout: 5), "The filter must really clear.")
+        try requireCollapsedBoard(app)
+        try checked("boardCollapseSurvivesTabAndFilter")
+        let after = try databaseCheckpoint("after-collapse", tasks: tasks, in: app)
+        for key in ["schemaSHA256", "taskRowsSHA256", "outboxRowsSHA256", "otherTaskRowsSHA256"] {
+            try require(before[key] as? String == after[key] as? String,
+                        "Collapse, tab navigation and filtering must not alter canonical \(key).")
+        }
+        receipt["collapseDatabaseSnapshots"] = ["before": before, "after": after]
+        try checked("collapseLeavesDatabaseAndOutboxUnchanged")
+        try capture(app, "03-board-collapse-retained")
+
+        try coldRelaunch(app)
+        try openWorkspace(app)
+        try tapMode("board", in: app)
+        try requireCollapsedBoard(app)
+        try checked("boardCollapseSurvivesColdRelaunch")
+        try capture(app, "04-board-after-cold-relaunch")
+
+        try tapMode("timeline", in: app)
+        try tapButton("task-workspace.timeline.fit", in: app)
+        let full = try timelineObservation(in: app)
+        try require(full.zoom == 100 && full.width >= 23 * 60 * 60,
+                    "The original Fit view must expose a full, parseable date range at 100%.")
+        let chart = element("task-workspace.timeline.chart", in: app)
+        let viewport = visibleViewport(in: app)
+        try require(viewport.contains(chart.frame) && chart.frame.width >= 180 && chart.frame.height >= 140,
+                    "A fully visible chart with measured space for a real pinch is required.")
+        try require(chart.isHittable, "The native Timeline chart must accept the actual pinch.")
+        receipt["fullTimeline"] = full.json
+        try capture(app, "05-timeline-before-pinch")
+        chart.pinch(withScale: 1.5, velocity: 1.0)
+        try waitForValueChange(element("task-workspace.timeline.zoom-scale", in: app), from: "100%")
+        let zoomed = try timelineObservation(in: app)
+        try require(zoomed.zoom >= 140 && zoomed.zoom <= 160, "The observed zoom must match the native 1.5 pinch.")
+        try require(zoomed.width < full.width - 3600,
+                    "A changed percentage alone is insufficient; the rendered date interval must narrow.")
+        try require(abs(full.width / zoomed.width - zoomed.zoom / 100) < 0.04,
+                    "The measured date range must agree with the reported zoom, allowing minute formatting.")
+        try contained(zoomed, in: full)
+        receipt["afterNativePinch"] = zoomed.json
+        try checked("nativePinchChangesZoomAndVisibleRange")
+        try capture(app, "06-timeline-after-native-pinch")
+
+        let earlier = app.buttons["task-workspace.timeline.earlier"]
+        // A pinch may anchor near either end. Exercise both real controls in an enabled order.
+        let firstEarlier = earlier.isEnabled
+        let first = try shiftTimeline(earlier: firstEarlier, previous: zoomed, full: full, in: app)
+        let shifted = try shiftTimeline(earlier: !firstEarlier, previous: first, full: full, in: app)
+        receipt["earlierLaterTimeline"] = [first.json, shifted.json]
+        try checked("earlierAndLaterShiftDatesWithoutChangingZoom")
+        try capture(app, "07-timeline-after-date-navigation")
+
+        // B was dated between A and C. Clearing its middle date preserves the full outer domain.
+        let target = tasks[1]
+        let row = app.buttons["task-workspace.timeline.inspect.\(target.id)"]
+        try require(row.waitForExistence(timeout: 10) && row.isHittable,
+                    "The original task row must remain touchable after zoom and date navigation.")
+        try require(row.label == target.title, "The zoomed row must still identify the exact canonical task.")
+        row.tap()
+        let due = app.buttons["task-workspace.timeline.due.\(target.id)"]
+        try require(due.waitForExistence(timeout: 10) && due.isHittable,
+                    "The selected task's original date action must remain in the visible footer.")
+        try capture(app, "08-zoomed-row-selected")
+        try setDatePresence(false, using: due, in: app)
+        let close = app.buttons["task-workspace.timeline.close-actions"]
+        try require(close.waitForExistence(timeout: 10) && close.isHittable, "Selected task actions did not return.")
+        close.tap()
+        try tapMode("table", in: app)
+        try verifyCanonicalNoDate(target, in: app, name: "09-canonical-date-cleared")
+        try checked("postZoomDateActionUpdatesCanonicalTask")
+        try tapMode("board", in: app)
+        try requireCollapsedBoard(app)
+        try tapMode("timeline", in: app)
+        let beforeRelaunch = try timelineObservation(in: app)
+        try sameViewport(beforeRelaunch, shifted)
+        receipt["beforeColdTimeline"] = beforeRelaunch.json
+        try capture(app, "10-presentation-before-cold-relaunch")
+
+        try coldRelaunch(app)
+        try openWorkspace(app)
+        try tapMode("board", in: app)
+        try requireCollapsedBoard(app)
+        try tapMode("timeline", in: app)
+        let restored = try timelineObservation(in: app)
+        try sameViewport(restored, beforeRelaunch)
+        receipt["afterColdTimeline"] = restored.json
+        try capture(app, "11-timeline-restored-from-disk")
+        try tapMode("table", in: app)
+        try verifyCanonicalNoDate(target, in: app, name: "12-canonical-date-after-cold-relaunch")
+        for task in tasks {
+            let open = app.buttons["task-workspace.open.\(task.id)"]
+            try require(open.waitForExistence(timeout: 10) && open.label == task.title,
+                        "Ordinary relaunch must preserve each original task ID and title.")
+        }
+        try checked("dateMutationAndPresentationSurviveColdRelaunch")
+        try tapMode("timeline", in: app)
+        try tapButton("task-workspace.timeline.fit", in: app)
+        let fitted = try timelineObservation(in: app)
+        try require(fitted.zoom == 100, "Fit must restore exactly 100%.")
+        try require(abs(fitted.lower.timeIntervalSince(full.lower)) <= 60 &&
+                    abs(fitted.upper.timeIntervalSince(full.upper)) <= 60,
+                    "Fit must restore the original full date domain, not just its percentage.")
+        receipt["afterFit"] = fitted.json
+        try checked("fitRestoresFullRange")
+        try capture(app, "13-timeline-fit-restored")
+    }
+
+    private func openWorkspace(_ app: XCUIApplication) throws {
+        let skip = app.buttons[hebrew ? "דילוג" : "Skip"]
+        if skip.waitForExistence(timeout: 3) {
+            try require(skip.isHittable, "The normal onboarding action is obscured.")
+            skip.tap()
+            try require(skip.waitForNonExistence(timeout: 10), "Onboarding did not finish.")
+        }
+        let tab = app.tabBars.buttons[hebrew ? "מרחב משימות" : "Workspace"]
+        let sidebar = element("gsd.sidebar.workspace", in: app)
+        let entry = tab.exists ? tab : sidebar
+        try require(entry.waitForExistence(timeout: 25) && entry.isHittable, "The actual Workspace entry is unavailable.")
+        entry.tap()
+        try require(element("task-workspace", in: app).waitForExistence(timeout: 15), "The shared workspace did not open.")
+        let frame = app.frame
+        let tablet = UIDevice.current.userInterfaceIdiom == .pad
+        try require(tablet ? frame.width > frame.height : frame.height > frame.width,
+                    "The observed app must match the requested tablet-landscape or phone-portrait configuration.")
+        receipt["appFrame"] = NSStringFromCGRect(frame)
+    }
+
+    private func createTask(_ title: String, in app: XCUIApplication) throws -> TaskIdentity {
+        try tapButton("task-workspace.create", in: app)
+        let field = app.textFields["editor-title"]
+        try require(field.waitForExistence(timeout: 10) && field.isHittable, "The canonical create editor did not open.")
+        let form = element("task-editor", in: app)
+        let quadrant = form.buttons.matching(NSPredicate(
+            format: "label CONTAINS %@", hebrew ? "לביצוע מיידי" : "Do First")).firstMatch
+        try require(quadrant.waitForExistence(timeout: 5) && quadrant.isHittable, "The real Do First control is missing.")
+        quadrant.tap()
+        try require(quadrant.isSelected, "The created task must use the intended actual Board lane.")
+        field.tap()
+        field.typeText(title)
+        try tapButton("editor-save", in: app)
+        try require(field.waitForNonExistence(timeout: 10), "The real task create must finish.")
+        let matches = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH 'task-workspace.open.' AND label == %@", title))
+        try require(matches.firstMatch.waitForExistence(timeout: 15), "The new canonical task row is missing.")
+        let ids = Set(matches.allElementsBoundByIndex.map(\.identifier))
+        try require(ids.count == 1, "A title must resolve to one exact task, without duplicates.")
+        guard let identifier = ids.first else { throw Failure.condition("Missing task identity.") }
+        let id = String(identifier.dropFirst("task-workspace.open.".count))
+        try require(!id.isEmpty, "The canonical task ID must not be empty.")
+        return TaskIdentity(id: id, title: title)
+    }
+
+    private func setDatePresence(_ wanted: Bool, using action: XCUIElement, in app: XCUIApplication) throws {
+        try require(action.waitForExistence(timeout: 10) && action.isHittable, "The original date action must be touchable.")
+        action.tap()
+        let row = app.switches["task-workspace.date.toggle"].firstMatch
+        try require(row.waitForExistence(timeout: 10), "The shared date editor did not open.")
+        let native = row.switches.firstMatch
+        try require(native.waitForExistence(timeout: 5) && native.isHittable,
+                    "The real nested UISwitch must be available for the date change.")
+        try require(row.frame.contains(native.frame) && app.frame.contains(native.frame), "The date switch must be visible.")
+        let before = wanted ? "0" : "1"
+        let after = wanted ? "1" : "0"
+        try require(native.value as? String == before, "The native date switch must begin in the opposite state.")
+        native.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        let settled = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", after), object: native)
+        try require(XCTWaiter.wait(for: [settled], timeout: 5) == .completed,
+                    "The native switch must actually change before saving.")
+        try tapButton("task-workspace.date.save", in: app)
+        try require(row.waitForNonExistence(timeout: 10), "The original date mutation did not finish.")
+    }
+
+    private func requireCollapsedBoard(_ app: XCUIApplication) throws {
+        let column = element("task-workspace.board.column.\(lane)", in: app)
+        try require(column.waitForNonExistence(timeout: 8), "The stored Board lane must remain collapsed.")
+        let expand = try boardCollapseControl(in: app)
+        try require(expand.label == (hebrew ? "הרחבת העמודה" : "Expand column"),
+                    "The same real control must advertise Expand after collapse.")
+        try require(expand.frame.width >= 44 && expand.frame.height >= 44, "The collapsed lane must retain a usable touch target.")
+    }
+
+    private func boardCollapseControl(in app: XCUIApplication) throws -> XCUIElement {
+        let control = app.buttons["task-workspace.board.collapse.\(lane)"]
+        try require(control.waitForExistence(timeout: 10), "The real Board collapse control is missing.")
+        let board = app.scrollViews["task-workspace.board"].firstMatch
+        try require(board.waitForExistence(timeout: 10) && !board.frame.isEmpty, "The native Board scroll container is missing.")
+        for _ in 0..<6 {
+            let viewport = board.frame.intersection(app.frame)
+            if viewport.contains(control.frame) && !control.frame.isEmpty { break }
+            if control.frame.midX > viewport.midX { board.swipeLeft() } else { board.swipeRight() }
+        }
+        try require(board.frame.intersection(app.frame).contains(control.frame) && control.isHittable,
+                    "The Board control must be physically visible before touch.")
+        return control
+    }
+
+    private func timelineObservation(in app: XCUIApplication) throws -> TimelineObservation {
+        let zoom = element("task-workspace.timeline.zoom-scale", in: app)
+        let range = element("task-workspace.timeline.visible-range", in: app)
+        let chart = element("task-workspace.timeline.chart", in: app)
+        try require(zoom.waitForExistence(timeout: 10) && range.waitForExistence(timeout: 10) &&
+                    chart.waitForExistence(timeout: 10), "Timeline zoom, range and chart must all be present.")
+        guard let rawZoom = zoom.value as? String,
+              let percentage = Double(rawZoom.replacingOccurrences(of: "%", with: "")) else {
+            throw Failure.condition("Timeline must expose its original numeric zoom percentage.")
+        }
+        let parts = range.label.components(separatedBy: " – ")
+        try require(parts.count == 2, "The original visible range must expose two actual formatted dates.")
+        let format = Date.FormatStyle(date: .abbreviated, time: .shortened,
+                                      locale: Locale(identifier: hebrew ? "he_IL" : "en_US"),
+                                      calendar: Calendar(identifier: .gregorian), timeZone: TimeZone.current)
+        let lower = try format.parseStrategy.parse(parts[0])
+        let upper = try format.parseStrategy.parse(parts[1])
+        try require(upper > lower && percentage >= 100 && percentage <= 1600, "The observed Timeline range must be valid.")
+        return TimelineObservation(zoom: percentage, lower: lower, upper: upper,
+                                   label: range.label, chartFrame: chart.frame)
+    }
+
+    private func shiftTimeline(earlier: Bool, previous: TimelineObservation,
+                               full: TimelineObservation, in app: XCUIApplication) throws -> TimelineObservation {
+        let button = app.buttons["task-workspace.timeline." + (earlier ? "earlier" : "later")]
+        try require(button.waitForExistence(timeout: 5) && button.isEnabled && button.isHittable,
+                    "Both real date navigation controls must have an enabled touch opportunity.")
+        button.tap()
+        let range = element("task-workspace.timeline.visible-range", in: app)
+        let changed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label != %@", previous.label), object: range)
+        try require(XCTWaiter.wait(for: [changed], timeout: 8) == .completed, "Date navigation must change the visible dates.")
+        let result = try timelineObservation(in: app)
+        try require(result.zoom == previous.zoom && abs(result.width - previous.width) <= 120,
+                    "Date navigation must preserve zoom and visible interval width.")
+        try require(earlier ? result.lower < previous.lower : result.lower > previous.lower,
+                    "The date range must move in the action's actual chronological direction, including RTL.")
+        try contained(result, in: full)
+        return result
+    }
+
+    private func contained(_ observation: TimelineObservation, in full: TimelineObservation) throws {
+        try require(observation.lower.timeIntervalSince(full.lower) >= -60 &&
+                    observation.upper.timeIntervalSince(full.upper) <= 60, "The visible dates must stay inside the task domain.")
+    }
+
+    private func sameViewport(_ actual: TimelineObservation, _ expected: TimelineObservation) throws {
+        try require(actual.zoom == expected.zoom &&
+                    abs(actual.lower.timeIntervalSince(expected.lower)) <= 60 &&
+                    abs(actual.upper.timeIntervalSince(expected.upper)) <= 60,
+                    "Navigation and cold reopen must restore the actual zoom and center date.")
+    }
+
+    private func verifyCanonicalNoDate(_ task: TaskIdentity, in app: XCUIApplication, name: String) throws {
+        let date = app.buttons["task-workspace.date.\(task.id)"]
+        try require(date.waitForExistence(timeout: 10) && date.label == (hebrew ? "קביעת תאריך" : "Set date"),
+                    "The canonical table must show that this exact task has no due date.")
+        try tapButton("task-workspace.open.\(task.id)", in: app)
+        let title = app.textFields["editor-title"]
+        try require(title.waitForExistence(timeout: 10) && title.value as? String == task.title,
+                    "The date mutation must still open the exact original canonical task.")
+        let toggle = app.switches[hebrew ? "יש תאריך יעד" : "Has due date"].firstMatch
+        let form = element("task-editor", in: app)
+        for _ in 0..<5 {
+            if toggle.exists && toggle.isHittable { break }
+            form.swipeUp()
+        }
+        try require(toggle.exists && toggle.value as? String == "0", "The actual editor must reload a nil due date.")
+        try capture(app, name)
+        try tapButton("editor-cancel", in: app)
+        try require(title.waitForNonExistence(timeout: 10), "Read-only canonical inspection must close through Cancel.")
+    }
+
+    private func databaseCheckpoint(_ phase: String, tasks: [TaskIdentity],
+                                    in app: XCUIApplication) throws -> [String: Any] {
+        let nonce = UUID().uuidString
+        let request = artifacts.appendingPathComponent("database-\(phase).request.json")
+        let acknowledgment = artifacts.appendingPathComponent("database-\(phase).ack.json")
+        try require(!FileManager.default.fileExists(atPath: request.path) &&
+                    !FileManager.default.fileExists(atPath: acknowledgment.path), "Checkpoint evidence must be fresh.")
+        let payload: [String: Any] = [
+            "schemaVersion": 1, "phase": phase, "nonce": nonce,
+            "sourceSHA": receipt["sourceSHA"]!, "simulator": receipt["simulator"]!,
+            "taskIDs": tasks.map(\.id).sorted(),
+            "tables": ["tasks", "syncQueue", "deletedTasks", "archivedTasks"],
+            "readOnlyRequired": true
+        ]
+        try JSONSerialization.data(withJSONObject: payload, options: [.prettyPrinted, .sortedKeys])
+            .write(to: request, options: .atomic)
+        let deadline = Date().addingTimeInterval(60)
+        while Date() < deadline {
+            if FileManager.default.fileExists(atPath: acknowledgment.path) { break }
+            Thread.sleep(forTimeInterval: 0.2)
+        }
+        try require(FileManager.default.fileExists(atPath: acknowledgment.path),
+                    "The owned read-only database watcher must acknowledge each snapshot within 60 seconds.")
+        guard let ack = try JSONSerialization.jsonObject(with: Data(contentsOf: acknowledgment)) as? [String: Any] else {
+            throw Failure.condition("Invalid database checkpoint acknowledgment.")
+        }
+        try require(ack["schemaVersion"] as? Int == 1 && ack["nonce"] as? String == nonce &&
+                    ack["phase"] as? String == phase && ack["sourceSHA"] as? String == receipt["sourceSHA"] as? String &&
+                    ack["simulator"] as? String == receipt["simulator"] as? String &&
+                    ack["captureComplete"] as? Bool == true && ack["readOnly"] as? Bool == true,
+                    "The snapshot must bind this exact source, owned simulator, phase, and fresh nonce.")
+        try require(ack["taskIDs"] as? [String] == tasks.map(\.id).sorted(),
+                    "The read-only database must contain the same three actual canonical tasks.")
+        for key in ["schemaSHA256", "taskRowsSHA256", "outboxRowsSHA256", "otherTaskRowsSHA256"] {
+            guard let digest = ack[key] as? String else { throw Failure.condition("Missing actual snapshot digest: \(key)") }
+            try require(digest.range(of: "^[0-9a-f]{64}$", options: .regularExpression) != nil, "Invalid database snapshot digest.")
+        }
+        return ack
+    }
+
+    private func coldRelaunch(_ app: XCUIApplication) throws {
+        app.terminate()
+        try require(app.wait(for: .notRunning, timeout: 10), "Cold persistence requires an actual process termination.")
+        app.launch()
+    }
+
+    private func tapMode(_ mode: String, in app: XCUIApplication) throws {
+        let identifier = "task-workspace.tab.\(mode)"
+        let button = app.buttons[identifier].firstMatch
+        try require(button.waitForExistence(timeout: 10), "The original presentation mode is missing.")
+        let strips = app.scrollViews.containing(.button, identifier: identifier)
+            .allElementsBoundByIndex.filter { !$0.frame.isEmpty }
+        guard let strip = strips.min(by: { $0.frame.height < $1.frame.height }) else {
+            throw Failure.condition("The actual presentation strip is unavailable.")
+        }
+        for _ in 0..<4 {
+            let viewport = strip.frame.intersection(app.frame)
+            if !button.frame.isEmpty && viewport.contains(button.frame) { break }
+            if button.frame.midX > viewport.midX { strip.swipeLeft() } else { strip.swipeRight() }
+        }
+        try require(strip.frame.intersection(app.frame).contains(button.frame) && button.isHittable,
+                    "The actual presentation tab must be inside its visible strip before tapping.")
+        button.tap()
+    }
+
+    private func tapButton(_ id: String, in app: XCUIApplication) throws {
+        let button = app.buttons[id].firstMatch
+        try require(button.waitForExistence(timeout: 10) && button.isEnabled && button.isHittable,
+                    "The real action must be visible and enabled: \(id)")
+        button.tap()
+    }
+
+    private func waitForValueChange(_ element: XCUIElement, from oldValue: String) throws {
+        let changed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value != %@", oldValue), object: element)
+        try require(XCTWaiter.wait(for: [changed], timeout: 8) == .completed, "The native gesture must change the actual zoom value.")
+    }
+
+    private func element(_ id: String, in app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any).matching(identifier: id).firstMatch
+    }
+
+    private func visibleViewport(in app: XCUIApplication) -> CGRect {
+        var viewport = app.frame
+        for cover in app.tabBars.allElementsBoundByIndex + app.keyboards.allElementsBoundByIndex {
+            if cover.frame.intersects(viewport) && cover.frame.minY > viewport.minY {
+                viewport.size.height = min(viewport.maxY, cover.frame.minY) - viewport.minY
+            }
+        }
+        return viewport
+    }
+
+    private func require(_ condition: Bool, _ message: String) throws {
+        guard condition else { XCTFail(message); throw Failure.condition(message) }
+    }
+
+    private func checked(_ name: String) throws {
+        checks.append(name)
+        try persist()
+    }
+
+    private func persist() throws {
+        receipt["checks"] = checks
+        try JSONSerialization.data(withJSONObject: receipt, options: [.prettyPrinted, .sortedKeys])
+            .write(to: artifacts.appendingPathComponent("workspace-presentation-persistence.json"), options: .atomic)
+    }
+
+    private func capture(_ app: XCUIApplication, _ name: String) throws {
+        let destination = artifacts.appendingPathComponent(name + ".png")
+        try require(!FileManager.default.fileExists(atPath: destination.path), "Raw screenshots must never be replaced.")
+        let screenshot = XCUIScreen.main.screenshot()
+        let attachment = XCTAttachment(screenshot: screenshot)
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        try screenshot.pngRepresentation.write(to: destination, options: .atomic)
+        let observed = app.debugDescription
+        let hierarchy = XCTAttachment(string: observed)
+        hierarchy.name = name + "-observed-elements"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
+        try observed.write(to: artifacts.appendingPathComponent(name + ".txt"), atomically: true, encoding: .utf8)
+    }
+}
 #endif
