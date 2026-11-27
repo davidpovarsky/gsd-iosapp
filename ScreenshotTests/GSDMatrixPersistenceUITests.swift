@@ -71,7 +71,7 @@ final class GSDMatrixPersistenceUITests: XCTestCase {
         // The existing product-video helper observes this native keyboard key. If it is absent,
         // attempt a tap on the observed navigation bar, then require actual keyboard dismissal.
         if app.keyboards.firstMatch.exists {
-            let hide = app.keyboards.buttons["Hide keyboard"]
+            let hide = app.keyboards.buttons[hebrew ? "הסתרת המקלדת" : "Hide keyboard"]
             if hide.exists {
                 hide.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
             } else {
