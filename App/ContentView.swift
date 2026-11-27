@@ -177,6 +177,11 @@ struct ContentView: View {
                 DeepLinkHandoff.clearPendingURL()
                 handleDeepLink(url)
             }
+            .onReceive(NotificationCenter.default.publisher(for: ReminderActionInbox.openNotification)) { note in
+                guard let id = note.object as? UUID,
+                      let request = ReminderActionInbox.consumePendingOpen(matching: id) else { return }
+                openReminderTask(request)
+            }
             .onReceive(NotificationCenter.default.publisher(for: .gsdShowCommandPalette)) { _ in
                 palette.showPalette = true
             }
@@ -195,6 +200,9 @@ struct ContentView: View {
             .task {
                 if let url = DeepLinkHandoff.consumePendingURL() {
                     handleDeepLink(url)
+                }
+                if let request = ReminderActionInbox.consumePendingOpen() {
+                    openReminderTask(request)
                 }
             }
     }
@@ -273,6 +281,17 @@ struct ContentView: View {
                 else { palette.editor = .edit(task) }
             } else {
                 navigate(to: .matrix)
+            }
+        }
+    }
+
+    /// A reminder is resolved within its original account/dataset lease. The callback makes
+    /// the presentation decision synchronously; external URL routing keeps its existing path.
+    private func openReminderTask(_ request: ReminderActionInbox.OpenRequest) {
+        _Concurrency.Task { @MainActor in
+            await ReminderActionInbox.resolveOpen(request) { task in
+                if task.isSaved { openSavedTask(task.id) }
+                else { palette.editor = .edit(task) }
             }
         }
     }
