@@ -10,6 +10,8 @@ struct CaptureView: View {
     @State private var text = ""
     @State private var chosen: Quadrant?
     @State private var saveFailed = false
+    @State private var origin: WatchModel.ActionLease?
+    @State private var boundOrigin = false
 
     private var overLimit: Bool { WatchCommandPlan.captureOverLimit(text) }
     private var parsed: ParsedCapture { CaptureParser.parse(text) }
@@ -18,6 +20,26 @@ struct CaptureView: View {
     var body: some View {
         NavigationStack {
             List {
+              if !model.accepts(origin) {
+                if origin == nil {
+                    Text("Open GSD on your iPhone to load your tasks.")
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("The account or task collection changed. This draft has not been sent.")
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("watch-capture-scope-changed")
+                }
+                if let current = model.actionLease,
+                   origin == nil || origin?.scope == current.scope {
+                    Button {
+                        origin = current
+                        saveFailed = false
+                    } label: {
+                        if origin == nil { Text("Start a new task") }
+                        else { Text("Resume draft") }
+                    }
+                }
+              } else {
                 TextField("New task", text: $text)
                     .accessibilityIdentifier("watch-capture-field")
 
@@ -42,7 +64,7 @@ struct CaptureView: View {
                         }
                     }
                     Button("Add") {
-                        if model.capture(text: text, quadrant: quadrant) {
+                        if model.capture(text: text, quadrant: quadrant, origin: origin) {
                             dismiss()
                         } else {
                             saveFailed = true
@@ -57,6 +79,12 @@ struct CaptureView: View {
                         .foregroundStyle(.red)
                         .accessibilityIdentifier("watch-capture-error")
                 }
+              }
+            }
+            .onAppear {
+                guard !boundOrigin else { return }
+                origin = model.actionLease
+                boundOrigin = true
             }
             .navigationTitle("New task")
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } } }

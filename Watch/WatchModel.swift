@@ -10,10 +10,18 @@ import GSDSnapshot
 /// shows on top of the snapshot until the iPhone reports it applied.
 @MainActor @Observable
 final class WatchModel: NSObject {
+    /// A callback keeps the origin it was rendered with. Reading the current scope at tap
+    /// time would silently reassign an old row or draft after an account transition.
+    struct ActionLease: Equatable {
+        let scope: WatchAccountScope
+        let generation: UUID
+    }
+
     /// Offered for 4 seconds after Complete (spec 6.4).
     struct UndoOffer: Equatable {
         let task: WatchTask
         let commandID: String
+        let origin: ActionLease
     }
 
     private(set) var snapshot: WatchSnapshot
@@ -31,6 +39,7 @@ final class WatchModel: NSObject {
     /// Each unsent command is offered again at most once per activation (WATCH-REVIEW-FIX).
     private var resendLedger = WatchResendLedger()
     private var undoExpiry: _Concurrency.Task<Void, Never>?
+    private var actionGeneration = UUID()
 
     override init() {
         let directory = Self.storageDirectory()
@@ -56,35 +65,61 @@ final class WatchModel: NSObject {
         WCSession.default.activate()
     }
 
+    var actionLease: ActionLease? {
+        guard let scope = snapshot.accountScope, scope.isValid else { return nil }
+        return ActionLease(scope: scope, generation: actionGeneration)
+    }
+
+    func accepts(_ origin: ActionLease?) -> Bool {
+        guard let origin else { return false }
+        return origin == actionLease
+    }
+
+    private var activeCommands: [WatchCommand] {
+        guard let scope = actionLease?.scope else { return [] }
+        return outbox.commands.filter { $0.accountScope == scope }
+    }
+
+    /// Held data remains durable, but its titles and mutations do not enter another account.
+    var quarantinedCount: Int { outbox.commands.count - activeCommands.count }
+
+    private var visibleSnapshot: WatchSnapshot {
+        actionLease == nil ? .empty : snapshot
+    }
+
     /// What to draw now: the snapshot with the unacknowledged commands on top.
     func lists(now: Date = .now) -> WatchLists {
-        WatchOverlay.apply(snapshot, pending: outbox.commands, now: now,
+        WatchOverlay.apply(visibleSnapshot, pending: activeCommands, now: now,
                            calendar: .current, timeZone: .current)
     }
 
     /// Today's picks, or the first suggestions when there are none, with pending commands applied.
     func today(now: Date = .now) -> WatchToday {
-        WatchOverlay.today(snapshot, pending: outbox.commands, now: now, timeZone: .current)
+        WatchOverlay.today(visibleSnapshot, pending: activeCommands, now: now, timeZone: .current)
     }
 
-    var hasSnapshot: Bool { snapshot.generatedAt != WatchSnapshot.empty.generatedAt }
+    var hasSnapshot: Bool { actionLease != nil && snapshot.generatedAt != WatchSnapshot.empty.generatedAt }
 
     // MARK: Commands
 
-    func complete(_ task: WatchTask) {
+    func complete(_ task: WatchTask, origin: ActionLease?) {
         // No Undo for a command that never queued: there is nothing to take back.
-        guard let command = queue(.complete(taskID: task.id), sendImmediately: false) else { return }
+        guard let origin, let command = queue(.complete(taskID: task.id), origin: origin, sendImmediately: false) else { return }
         // WatchConnectivity can deliver a transfer after its local entry is removed.
         // Keep this completion local while Undo is visible; release the previous offer.
         releasePendingCompletion()
-        undoOffer = UndoOffer(task: task, commandID: command.id)
+        undoOffer = UndoOffer(task: task, commandID: command.id, origin: origin)
         undoExpiry = _Concurrency.Task { [weak self] in
             try? await _Concurrency.Task.sleep(for: .seconds(4))
             if !_Concurrency.Task.isCancelled { self?.releasePendingCompletion() }
         }
     }
 
-    func open(taskID: String) { openedTaskID = taskID }
+    func open(taskID: String) {
+        guard hasSnapshot, lists().doFirst.contains(where: { $0.id == taskID })
+                || snapshot.tasks.contains(where: { $0.id == taskID }) else { return }
+        openedTaskID = taskID
+    }
 
     /// Called once the list has scrolled, so a second tap on the same task scrolls again.
     func consumeOpenedTask() { openedTaskID = nil }
@@ -100,15 +135,15 @@ final class WatchModel: NSObject {
         if DeepLinkParser.route(from: url) == .capture { captureRequested = true }
     }
 
-    func addToToday(_ task: WatchTask) { queue(.addToToday(taskID: task.id)) }
+    func addToToday(_ task: WatchTask, origin: ActionLease?) { queue(.addToToday(taskID: task.id), origin: origin) }
 
-    func removeFromToday(_ task: WatchTask) { queue(.removeFromToday(taskID: task.id)) }
+    func removeFromToday(_ task: WatchTask, origin: ActionLease?) { queue(.removeFromToday(taskID: task.id), origin: origin) }
 
-    func markUrgent(_ task: WatchTask) { queue(.markUrgent(taskID: task.id)) }
+    func markUrgent(_ task: WatchTask, origin: ActionLease?) { queue(.markUrgent(taskID: task.id), origin: origin) }
 
     @discardableResult
-    func capture(text: String, quadrant: Quadrant) -> Bool {
-        queue(.capture(text: text, quadrant: quadrant)) != nil
+    func capture(text: String, quadrant: Quadrant, origin: ActionLease?) -> Bool {
+        queue(.capture(text: text, quadrant: quadrant), origin: origin) != nil
     }
 
     /// End the four-second Undo window before suspension, on expiry, or when another
@@ -123,15 +158,15 @@ final class WatchModel: NSObject {
     }
 
     /// Removes the queued `complete` if it never left, otherwise queues a `reopen`.
-    func undo() {
-        guard let offer = undoOffer else { return }
+    func undo(origin: ActionLease?) {
+        guard accepts(origin), let offer = undoOffer, accepts(offer.origin) else { return }
         switch WatchOverlay.undoComplete(commandID: offer.commandID, of: offer.task, outbox: outbox.commands) {
         case .removeFromOutbox(let id):
             var pending = outbox
             do { try pending.remove(id: id) } catch { return }
             outbox = pending
         case .queueReopen(let taskID):
-            guard queue(.reopen(taskID: taskID)) != nil else { return }
+            guard queue(.reopen(taskID: taskID), origin: offer.origin) != nil else { return }
         case .unavailable:
             return
         }
@@ -143,14 +178,16 @@ final class WatchModel: NSObject {
 
     /// Whether the offer can still be undone: a repeating task whose `complete` left has no Undo.
     var canUndo: Bool {
-        guard let offer = undoOffer else { return false }
+        guard let offer = undoOffer, accepts(offer.origin) else { return false }
         return WatchOverlay.undoComplete(commandID: offer.commandID, of: offer.task,
                                          outbox: outbox.commands) != .unavailable
     }
 
     @discardableResult
-    func queue(_ kind: WatchCommand.Kind, sendImmediately: Bool = true) -> WatchCommand? {
-        let command = WatchCommand(id: UUID().uuidString, issuedAt: .now, kind: kind)
+    func queue(_ kind: WatchCommand.Kind, origin: ActionLease?, sendImmediately: Bool = true) -> WatchCommand? {
+        guard let origin, accepts(origin) else { return nil }
+        let command = WatchCommand(id: UUID().uuidString, issuedAt: .now, kind: kind,
+                                   accountScope: origin.scope)
         // WatchOutbox mutates before it writes. Publish only a durable queue so a failed
         // save cannot appear as a pending task or be sent later during reactivation.
         var pending = outbox
@@ -169,14 +206,15 @@ final class WatchModel: NSObject {
     /// Canonical tasks retain this opaque id, so a prefix by itself is not a pending-state flag.
     private var awaitingCaptureTaskIDs: Set<String> {
         let acknowledged = Set(snapshot.appliedCommandIDs)
-        return Set(outbox.commands.compactMap { command in
+        return Set(activeCommands.compactMap { command in
             guard case .capture = command.kind, !acknowledged.contains(command.id) else { return nil }
             return "pending-\(command.id)"
         })
     }
 
     private func send(_ command: WatchCommand) {
-        guard WCSession.isSupported(), WCSession.default.activationState == .activated else { return }
+        guard let scope = actionLease?.scope, command.accountScope == scope,
+              WCSession.isSupported(), WCSession.default.activationState == .activated else { return }
         if let taskID = command.taskID, awaitingCaptureTaskIDs.contains(taskID) { return }
         if let payload = WatchWire.userInfo(for: command) { WCSession.default.transferUserInfo(payload) }
     }
@@ -193,8 +231,10 @@ final class WatchModel: NSObject {
         // Do not consume the once-per-activation resend slot while a capture prerequisite is
         // unresolved; its acknowledgement will release the same durable dependent command.
         let awaiting = awaitingCaptureTaskIDs
+        let activeIDs = Set(activeCommands.map(\.id))
         let blocked = Set(outbox.commands.filter { command in
-            command.taskID.map { awaiting.contains($0) } ?? false
+            !activeIDs.contains(command.id) || snapshot.appliedCommandIDs.contains(command.id)
+                || (command.taskID.map { awaiting.contains($0) } ?? false)
         }.map(\.id))
         resendLedger.take(from: outbox, excluding: inFlight.union(held).union(blocked)).forEach(send)
     }
@@ -203,9 +243,29 @@ final class WatchModel: NSObject {
 
     fileprivate func receive(_ snapshot: WatchSnapshot, resendPending: Bool = true) {
         guard snapshot.generatedAt >= self.snapshot.generatedAt else { return }   // a late, older context
+        if snapshot.accountScope != self.snapshot.accountScope {
+            actionGeneration = UUID()
+            undoExpiry?.cancel()
+            undoExpiry = nil
+            undoOffer = nil
+            openedTaskID = nil
+            resendLedger.startActivation()
+        }
         self.snapshot = snapshot
         try? snapshotStore.write(snapshot)
-        try? outbox.drop(acknowledged: Set(snapshot.appliedCommandIDs))
+        // A global phone ledger can contain ids from an earlier account. Only the matching
+        // scope may acknowledge its own durable commands; legacy unscoped data stays held.
+        if let scope = actionLease?.scope {
+            let acknowledged = Set(snapshot.appliedCommandIDs)
+            let matching = Set(outbox.commands.filter {
+                $0.accountScope == scope && acknowledged.contains($0.id)
+            }.map(\.id))
+            var pending = outbox
+            do {
+                try pending.drop(acknowledged: matching)
+                outbox = pending
+            } catch { /* Retain the durable queue; the phone's idempotency makes a retry safe. */ }
+        }
         WidgetCenter.shared.reloadAllTimelines()
         if resendPending { resendUnsent() }
     }

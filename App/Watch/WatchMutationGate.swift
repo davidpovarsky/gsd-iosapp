@@ -80,7 +80,8 @@ final class WatchMutationGate {
             guard let identityURL else { throw IdentityError.unavailable }
             let fresh = Identity(installationID: identity?.installationID ?? UUID().uuidString,
                                  datasetID: UUID().uuidString)
-            try Self.write(fresh, to: identityURL)
+            do { try Self.write(fresh, to: identityURL) }
+            catch { throw IdentityError.unavailable }
             identity = fresh
             return try await operation()
         }
@@ -92,5 +93,10 @@ final class WatchMutationGate {
         try JSONEncoder().encode(identity).write(to: url, options: .atomic)
     }
 
-    private enum IdentityError: Error { case unavailable }
+    private enum IdentityError: Error, LocalizedError {
+        case unavailable
+        var errorDescription: String? {
+            String(localized: "Couldn't prepare the task collection. Please try again.")
+        }
+    }
 }

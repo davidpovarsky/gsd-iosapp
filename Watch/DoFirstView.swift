@@ -13,6 +13,7 @@ struct DoFirstView: View {
 
     var body: some View {
         let lists = model.lists()
+        let origin = model.actionLease
         let today = model.today()
         let pickIDs = Set(today.picks.map(\.id))
         NavigationStack {
@@ -29,7 +30,7 @@ struct DoFirstView: View {
                 if !lists.doFirst.isEmpty {
                     Section("Do First") {
                         ForEach(lists.doFirst.prefix(rowLimit)) { task in
-                            TaskRow(task: task, escalation: nil, canAddToToday: today.canAdd && !pickIDs.contains(task.id))
+                            TaskRow(task: task, origin: origin, escalation: nil, canAddToToday: today.canAdd && !pickIDs.contains(task.id))
                         }
                         let more = lists.doFirstMore(rowLimit: rowLimit, doFirstTotal: model.snapshot.doFirstTotal)
                         if more > 0 {
@@ -42,7 +43,7 @@ struct DoFirstView: View {
                 if !lists.comingUp.isEmpty {
                     Section("Coming up") {
                         ForEach(lists.comingUp.prefix(rowLimit)) { row in
-                            TaskRow(task: row.task, escalation: row, canAddToToday: today.canAdd && !pickIDs.contains(row.task.id))
+                            TaskRow(task: row.task, origin: origin, escalation: row, canAddToToday: today.canAdd && !pickIDs.contains(row.task.id))
                         }
                     }
                 }
@@ -79,6 +80,7 @@ struct DoFirstView: View {
 private struct TaskRow: View {
     @Environment(WatchModel.self) private var model
     let task: WatchTask
+    let origin: WatchModel.ActionLease?
     let escalation: WatchEscalatingRow?
     /// False when three picks are in, or the row is already one: "Add to today" is hidden (spec 4.1).
     let canAddToToday: Bool
@@ -93,15 +95,15 @@ private struct TaskRow: View {
         }
         .accessibilityElement(children: .combine)
         .swipeActions(edge: .leading) {
-            Button { model.complete(task) } label: { Label("Complete", systemImage: "checkmark") }
+            Button { model.complete(task, origin: origin) } label: { Label("Complete", systemImage: "checkmark") }
                 .tint(.green)
         }
         .swipeActions(edge: .trailing) {
             if canAddToToday {
-                Button { model.addToToday(task) } label: { Label("Add to today", systemImage: "sun.max") }
+                Button { model.addToToday(task, origin: origin) } label: { Label("Add to today", systemImage: "sun.max") }
             }
             if let target = escalation?.escalation.target {
-                Button { model.markUrgent(task) } label: { Label("Mark urgent", systemImage: "exclamationmark") }
+                Button { model.markUrgent(task, origin: origin) } label: { Label("Mark urgent", systemImage: "exclamationmark") }
                     .accessibilityHint(target.markUrgentHint)
                     .tint(.orange)
             }

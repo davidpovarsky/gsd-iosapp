@@ -66,9 +66,19 @@ struct GSDApp: App {
         _databaseUnavailable = State(initialValue: databaseUnavailable)
         // The live scheduler reads NotificationSettings straight from App-Group defaults
         // (the same suite the store persists to) — avoids a store-construction cycle.
-        let scheduler: any ReminderScheduling = isolated
-            ? NoopReminderScheduler()
-            : LiveReminderScheduler(settingsProvider: { TaskStore.readNotificationSettings(from: .shared) })
+        let scheduler: any ReminderScheduling
+        let liveScheduler: LiveReminderScheduler?
+        if isolated {
+            scheduler = NoopReminderScheduler()
+            liveScheduler = nil
+        } else {
+            let live = LiveReminderScheduler(settingsProvider: { TaskStore.readNotificationSettings(from: .shared) })
+            scheduler = live
+            liveScheduler = live
+        }
+        // The test/demo harness owns a scratch identity, never the real app-group dataset.
+        let watchMutationGate = WatchMutationGate(directory: isolated ? HarnessLaunch.scratchDirectory
+            : FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: AppGroup.id))
         // Repos shared by the store and the sync engine (Phase 5c): pulled writes reach the store's
         // observer, and the store's enqueues reach the engine's drain — same GRDB instances.
         let taskRepo = GRDBTaskRepository(database, now: now)
@@ -84,7 +94,6 @@ struct GSDApp: App {
             syncQueue: queueRepo
         )
         _store = State(initialValue: store)
-        ReminderActionInbox.attach(store: store)   // reminder Complete / Snooze buttons (B-17)
         // Auth + transport (Phase 5b). Live seams; the pure AuthService logic is unit-tested.
         let tokenStore: any TokenStore = isolated ? SignedOutTokenStore() : KeychainTokenStore()
         let authService = AuthService(
@@ -111,7 +120,7 @@ struct GSDApp: App {
         // and the status surface; SessionStore delegates start/stop to it on sign-in/out.
         let realtime = PocketBaseRealtime(baseURL: AuthConfig.live.baseURL)
         let coordinator = SyncCoordinator(
-            engine: syncEngine, realtime: realtime,
+            engine: syncEngine, realtime: realtime, watchMutationGate: watchMutationGate,
             tokenProvider: { try? await authService.validToken() },
             signedIn: { tokenStore.load() != nil })
         _coordinator = State(initialValue: coordinator)
@@ -131,9 +140,39 @@ struct GSDApp: App {
         // hooks; this rebuilds reminders+badge from the snapshot on every observed change.
         let reminderResyncer = ReminderResyncer(store: store)
         _reminderResyncer = State(initialValue: reminderResyncer)
+        let session = SessionStore(
+            auth: authService, tokenStore: tokenStore, coordinator: coordinator,
+            hasLocalActiveTasks: { (try? await store.hasCloudAccountData()) ?? true },
+            eraseLocal: {
+                try await watchMutationGate.replacingDataset {
+                    try await store.eraseAllData()
+                    try await GRDBCloudLibraryRepository(database).resetMetadata()
+                }
+            })
+        _session = State(initialValue: session)
+        // Canonical SessionStore phases fence unresolved transitions. Rechecking the token owner
+        // also closes the short interval before a Keychain-change notification reaches MainActor.
+        let watchScopeProvider: @MainActor @Sendable () -> WatchAccountScope? = {
+            guard !watchMutationGate.isPaused, let identity = watchMutationGate.identity,
+                  !session.inProgress, session.pendingAccountSwitch == nil else { return nil }
+            if session.isSignedIn {
+                guard let owner = session.currentUserID, owner == authService.currentUserId() else { return nil }
+                return .account(userID: owner, datasetID: identity.datasetID)
+            }
+            guard session.currentUserID == nil, tokenStore.load() == nil else { return nil }
+            return .guest(installationID: identity.installationID, datasetID: identity.datasetID)
+        }
+        liveScheduler?.setScopeProvider(watchScopeProvider)
+        ReminderActionInbox.attach(store: store, mutationGate: watchMutationGate,
+                                   scopeProvider: watchScopeProvider)
         // Apple Watch link (W2): sends the watch snapshot and applies its queued commands. A no-op
         // in the harness and wherever WatchConnectivity is unsupported (Mac Catalyst).
-        let watchSession = WatchSessionCoordinator(store: store, enabled: !isolated)
+        let watchSession = WatchSessionCoordinator(
+            store: store, enabled: !isolated, mutationGate: watchMutationGate,
+            scopeProvider: watchScopeProvider,
+            scopeDidChange: {
+                if store.hasLoadedTasks, watchScopeProvider() != nil { reminderResyncer.schedule() }
+            })
         _watchSession = State(initialValue: watchSession)
         let spotlightIndexer = SpotlightIndexer()
         _spotlightIndexer = State(initialValue: spotlightIndexer)
@@ -153,13 +192,6 @@ struct GSDApp: App {
             store: store,
             titleEnricher: ShareTitleEnricher(store: store, fetch: fetcher.title))
         _shareDrainer = State(initialValue: shareDrainer)
-        _session = State(initialValue: SessionStore(
-            auth: authService, tokenStore: tokenStore, coordinator: coordinator,
-            hasLocalActiveTasks: { (try? await store.hasCloudAccountData()) ?? true },
-            eraseLocal: {
-                try await store.eraseAllData()
-                try await GRDBCloudLibraryRepository(database).resetMetadata()
-            }))
         // In-app intents (Siri/Shortcuts run in this process) resolve the SAME store via
         // AppDependencyManager. A second connection on the live DB would be invisible to
         // this one's ValueObservation (stale UI/widgets/reminders) and racing the open

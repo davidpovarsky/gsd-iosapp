@@ -1,4 +1,5 @@
 import Foundation
+import Observation
 import UIKit
 import WatchConnectivity
 import GSDModel
@@ -16,6 +17,12 @@ final class WatchSessionCoordinator: NSObject {
     nonisolated static let snapshotKey = WatchWire.snapshotKey
 
     private let store: TaskStore
+    private let mutationGate: WatchMutationGate
+    private let scopeProvider: @MainActor () -> WatchAccountScope?
+    private let scopeDidChange: @MainActor () -> Void
+    private var observedScope: WatchAccountScope?
+    private var scopeGeneration: UInt64 = 0
+    private var scopeIsStable = false
     /// A command can land while the phone app is backgrounded and its database suspended. Mac
     /// Catalyst never suspends, and a Mac app is routinely `.inactive` with its window live.
     private let databaseWindow = BackgroundDatabaseWindow(isBackgrounded: {
@@ -39,11 +46,16 @@ final class WatchSessionCoordinator: NSObject {
     private nonisolated let commands: AsyncStream<WatchCommand>
     private nonisolated let commandSink: AsyncStream<WatchCommand>.Continuation
 
-    init(store: TaskStore, enabled: Bool,
+    init(store: TaskStore, enabled: Bool, mutationGate: WatchMutationGate,
+         scopeProvider: @escaping @MainActor () -> WatchAccountScope?,
+         scopeDidChange: @escaping @MainActor () -> Void = {},
          defaults: UserDefaults = AppGroupDefaults.shared,
          now: @escaping () -> Date = { Date() },
          debounce: Duration = .seconds(1)) {
         self.store = store
+        self.mutationGate = mutationGate
+        self.scopeProvider = scopeProvider
+        self.scopeDidChange = scopeDidChange
         self.enabled = enabled
         self.defaults = defaults
         self.now = now
@@ -51,6 +63,46 @@ final class WatchSessionCoordinator: NSObject {
         self.ledger = WatchAppliedLedger(defaults: defaults)
         (self.commands, self.commandSink) = AsyncStream.makeStream(of: WatchCommand.self)
         super.init()
+        observeAccountScope()
+    }
+
+    private func readScope() -> WatchAccountScope? {
+        guard !mutationGate.isPaused, let dataset = mutationGate.identity?.datasetID,
+              let scope = scopeProvider(), scope.isValid, scope.datasetID == dataset else { return nil }
+        return scope
+    }
+
+    private var currentScope: WatchAccountScope? {
+        guard scopeIsStable, let scope = readScope(), scope == observedScope else { return nil }
+        return scope
+    }
+
+    /// Observation fires in willSet. Invalidate synchronously, before the deferred reread, so
+    /// A → unresolved → A cannot revive a command already waiting on an old database read.
+    private func observeAccountScope() {
+        observedScope = withObservationTracking {
+            readScope()
+        } onChange: { [weak self] in
+            // Every observed input belongs to a MainActor app/session object.
+            MainActor.assumeIsolated { self?.invalidateAccountScope() }
+        }
+        scopeIsStable = true
+    }
+
+    private func invalidateAccountScope() {
+        scopeGeneration &+= 1
+        scopeIsStable = false
+        _Concurrency.Task { @MainActor [weak self] in
+            guard let self else { return }
+            self.observeAccountScope()
+            self.scopeDidChange()
+            self.lastSent = nil
+            self.schedule()
+        }
+    }
+
+    private func isCurrent(_ scope: WatchAccountScope, generation: UInt64) -> Bool {
+        !_Concurrency.Task.isCancelled && generation == scopeGeneration && currentScope == scope
     }
 
     private var session: WCSession? {
@@ -82,13 +134,19 @@ final class WatchSessionCoordinator: NSObject {
 
     private func sendSnapshot() {
         guard let session, session.activationState == .activated,
-              session.isPaired, session.isWatchAppInstalled,
-              store.hasLoadedTasks else { return }   // an empty first emission must not blank the watch
+              session.isPaired, session.isWatchAppInstalled else { return }
+        let scope = currentScope
+        // A valid account waits for its first database emission. An unresolved identity must
+        // actively clear the old account from Watch, even while a replacement is still loading.
+        if scope != nil, !store.hasLoadedTasks { return }
         let window = EscalationWindow.load(from: defaults)
-        let snapshot = WatchSnapshotBuilder.build(
-            from: store.tasks, now: now(),
-            escalationWindowDays: window.days,
-            appliedCommandIDs: ledger.snapshotIDs)
+        var snapshot = scope == nil
+            ? WatchSnapshot(generatedAt: now(), escalationWindowDays: nil, tasks: [],
+                            doFirstTotal: 0, appliedCommandIDs: [])
+            : WatchSnapshotBuilder.build(
+                from: store.tasks, now: now(), escalationWindowDays: window.days,
+                appliedCommandIDs: ledger.snapshotIDs)
+        snapshot.accountScope = scope
         guard let data = try? JSONEncoder().encode(snapshot) else { return }
         // `generatedAt` changes every build, so compare the payload with it held fixed.
         var stable = snapshot; stable.generatedAt = .distantPast
@@ -105,20 +163,34 @@ final class WatchSessionCoordinator: NSObject {
     // MARK: Watch to phone
 
     private func apply(_ command: WatchCommand) async {
-        await databaseWindow.run { await applyWithDatabase(command) }
+        guard let scope = currentScope, command.accountScope == scope,
+              let ticket = mutationGate.admit() else {
+            schedule()   // return the current identity; keep an unaccepted command unacknowledged
+            return
+        }
+        let generation = scopeGeneration
+        defer { mutationGate.finish(ticket) }
+        await databaseWindow.run {
+            guard isCurrent(scope, generation: generation) else { return }
+            await applyWithDatabase(command, scope: scope, generation: generation)
+        }
     }
 
-    private func applyWithDatabase(_ command: WatchCommand) async {
+    private func applyWithDatabase(_ command: WatchCommand, scope: WatchAccountScope,
+                                   generation: UInt64) async {
         let task: Task?
         do { task = try await store.fetchTask(id: command.taskID ?? "pending-\(command.id)") }
         catch { return }   // database unavailable: leave the id unrecorded so a retry can apply it
+        guard isCurrent(scope, generation: generation) else { return }
         let now = Date(), zone = TimeZone.current
         // Read the rows fresh: `store.tasks` can lag behind a database that was just resumed.
         var nextRank: Int?
         if case .addToToday = command.kind {
             do { nextRank = TopThree.nextRank(try await store.fetchAllTasks(), now: now, timeZone: zone) }
             catch { return }
+            guard isCurrent(scope, generation: generation) else { return }
         }
+        guard isCurrent(scope, generation: generation) else { return }
         let decision = WatchCommandPlan.decide(
             command, task: task, alreadyApplied: ledger.contains(command.id),
             today: TopThree.localDate(now, timeZone: zone), nextRank: nextRank)

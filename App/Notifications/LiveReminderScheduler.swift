@@ -1,19 +1,24 @@
 import Foundation
+import Synchronization
 import UserNotifications
 import GSDModel
 import GSDStore
+import GSDSnapshot
 
 /// The live `ReminderScheduling` implementation (product spec §9). Lives in the App target —
 /// the only layer that imports `UserNotifications`. Owns the scheduling math (`ReminderMath` +
 /// quiet hours), reads `NotificationSettings` via an injected closure (so it needn't reach into
 /// the store's internals), and uses the stable id `task-<id>` so a reschedule REPLACES rather
 /// than stacks. `@unchecked Sendable`: `UNUserNotificationCenter.current()` is a thread-safe
-/// singleton and the injected closure is `@Sendable`; the type holds no mutable state.
+/// singleton and injected closures are `@Sendable`; the late-bound scope closure uses a Mutex.
 final class LiveReminderScheduler: ReminderScheduling, @unchecked Sendable {
     private let center = UNUserNotificationCenter.current()
     private let settingsProvider: @Sendable () -> NotificationSettings
     private let calendar: Calendar
     private let now: @Sendable () -> Date
+    // SessionStore depends on TaskStore, which depends on this scheduler. GSDApp installs this
+    // fail-closed resolver once, after construction and before any store/reminder operation.
+    private let scopeProvider = Mutex<(@MainActor @Sendable () -> WatchAccountScope?)?>(nil)
 
     init(settingsProvider: @escaping @Sendable () -> NotificationSettings,
          calendar: Calendar = .current,
@@ -21,6 +26,13 @@ final class LiveReminderScheduler: ReminderScheduling, @unchecked Sendable {
         self.settingsProvider = settingsProvider
         self.calendar = calendar
         self.now = now
+    }
+
+    func setScopeProvider(_ provider: @escaping @MainActor @Sendable () -> WatchAccountScope?) {
+        scopeProvider.withLock { current in
+            precondition(current == nil, "Reminder scope is installed once during app construction")
+            current = provider
+        }
     }
 
     func schedule(_ task: Task) async {
@@ -45,6 +57,10 @@ final class LiveReminderScheduler: ReminderScheduling, @unchecked Sendable {
         if !task.description.isEmpty { content.body = task.description }
         content.sound = settings.soundEnabled ? .default : nil
         content.userInfo = ["taskID": task.id]
+        let resolveScope = scopeProvider.withLock { $0 }
+        if let scope = await resolveScope?(), let value = scope.notificationValue {
+            content.userInfo[WatchAccountScope.notificationKey] = value
+        }
         content.categoryIdentifier = ReminderAction.categoryID
 
         let comps = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: deferred)

@@ -17551,6 +17551,23 @@
         }
       },
       "extractionState": "manual"
+    },
+    "Couldn't prepare the task collection. Please try again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't prepare the task collection. Please try again."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא ניתן להכין את אוסף המשימות. נסו שוב."
+          }
+        }
+      },
+      "extractionState": "manual"
     }
   },
   "version": "1.0"
