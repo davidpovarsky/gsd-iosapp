@@ -170,6 +170,7 @@ final class SessionStore {
     /// throughout, and a failure that removed server tasks signs out, or the next sync would read
     /// those tasks as deleted and remove the local copies.
     func deleteAccount(eraseLocalData: Bool) async {
+        guard !inProgress else { return }
         inProgress = true; lastError = nil
         defer { refreshIdentity(); inProgress = false }
 
@@ -181,7 +182,21 @@ final class SessionStore {
             deleteUserRecord: { try await auth.deleteAccount() })
 
         coordinator?.holdForAccountDeletion()
-        let outcome = await deleter.delete()
+        let outcome: AccountDeleter.Outcome
+        do {
+            if let coordinator {
+                // Drain cooperating extension writes through the primary route and fallback.
+                // Release this lease before eraseLocal, which may acquire its own reset lease.
+                outcome = try await coordinator.withExternalWritesPaused { await deleter.delete() }
+            } else {
+                outcome = await deleter.delete()
+            }
+        } catch {
+            // No remote deletion starts if the cross-process boundary cannot be acquired.
+            lastError = String(localized: "Couldn't delete your account right now. Check your connection and try again.")
+            coordinator?.releaseAfterFailedAccountDeletion()
+            return
+        }
         switch outcome {
         case .deleted:
             if eraseLocalData {
