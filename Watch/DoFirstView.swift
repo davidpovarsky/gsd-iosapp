@@ -59,9 +59,6 @@ struct DoFirstView: View {
                         .accessibilityIdentifier("watch-capture")
                 }
             }
-            .sheet(item: $capturePresentation) { presentation in
-                CaptureView(origin: presentation.origin)
-            }
             .onChange(of: model.captureRequested, initial: true) { _, requested in
                 if requested {
                     capturePresentation = .init(origin: model.actionLease)
@@ -73,6 +70,9 @@ struct DoFirstView: View {
             .onChange(of: model.openedTaskID, initial: true) { _, _ in openTask(proxy) }
             .onChange(of: active) { _, _ in openTask(proxy) }
           }
+        }
+        .sheet(item: $capturePresentation) { presentation in
+            CaptureView(origin: presentation.origin)
         }
     }
 

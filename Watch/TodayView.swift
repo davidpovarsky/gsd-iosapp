@@ -59,12 +59,12 @@ struct TodayView: View {
                     } label: { Label("Add task", systemImage: "plus") }
                 }
             }
-            .sheet(item: $capturePresentation) { presentation in
-                CaptureView(origin: presentation.origin)
-            }
             .onChange(of: model.openedTaskID, initial: true) { _, _ in openTask(proxy, today: today) }
             .onChange(of: active) { _, _ in openTask(proxy, today: today) }
           }
+        }
+        .sheet(item: $capturePresentation) { presentation in
+            CaptureView(origin: presentation.origin)
         }
     }
 
