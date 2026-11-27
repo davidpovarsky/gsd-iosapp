@@ -100,6 +100,7 @@ final class SessionStore {
     /// `client_id`). Silent on cancel, generic banner otherwise. Sets `accountNote` so any Apple
     /// sign-in surfaces the §8.4 "separate account" hint, not only a "Hide My Email" one.
     func signIn(provider: String) async {
+        guard !inProgress else { return }
         inProgress = true; lastError = nil
         defer { refreshIdentity(); inProgress = false }
         // Before the token exists, so no sync or push can run ahead of the sign-in drop.

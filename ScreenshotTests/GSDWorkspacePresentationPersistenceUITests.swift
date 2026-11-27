@@ -60,7 +60,8 @@ private enum WorkspacePresentationFixture {
             ("cross_account_and_root_retarget_reject_old_binding", retarget),
             ("same_scope_views_share_latest_state", sharedViews),
             ("invalid_identity_and_viewport_fail_closed", validation),
-            ("session_resolution_holds_identity_until_apply", accountResolution)
+            ("session_resolution_holds_identity_until_apply", accountResolution),
+            ("oauth_retry_cannot_interrupt_an_inflight_signin", oauthAdmission)
         ]
         let selection = ProcessInfo.processInfo.environment["GSD_WORKSPACE_PRESENTATION_FIXTURE_CASE"]
         let selected = cases.filter { selection == nil || $0.0 == selection }
@@ -317,6 +318,67 @@ private enum WorkspacePresentationFixture {
                     "Exactly two intercepted password requests and no unexpected transport are required.")
     }
 
+
+    private static func oauthAdmission() async throws {
+        let keys = ["gsd.lastOwnerId", "gsd.accountEmail", "gsd.accountProvider"]
+        let saved = keys.map { ($0, UserDefaults.standard.object(forKey: $0)) }
+        defer {
+            for (key, value) in saved {
+                if let value { UserDefaults.standard.set(value, forKey: key) }
+                else { UserDefaults.standard.removeObject(forKey: key) }
+            }
+        }
+        UserDefaults.standard.set("fixture-owner-a", forKey: "gsd.lastOwnerId")
+        let originalToken = fixtureToken(owner: "fixture-owner-a")
+        let tokens = FixtureTokens(token: originalToken)
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [FixtureHeldLoginProtocol.self]
+        let transport = URLSession(configuration: configuration)
+        defer { FixtureHeldLoginProtocol.release(); transport.invalidateAndCancel() }
+        let client = PocketBaseClient(baseURL: "https://fixture.invalid", session: transport)
+        let auth = AuthService(client: client, presenter: FixtureAdmissionPresenter(), tokenStore: tokens,
+                               config: AuthConfig(baseURL: "https://fixture.invalid",
+                                                  redirectURI: "fixture://callback", callbackScheme: "fixture"))
+        let session = SessionStore(auth: auth, tokenStore: tokens, coordinator: nil,
+                                   hasLocalActiveTasks: { false })
+        let first = _Concurrency.Task {
+            await session.signInWithEmail("fixture-b@example.invalid", password: "fixture-only", createAccount: false)
+        }
+        var admissionFailure: Error?
+        do {
+            let deadline = Date().addingTimeInterval(10)
+            while !FixtureHeldLoginProtocol.isHolding && Date() < deadline {
+                try await _Concurrency.Task.sleep(for: .milliseconds(20))
+            }
+            try require(FixtureHeldLoginProtocol.isHolding && session.inProgress,
+                        "The first real AuthService password response must be held while sign-in is active.")
+            await session.signIn(provider: "google")
+            try require(session.inProgress,
+                        "A second OAuth attempt must not end the first sign-in phase.")
+            try require(Account.validated(isSignedIn: session.isSignedIn, userID: session.currentUserID,
+                                          inProgress: session.inProgress,
+                                          hasPendingAccountSwitch: session.pendingAccountSwitch != nil) == nil,
+                        "The concurrent attempt must not reopen validated account admission.")
+            try require(tokens.load() == originalToken,
+                        "No second attempt may replace the original token while the first response is held.")
+            try require(FixtureHeldLoginProtocol.observations.withLock { $0.requests } == 1 &&
+                        !FixtureHeldLoginProtocol.observations.withLock { $0.unexpected } &&
+                        FixtureAdmissionPresenter.calls.withLock { $0 } == 0,
+                        "The rejected OAuth entry must not start transport or an authorization presenter.")
+        } catch { admissionFailure = error }
+        // Even a meaningful RED releases and joins the first actual login before restoring defaults.
+        let hadHeldResponse = FixtureHeldLoginProtocol.isHolding
+        FixtureHeldLoginProtocol.release()
+        if !hadHeldResponse { first.cancel(); transport.invalidateAndCancel() }
+        await first.value
+        try require(!session.inProgress && session.isSignedIn && session.currentUserID == "fixture-owner-b" &&
+                    tokens.load() == FixtureHeldLoginProtocol.responseToken,
+                    "Only the original held login may install its account and exact response token.")
+        try require(FixtureAdmissionPresenter.calls.withLock { $0 } == 0,
+                    "No real or fixture OAuth presenter may be entered, including the negative baseline.")
+        if let admissionFailure { throw admissionFailure }
+    }
+
     @MainActor
     private final class EraseGate {
         let fails: Bool
@@ -377,6 +439,66 @@ private final class FixtureAuthProtocol: URLProtocol, @unchecked Sendable {
         client?.urlProtocolDidFinishLoading(self)
     }
     override func stopLoading() {}
+}
+
+
+private struct FixtureAdmissionPresenter: WebAuthPresenting {
+    static let calls = Mutex(0)
+    func present(authURL: URL, callbackURLScheme: String) async throws -> URL {
+        Self.calls.withLock { $0 += 1 }
+        throw URLError(.unsupportedURL)
+    }
+}
+
+/// Every URL is intercepted. The first password response is released explicitly by the test;
+/// an unexpected OAuth discovery request fails locally before any browser can be presented.
+private final class FixtureHeldLoginProtocol: URLProtocol, @unchecked Sendable {
+    static let observations = Mutex((requests: 0, unexpected: false))
+    private static let held = Mutex<FixtureHeldLoginProtocol?>(nil)
+    static let responseToken = fixtureToken(owner: "fixture-owner-b")
+    static var isHolding: Bool { held.withLock { $0 != nil } }
+
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() {
+        let expected = request.url?.host == "fixture.invalid" &&
+            request.url?.path == "/api/collections/users/auth-with-password" && request.httpMethod == "POST"
+        let first = Self.observations.withLock {
+            $0.requests += 1
+            $0.unexpected = $0.unexpected || !expected || $0.requests != 1
+            return $0.requests == 1
+        }
+        guard expected && first else {
+            client?.urlProtocol(self, didFailWithError: URLError(.unsupportedURL)); return
+        }
+        Self.held.withLock { $0 = self }
+    }
+
+    static func release() {
+        let pending = held.withLock { value -> FixtureHeldLoginProtocol? in
+            defer { value = nil }
+            return value
+        }
+        pending?.finish()
+    }
+
+    private func finish() {
+        guard let url = request.url else { return }
+        let body: [String: Any] = [
+            "token": Self.responseToken,
+            "record": ["id": "fixture-owner-b", "email": "fixture-b@example.invalid"]
+        ]
+        let data = try! JSONSerialization.data(withJSONObject: body)
+        let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "HTTP/1.1",
+                                       headerFields: ["Content-Type": "application/json"])!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: data)
+        client?.urlProtocolDidFinishLoading(self)
+    }
+
+    override func stopLoading() {
+        Self.held.withLock { if $0 === self { $0 = nil } }
+    }
 }
 
 /// Compile-only optional dependency. The actual SessionStore is initialized with coordinator:nil.
