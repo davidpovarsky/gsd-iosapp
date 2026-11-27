@@ -165,8 +165,19 @@ final class WatchModel: NSObject {
         return command
     }
 
+    /// Only a capture still awaiting acknowledgement blocks its dependent actions.
+    /// Canonical tasks retain this opaque id, so a prefix by itself is not a pending-state flag.
+    private var awaitingCaptureTaskIDs: Set<String> {
+        let acknowledged = Set(snapshot.appliedCommandIDs)
+        return Set(outbox.commands.compactMap { command in
+            guard case .capture = command.kind, !acknowledged.contains(command.id) else { return nil }
+            return "pending-\(command.id)"
+        })
+    }
+
     private func send(_ command: WatchCommand) {
         guard WCSession.isSupported(), WCSession.default.activationState == .activated else { return }
+        if let taskID = command.taskID, awaitingCaptureTaskIDs.contains(taskID) { return }
         if let payload = WatchWire.userInfo(for: command) { WCSession.default.transferUserInfo(payload) }
     }
 
@@ -179,17 +190,24 @@ final class WatchModel: NSObject {
             .compactMap { WatchWire.command(from: $0.userInfo)?.id })
         // Activation must not hand off a completion whose Undo window is still open.
         let held = Set(undoOffer.map { [$0.commandID] } ?? [])
-        resendLedger.take(from: outbox, excluding: inFlight.union(held)).forEach(send)
+        // Do not consume the once-per-activation resend slot while a capture prerequisite is
+        // unresolved; its acknowledgement will release the same durable dependent command.
+        let awaiting = awaitingCaptureTaskIDs
+        let blocked = Set(outbox.commands.filter { command in
+            command.taskID.map { awaiting.contains($0) } ?? false
+        }.map(\.id))
+        resendLedger.take(from: outbox, excluding: inFlight.union(held).union(blocked)).forEach(send)
     }
 
     // MARK: Snapshot from the iPhone
 
-    fileprivate func receive(_ snapshot: WatchSnapshot) {
+    fileprivate func receive(_ snapshot: WatchSnapshot, resendPending: Bool = true) {
         guard snapshot.generatedAt >= self.snapshot.generatedAt else { return }   // a late, older context
         self.snapshot = snapshot
         try? snapshotStore.write(snapshot)
         try? outbox.drop(acknowledged: Set(snapshot.appliedCommandIDs))
         WidgetCenter.shared.reloadAllTimelines()
+        if resendPending { resendUnsent() }
     }
 }
 
@@ -199,7 +217,7 @@ extension WatchModel: WCSessionDelegate {
         // A context that arrived while the app wasn't running is waiting here.
         let snapshot = Self.decode(session.receivedApplicationContext)
         _Concurrency.Task { @MainActor in
-            if let snapshot { self.receive(snapshot) }
+            if let snapshot { self.receive(snapshot, resendPending: false) }
             self.resendLedger.startActivation()
             self.resendUnsent()
         }

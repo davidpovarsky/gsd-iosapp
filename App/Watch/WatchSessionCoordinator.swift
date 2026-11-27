@@ -110,7 +110,7 @@ final class WatchSessionCoordinator: NSObject {
 
     private func applyWithDatabase(_ command: WatchCommand) async {
         let task: Task?
-        do { task = try await store.fetchTask(id: command.taskID ?? "") }
+        do { task = try await store.fetchTask(id: command.taskID ?? "pending-\(command.id)") }
         catch { return }   // database unavailable: leave the id unrecorded so a retry can apply it
         let now = Date(), zone = TimeZone.current
         // Read the rows fresh: `store.tasks` can lag behind a database that was just resumed.
@@ -122,8 +122,15 @@ final class WatchSessionCoordinator: NSObject {
         let decision = WatchCommandPlan.decide(
             command, task: task, alreadyApplied: ledger.contains(command.id),
             today: TopThree.localDate(now, timeZone: zone), nextRank: nextRank)
+        // An older phone may have acknowledged a capture under an unrelated random task id.
+        // Keep a later action recoverable instead of claiming an unresolved synthetic id applied.
+        // Never guess by title: two real tasks can have identical text.
+        if case .skip(.missingTask) = decision, let id = command.taskID,
+           id.hasPrefix("pending-"), UUID(uuidString: String(id.dropFirst("pending-".count))) != nil {
+            return
+        }
         if case .apply(let action) = decision {
-            do { try await perform(action, on: task) }
+            do { try await perform(action, on: task, commandID: command.id) }
             catch where Self.isPermanentRefusal(error) {
                 // The store will always refuse this command. Recording it lets the watch drop it.
             } catch { return }   // a store or database failure may clear; leave the id unrecorded
@@ -136,7 +143,7 @@ final class WatchSessionCoordinator: NSObject {
         error is TaskStoreError || error is ValidationError
     }
 
-    private func perform(_ action: WatchCommandPlan.Action, on task: Task?) async throws {
+    private func perform(_ action: WatchCommandPlan.Action, on task: Task?, commandID: String) async throws {
         switch action {
         case .toggleComplete:
             if let task { try await store.toggleComplete(task) }
@@ -145,7 +152,16 @@ final class WatchSessionCoordinator: NSObject {
         case .snoozeOneHour:
             if let task { try await store.snooze(task, by: .oneHour) }
         case .capture(let text, let quadrant):
-            try await store.add(WatchCommandPlan.parseCapture(text), override: quadrant)
+            // Match the optimistic row exactly, so later offline actions target the same task.
+            // A replay after a lost acknowledgement must not overwrite subsequent edits.
+            guard task == nil else { return }
+            let parsed = WatchCommandPlan.parseCapture(text)
+            let stamp = Date()
+            try await store.create(Task(
+                id: "pending-\(commandID)", title: parsed.title,
+                description: parsed.descriptionAdditions.joined(separator: "\n"),
+                urgent: quadrant.isUrgent, important: quadrant.isImportant,
+                createdAt: stamp, updatedAt: stamp, tags: parsed.tags))
         case .pickForToday(let date, let rank):
             if let task { try await store.setFocus(id: task.id, date: date, rank: rank) }
         case .clearPick:
