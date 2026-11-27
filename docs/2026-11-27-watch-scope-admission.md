@@ -35,7 +35,7 @@ An older phone may already have created a random-ID task for a capture. The new 
 - Stable-ID RED27: 6df6ae27650cf81d91959f0762c256f95d0563fe. Original17 plus Undo control passed; nine new faults failed.
 - Stable-ID GREEN27: 3b2422fbc61a1650cbb390b2472b1d6c803b0b5b. Actual native27/27 passed.
 - Scope RED18: d6836f05849e1597d2ad67801690af3f4c95c1e4. Actual native17 failures plus same-scope refresh control passed.
-- Real-TaskStore RED8: ef91ebb0342a35780384db25f2222fecacc6b13a. Three intended reset/write failures reproduced; one unexpected identity-failure control is being diagnosed at fixture-only2e49364a1a392bd3025d29b4e06281fb96c63fea.
+- Real-TaskStore RED8: ef91ebb0342a35780384db25f2222fecacc6b13a. Three intended reset/write failures reproduced. Diagnostic2e49364a1a392bd3025d29b4e06281fb96c63fea proved the additional identity-control failure was a fixture timestamp comparison: the write was refused, destructive body did not run, identity/outbox stayed unchanged, and persisted rows before/after were exactly equal. The final fixture compares those actual persisted rows, preserving a strict no-data-change assertion instead of comparing a Date.now value to GRDB's millisecond representation.
 - Final scoped GREEN27/18/8 and full app/Watch framework builds are pending at this checkpoint.
 
 The original27 Swift fixture is byte-identical. A test-only adapter supplies a verified synthetic guest prerequisite and callback origins, so scope refusal cannot mask its original storage-failure/Undo checks. Scope18 uses explicit wire metadata and retained origins. Gate8 uses actual TaskStore, GRDB task/outbox repositories and BackgroundDatabaseWindow; only UIKit application state and WatchConnectivity transport are doubled.

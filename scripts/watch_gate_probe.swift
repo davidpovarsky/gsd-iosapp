@@ -264,7 +264,7 @@ final class SuspendedRepository: TaskRepository, Sendable {
         print("WATCH_GATE_DIAGNOSTIC " + String(decoding: try JSONSerialization.data(
             withJSONObject: failureDiagnostic, options: [.sortedKeys]), as: UTF8.self))
         check("identity_failure_prevents_destructive_body", refused && !destructiveBodyRan
-              && rows == [kept] && queued.isEmpty && rig.gate.identity == previousIdentity && !rig.gate.isPaused)
+              && rows == persistedBeforeFailure && queued.isEmpty && rig.gate.identity == previousIdentity && !rig.gate.isPaused)
         try FileManager.default.removeItem(at: path)
         try FileManager.default.moveItem(at: preserved, to: path)
     }
