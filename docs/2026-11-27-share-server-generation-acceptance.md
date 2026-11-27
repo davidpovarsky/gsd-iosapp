@@ -61,3 +61,15 @@ The producer uses the normally merged wire API `c21c46b7296ca30e92c0f090ec95acb2
 The original eight `DirectTaskPushTests` identities remain. Their HTTP fixture now returns a generation to GET; the create test asserts exactly one GET followed by one POST, with the generation header, while retaining all original task/owner/device/title/date payload assertions and the default-reminder assertion. The four skip cases still require zero requests. Required callback arguments are explicit fixtures, not a production bypass.
 
 The original Share retry four assertion source is unchanged. Its controller fixture now supplies a known synthetic generation to the real preparation callback before its recording network double. The extension ten case bodies and assertions are unchanged; only their constructor fixture supplies the same explicit prerequisite. Both adapters record this prerequisite. They prove their existing retry/account-scope behavior, while the new eleven-case fixture proves actual PocketBase generation discovery, cancellation and durable binding. Actual Apple framework, real server and system Share-sheet acceptance remain separate gates.
+
+## App consumer after observed actual-store RED
+
+Native execution of immutable `73f7eb9f0927bebaefb66b8d5ffcaf7b7db6f4c2` reached all 27 identities: the original sixteen controls and the guest control passed; exactly ten new generation cases failed. Receipt SHA-256 `4f733b052b3127a53ff53f4638f3ef42c3e301da3fceadd32d8b7eb4e42f0382`, execution proof `3186a7de55a6ee96e84f0caaff85506d91196424e991433920dd194398f3e37f`. The assertions remain unchanged.
+
+The normally merged `bcfadbcec1a7062ef5ed7fb6229134e126689508` dependency supplies nullable durable queue bindings and `TaskStore.create/save(_:serverDatasetGeneration:)`. The consumer does not edit those producers. Both app initializers require a final `serverGeneration: @MainActor @Sendable (WatchAccountScope) async throws -> String` argument; GSDApp owns the provider and its exact-token fence.
+
+Personal-account ingestion refuses missing/invalid or noncurrent server generations while retaining the capture. Guest ingestion remains local and makes no generation request. Existing already-applied/terminal capture replay is a no-write acknowledgement. After the awaited generation read, ingestion checks canonical live/terminal rows again, preserving any intervening manual edit. A new creation queues its original server authority through the TaskStore API. Pushed captures are also checked before ingest.
+
+Optional title enrichment retains the original authority. After its URL response, it reacquires the origin lease, verifies the server generation and only then reads the canonical row. It saves through the same bound queue API; missing authority, discovery failure, reset, cancellation or a newer manual title leaves the row unchanged. No timestamp alone grants authority or overwrites a canonical edit.
+
+This is source preparation following meaningful native RED. GREEN, complete Core discovery/execution, actual extension/framework build and final system-surface acceptance are owned by the native runner and must be recorded separately.

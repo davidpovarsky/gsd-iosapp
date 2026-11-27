@@ -13,18 +13,21 @@ final class ShareInboxDrainer {
     private let context: ShareScopeContext
     private let sharedDirectory: URL?
     private let recoverJournals: Bool
+    private let serverGeneration: @MainActor @Sendable (WatchAccountScope) async throws -> String
     private(set) var pendingCount = 0
 
     init(inbox: ShareInbox, store: TaskStore, titleEnricher: ShareTitleEnricher,
          mutationGate: WatchMutationGate,
          scopeProvider: @escaping @MainActor @Sendable () -> WatchAccountScope?,
-         sharedDirectory: URL? = nil, recoverJournals: Bool = false) {
+         sharedDirectory: URL? = nil, recoverJournals: Bool = false,
+         serverGeneration: @escaping @MainActor @Sendable (WatchAccountScope) async throws -> String) {
         self.inbox = inbox
         self.store = store
         self.titleEnricher = titleEnricher
         self.context = ShareScopeContext(mutationGate: mutationGate, scopeProvider: scopeProvider)
         self.sharedDirectory = sharedDirectory
         self.recoverJournals = recoverJournals
+        self.serverGeneration = serverGeneration
         refreshPending()
     }
 
@@ -44,15 +47,37 @@ final class ShareInboxDrainer {
         await inbox.drain { capture, task, pushed in
             try await context.withOrigin(capture.origin) { scope, generation in
                 if try await isAlreadyApplied(capture, task: task, scope: scope, generation: generation) { return }
+                let binding = try await validatedServerGeneration(
+                    capture, scope: scope, generation: generation)
+                // Discovery suspends. Sync or another local action may have landed this
+                // identity meanwhile; a creation replay must still preserve canonical edits.
+                if scope.kind == "account",
+                   try await isAlreadyApplied(capture, task: task, scope: scope, generation: generation) { return }
                 try context.require(scope, generation: generation)
                 if pushed { try await store.ingestSynced(task) }
-                else { try await store.create(task) }
+                else { try await store.create(task, serverDatasetGeneration: binding) }
                 if enrichTitles && !_Concurrency.Task.isCancelled {
-                    titleEnricher.schedule(for: task, origin: scope)
+                    titleEnricher.schedule(for: task, origin: scope, serverDatasetGeneration: binding)
                 }
             }
         }
         refreshPending()
+    }
+
+    /// A personal-account capture may never acquire a newer server authority on app launch.
+    /// The origin lease and exact credential check in the injected provider span this read.
+    private func validatedServerGeneration(
+        _ capture: SharedCapture, scope: WatchAccountScope, generation: UInt64
+    ) async throws -> String? {
+        guard scope.kind == "account" else { return nil }
+        guard let bound = capture.serverDatasetGeneration, !bound.isEmpty, bound.utf8.count <= 128,
+              !bound.utf8.contains(where: { $0 < 0x20 || $0 == 0x7F }) else {
+            throw ShareScopeError.held
+        }
+        let current = try await serverGeneration(scope)
+        try context.require(scope, generation: generation)
+        guard bound.utf8.elementsEqual(current.utf8) else { throw ShareScopeError.held }
+        return bound
     }
 
     private func isAlreadyApplied(_ capture: SharedCapture, task: GSDModel.Task,
