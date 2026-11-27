@@ -35,7 +35,8 @@ EXPECTED = set([
     "title_generation_reaches_persisted_sync_queue",
     "title_enrichment_rejects_rotated_server_generation",
     "unbound_account_title_enrichment_does_not_queue",
-    "guest_share_and_title_do_not_require_server_generation"
+    "guest_share_and_title_do_not_require_server_generation",
+    "canonical_edits_during_generation_lookup_are_preserved"
 ])
 
 def digest(path):

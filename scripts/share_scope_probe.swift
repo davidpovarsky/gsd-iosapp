@@ -520,6 +520,40 @@ actor ShareFetch {
               && captureCalls == 0 && titleCalls == 0 && captureRig.outbox.pending().isEmpty)
     }
 
+    @MainActor static func canonicalEditsDuringGenerationRead(root: URL) async throws {
+        let landing = try ShareRig(directory: root.appendingPathComponent("generation-live-landing"))
+        let title = try ShareRig(directory: root.appendingPathComponent("generation-live-title"))
+        defer { landing.close(); title.close() }
+        try landing.outbox.write(capture("Old captured fields", origin: landing.origin))
+        await landing.server.configure(hold: true)
+        let landingOperation = _Concurrency.Task { await landing.drainer.drain(enrichTitles: false) }
+        let landingEntered = await waitFor { await landing.server.didEnter() }
+        let editedLanding = row("Manual canonical edit during discovery")
+        try await landing.rows.upsert(editedLanding)
+        let landingBefore = try await landing.rows.fetchAll(), landingQueueBefore = try await landing.queue.all()
+        await landing.server.release()
+        await landingOperation.value
+        let landingAfter = try await landing.rows.fetchAll(), landingQueueAfter = try await landing.queue.all()
+
+        let derived = String(URLTitle.derive(from: "https://example.com/article").prefix(FieldLimits.titleRange.upperBound))
+        let originalTitle = row(derived)
+        try await title.rows.upsert(originalTitle)
+        await title.server.configure(hold: true)
+        let titleOperation = title.schedule(originalTitle, origin: title.origin)
+        let titleEntered = await waitFor { await title.server.didEnter() }
+        var editedTitle = originalTitle
+        editedTitle.title = "Manual title during discovery"
+        try await title.rows.upsert(editedTitle)
+        let titleBefore = try await title.rows.fetchAll(), titleQueueBefore = try await title.queue.all()
+        await title.server.release()
+        await titleOperation?.value
+        let titleAfter = try await title.rows.fetchAll(), titleQueueAfter = try await title.queue.all()
+        check("canonical_edits_during_generation_lookup_are_preserved",
+              landingEntered && titleEntered && landingAfter == landingBefore
+              && landingQueueAfter == landingQueueBefore && landing.outbox.pending().isEmpty
+              && titleAfter == titleBefore && titleQueueAfter == titleQueueBefore)
+    }
+
     enum ProbeError: Error { case observationSetup, isolationRequired, generationUnavailable }
     @MainActor static func main() async {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("GSDShareScope-" + UUID().uuidString)
@@ -540,6 +574,7 @@ actor ShareFetch {
             try await generationQueueCheck(root: root)
             try await generationTitleChecks(root: root)
             try await guestGenerationControl(root: root)
+            try await canonicalEditsDuringGenerationRead(root: root)
             exit(failures == 0 ? 0 : 1)
         } catch {
             print("SHARE_SCOPE_ERROR " + String(describing: error)); exit(2)
