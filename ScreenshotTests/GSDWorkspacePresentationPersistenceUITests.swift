@@ -690,7 +690,7 @@ final class GSDWorkspacePresentationPersistenceUITests: XCTestCase {
         var json: [String: Any] {
             ["zoomPercent": zoom, "lowerEpoch": lower.timeIntervalSince1970,
              "upperEpoch": upper.timeIntervalSince1970, "visibleRange": label,
-             "chartFrame": NSStringFromCGRect(chartFrame)]
+             "chartFrame": NSCoder.string(for: chartFrame)]
         }
     }
     private var hebrew = false
@@ -914,7 +914,7 @@ final class GSDWorkspacePresentationPersistenceUITests: XCTestCase {
         let tablet = UIDevice.current.userInterfaceIdiom == .pad
         try require(tablet ? frame.width > frame.height : frame.height > frame.width,
                     "The observed app must match the requested tablet-landscape or phone-portrait configuration.")
-        receipt["appFrame"] = NSStringFromCGRect(frame)
+        receipt["appFrame"] = NSCoder.string(for: frame)
     }
 
     private func createTask(_ title: String, in app: XCUIApplication) throws -> TaskIdentity {

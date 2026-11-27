@@ -90,8 +90,8 @@ final class GSDMatrixPersistenceUITests: XCTestCase {
         try require(hebrew ? source.frame.midX > destination.frame.midX : source.frame.midX < destination.frame.midX,
                     "The Do First and Schedule panes must follow the current LTR/RTL direction.")
         receipt["beforeDrag"] = [
-            "sourceFrame": NSStringFromCGRect(source.frame),
-            "destinationFrame": NSStringFromCGRect(destination.frame),
+            "sourceFrame": NSCoder.string(for: source.frame),
+            "destinationFrame": NSCoder.string(for: destination.frame),
             "sourceLabel": source.label, "destinationLabel": destination.label
         ]
         try capture(app, "01-matrix-before-native-drag")
