@@ -46,6 +46,7 @@ final class GSDMatrixPersistenceUITests: XCTestCase {
             receipt["passed"] = true
             try persist()
         } catch {
+            try? capture(app, "failure-matrix-native-state")
             receipt["failure"] = String(describing: error)
             try persist()
             throw error
@@ -68,7 +69,7 @@ final class GSDMatrixPersistenceUITests: XCTestCase {
         try checked("twoOrdinaryTasksCreated")
 
         // The existing product-video helper observes this native keyboard key. If it is absent,
-        // a tap on the observed navigation bar leaves the field without changing either task.
+        // attempt a tap on the observed navigation bar, then require actual keyboard dismissal.
         if app.keyboards.firstMatch.exists {
             let hide = app.keyboards.buttons["Hide keyboard"]
             if hide.exists {
@@ -105,6 +106,8 @@ final class GSDMatrixPersistenceUITests: XCTestCase {
                     "Dragging must preserve the original task ID and create no duplicate.")
         try require(try uniqueCardID(containing: destinationTitle, in: app) == destinationID,
                     "Dragging onto the destination must preserve that independent task.")
+        try require(card(destinationID, in: app).label.contains(schedule),
+                    "The destination task must remain in Schedule after the native drop.")
         try checked("nativeDragChangedOnlySourceQuadrant")
         try capture(app, "02-matrix-after-native-drag")
         try verifyCanonicalEditor(sourceID, title: sourceTitle, expectedQuadrant: schedule, in: app)
@@ -120,6 +123,8 @@ final class GSDMatrixPersistenceUITests: XCTestCase {
                     "The new quadrant must reload from the ordinary persistent store.")
         try require(try uniqueCardID(containing: destinationTitle, in: app) == destinationID,
                     "The destination task must remain intact after relaunch.")
+        try require(card(destinationID, in: app).label.contains(schedule),
+                    "The destination quadrant must also remain Schedule after disk relaunch.")
         try capture(app, "03-matrix-after-disk-relaunch")
         try verifyCanonicalEditor(sourceID, title: sourceTitle, expectedQuadrant: schedule, in: app)
         try checked("sameIDAndQuadrantAfterDiskRelaunch")
