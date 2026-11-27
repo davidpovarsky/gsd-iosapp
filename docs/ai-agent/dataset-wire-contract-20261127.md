@@ -9,7 +9,8 @@ separate owners.
 
 - GET /api/gsd/dataset returns a validated opaque generation.
 - POST /api/gsd/dataset/reset carries caller-owned expected_generation and
-  request_id. The returned request_id must match the exact submitted UTF-8 bytes.
+  request_id. The returned request_id must match the exact submitted UTF-8 bytes,
+  and the returned generation must differ from the submitted expected generation.
 - X-GSD-Dataset-Generation is optional on the package createTask API. Supplying
   it requires a nonempty value of at most 128 UTF-8 bytes, with no ASCII control
   characters (0x00–0x1F or 0x7F). The same limit applies to dataset identifiers.
